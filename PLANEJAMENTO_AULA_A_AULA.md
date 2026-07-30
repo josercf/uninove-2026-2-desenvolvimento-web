@@ -313,22 +313,33 @@ dizer qual código de status seria esperado se o médico informado não existiss
 
 **Enunciado:** Qual é o papel do DNS em uma requisição web?
 
-- (a) Criptografar o tráfego entre o navegador e o servidor.
-- (b) Traduzir o nome do domínio no endereço IP do servidor.
-- (c) Comprimir o HTML antes de enviá-lo ao navegador.
-- (d) Guardar os cookies do usuário entre uma visita e outra.
+- (a) Criptografar o tráfego entre o navegador e o servidor, para que ninguém no
+  caminho consiga ler o conteúdo.
+- (b) Comprimir o HTML antes de enviá-lo ao navegador, para reduzir o tempo de
+  carregamento da página.
+- (c) Traduzir o nome do domínio no endereço IP do servidor, para que a conexão
+  possa ser estabelecida.
+- (d) Guardar os cookies do usuário entre uma visita e outra, para que o servidor
+  reconheça quem está acessando.
 
-**Resposta correta: (b).**
+**Resposta correta: (c).**
 
-### Laboratório, ciclos 3 e 4, 20h50 às 21h50
+### Ciclo 3, 20h50 às 21h25: laboratório guiado, parte 1
 
 **Missão no case:** documentar a arquitetura pela qual o site da Clínica Vida+
-vai passar a operar. O aluno cria `docs/arquitetura.md` no próprio fork
-contendo: um diagrama, em texto ou Mermaid, do caminho da requisição do
-navegador do paciente até o servidor e de volta; a saída de `nslookup` de um
-domínio investigado; uma tabela com pelo menos quatro requisições observadas no
-DevTools, com método, recurso e código de status; e um parágrafo explicando por
-que o formulário de agendamento precisará de HTTPS.
+vai passar a operar.
+
+Parte guiada, com o professor conduzindo passo a passo: rodar `nslookup` de um
+domínio investigado e guardar a saída; abrir o DevTools e registrar pelo menos
+quatro requisições observadas, com método, recurso e código de status.
+
+### Ciclo 4, 21h25 às 21h50: laboratório, parte 2, e entregável
+
+Sozinho, montar `docs/arquitetura.md` no próprio fork, reunindo o diagrama, em
+texto ou Mermaid, do caminho da requisição do navegador do paciente até o
+servidor e de volta, as evidências coletadas no ciclo anterior e um parágrafo
+explicando por que o formulário de agendamento precisará de HTTPS. Commit e
+push.
 
 **Entregável:** `docs/arquitetura.md` commitado e enviado ao fork.
 
@@ -390,23 +401,33 @@ tela pelas tags semânticas corretas.
 **Enunciado:** Por que usar `<header>`, `<nav>` e `<main>` em vez de `<div>`
 para tudo?
 
-- (a) Porque essas tags carregam mais rápido que a `<div>`.
-- (b) Porque elas dão significado ao conteúdo, o que ajuda leitores de tela,
+- (a) Porque elas dão significado ao conteúdo, o que ajuda leitores de tela,
   buscadores e a manutenção do próprio código.
-- (c) Porque somente essas tags aceitam regras de CSS.
-- (d) Porque a `<div>` foi removida do HTML5.
+- (b) Porque elas são processadas mais rápido que a `<div>`, o que reduz de forma
+  perceptível o tempo de renderização.
+- (c) Porque somente elas aceitam regras de CSS, já que a `<div>` não pode receber
+  nem classe nem identificador próprio.
+- (d) Porque a `<div>` foi removida do HTML5 e só é mantida por compatibilidade com
+  páginas escritas antes da versão 5.
 
-**Resposta correta: (b).**
+**Resposta correta: (a).**
 
-### Laboratório, ciclos 3 e 4, 20h50 às 21h50
+### Ciclo 3, 20h50 às 21h25: laboratório guiado, parte 1
 
 **Missão no case:** construir a página inicial do site da Clínica Vida+ com
-estrutura semântica completa. Criar a branch `feature/pagina-inicial`; montar
-`index.html` com `header` contendo o nome da clínica, `nav` com os links do
-menu, `main` com uma seção de apresentação, uma seção de especialidades em lista
-e uma seção do corpo clínico em tabela com nome, CRM e especialidade, e `footer`
-com endereço e telefone. Validar no W3C, commitar, dar push da branch e abrir o
-Pull Request.
+estrutura semântica completa.
+
+Parte guiada: criar a branch `feature/pagina-inicial` e montar, junto com o
+professor, o esqueleto de `index.html`, com `header` contendo o nome da clínica,
+`nav` com os links do menu e a abertura do `main`.
+
+### Ciclo 4, 21h25 às 21h50: laboratório, parte 2, e entregável
+
+Sozinho, completar o `main` com a seção de apresentação, a seção de
+especialidades em lista e a do corpo clínico em tabela com nome, CRM e
+especialidade, mais o `footer` com endereço e telefone. Validar no W3C e
+corrigir os erros apontados. Commitar, dar push da branch e abrir o Pull
+Request.
 
 **Entregável:** `index.html` semântico e validado, na branch
 `feature/pagina-inicial`, com Pull Request aberto no fork do aluno.
@@ -467,20 +488,30 @@ com Flexbox, ao vivo, com o inspetor aberto mostrando as caixas.
 **Enunciado:** No box model padrão do CSS, sem `border-box`, o que a propriedade
 `width` define?
 
-- (a) A largura total do elemento, já incluindo padding e borda.
-- (b) Apenas a largura da área de conteúdo, sem contar padding e borda.
-- (c) A largura da margem externa do elemento.
-- (d) A largura da janela do navegador.
+- (a) A largura total do elemento, já somando a área de conteúdo, o padding e a
+  borda declarada.
+- (b) A largura da margem externa, que é o espaço reservado entre o elemento e os
+  seus vizinhos na página.
+- (c) A largura da janela do navegador, da qual o elemento passa a ocupar uma
+  fração proporcional.
+- (d) Apenas a largura da área de conteúdo, sem contar o padding nem a borda, que
+  são somados depois.
 
-**Resposta correta: (b).**
+**Resposta correta: (d).**
 
-### Laboratório, ciclos 3 e 4, 20h50 às 21h50
+### Ciclo 3, 20h50 às 21h25: laboratório guiado, parte 1
 
-**Missão no case:** dar identidade visual à página inicial da Clínica Vida+. Na
-branch `feature/estilo-inicial`, criar `assets/css/site.css` com a paleta e a
-tipografia da clínica declaradas em variáveis, estilizar o cabeçalho e o menu de
-navegação, transformar as especialidades em cards com Flexbox, formatar a tabela
-do corpo clínico e estilizar o rodapé.
+**Missão no case:** dar identidade visual à página inicial da Clínica Vida+.
+
+Parte guiada: na branch `feature/estilo-inicial`, criar `assets/css/site.css`,
+declarar em variáveis a paleta e a tipografia da clínica e estilizar o cabeçalho
+e o menu de navegação junto com o professor.
+
+### Ciclo 4, 21h25 às 21h50: laboratório, parte 2, e entregável
+
+Sozinho, transformar as especialidades em cards com Flexbox, formatar a tabela
+do corpo clínico e estilizar o rodapé, conferindo o resultado no navegador a
+cada bloco de regras.
 
 **Entregável:** `assets/css/site.css` aplicado ao `index.html`, com a página
 inicial estilizada, commitado e enviado.
@@ -539,23 +570,31 @@ nascimento, telefone, e-mail, especialidade e observações.
 
 **Enunciado:** O que o atributo `required` em um `<input>` faz?
 
-- (a) Faz o campo ser enviado ao servidor mesmo quando está vazio.
-- (b) Impede o envio do formulário enquanto o campo estiver vazio, pela
-  validação nativa do navegador.
-- (c) Garante que o dado será validado também no servidor.
-- (d) Formata automaticamente o conteúdo digitado no campo.
+- (a) Faz o campo ser enviado ao servidor mesmo vazio, para que a action receba a
+  propriedade preenchida com nulo.
+- (b) Impede o envio do formulário enquanto o campo estiver vazio, pela validação
+  nativa que o próprio navegador executa.
+- (c) Garante que o dado também será validado no servidor, dispensando qualquer
+  verificação adicional na action.
+- (d) Formata automaticamente o conteúdo digitado no campo, conforme o tipo
+  declarado no atributo `type`.
 
 **Resposta correta: (b).**
 
-### Laboratório, ciclos 3 e 4, 20h50 às 21h50
+### Ciclo 3, 20h50 às 21h25: laboratório guiado, parte 1
 
-**Missão no case:** criar a página de agendamento da Clínica Vida+. Na branch
-`feature/agendamento`, montar `agendamento.html` com o mesmo cabeçalho e rodapé
-do site e um formulário contendo dados do paciente, nome, CPF, data de
-nascimento, telefone e e-mail, mais dados da consulta, especialidade em
-`select`, médico em `select`, data, horário e observações em `textarea`. Aplicar
-Grid ao formulário, com uma media query que empilha os campos no celular, e
-ativar a validação nativa nos campos obrigatórios.
+**Missão no case:** criar a página de agendamento da Clínica Vida+.
+
+Parte guiada: na branch `feature/agendamento`, criar `agendamento.html`
+reaproveitando o cabeçalho e o rodapé do site e montar, com o professor, os
+campos do paciente, nome, CPF, data de nascimento, telefone e e-mail.
+
+### Ciclo 4, 21h25 às 21h50: laboratório, parte 2, e entregável
+
+Sozinho, acrescentar os dados da consulta, especialidade em `select`, médico em
+`select`, data, horário e observações em `textarea`; aplicar Grid ao formulário
+com a media query que empilha os campos no celular; e ativar a validação nativa
+nos campos obrigatórios.
 
 **Entregável:** `agendamento.html` responsivo, com formulário completo e
 validação nativa funcionando, commitado e enviado.
@@ -615,23 +654,32 @@ página usando `classList.toggle`.
 **Enunciado:** Para que serve `event.preventDefault()` dentro do tratador do
 evento `submit` de um formulário?
 
-- (a) Limpa todos os campos do formulário.
-- (b) Impede o comportamento padrão do navegador, que é enviar o formulário e
+- (a) Impede o comportamento padrão do navegador, que é enviar o formulário e
   recarregar a página, deixando o controle com o código JavaScript.
-- (c) Envia o formulário automaticamente por AJAX.
-- (d) Valida todos os campos obrigatórios sozinho.
+- (b) Limpa todos os campos do formulário, devolvendo cada um ao valor que tinha
+  quando a página foi carregada pela primeira vez.
+- (c) Envia o formulário por AJAX automaticamente, montando a requisição a partir
+  dos campos declarados dentro do elemento `form`.
+- (d) Valida sozinho todos os campos obrigatórios do formulário, exibindo as
+  mensagens de erro que o navegador traz por padrão.
 
-**Resposta correta: (b).**
+**Resposta correta: (a).**
 
-### Laboratório, ciclos 3 e 4, 20h50 às 21h50
+### Ciclo 3, 20h50 às 21h25: laboratório guiado, parte 1
 
-**Missão no case:** dar comportamento ao site da Clínica Vida+. Na branch
-`feature/js-agendamento`, criar `assets/js/agendamento.js` que intercepte o
-envio do formulário, valide as regras que o HTML não expressa, CPF com 11
-dígitos, data da consulta no futuro e horário dentro do expediente da clínica,
-exiba mensagens de erro ao lado de cada campo e mostre um resumo do agendamento
-na tela em caso de sucesso. Na página inicial, criar um campo de busca que filtre
-a lista de especialidades enquanto o usuário digita.
+**Missão no case:** dar comportamento ao site da Clínica Vida+.
+
+Parte guiada: na branch `feature/js-agendamento`, criar
+`assets/js/agendamento.js`, interceptar o `submit` e implementar com o professor
+a primeira regra de validação, o CPF com 11 dígitos, exibindo a mensagem ao lado
+do campo.
+
+### Ciclo 4, 21h25 às 21h50: laboratório, parte 2, e entregável
+
+Sozinho, acrescentar as demais regras que o HTML não expressa, data da consulta
+no futuro e horário dentro do expediente da clínica, mostrar o resumo do
+agendamento na tela em caso de sucesso e criar, na página inicial, o campo de
+busca que filtra a lista de especialidades enquanto o usuário digita.
 
 **Entregável:** `assets/js/agendamento.js` com validação e filtro funcionando,
 commitado e enviado.
@@ -698,22 +746,32 @@ pelo texto que aparece na página inicial e alterá-lo.
 **Enunciado:** Qual comando cria um novo projeto ASP.NET Core MVC chamado
 `ClinicaVida.Web`?
 
-- (a) `dotnet build mvc ClinicaVida.Web`
-- (b) `dotnet new mvc -n ClinicaVida.Web`
-- (c) `dotnet run mvc ClinicaVida.Web`
-- (d) `dotnet add mvc ClinicaVida.Web`
+- (a) `dotnet build mvc ClinicaVida.Web`, que compila o projeto a partir do modelo
+  MVC e o deixa pronto para execução.
+- (b) `dotnet add mvc ClinicaVida.Web`, que acrescenta o modelo MVC a um projeto
+  vazio criado anteriormente.
+- (c) `dotnet run mvc ClinicaVida.Web`, que gera o projeto a partir do modelo MVC e
+  já o executa no servidor local.
+- (d) `dotnet new mvc -n ClinicaVida.Web`, que gera a estrutura completa do projeto
+  a partir do modelo MVC.
 
-**Resposta correta: (b).**
+**Resposta correta: (d).**
 
-### Laboratório, ciclos 3 e 4, 20h50 às 21h50
+### Ciclo 3, 20h50 às 21h25: laboratório guiado, parte 1
 
 **Missão no case:** preparar o ambiente e criar o projeto que hospedará a
-Clínica Vida+ pelo resto do semestre. Instalar ou confirmar o SDK; criar a
-branch `feature/projeto-dotnet`; criar `ClinicaVida.Web` com `dotnet new mvc`;
-acrescentar o `.gitignore` do .NET para não versionar `bin` e `obj`; executar
-com `dotnet watch run`; alterar a página inicial para o nome e a apresentação da
-clínica; registrar no `README.md` a versão do SDK obtida em `dotnet --info` e o
-comando para executar o projeto.
+Clínica Vida+ pelo resto do semestre.
+
+Parte guiada, com o professor atendendo os problemas de instalação: instalar ou
+confirmar o SDK, criar a branch `feature/projeto-dotnet`, criar
+`ClinicaVida.Web` com `dotnet new mvc`, acrescentar o `.gitignore` do .NET para
+não versionar `bin` e `obj`, e executar com `dotnet watch run`.
+
+### Ciclo 4, 21h25 às 21h50: laboratório, parte 2, e entregável
+
+Sozinho, alterar a página inicial para o nome e a apresentação da clínica e
+registrar no `README.md` a versão do SDK obtida em `dotnet --info` e o comando
+para executar o projeto.
 
 **Entregável:** projeto `ClinicaVida.Web` criado, executando localmente, com
 `.gitignore` adequado e o `README.md` atualizado, commitado e enviado.
@@ -769,22 +827,32 @@ respectiva View, contendo o texto institucional da clínica.
 **Enunciado:** Com a rota padrão `{controller=Home}/{action=Index}/{id?}`, qual
 método atende a URL `/Especialidades/Detalhes/3`?
 
-- (a) `HomeController.Index`, porque a rota cai sempre no padrão.
-- (b) `EspecialidadesController.Detalhes`, recebendo `id` igual a 3.
-- (c) `DetalhesController.Especialidades`, recebendo `id` igual a 3.
-- (d) Nenhum, porque essa URL não é válida no roteamento convencional.
+- (a) `HomeController.Index`, porque a rota cai no padrão sempre que o primeiro
+  segmento não corresponde a um Controller.
+- (b) `DetalhesController.Especialidades`, recebendo `id` igual a 3 no terceiro
+  segmento da rota.
+- (c) `EspecialidadesController.Detalhes`, recebendo `id` igual a 3 no terceiro
+  segmento da rota.
+- (d) Nenhum, porque o roteamento convencional não aceita três segmentos sem uma
+  rota específica declarada.
 
-**Resposta correta: (b).**
+**Resposta correta: (c).**
 
-### Laboratório, ciclos 3 e 4, 20h50 às 21h50
+### Ciclo 3, 20h50 às 21h25: laboratório guiado, parte 1
 
-**Missão no case:** trazer o conteúdo estático da clínica para dentro do MVC. Na
-branch `feature/controllers-iniciais`, criar `EspecialidadesController` com as
-actions `Index`, listando as especialidades, e `Detalhes`, recebendo o
-identificador e exibindo os dados de uma especialidade; criar as Views
-correspondentes em `Views/Especialidades`; acrescentar os links no menu de
-navegação; e migrar o texto institucional para a action `Sobre` do
-`HomeController`.
+**Missão no case:** trazer o conteúdo estático da clínica para dentro do MVC.
+
+Parte guiada: na branch `feature/controllers-iniciais`, criar
+`EspecialidadesController` com a action `Index` e a View correspondente,
+listando as especialidades, com o professor conduzindo a convenção de nomes e de
+pastas.
+
+### Ciclo 4, 21h25 às 21h50: laboratório, parte 2, e entregável
+
+Sozinho, acrescentar a action `Detalhes`, que recebe o identificador e exibe os
+dados de uma especialidade, com a View correspondente em `Views/Especialidades`;
+incluir os links no menu de navegação; e migrar o texto institucional para a
+action `Sobre` do `HomeController`.
 
 **Entregável:** `EspecialidadesController` com `Index` e `Detalhes`, Views
 correspondentes e navegação funcionando, commitado e enviado.
@@ -842,22 +910,32 @@ por nome e apenas os da especialidade informada.
 **Enunciado:** O que a expressão `medicos.Where(m => m.EspecialidadeId == 2)`
 devolve?
 
-- (a) O primeiro médico cuja especialidade é a de identificador 2.
-- (b) Uma sequência com todos os médicos cuja `EspecialidadeId` é igual a 2.
-- (c) A quantidade de médicos da especialidade 2.
-- (d) Um valor booleano indicando se existe algum médico na especialidade 2.
+- (a) O primeiro médico cuja especialidade é a de identificador 2, ou nulo quando
+  não houver nenhum.
+- (b) Uma sequência com todos os médicos cuja `EspecialidadeId` é igual a 2, na
+  ordem em que estão na lista.
+- (c) A quantidade de médicos da especialidade 2, como um número inteiro pronto
+  para ser exibido na View.
+- (d) Um valor booleano indicando se existe pelo menos um médico cadastrado na
+  especialidade de identificador 2.
 
 **Resposta correta: (b).**
 
-### Laboratório, ciclos 3 e 4, 20h50 às 21h50
+### Ciclo 3, 20h50 às 21h25: laboratório guiado, parte 1
 
 **Missão no case:** dar vida ao corpo clínico da Clínica Vida+, ainda em
-memória. Na branch `feature/medicos-em-memoria`, criar as classes
-`Especialidade` e `Medico` em `Models`; criar uma classe de repositório em
-memória com a lista de especialidades e de médicos da clínica; criar
-`MedicosController` com `Index`, aceitando um filtro opcional por especialidade,
-e `Detalhes`; montar as Views tipadas com `@model IEnumerable<Medico>`; e exibir
-a contagem de médicos por especialidade na tela de especialidades.
+memória.
+
+Parte guiada: na branch `feature/medicos-em-memoria`, criar as classes
+`Especialidade` e `Medico` em `Models` e a classe de repositório em memória com
+a lista de especialidades e de médicos da clínica, junto com o professor.
+
+### Ciclo 4, 21h25 às 21h50: laboratório, parte 2, e entregável
+
+Sozinho, criar `MedicosController` com `Index`, aceitando um filtro opcional por
+especialidade, e `Detalhes`; montar as Views tipadas com
+`@model IEnumerable<Medico>`; e exibir a contagem de médicos por especialidade na
+tela de especialidades.
 
 **Entregável:** lista de médicos filtrada por especialidade, vinda do Controller
 e renderizada em View tipada, commitada e enviada.
@@ -917,23 +995,33 @@ o resultado.
 **Enunciado:** Um formulário é enviado com um campo obrigatório em branco e a
 validação do cliente foi contornada. O que acontece na action de POST?
 
-- (a) A action não chega a ser executada, porque o framework bloqueia antes.
-- (b) A action executa, `ModelState.IsValid` fica falso e cabe ao Controller
+- (a) A action executa, `ModelState.IsValid` fica falso e cabe ao Controller
   devolver a View com as mensagens de erro.
-- (c) O Entity Framework Core rejeita o registro automaticamente.
-- (d) O navegador exibe uma tela de erro do servidor.
+- (b) A action não chega a ser executada, porque o framework bloqueia a requisição
+  antes do model binding.
+- (c) O Entity Framework Core rejeita o registro no `SaveChangesAsync` e devolve à
+  action uma exceção de validação.
+- (d) O navegador exibe uma tela de erro do servidor, porque a propriedade
+  obrigatória ficou sem valor no Model.
 
-**Resposta correta: (b).**
+**Resposta correta: (a).**
 
-### Laboratório, ciclos 3 e 4, 20h50 às 21h50
+### Ciclo 3, 20h50 às 21h25: laboratório guiado, parte 1
 
-**Missão no case:** trazer o formulário de agendamento para dentro da aplicação.
-Na branch `feature/formulario-agendamento`, criar o Model `Consulta` com
-paciente, especialidade, médico, data, horário e observações, anotado com Data
-Annotations e mensagens em português; criar `ConsultasController` com `Agendar`
-em GET e em POST; construir a View com Tag Helpers, resumo de validação e listas
-suspensas alimentadas pelo repositório em memória; e, no caso válido, redirecionar
-para uma tela de confirmação exibindo os dados do agendamento.
+**Missão no case:** trazer o formulário de agendamento para dentro da
+aplicação.
+
+Parte guiada: na branch `feature/formulario-agendamento`, criar o Model
+`Consulta` com paciente, especialidade, médico, data, horário e observações,
+anotá-lo com Data Annotations e mensagens em português e criar
+`ConsultasController` com `Agendar` em GET, acompanhado pelo professor.
+
+### Ciclo 4, 21h25 às 21h50: laboratório, parte 2, e entregável
+
+Sozinho, construir a View com Tag Helpers, resumo de validação e listas
+suspensas alimentadas pelo repositório em memória, implementar `Agendar` em POST
+e, no caso válido, redirecionar para uma tela de confirmação exibindo os dados do
+agendamento.
 
 **Entregável:** formulário de agendamento validando no servidor, com mensagens
 de erro por campo e tela de confirmação, commitado e enviado.
@@ -995,21 +1083,32 @@ antes de rodar a migration, e conferir depois.
 
 **Enunciado:** O que o comando `dotnet ef database update` faz?
 
-- (a) Gera as classes de entidade a partir de um banco de dados já existente.
-- (b) Aplica ao banco as migrations pendentes, criando ou alterando as tabelas.
-- (c) Apaga o banco de dados e o recria vazio.
-- (d) Atualiza os pacotes NuGet do projeto para a versão mais recente.
+- (a) Gera as classes de entidade a partir de um banco já existente, invertendo o
+  sentido do mapeamento.
+- (b) Apaga o banco de dados e o recria vazio, descartando as tabelas e os dados
+  que existiam antes.
+- (c) Aplica ao banco as migrations pendentes, criando ou alterando as tabelas
+  conforme o modelo atual.
+- (d) Atualiza os pacotes NuGet do projeto para a versão mais recente, inclusive os
+  do próprio EF Core.
 
-**Resposta correta: (b).**
+**Resposta correta: (c).**
 
-### Laboratório, ciclos 3 e 4, 20h50 às 21h50
+### Ciclo 3, 20h50 às 21h25: laboratório guiado, parte 1
 
-**Missão no case:** dar ao case um banco de dados de verdade. Na branch
-`feature/ef-core-mysql`, instalar os pacotes do EF Core e do provedor de MySQL;
-criar as classes `Paciente`, `Medico`, `Especialidade` e `Consulta` em `Models`;
-criar `ClinicaContext` com os quatro `DbSet`; configurar a connection string e
-registrar o contexto; criar a migration `InicialClinicaVida` e aplicá-la; semear
-as especialidades da clínica com `HasData`; e conferir as tabelas no MySQL.
+**Missão no case:** dar ao case um banco de dados de verdade.
+
+Parte guiada, com o professor atendendo os problemas de conexão: na branch
+`feature/ef-core-mysql`, instalar os pacotes do EF Core e do provedor de MySQL,
+criar as classes `Paciente`, `Medico`, `Especialidade` e `Consulta` em `Models`,
+criar `ClinicaContext` com os quatro `DbSet`, configurar a connection string e
+registrar o contexto.
+
+### Ciclo 4, 21h25 às 21h50: laboratório, parte 2, e entregável
+
+Sozinho, criar a migration `InicialClinicaVida` e aplicá-la, semear as
+especialidades da clínica com `HasData` e conferir no MySQL as tabelas geradas,
+comparando as colunas com as propriedades das classes.
 
 **Entregável:** `ClinicaContext` configurado, migration inicial aplicada e banco
 `clinicavida` criado no MySQL com as quatro tabelas e as especialidades
@@ -1069,23 +1168,32 @@ exclusão em si aconteça em POST.
 **Enunciado:** Por que redirecionar após um POST bem-sucedido, em vez de
 devolver a View diretamente?
 
-- (a) Porque o redirecionamento é mais rápido que devolver a View.
-- (b) Para evitar o reenvio duplicado do formulário quando o usuário atualiza a
-  página, que é o padrão Post-Redirect-Get.
-- (c) Porque o Entity Framework Core exige um redirecionamento após
-  `SaveChangesAsync`.
-- (d) Porque uma action de POST não pode retornar uma View.
+- (a) Porque o redirecionamento consome menos memória no servidor do que renderizar
+  a View mais uma vez.
+- (b) Porque o Entity Framework Core exige um redirecionamento logo depois da
+  chamada de `SaveChangesAsync`.
+- (c) Porque uma action anotada com `[HttpPost]` não pode retornar uma View, apenas
+  um redirecionamento.
+- (d) Para evitar o reenvio duplicado do formulário quando o usuário atualiza a
+  página, no padrão Post-Redirect-Get.
 
-**Resposta correta: (b).**
+**Resposta correta: (d).**
 
-### Laboratório, ciclos 3 e 4, 20h50 às 21h50
+### Ciclo 3, 20h50 às 21h25: laboratório guiado, parte 1
 
 **Missão no case:** dar à recepção da Clínica Vida+ o cadastro completo de
-pacientes. Na branch `feature/crud-pacientes`, criar `PacientesController` com
-`Index`, `Details`, `Create` em GET e POST, `Edit` em GET e POST e `Delete` com
-confirmação, todos assíncronos e persistindo no MySQL; construir as cinco Views
-com Tag Helpers e validação; aplicar Post-Redirect-Get com mensagem de sucesso
-em `TempData`; e tratar identificador inexistente com `NotFound`.
+pacientes.
+
+Parte guiada: na branch `feature/crud-pacientes`, criar `PacientesController`
+recebendo o `ClinicaContext` por injeção e implementar `Index`, `Details` e
+`Create` em GET e POST, todos assíncronos, com as Views correspondentes, junto
+com o professor.
+
+### Ciclo 4, 21h25 às 21h50: laboratório, parte 2, e entregável
+
+Sozinho, implementar `Edit` em GET e POST e `Delete` com tela de confirmação,
+aplicar Post-Redirect-Get com a mensagem de sucesso em `TempData` e tratar
+identificador inexistente com `NotFound`.
 
 **Entregável:** CRUD completo de Paciente, com listagem, detalhe, cadastro,
 edição e exclusão persistindo no banco, commitado e enviado.
@@ -1152,22 +1260,31 @@ em sessão.
 **Enunciado:** Por padrão, onde ficam guardados os dados de uma sessão do
 ASP.NET Core?
 
-- (a) Inteiros no navegador do usuário, dentro do próprio cookie.
-- (b) No servidor, com o navegador guardando apenas o identificador da sessão em
-  um cookie.
-- (c) No banco de dados da aplicação, automaticamente.
-- (d) Na query string de cada URL da aplicação.
+- (a) No servidor, com o navegador guardando apenas o identificador da sessão em um
+  cookie enviado a cada requisição.
+- (b) No navegador do usuário, inteiros dentro do próprio cookie, que trafega
+  completo a cada requisição feita.
+- (c) No banco de dados da aplicação, gravados pelo EF Core a cada alteração que
+  for feita no conteúdo da sessão.
+- (d) Na query string de cada URL da aplicação, acrescentada pelo framework no
+  momento em que a página é renderizada.
 
-**Resposta correta: (b).**
+**Resposta correta: (a).**
 
-### Laboratório, ciclos 3 e 4, 20h50 às 21h50
+### Ciclo 3, 20h50 às 21h25: laboratório guiado, parte 1
 
 **Missão no case:** transformar o agendamento da Clínica Vida+ em um fluxo de
-duas etapas. Na branch `feature/sessao-agendamento`, habilitar a sessão;
-implementar a etapa 1, escolha de especialidade e médico, guardada em sessão;
-implementar a etapa 2, escolha de data e horário, que recupera a etapa 1 da
-sessão, grava a consulta no banco e limpa a sessão; impedir o acesso direto à
-etapa 2 sem a etapa 1; e gravar em cookie a unidade preferida do usuário,
+duas etapas.
+
+Parte guiada: na branch `feature/sessao-agendamento`, habilitar a sessão no
+pipeline e implementar a etapa 1, escolha de especialidade e médico, guardada em
+sessão, com o professor conduzindo a ordem correta dos middlewares.
+
+### Ciclo 4, 21h25 às 21h50: laboratório, parte 2, e entregável
+
+Sozinho, implementar a etapa 2, escolha de data e horário, que recupera a etapa
+1 da sessão, grava a consulta no banco e limpa a sessão; impedir o acesso direto
+à etapa 2 sem a etapa 1; e gravar em cookie a unidade preferida do usuário,
 usando-a como valor padrão nas próximas visitas.
 
 **Entregável:** agendamento em duas etapas usando sessão, mais o cookie de
@@ -1225,21 +1342,31 @@ carregamento à chamada demonstrada.
 **Enunciado:** O que a action precisa retornar para que o `fetch` do navegador
 receba dados e não uma página inteira?
 
-- (a) `View()`, porque o navegador extrai os dados do HTML.
-- (b) `Json(...)` ou outro resultado cujo corpo seja JSON.
-- (c) `RedirectToAction`, apontando para a action que tem os dados.
-- (d) `Content` com o tipo `text/html`.
+- (a) `View()`, porque o navegador consegue extrair os dados do HTML devolvido e
+  montar o objeto sozinho.
+- (b) `Json(...)` ou outro resultado cujo corpo seja JSON, que é o formato que o
+  `fetch` converte em objeto.
+- (c) `RedirectToAction`, apontando para a action que carrega os dados e devolve a
+  tela já preenchida.
+- (d) `Content` com o tipo `text/html`, entregando apenas o trecho de página que
+  será inserido no DOM.
 
 **Resposta correta: (b).**
 
-### Laboratório, ciclos 3 e 4, 20h50 às 21h50
+### Ciclo 3, 20h50 às 21h25: laboratório guiado, parte 1
 
-**Missão no case:** deixar o agendamento fluido. Na branch `feature/ajax-
-horarios`, criar as actions `MedicosPorEspecialidade` e `HorariosDisponiveis`
-devolvendo JSON a partir do banco; escrever o JavaScript que, ao trocar a
-especialidade, recarrega a lista de médicos, e que, ao escolher médico e data,
-exibe os horários livres como botões selecionáveis; tratar o caso de nenhum
-horário disponível; e exibir indicação de carregamento e mensagem de erro.
+**Missão no case:** deixar o agendamento fluido.
+
+Parte guiada: na branch `feature/ajax-horarios`, criar as actions
+`MedicosPorEspecialidade` e `HorariosDisponiveis` devolvendo JSON a partir do
+banco e escrever, com o professor, o JavaScript que recarrega a lista de médicos
+ao trocar a especialidade.
+
+### Ciclo 4, 21h25 às 21h50: laboratório, parte 2, e entregável
+
+Sozinho, implementar a exibição dos horários livres como botões selecionáveis ao
+escolher médico e data, tratar o caso de nenhum horário disponível e acrescentar
+a indicação de carregamento e a mensagem de erro.
 
 **Entregável:** consulta de médicos e de horários livres por AJAX, sem recarregar
 a página, commitada e enviada.
@@ -1297,22 +1424,30 @@ de acesso montada no ciclo anterior.
 
 **Enunciado:** O que o atributo `[Authorize]` aplicado a um Controller garante?
 
-- (a) Que o usuário tem perfil de administrador.
-- (b) Que somente requisições autenticadas chegam às actions, sendo as demais
+- (a) Que o usuário autenticado tem perfil de administrador, com acesso irrestrito
+  a todas as actions do Controller.
+- (b) Que a senha do usuário é armazenada de forma criptografada nas tabelas
+  criadas pelo Identity.
+- (c) Que a aplicação passa a responder somente por HTTPS, recusando qualquer
+  requisição feita em texto puro.
+- (d) Que somente requisições autenticadas chegam às actions, sendo as demais
   redirecionadas para a tela de login.
-- (c) Que a senha do usuário é armazenada de forma criptografada.
-- (d) Que a aplicação passa a responder somente por HTTPS.
 
-**Resposta correta: (b).**
+**Resposta correta: (d).**
 
-### Laboratório, ciclos 3 e 4, 20h50 às 21h50
+### Ciclo 3, 20h50 às 21h25: laboratório guiado, parte 1
 
-**Missão no case:** controlar o acesso à Clínica Vida+. Na branch
-`feature/autenticacao`, instalar e configurar o Identity; gerar e aplicar a
-migration das tabelas de identidade; disponibilizar registro, login e logout;
-criar os perfis `Recepcao` e `Medico` e semear um usuário administrativo
-inicial; deixar públicas as páginas institucionais e o formulário de solicitação
-de agendamento; proteger o cadastro de pacientes e a agenda com
+**Missão no case:** controlar o acesso à Clínica Vida+.
+
+Parte guiada: na branch `feature/autenticacao`, instalar e configurar o Identity,
+gerar e aplicar a migration das tabelas de identidade e disponibilizar registro,
+login e logout, com o professor conduzindo a configuração.
+
+### Ciclo 4, 21h25 às 21h50: laboratório, parte 2, e entregável
+
+Sozinho, criar os perfis `Recepcao` e `Medico` e semear um usuário
+administrativo inicial; deixar públicas as páginas institucionais e o formulário
+de solicitação de agendamento; proteger o cadastro de pacientes e a agenda com
 `[Authorize(Roles = "Recepcao")]`; e ajustar o menu para exibir apenas o que o
 usuário pode acessar.
 
@@ -1374,22 +1509,32 @@ exclusão, apontando os status corretos.
 **Enunciado:** Qual código de status uma API REST deve devolver ao criar um
 recurso com sucesso?
 
-- (a) 200 OK, sempre, porque a requisição funcionou.
-- (b) 201 Created, com o cabeçalho `Location` apontando para o recurso criado.
-- (c) 204 No Content, porque o corpo da resposta é dispensável.
-- (d) 302 Found, redirecionando para o recurso criado.
+- (a) 200 OK sempre, porque a requisição foi processada com sucesso e o corpo já
+  traz o recurso criado.
+- (b) 204 No Content, porque o cliente conhece os dados que enviou e o corpo da
+  resposta se torna dispensável.
+- (c) 201 Created, com o cabeçalho `Location` apontando para o endereço do recurso
+  recém-criado.
+- (d) 302 Found, redirecionando o cliente para o endereço em que o recurso criado
+  pode ser consultado.
 
-**Resposta correta: (b).**
+**Resposta correta: (c).**
 
-### Laboratório, ciclos 3 e 4, 20h50 às 21h50
+### Ciclo 3, 20h50 às 21h25: laboratório guiado, parte 1
 
-**Missão no case:** expor a agenda da Clínica Vida+ para integração. Na branch
-`feature/api-consultas`, criar `ConsultasApiController` com `GET api/consultas`,
-aceitando filtro por data e por médico, `GET api/consultas/{id}`, `POST
-api/consultas`, `PUT api/consultas/{id}` e `DELETE api/consultas/{id}`; criar os
-DTOs de entrada e de saída; devolver os status corretos em cada caso; testar
-todos os endpoints e registrar as chamadas em um arquivo `ClinicaVida.http` ou
-em uma coleção exportada; e documentar a API no `README.md`.
+**Missão no case:** expor a agenda da Clínica Vida+ para integração.
+
+Parte guiada: na branch `feature/api-consultas`, criar `ConsultasApiController`
+com os DTOs de entrada e de saída e implementar `GET api/consultas`, aceitando
+filtro por data e por médico, e `GET api/consultas/{id}`, junto com o
+professor.
+
+### Ciclo 4, 21h25 às 21h50: laboratório, parte 2, e entregável
+
+Sozinho, implementar `POST api/consultas`, `PUT api/consultas/{id}` e
+`DELETE api/consultas/{id}` devolvendo os status corretos em cada caso; testar
+todos os endpoints registrando as chamadas em um arquivo `ClinicaVida.http` ou em
+uma coleção exportada; e documentar a API no `README.md`.
 
 **Entregável:** `ConsultasApiController` com os cinco endpoints testados e
 documentados, commitado e enviado.
@@ -1447,23 +1592,32 @@ consulta por linha.
 **Enunciado:** Para trazer cada consulta já acompanhada do paciente e do médico
 em um único acesso ao banco, o que se usa?
 
-- (a) Um `foreach` sobre as consultas, buscando paciente e médico um a um.
-- (b) `Include` das propriedades de navegação dentro da própria consulta LINQ.
-- (c) Três consultas separadas ao banco, unidas depois em memória.
-- (d) `AsNoTracking` sozinho, que já traz os dados relacionados.
+- (a) Um `foreach` sobre as consultas, buscando o paciente e o médico de cada uma
+  em acessos separados ao banco.
+- (b) `Include` das propriedades de navegação na própria consulta LINQ, que gera
+  uma única ida ao banco.
+- (c) Três consultas ao banco, uma por entidade, unidas depois em memória com
+  `Select` sobre as listas.
+- (d) `AsNoTracking` sozinho, que ao dispensar o rastreamento já traz junto os
+  dados relacionados.
 
 **Resposta correta: (b).**
 
-### Laboratório, ciclos 3 e 4, 20h50 às 21h50
+### Ciclo 3, 20h50 às 21h25: laboratório guiado, parte 1
 
-**Missão no case:** ligar as quatro entidades da Clínica Vida+. Na branch
-`feature/relacionamentos`, mapear Especialidade um-para-muitos Médico, Médico
-um-para-muitos Consulta e Paciente um-para-muitos Consulta, com propriedades de
-navegação nos dois sentidos; ajustar o comportamento de exclusão para não perder
-histórico de consultas; gerar e aplicar a migration; refazer a agenda do dia com
-`Include`, exibindo nome do paciente, nome do médico e especialidade; criar a
-tela de histórico do paciente; e montar um relatório de consultas por
-especialidade com `GroupBy` e projeção.
+**Missão no case:** ligar as quatro entidades da Clínica Vida+.
+
+Parte guiada: na branch `feature/relacionamentos`, mapear Especialidade
+um-para-muitos Médico, Médico um-para-muitos Consulta e Paciente um-para-muitos
+Consulta, com propriedades de navegação nos dois sentidos, ajustar o
+comportamento de exclusão para não perder histórico de consultas e gerar e
+aplicar a migration, com o professor conduzindo.
+
+### Ciclo 4, 21h25 às 21h50: laboratório, parte 2, e entregável
+
+Sozinho, refazer a agenda do dia com `Include`, exibindo nome do paciente, nome
+do médico e especialidade; criar a tela de histórico do paciente; e montar um
+relatório de consultas por especialidade com `GroupBy` e projeção.
 
 **Entregável:** relacionamentos mapeados e aplicados no banco, com agenda do dia
 e histórico do paciente exibindo dados relacionados, commitado e enviado.
@@ -1526,23 +1680,31 @@ formulário do Bootstrap.
 
 **Enunciado:** Qual é o papel de `@RenderBody()` dentro do `_Layout.cshtml`?
 
-- (a) Renderiza o menu de navegação compartilhado entre as telas.
-- (b) Marca o ponto onde o conteúdo específico de cada View é inserido dentro do
-  layout.
-- (c) Importa as folhas de estilo e os scripts do Bootstrap.
-- (d) Executa a action do Controller correspondente à View atual.
+- (a) Marca o ponto onde o conteúdo específico de cada View é inserido dentro do
+  layout compartilhado.
+- (b) Renderiza o menu de navegação compartilhado, que por isso não precisa ser
+  repetido em cada View.
+- (c) Importa as folhas de estilo e os scripts do Bootstrap declarados no
+  `_ViewImports.cshtml`.
+- (d) Executa a action do Controller correspondente à View atual, devolvendo o
+  modelo já preenchido.
 
-**Resposta correta: (b).**
+**Resposta correta: (a).**
 
-### Laboratório, ciclos 3 e 4, 20h50 às 21h50
+### Ciclo 3, 20h50 às 21h25: laboratório guiado, parte 1
 
-**Missão no case:** padronizar a interface da Clínica Vida+. Na branch
-`feature/layout-bootstrap`, incluir o Bootstrap 5 e ajustar o `_Layout.cshtml`
-com navbar responsiva, área de conteúdo e rodapé; criar as Partial Views de
-mensagens de sucesso e erro, de card de médico e de linha de consulta; aplicar
-grid e componentes a todas as telas do projeto, incluindo o CRUD de pacientes, o
-agendamento e a agenda do dia; e conferir cada tela em largura de celular,
-tablet e desktop.
+**Missão no case:** padronizar a interface da Clínica Vida+.
+
+Parte guiada: na branch `feature/layout-bootstrap`, incluir o Bootstrap 5,
+ajustar o `_Layout.cshtml` com navbar responsiva, área de conteúdo e rodapé, e
+criar as Partial Views de mensagens de sucesso e erro, junto com o professor.
+
+### Ciclo 4, 21h25 às 21h50: laboratório, parte 2, e entregável
+
+Sozinho, criar as Partial Views de card de médico e de linha de consulta;
+aplicar grid e componentes a todas as telas do projeto, incluindo o CRUD de
+pacientes, o agendamento e a agenda do dia; e conferir cada tela em largura de
+celular, tablet e desktop.
 
 **Entregável:** `_Layout.cshtml` e Partial Views com Bootstrap 5 aplicados a
 todas as telas, com interface responsiva e consistente, commitados e enviados.
@@ -1600,23 +1762,32 @@ celular, na frente da turma.
 
 **Enunciado:** Onde deve ficar a senha do banco de dados de produção?
 
-- (a) No `appsettings.json`, que é versionado junto com o código.
-- (b) Fora do repositório, em variável de ambiente ou no serviço de segredos do
+- (a) No `appsettings.json`, que é versionado junto com o código e por isso
+  acompanha cada publicação.
+- (b) No `README.md`, junto das instruções de instalação, para quem precisar
+  publicar a aplicação outra vez.
+- (c) Fora do repositório, em variável de ambiente ou no serviço de segredos do
   provedor de hospedagem.
-- (c) Em um comentário no código, para facilitar a manutenção.
-- (d) No `README.md`, junto com as instruções de instalação.
+- (d) Em um comentário ao lado da connection string, separado do restante da
+  configuração da aplicação.
 
-**Resposta correta: (b).**
+**Resposta correta: (c).**
 
-### Laboratório, ciclos 3 e 4, 20h50 às 21h50
+### Ciclo 3, 20h50 às 21h25: laboratório guiado, parte 1
 
-**Missão no case:** colocar a Clínica Vida+ no ar. Na branch `feature/deploy`,
-separar as configurações por ambiente e remover qualquer segredo do repositório;
-criar a conta no provedor e provisionar a aplicação e o banco MySQL; configurar
-a connection string por variável de ambiente; publicar; aplicar as migrations no
-banco remoto e semear os dados iniciais; testar em produção o cadastro de
-paciente, o agendamento, o login e a API; e registrar no `README.md` a URL
-pública e as instruções de publicação.
+**Missão no case:** colocar a Clínica Vida+ no ar.
+
+Parte guiada, com o professor acompanhando cada etapa: na branch
+`feature/deploy`, separar as configurações por ambiente e remover qualquer
+segredo do repositório; criar a conta no provedor e provisionar a aplicação e o
+banco MySQL.
+
+### Ciclo 4, 21h25 às 21h50: laboratório, parte 2, e entregável
+
+Sozinho, configurar a connection string por variável de ambiente; publicar;
+aplicar as migrations no banco remoto e semear os dados iniciais; testar em
+produção o cadastro de paciente, o agendamento, o login e a API; e registrar no
+`README.md` a URL pública e as instruções de publicação.
 
 **Entregável:** aplicação publicada, com URL acessível pela internet, banco de
 produção configurado e URL registrada no `README.md`.
@@ -1675,23 +1846,32 @@ cinco tópicos.
 **Enunciado:** Em uma aplicação ASP.NET Core MVC com EF Core, onde deve ficar a
 regra que impede agendar duas consultas para o mesmo médico no mesmo horário?
 
-- (a) Somente no JavaScript da página de agendamento.
-- (b) No servidor, na lógica da aplicação, com apoio de restrição no banco de
-  dados, porque a validação feita no navegador pode ser contornada.
-- (c) Somente na View, escondendo os horários já ocupados.
-- (d) Somente no CSS, desabilitando visualmente os botões de horário.
+- (a) Somente no JavaScript da página de agendamento, que bloqueia o envio do
+  formulário antes de a requisição sair do navegador.
+- (b) Somente na View, escondendo da lista os horários que já estão ocupados por
+  outra consulta marcada com o mesmo médico.
+- (c) Somente no banco de dados, com uma restrição de unicidade que rejeita a
+  segunda tentativa de gravar o mesmo horário.
+- (d) No servidor, na lógica da aplicação e com apoio de restrição no banco, porque
+  a validação feita no navegador pode ser contornada.
 
-**Resposta correta: (b).**
+**Resposta correta: (d).**
 
-### Laboratório, ciclos 3 e 4, 20h50 às 21h50
+### Ciclo 3, 20h50 às 21h25: laboratório guiado, parte 1
 
-**Missão no case:** entregar e apresentar a Clínica Vida+. Rodar o checklist
-final de entrega, aplicação publicada respondendo, repositório com histórico de
-commits do aluno, `README.md` com descrição, instruções de execução e URL do
-deploy, e banco com dados de demonstração; corrigir as pendências encontradas;
-integrar as branches remanescentes à `main`; e apresentar o projeto em cinco
-minutos, com dois minutos de arguição, seguindo o roteiro do Ciclo 2. Enquanto
-uma equipe apresenta, as demais preenchem a ficha de observação por critério.
+**Missão no case:** entregar e apresentar a Clínica Vida+.
+
+Parte guiada: rodar com o professor o checklist final de entrega, aplicação
+publicada respondendo, repositório com histórico de commits do aluno,
+`README.md` com descrição, instruções de execução e URL do deploy, e banco com
+dados de demonstração; corrigir as pendências encontradas; e integrar as branches
+remanescentes à `main`.
+
+### Ciclo 4, 21h25 às 21h50: laboratório, parte 2, e entregável
+
+Apresentar o projeto em cinco minutos, com dois minutos de arguição, seguindo o
+roteiro montado no Ciclo 2. Enquanto uma equipe apresenta, as demais preenchem a
+ficha de observação por critério.
 
 **Entregável:** apresentação realizada, mais o link do repositório no GitHub e a
 URL do deploy funcional, postados no Google Classroom.
