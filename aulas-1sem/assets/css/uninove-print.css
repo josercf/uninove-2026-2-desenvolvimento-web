@@ -1,0 +1,386 @@
+/* ============================================
+   FIAP Print Styles for Reveal.js PDF Export
+   Mantém o layout e formatação ao imprimir
+   ============================================ */
+
+/* --- Print-PDF Mode (via ?print-pdf) --- */
+.print-pdf .reveal .slides section {
+  height: 720px !important;
+  width: 1280px !important;
+  padding: 20px 60px 60px 60px;
+  box-sizing: border-box;
+  position: relative !important;
+  page-break-after: always;
+  page-break-inside: avoid;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+/* Esconde botão de impressão no PDF */
+.print-pdf #uninove-print-btn,
+.print-pdf .uninove-print-fab {
+  display: none !important;
+}
+
+/* Esconde controles do Reveal no PDF */
+.print-pdf .reveal .controls,
+.print-pdf .reveal .progress,
+.print-pdf .reveal .slide-number {
+  display: none !important;
+}
+
+/* --- Capa --- */
+.print-pdf .reveal .slides section.cover-slide {
+  background: #000000 !important;
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+  color-adjust: exact;
+}
+
+/* --- Slide de Título --- */
+.print-pdf .reveal .slides section.title-slide {
+  background: #ffffff !important;
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+  color-adjust: exact;
+}
+
+.print-pdf .title-slide .top-bar {
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+  color-adjust: exact;
+  background: linear-gradient(90deg, #ED145B 0%, #ED145B 40%, #ccc 40%, #ccc 100%) !important;
+}
+
+.print-pdf .title-slide .title-card {
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+  color-adjust: exact;
+}
+
+.print-pdf .title-slide .title-card::before {
+  background: rgba(0, 0, 0, 0.65) !important;
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+  color-adjust: exact;
+}
+
+.print-pdf .title-slide .lesson-bar {
+  background: #ED145B !important;
+  color: #ffffff !important;
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+  color-adjust: exact;
+}
+
+/* --- Slides de Conteúdo --- */
+.print-pdf .reveal .slides section.content-slide {
+  background: #ffffff !important;
+}
+
+.print-pdf .content-slide .top-bar {
+  background: linear-gradient(90deg, #ED145B 0%, #ED145B 30%, #e0e0e0 30%, #e0e0e0 100%) !important;
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+  color-adjust: exact;
+}
+
+.print-pdf .content-slide .slide-footer .footer-bar,
+.print-pdf .content-slide .slide-footer .footer-page {
+  background: #ED145B !important;
+  color: #ffffff !important;
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+  color-adjust: exact;
+}
+
+/* --- Slide de Seção --- */
+.print-pdf .reveal .slides section.section-slide {
+  background: #ffffff !important;
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+}
+
+.print-pdf .section-slide .top-bar {
+  background: linear-gradient(90deg, #ED145B 0%, #ED145B 30%, #e0e0e0 30%, #e0e0e0 100%) !important;
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+  color-adjust: exact;
+}
+
+.print-pdf .section-slide .slide-footer .footer-page {
+  background: #ED145B !important;
+  color: #ffffff !important;
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+  color-adjust: exact;
+}
+
+/* --- Slide de Intervalo --- */
+.print-pdf .reveal .slides section.break-slide {
+  background: #1a1a1a !important;
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+  color-adjust: exact;
+}
+
+.print-pdf .break-slide h2 {
+  color: #ffffff !important;
+}
+
+.print-pdf .break-slide p {
+  color: #ED145B !important;
+}
+
+/* --- Slide de Encerramento --- */
+.print-pdf .reveal .slides section.end-slide {
+  background: #000000 !important;
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+  color-adjust: exact;
+}
+
+.print-pdf .end-slide .copyright {
+  color: #888888 !important;
+}
+
+/* --- Accent Bars --- */
+.print-pdf .accent-bar {
+  background: #ED145B !important;
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+  color-adjust: exact;
+}
+
+/* --- Concept Cards --- */
+.print-pdf .concept-card {
+  background: #f5f5f5 !important;
+  border-left: 4px solid #ED145B !important;
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+  color-adjust: exact;
+}
+
+/* --- Tabelas --- */
+.print-pdf .reveal table th {
+  background: #1a1a1a !important;
+  color: #ffffff !important;
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+  color-adjust: exact;
+}
+
+.print-pdf .reveal table tr:nth-child(even) td {
+  background: #f5f5f5 !important;
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+  color-adjust: exact;
+}
+
+/* --- Blocos de Código --- */
+.print-pdf .reveal pre {
+  background: #1e1e1e !important;
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+  color-adjust: exact;
+}
+
+.print-pdf .reveal pre code {
+  color: #d4d4d4 !important;
+}
+
+/* --- Callout --- */
+.print-pdf .callout {
+  background: linear-gradient(135deg, #fff5f8 0%, #ffe8ef 100%) !important;
+  border-left: 4px solid #ED145B !important;
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+  color-adjust: exact;
+}
+
+/* --- Side-by-Side --- */
+.print-pdf .side-by-side .side {
+  background: #f5f5f5 !important;
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+  color-adjust: exact;
+}
+
+.print-pdf .side-by-side .side h4 {
+  color: #ED145B !important;
+}
+
+/* --- Flow Diagram --- */
+.print-pdf .flow-diagram .flow-item {
+  background: #1a1a1a !important;
+  color: #ffffff !important;
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+  color-adjust: exact;
+}
+
+.print-pdf .flow-diagram .flow-arrow {
+  color: #ED145B !important;
+}
+
+/* --- Quiz --- */
+.print-pdf .quiz-slide .quiz-container {
+  background: #f5f5f5 !important;
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+  color-adjust: exact;
+}
+
+.print-pdf .quiz-slide .quiz-options li {
+  background: #ffffff !important;
+  border: 2px solid #e0e0e0 !important;
+}
+
+.print-pdf .quiz-slide .quiz-options li .option-letter {
+  background: #ED145B !important;
+  color: #ffffff !important;
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+  color-adjust: exact;
+}
+
+/* --- Exercício --- */
+.print-pdf .exercise-slide .exercise-container {
+  background: linear-gradient(135deg, #1e1e2e 0%, #2d2d3f 100%) !important;
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+  color-adjust: exact;
+}
+
+.print-pdf .exercise-slide .exercise-container h3 {
+  color: #ED145B !important;
+}
+
+.print-pdf .exercise-slide .exercise-steps li::before {
+  background: #ED145B !important;
+  color: #ffffff !important;
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+  color-adjust: exact;
+}
+
+/* --- Fragmentos: mostrar tudo no PDF --- */
+.print-pdf .reveal .slides section .fragment {
+  opacity: 1 !important;
+  visibility: visible !important;
+  transform: none !important;
+}
+
+/* --- Imagens --- */
+.print-pdf .reveal img {
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+  color-adjust: exact;
+}
+
+/* --- Logo --- */
+.print-pdf .uninove-logo-header,
+.print-pdf .uninove-logo-full {
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+  color-adjust: exact;
+}
+
+/* === Botão flutuante de impressão (modo normal) === */
+.uninove-print-fab {
+  position: fixed;
+  bottom: 24px;
+  left: 24px;
+  z-index: 9999;
+  background: #ED145B;
+  color: #ffffff;
+  border: none;
+  border-radius: 50%;
+  width: 48px;
+  height: 48px;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(237, 20, 91, 0.4);
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  line-height: 1;
+}
+
+.uninove-print-fab:hover {
+  background: #c9114d;
+  transform: scale(1.1);
+  box-shadow: 0 6px 18px rgba(237, 20, 91, 0.5);
+}
+
+.uninove-print-fab:active {
+  transform: scale(0.95);
+}
+
+/* Tooltip */
+.uninove-print-fab::after {
+  content: 'Imprimir PDF';
+  position: absolute;
+  left: 56px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: #1a1a1a;
+  color: #ffffff;
+  padding: 6px 12px;
+  border-radius: 4px;
+  font-size: 13px;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 500;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease;
+}
+
+.uninove-print-fab:hover::after {
+  opacity: 1;
+}
+
+/* SVG icon inside button */
+.uninove-print-fab svg {
+  width: 22px;
+  height: 22px;
+  fill: currentColor;
+}
+
+/* --- @media print final overrides --- */
+@media print {
+  body {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+    color-adjust: exact !important;
+  }
+
+  .uninove-print-fab {
+    display: none !important;
+  }
+
+  .reveal .controls,
+  .reveal .progress,
+  .reveal .slide-number {
+    display: none !important;
+  }
+
+  .reveal .slides section {
+    page-break-after: always;
+    page-break-inside: avoid;
+    border: none !important;
+    box-shadow: none !important;
+  }
+}

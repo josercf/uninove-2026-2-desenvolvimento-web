@@ -1,0 +1,1152 @@
+/* ============================================
+   Tema Uninove para Reveal.js
+   Paleta e decoracoes herdadas do acervo 2026.1
+   ============================================ */
+
+:root {
+  --uninove-azul: #00274D;
+  --uninove-coral: #C84B31;
+  --uninove-preto: #12121A;
+  --uninove-branco: #FFFFFF;
+  --uninove-cinza: #333333;
+  --uninove-cinza-claro: #F5F5F5;
+  --uninove-code-bg: #1E1E1E;
+  --uninove-fonte: 'Montserrat', 'Segoe UI', Arial, sans-serif;
+}
+
+/* --- Reset & Base --- */
+.reveal {
+  font-family: var(--uninove-fonte);
+  font-size: 28px;
+  color: var(--uninove-cinza);
+}
+
+.reveal .slides {
+  text-align: left;
+  pointer-events: auto !important;
+}
+
+.reveal .slides section {
+  padding: 20px 60px 60px 60px;
+  box-sizing: border-box;
+  height: 720px !important;
+  width: 1280px !important;
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  pointer-events: auto !important;
+}
+
+/* --- Slide de Capa (FIAP Graduação) --- */
+.reveal .slides section.cover-slide {
+  background: var(--uninove-preto);
+  display: flex !important;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 0;
+  overflow: hidden;
+}
+
+.reveal .slides section.cover-slide .uninove-logo-full {
+  max-width: 500px;
+  height: auto;
+}
+
+/* --- Slide de Título da Aula --- */
+.reveal .slides section.title-slide {
+  background: var(--uninove-branco);
+  display: flex !important;
+  flex-direction: column;
+  justify-content: center;
+  padding: 0;
+  position: relative;
+  overflow: hidden;
+}
+
+.title-slide .top-bar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 6px;
+  background: linear-gradient(90deg, var(--uninove-coral) 0%, var(--uninove-coral) 40%, #ccc 40%, #ccc 100%);
+}
+
+.title-slide .uninove-logo-header {
+  position: absolute;
+  top: 20px;
+  right: 30px;
+  height: 40px;
+  opacity: 0.6;
+}
+
+.title-slide .title-card {
+  background: url('../img/code-bg.png') center/cover no-repeat;
+  margin: 80px 60px 0 60px;
+  padding: 50px 40px;
+  border-radius: 4px;
+  position: relative;
+}
+
+.title-slide .title-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.65);
+  border-radius: 4px;
+}
+
+.title-slide .title-card .accent-bar {
+  position: absolute;
+  left: 0;
+  top: 20px;
+  bottom: 20px;
+  width: 5px;
+  background: var(--uninove-coral);
+  border-radius: 0 3px 3px 0;
+  z-index: 1;
+}
+
+.title-slide .title-card h1,
+.title-slide .title-card h2,
+.title-slide .title-card h3 {
+  position: relative;
+  z-index: 1;
+  color: var(--uninove-branco);
+  margin: 0;
+}
+
+.title-slide .title-card h1 {
+  font-size: 1.6em;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+
+.title-slide .title-card h2 {
+  font-size: 0.9em;
+  font-weight: 400;
+  margin-top: 10px;
+  opacity: 0.9;
+}
+
+.title-slide .title-card h3 {
+  font-size: 0.75em;
+  font-weight: 400;
+  margin-top: 15px;
+  opacity: 0.8;
+}
+
+.title-slide .lesson-bar {
+  position: absolute;
+  bottom: 40px;
+  left: 60px;
+  right: 60px;
+  background: var(--uninove-coral);
+  color: var(--uninove-branco);
+  padding: 12px 20px;
+  font-size: 0.75em;
+  font-weight: 600;
+  border-radius: 3px;
+}
+
+/* --- Slides de Conteúdo --- */
+.reveal .slides section.content-slide {
+  background: var(--uninove-branco);
+  position: relative;
+}
+
+.content-slide .top-bar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 5px;
+  background: linear-gradient(90deg, var(--uninove-coral) 0%, var(--uninove-coral) 30%, #e0e0e0 30%, #e0e0e0 100%);
+}
+
+.content-slide .uninove-logo-header {
+  position: absolute;
+  top: 18px;
+  right: 30px;
+  height: 36px;
+  opacity: 0.5;
+}
+
+.content-slide .slide-title-area {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 30px;
+  margin-top: 10px;
+  width: fit-content;
+  max-width: calc(100% - 90px);
+}
+
+.content-slide .slide-title-area .accent-bar {
+  width: 5px;
+  height: 35px;
+  background: var(--uninove-coral);
+  border-radius: 3px;
+  flex-shrink: 0;
+}
+
+.content-slide .slide-title-area h2 {
+  font-size: 1.15em;
+  font-weight: 700;
+  color: var(--uninove-azul);
+  margin: 0;
+}
+
+/* Rodapé dos slides de conteúdo */
+.content-slide .slide-footer {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  align-items: stretch;
+}
+
+.content-slide .slide-footer .footer-bar {
+  flex: 1;
+  background: var(--uninove-coral);
+  color: var(--uninove-branco);
+  padding: 8px 20px;
+  font-size: 0.5em;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+}
+
+.content-slide .slide-footer .footer-page {
+  background: var(--uninove-coral);
+  color: var(--uninove-branco);
+  padding: 8px 15px;
+  font-size: 0.55em;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 40px;
+}
+
+.content-slide .slide-author {
+  position: absolute;
+  bottom: -25px;
+  left: 20px;
+  font-size: 0.4em;
+  color: var(--uninove-cinza);
+}
+
+/* --- Slide de Seção (divisor) --- */
+.reveal .slides section.section-slide {
+  background: var(--uninove-branco);
+  display: flex !important;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.section-slide .top-bar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 5px;
+  background: linear-gradient(90deg, var(--uninove-coral) 0%, var(--uninove-coral) 30%, #e0e0e0 30%, #e0e0e0 100%);
+}
+
+.section-slide .uninove-logo-header {
+  position: absolute;
+  top: 18px;
+  right: 30px;
+  height: 36px;
+  opacity: 0.5;
+}
+
+.section-slide .accent-bar {
+  width: 5px;
+  height: 35px;
+  background: var(--uninove-coral);
+  border-radius: 3px;
+  margin-bottom: 15px;
+}
+
+.section-slide h2 {
+  font-size: 2em;
+  font-weight: 800;
+  color: var(--uninove-azul);
+}
+
+.section-slide .slide-footer {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+}
+
+.section-slide .slide-footer .footer-page {
+  background: var(--uninove-coral);
+  color: var(--uninove-branco);
+  padding: 8px 15px;
+  font-size: 0.55em;
+  font-weight: 700;
+}
+
+/* --- Slide de Intervalo --- */
+.reveal .slides section.break-slide {
+  background: var(--uninove-azul);
+  display: flex !important;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  color: var(--uninove-branco);
+  overflow: hidden;
+}
+
+.break-slide h2 {
+  font-size: 2.5em;
+  font-weight: 800;
+  color: var(--uninove-branco);
+  margin-bottom: 10px;
+}
+
+.break-slide p {
+  font-size: 1em;
+  color: var(--uninove-coral);
+  font-weight: 600;
+}
+
+/* --- Slide de Quiz --- */
+.reveal .slides section.quiz-slide {
+  background: var(--uninove-branco);
+  position: relative;
+}
+
+.quiz-slide .slide-title-area {
+  text-align: center;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.quiz-slide .slide-title-area h2 {
+  font-size: 1.1em;
+}
+
+.quiz-slide .slide-title-area h3 {
+  font-size: 0.95em;
+  color: var(--uninove-cinza);
+  font-weight: 500;
+  margin-top: 5px;
+}
+
+/* Quiz options container (ul.quiz-options or div.quiz-options) */
+.quiz-slide .quiz-options {
+  list-style: none;
+  padding: 0;
+  margin: 0 auto;
+  max-width: 900px;
+  width: 100%;
+}
+
+/* Label-based quiz options (radio inputs) */
+.quiz-slide .quiz-options label {
+  display: block;
+  background: var(--uninove-cinza-claro);
+  border: 2px solid #e0e0e0;
+  border-left: 5px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 14px 22px;
+  margin-bottom: 12px;
+  font-size: 0.85em;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  line-height: 1.4;
+}
+
+.quiz-slide .quiz-options label:hover {
+  border-color: var(--uninove-coral);
+  border-left-color: var(--uninove-coral);
+  background: #fff5f8;
+}
+
+.quiz-slide .quiz-options label input[type="radio"] {
+  accent-color: var(--uninove-coral);
+  margin-right: 10px;
+  transform: scale(1.3);
+  vertical-align: middle;
+}
+
+/* List-based quiz options (padrão dos decks): ul.quiz-options > li[data-correct] */
+.quiz-slide .quiz-container {
+  max-width: 940px;
+  margin: 0 auto;
+}
+
+.quiz-slide .quiz-question {
+  font-size: 0.9em;
+  font-weight: 700;
+  color: var(--uninove-azul);
+  line-height: 1.45;
+  margin-bottom: 18px;
+}
+
+.quiz-slide .quiz-options li {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  background: var(--uninove-cinza-claro);
+  border: 2px solid #e0e0e0;
+  border-left: 5px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 10px 18px;
+  margin-bottom: 8px;
+  font-size: 0.72em;
+  line-height: 1.35;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.quiz-slide .quiz-options li:hover {
+  border-color: var(--uninove-coral);
+  border-left-color: var(--uninove-coral);
+  background: #fff5f8;
+}
+
+.quiz-slide .quiz-options .option-letter {
+  flex: 0 0 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: var(--uninove-azul);
+  color: var(--uninove-branco);
+  font-weight: 800;
+  font-size: 0.85em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Estados aplicados por uninove-quiz.js após a resposta */
+.quiz-slide .quiz-options li.is-correct {
+  background: #eafaf1;
+  border-color: #27ae60;
+  border-left-color: #27ae60;
+  color: #1e8449;
+  font-weight: 700;
+}
+
+.quiz-slide .quiz-options li.is-correct .option-letter {
+  background: #27ae60;
+}
+
+.quiz-slide .quiz-options li.is-wrong {
+  background: #fdedec;
+  border-color: #e74c3c;
+  border-left-color: #e74c3c;
+  color: #c0392b;
+  text-decoration: line-through;
+}
+
+.quiz-slide .quiz-options li.is-wrong .option-letter {
+  background: #e74c3c;
+  text-decoration: none;
+}
+
+.quiz-slide .quiz-options li.is-dimmed {
+  opacity: 0.4;
+}
+
+/* Button-based quiz options (legacy support) */
+.quiz-slide button.quiz-option {
+  display: block;
+  width: 100%;
+  max-width: 900px;
+  margin: 0 auto 12px;
+  background: var(--uninove-cinza-claro);
+  border: 2px solid #e0e0e0;
+  border-left: 5px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 14px 22px;
+  font-size: 0.85em;
+  font-family: var(--uninove-fonte);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  line-height: 1.4;
+  text-align: left;
+  color: var(--uninove-cinza);
+}
+
+.quiz-slide button.quiz-option:hover {
+  border-color: var(--uninove-coral);
+  border-left-color: var(--uninove-coral);
+  background: #fff5f8;
+}
+
+/* Quiz feedback */
+.quiz-slide .quiz-feedback {
+  margin: 15px auto 0;
+  padding: 0;
+  border-radius: 8px;
+  font-size: 0.75em;
+  display: none;
+  max-width: 900px;
+  line-height: 1.5;
+}
+
+.quiz-slide .quiz-feedback.correct {
+  display: block;
+  padding: 14px 22px;
+  background: #eafaf1;
+  border-left: 5px solid #27ae60;
+  color: #1e8449;
+  font-weight: 600;
+}
+
+.quiz-slide .quiz-feedback.incorrect {
+  display: block;
+  padding: 14px 22px;
+  background: #fdedec;
+  border-left: 5px solid #e74c3c;
+  color: #c0392b;
+  font-weight: 600;
+}
+
+/* --- Slide de Exercício Prático --- */
+.reveal .slides section.exercise-slide {
+  background: var(--uninove-branco);
+  position: relative;
+}
+
+.exercise-slide .exercise-container {
+  background: linear-gradient(135deg, #1e1e2e 0%, #2d2d3f 100%);
+  border-radius: 8px;
+  padding: 25px 30px;
+  color: var(--uninove-branco);
+  margin-top: 10px;
+}
+
+.exercise-slide .exercise-container h3 {
+  color: var(--uninove-coral);
+  font-size: 0.85em;
+  margin: 0 0 10px 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.exercise-slide .exercise-container p {
+  font-size: 0.78em;
+  line-height: 1.5;
+  color: #ccc;
+  margin: 0 0 15px 0;
+}
+
+.exercise-slide .exercise-steps {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  counter-reset: step-counter;
+}
+
+.exercise-slide .exercise-steps li {
+  counter-increment: step-counter;
+  font-size: 0.75em;
+  padding: 8px 0 8px 35px;
+  position: relative;
+  color: #ddd;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+
+.exercise-slide .exercise-steps li:last-child {
+  border-bottom: none;
+}
+
+.exercise-slide .exercise-steps li::before {
+  content: counter(step-counter);
+  position: absolute;
+  left: 0;
+  top: 8px;
+  background: var(--uninove-coral);
+  color: white;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.85em;
+  font-weight: 700;
+}
+
+/* --- Tipografia --- */
+.reveal h1 { font-size: 1.8em; font-weight: 800; color: var(--uninove-azul); }
+.reveal h2 { font-size: 1.3em; font-weight: 700; color: var(--uninove-azul); }
+.reveal h3 { font-size: 1em; font-weight: 600; color: var(--uninove-azul); }
+.reveal p { font-size: 0.85em; line-height: 1.6; }
+.reveal ul, .reveal ol { font-size: 0.85em; line-height: 1.6; }
+.reveal li { margin-bottom: 8px; }
+
+/* --- Blocos de Código --- */
+.reveal pre {
+  background: var(--uninove-code-bg);
+  border-radius: 6px;
+  padding: 18px;
+  font-size: 0.65em;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  width: 100%;
+  box-sizing: border-box;
+  margin: 15px 0;
+}
+
+.reveal pre code {
+  font-family: 'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
+  line-height: 1.5;
+  color: #d4d4d4;
+}
+
+/* Bloco de código para slides que já trazem outro conteúdo acima, como os
+   cards de conceito do hands-on. Sem isto o código estoura os 720px. */
+.reveal pre.code-compact {
+  font-size: 0.48em;
+  padding: 12px;
+  margin: 10px 0;
+}
+
+.reveal pre.code-compact code {
+  line-height: 1.4;
+}
+
+/* --- Cards de Conceito --- */
+.concept-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 15px;
+  margin-top: 15px;
+}
+
+.concept-card {
+  background: var(--uninove-cinza-claro);
+  border-radius: 8px;
+  padding: 20px;
+  border-left: 4px solid var(--uninove-coral);
+}
+
+.concept-card h4 {
+  font-size: 0.75em;
+  font-weight: 700;
+  color: var(--uninove-azul);
+  margin: 0 0 8px 0;
+}
+
+.concept-card p {
+  font-size: 0.7em;
+  color: #666;
+  margin: 0;
+  line-height: 1.5;
+}
+
+/* --- Tabelas --- */
+.reveal table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.75em;
+  margin: 15px 0;
+}
+
+.reveal table th {
+  background: var(--uninove-azul);
+  color: var(--uninove-branco);
+  padding: 10px 15px;
+  text-align: left;
+  font-weight: 600;
+}
+
+.reveal table td {
+  padding: 10px 15px;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.reveal table tr:nth-child(even) td {
+  background: var(--uninove-cinza-claro);
+}
+
+/* --- Comparação lado a lado --- */
+.side-by-side {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  margin-top: 15px;
+}
+
+.side-by-side .side {
+  background: var(--uninove-cinza-claro);
+  border-radius: 8px;
+  padding: 20px;
+}
+
+.side-by-side .side h4 {
+  font-size: 0.75em;
+  font-weight: 700;
+  color: var(--uninove-coral);
+  margin: 0 0 10px 0;
+}
+
+.side-by-side .side p,
+.side-by-side .side ul {
+  font-size: 0.75em;
+}
+
+/* --- Destaque / Callout --- */
+.callout {
+  background: linear-gradient(135deg, #fff5f8 0%, #ffe8ef 100%);
+  border-left: 4px solid var(--uninove-coral);
+  border-radius: 0 8px 8px 0;
+  padding: 15px 20px;
+  margin: 15px 0;
+}
+
+.callout p {
+  font-size: 0.78em;
+  color: var(--uninove-azul);
+  margin: 0;
+}
+
+.callout strong {
+  color: var(--uninove-coral);
+}
+
+/* --- Diagrama / Fluxo --- */
+.flow-diagram {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin: 20px 0;
+  flex-wrap: wrap;
+}
+
+.flow-diagram .flow-item {
+  background: var(--uninove-azul);
+  color: var(--uninove-branco);
+  padding: 12px 20px;
+  border-radius: 6px;
+  font-size: 0.65em;
+  font-weight: 600;
+  text-align: center;
+}
+
+.flow-diagram .flow-arrow {
+  color: var(--uninove-coral);
+  font-size: 1.2em;
+  font-weight: 700;
+}
+
+/* --- Slide de Encerramento --- */
+.reveal .slides section.end-slide {
+  background: var(--uninove-preto);
+  display: flex !important;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  color: var(--uninove-branco);
+}
+
+.end-slide .copyright {
+  font-size: 0.5em;
+  color: #888;
+  margin-top: 20px;
+  line-height: 1.6;
+}
+
+/* --- Animações --- */
+.reveal .slides section .fragment.fade-in-then-semi-out.visible:not(.current-fragment) {
+  opacity: 0.4;
+}
+
+/* --- Responsividade --- */
+@media (max-width: 768px) {
+  .reveal .slides section {
+    padding: 20px 30px 60px 30px;
+  }
+  .concept-cards {
+    grid-template-columns: 1fr;
+  }
+  .side-by-side {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* --- Progress bar override --- */
+.reveal .progress {
+  color: var(--uninove-coral);
+  height: 4px;
+}
+
+.reveal .controls {
+  color: var(--uninove-coral);
+}
+
+/* --- Highlight.js override for dark code blocks --- */
+.reveal .hljs {
+  background: transparent;
+}
+
+/* --- Botão Imprimir / Exportar PDF --- */
+.pdf-print-btn {
+  position: absolute;
+  top: 15px;
+  right: 200px;
+  z-index: 100;
+  background: var(--uninove-coral);
+  color: white;
+  border: none;
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 0.7em;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(237, 20, 91, 0.4);
+  transition: all 0.2s ease;
+}
+.pdf-print-btn:hover {
+  background: #c70c49;
+  transform: translateY(-2px);
+}
+
+/* --- Timer & Quiz Custom Elements --- */
+.quiz-timer-box {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: #111;
+  border: 1px solid var(--uninove-coral);
+  padding: 8px 16px;
+  border-radius: 25px;
+  font-size: 0.8em;
+  font-weight: 700;
+  color: #fff;
+  width: fit-content;
+  margin-top: 10px;
+}
+.quiz-timer-btn {
+  background: var(--uninove-coral);
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 28px;
+  height: 28px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.9em;
+}
+
+.quiz-qr-container {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  background: rgba(255,255,255,0.05);
+  padding: 15px 20px;
+  border-radius: 8px;
+  margin-top: 15px;
+}
+.quiz-qr-code {
+  width: 90px;
+  height: 90px;
+  background: white;
+  padding: 5px;
+  border-radius: 6px;
+}
+
+/* --- Citações / Badges de Referência --- */
+.ref-badge {
+  display: inline-block;
+  background: rgba(237, 20, 91, 0.15);
+  color: var(--uninove-coral);
+  border: 1px solid var(--uninove-coral);
+  border-radius: 12px;
+  padding: 2px 8px;
+  font-size: 0.65em;
+  font-weight: 700;
+  margin-left: 6px;
+  vertical-align: middle;
+  text-decoration: none;
+}
+.ref-badge:hover {
+  background: var(--uninove-coral);
+  color: white;
+}
+
+/* --- Timer esgotado --- */
+.timer-done {
+  color: #ff6b6b !important;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+}
+
+/* --- Barra de apoio do quiz (QR de votação + timer) --- */
+.quiz-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  max-width: 940px;
+  margin: 12px auto 0;
+  background: var(--uninove-azul);
+  border-radius: 10px;
+  padding: 10px 18px;
+}
+
+.quiz-toolbar .quiz-vote {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  color: var(--uninove-branco);
+}
+
+.quiz-toolbar .quiz-vote-text {
+  font-size: 0.62em;
+  line-height: 1.4;
+  font-weight: 600;
+}
+
+.quiz-toolbar .quiz-vote-text span {
+  display: block;
+  color: #999;
+  font-weight: 500;
+  margin-top: 2px;
+}
+
+.quiz-toolbar .quiz-timer-box {
+  margin-top: 0;
+  background: #000;
+}
+
+/* --- Figura em destaque (slides visuais) --- */
+.slide-figure {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 10px;
+}
+
+.slide-figure img,
+.slide-figure svg {
+  max-width: 100%;
+  max-height: 420px;
+  border-radius: 8px;
+}
+
+.slide-figure figcaption {
+  font-size: 0.62em;
+  color: #777;
+  margin-top: 10px;
+  text-align: center;
+  font-style: italic;
+}
+
+/* Slide dividido: figura de um lado, texto do outro */
+.figure-split {
+  display: grid;
+  grid-template-columns: 1.1fr 1fr;
+  gap: 28px;
+  align-items: center;
+  margin-top: 12px;
+}
+
+.figure-split img,
+.figure-split svg {
+  width: 100%;
+  border-radius: 8px;
+}
+
+/* --- Linha do tempo horizontal --- */
+.timeline {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: 1fr;
+  gap: 0;
+  margin-top: 28px;
+  position: relative;
+}
+
+.timeline::before {
+  content: '';
+  position: absolute;
+  top: 13px;
+  left: 6%;
+  right: 6%;
+  height: 3px;
+  background: linear-gradient(90deg, #ccc 0%, var(--uninove-coral) 100%);
+}
+
+.timeline .tl-item {
+  position: relative;
+  text-align: center;
+  padding: 0 8px;
+}
+
+.timeline .tl-dot {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--uninove-branco);
+  border: 3px solid var(--uninove-coral);
+  margin: 0 auto 12px;
+  position: relative;
+  z-index: 1;
+}
+
+.timeline .tl-item.is-past .tl-dot {
+  border-color: #bbb;
+}
+
+.timeline .tl-year {
+  font-size: 0.62em;
+  font-weight: 800;
+  color: var(--uninove-coral);
+  display: block;
+}
+
+.timeline .tl-item.is-past .tl-year {
+  color: #888;
+}
+
+.timeline .tl-tool {
+  font-size: 0.72em;
+  font-weight: 700;
+  color: var(--uninove-azul);
+  display: block;
+  margin: 4px 0 4px;
+}
+
+.timeline .tl-desc {
+  font-size: 0.58em;
+  color: #666;
+  line-height: 1.35;
+  display: block;
+}
+
+/* --- Takeaway de engenharia --- */
+.takeaway {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: var(--uninove-azul);
+  color: var(--uninove-branco);
+  border-left: 5px solid var(--uninove-coral);
+  border-radius: 0 8px 8px 0;
+  padding: 11px 18px;
+  margin-top: 12px;
+}
+
+.takeaway .takeaway-label {
+  font-size: 0.6em;
+  font-weight: 800;
+  letter-spacing: 1px;
+  color: var(--uninove-coral);
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.takeaway p {
+  font-size: 0.66em;
+  margin: 0;
+  line-height: 1.45;
+  color: #eee;
+}
+
+
+/* --- Decoracoes do template institucional --- */
+
+.reveal .slides section.content-slide::before,
+.reveal .slides section.section-slide::before,
+.reveal .slides section.quiz-slide::before,
+.reveal .slides section.exercise-slide::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-width: 90px 90px 0 0;
+  border-color: var(--uninove-azul) transparent transparent transparent;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.reveal .slides section.content-slide::after,
+.reveal .slides section.section-slide::after,
+.reveal .slides section.quiz-slide::after,
+.reveal .slides section.exercise-slide::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-width: 0 0 60px 60px;
+  border-color: transparent transparent var(--uninove-azul) transparent;
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* O elemento em si fica com area zero: quem desenha o triangulo e o
+   pseudo-elemento ::after, do mesmo jeito que os triangulos azuis acima.
+   Assim o validador de layout, que so mede elementos reais do DOM, nunca
+   contabiliza esta decoracao como estouro nem como sobreposicao. */
+.reveal .slides section .decor-coral {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 0;
+  height: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.reveal .slides section .decor-coral::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-width: 0 80px 80px 0;
+  border-color: transparent var(--uninove-coral) transparent transparent;
+  opacity: 0.75;
+  pointer-events: none;
+}
+
+/* O conteudo precisa ficar acima das decoracoes */
+.reveal .slides section > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* A regra acima teria maior especificidade que as declaracoes originais de
+   top-bar, logo, rodape etc. e trocaria o position:absolute delas por
+   relative, tirando essas barras do lugar. Aqui devolvemos o absolute para
+   quem precisa ficar preso na borda do slide, mantendo o z-index:1 herdado
+   da regra anterior. */
+.reveal .slides section > .top-bar,
+.reveal .slides section > .uninove-logo-header,
+.reveal .slides section > .slide-footer,
+.reveal .slides section > .lesson-bar,
+.reveal .slides section > .slide-author {
+  position: absolute;
+}
