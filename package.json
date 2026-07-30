@@ -1,0 +1,13 @@
+{
+  "name": "uninove-2026-2-desenvolvimento-web",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Acervo didatico da disciplina Desenvolvimento Web, Uninove 2026.2",
+  "type": "module",
+  "scripts": {
+    "test": "node --test tests/"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

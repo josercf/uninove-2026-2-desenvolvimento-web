@@ -1,0 +1,20 @@
+# Sistema
+.DS_Store
+Thumbs.db
+
+# Node
+node_modules/
+
+# .NET, gerado pelos labs
+bin/
+obj/
+*.user
+appsettings.Development.json
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+
+# Saída de validação
+shots/
