@@ -62,7 +62,7 @@ Cada `aulaXX.html` é autocontido, mede exatamente 1280x720 e é inicializado co
 `center: false, margin: 0`. A `section` do Reveal tem altura fixa: o conteúdo
 não rola, e o que não couber quebra o slide visualmente sem lançar nenhum erro.
 
-Ordem canônica de slides, em quatro ciclos de aproximadamente 35 minutos:
+Ordem canônica de slides, em quatro ciclos de 35, 35, 35 e 25 minutos:
 
 ```
 capa
@@ -116,14 +116,18 @@ Ver ADR-003 para o raciocínio completo por trás dessa decisão.
   (ano, mês, dia), nunca pelo construtor de string ISO.
 - O workflow publica o repositório inteiro. Qualquer arquivo commitado fica
   público, incluindo o que estiver fora de `aulas-1sem/`.
-- O remote deste repositório usa o alias de host `github.com-josercf`, definido
-  no `~/.ssh/config`. Um `git push` simples funciona sem nenhum ajuste. Nunca
-  usar `-F /dev/null` no `GIT_SSH_COMMAND` aqui: isso faz o SSH ignorar o
-  próprio `~/.ssh/config` e o alias deixa de resolver. O acervo da FIAP é o
-  caso oposto: lá o remote usa o host `github.com` normal, cujo alias padrão
-  autentica como outro usuário, então o push exige forçar a identidade
-  explicitamente, sem `-F /dev/null`: `GIT_SSH_COMMAND='ssh -i
-  ~/.ssh/id_ed25519_josercf -o IdentitiesOnly=yes' git push`.
+- O comando de push correto depende do repositório, porque cada um usa um host
+  SSH diferente. Neste repositório (Uninove), o remote usa o alias de host
+  `github.com-josercf`, que só existe dentro do `~/.ssh/config`; um `git push`
+  simples já autentica como `josercf` e é o comando a usar aqui. Usar
+  `-F /dev/null` neste repositório faz o SSH ignorar o próprio `~/.ssh/config`,
+  o alias deixa de resolver e o push falha por hostname não encontrado (foi o
+  que aconteceu na Task 1). Já o acervo da FIAP é o caso oposto: o remote usa o
+  host `github.com` normal, onde o `~/.ssh/config` mapeia essa entrada para a
+  identidade `canaldoovidio`. Ali vale a diretiva global do professor, com
+  `-F /dev/null` como forma mais defensiva de forçar a identidade `josercf`:
+  `GIT_SSH_COMMAND='ssh -i /Users/joseromualdocostafilho/.ssh/id_ed25519_josercf
+  -o IdentitiesOnly=yes -F /dev/null' git push`.
 - `.claude/settings.local.json` existe em disco mas não é versionado, por um
   gitignore global do usuário (`**/.claude/settings.local.json`). Quem clonar
   este repositório numa máquina nova precisa recriá-lo manualmente; ele não

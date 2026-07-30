@@ -15,7 +15,7 @@ aula acabava perdendo tempo recuperando uma base que deveria ter chegado pronta.
 
 Adotar um case integrador único, a Clínica Vida+, um sistema de agendamento de
 consultas que evolui aula a aula ao longo do semestre. O encontro é estruturado
-em quatro ciclos de aproximadamente 35 minutos cada, alternando conceito,
+em quatro ciclos de 35, 35, 35 e 25 minutos, alternando conceito,
 demonstração e prática, sem nenhuma atividade pré-aula.
 
 ## Motivações
