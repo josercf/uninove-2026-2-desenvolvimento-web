@@ -37,7 +37,7 @@
   pointer-events: auto !important;
 }
 
-/* --- Slide de Capa (FIAP Graduação) --- */
+/* --- Slide de Capa (Uninove Graduação) --- */
 .reveal .slides section.cover-slide {
   background: var(--uninove-preto);
   display: flex !important;
@@ -336,6 +336,10 @@
   text-align: center;
   justify-content: center;
   margin-bottom: 20px;
+  width: fit-content;
+  max-width: calc(100% - 180px);
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .quiz-slide .slide-title-area h2 {
@@ -815,7 +819,7 @@
   font-size: 0.7em;
   font-weight: 700;
   cursor: pointer;
-  box-shadow: 0 2px 8px rgba(237, 20, 91, 0.4);
+  box-shadow: 0 2px 8px rgba(200, 75, 49, 0.4);
   transition: all 0.2s ease;
 }
 .pdf-print-btn:hover {
@@ -872,7 +876,7 @@
 /* --- Citações / Badges de Referência --- */
 .ref-badge {
   display: inline-block;
-  background: rgba(237, 20, 91, 0.15);
+  background: rgba(200, 75, 49, 0.15);
   color: var(--uninove-coral);
   border: 1px solid var(--uninove-coral);
   border-radius: 12px;

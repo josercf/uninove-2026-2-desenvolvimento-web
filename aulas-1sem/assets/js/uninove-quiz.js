@@ -1,5 +1,5 @@
 /**
- * FIAP Quiz System for Reveal.js
+ * Uninove Quiz System for Reveal.js
  * Sistema de quizzes interativos para as aulas
  *
  * Suporta três padrões de markup:

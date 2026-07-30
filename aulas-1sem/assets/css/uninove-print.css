@@ -1,5 +1,5 @@
 /* ============================================
-   FIAP Print Styles for Reveal.js PDF Export
+   Uninove Print Styles for Reveal.js PDF Export
    Mantém o layout e formatação ao imprimir
    ============================================ */
 
@@ -52,7 +52,7 @@
   -webkit-print-color-adjust: exact;
   print-color-adjust: exact;
   color-adjust: exact;
-  background: linear-gradient(90deg, #ED145B 0%, #ED145B 40%, #ccc 40%, #ccc 100%) !important;
+  background: linear-gradient(90deg, var(--uninove-coral) 0%, var(--uninove-coral) 40%, #ccc 40%, #ccc 100%) !important;
 }
 
 .print-pdf .title-slide .title-card {
@@ -69,7 +69,7 @@
 }
 
 .print-pdf .title-slide .lesson-bar {
-  background: #ED145B !important;
+  background: var(--uninove-coral) !important;
   color: #ffffff !important;
   -webkit-print-color-adjust: exact;
   print-color-adjust: exact;
@@ -82,7 +82,7 @@
 }
 
 .print-pdf .content-slide .top-bar {
-  background: linear-gradient(90deg, #ED145B 0%, #ED145B 30%, #e0e0e0 30%, #e0e0e0 100%) !important;
+  background: linear-gradient(90deg, var(--uninove-coral) 0%, var(--uninove-coral) 30%, #e0e0e0 30%, #e0e0e0 100%) !important;
   -webkit-print-color-adjust: exact;
   print-color-adjust: exact;
   color-adjust: exact;
@@ -90,7 +90,7 @@
 
 .print-pdf .content-slide .slide-footer .footer-bar,
 .print-pdf .content-slide .slide-footer .footer-page {
-  background: #ED145B !important;
+  background: var(--uninove-coral) !important;
   color: #ffffff !important;
   -webkit-print-color-adjust: exact;
   print-color-adjust: exact;
@@ -106,14 +106,14 @@
 }
 
 .print-pdf .section-slide .top-bar {
-  background: linear-gradient(90deg, #ED145B 0%, #ED145B 30%, #e0e0e0 30%, #e0e0e0 100%) !important;
+  background: linear-gradient(90deg, var(--uninove-coral) 0%, var(--uninove-coral) 30%, #e0e0e0 30%, #e0e0e0 100%) !important;
   -webkit-print-color-adjust: exact;
   print-color-adjust: exact;
   color-adjust: exact;
 }
 
 .print-pdf .section-slide .slide-footer .footer-page {
-  background: #ED145B !important;
+  background: var(--uninove-coral) !important;
   color: #ffffff !important;
   -webkit-print-color-adjust: exact;
   print-color-adjust: exact;
@@ -136,7 +136,7 @@
 }
 
 .print-pdf .break-slide p {
-  color: #ED145B !important;
+  color: var(--uninove-coral) !important;
 }
 
 /* --- Slide de Encerramento --- */
@@ -156,7 +156,7 @@
 
 /* --- Accent Bars --- */
 .print-pdf .accent-bar {
-  background: #ED145B !important;
+  background: var(--uninove-coral) !important;
   -webkit-print-color-adjust: exact;
   print-color-adjust: exact;
   color-adjust: exact;
@@ -165,7 +165,7 @@
 /* --- Concept Cards --- */
 .print-pdf .concept-card {
   background: #f5f5f5 !important;
-  border-left: 4px solid #ED145B !important;
+  border-left: 4px solid var(--uninove-coral) !important;
   -webkit-print-color-adjust: exact;
   print-color-adjust: exact;
   color-adjust: exact;
@@ -202,7 +202,7 @@
 /* --- Callout --- */
 .print-pdf .callout {
   background: linear-gradient(135deg, #fff5f8 0%, #ffe8ef 100%) !important;
-  border-left: 4px solid #ED145B !important;
+  border-left: 4px solid var(--uninove-coral) !important;
   -webkit-print-color-adjust: exact;
   print-color-adjust: exact;
   color-adjust: exact;
@@ -217,7 +217,7 @@
 }
 
 .print-pdf .side-by-side .side h4 {
-  color: #ED145B !important;
+  color: var(--uninove-coral) !important;
 }
 
 /* --- Flow Diagram --- */
@@ -230,7 +230,7 @@
 }
 
 .print-pdf .flow-diagram .flow-arrow {
-  color: #ED145B !important;
+  color: var(--uninove-coral) !important;
 }
 
 /* --- Quiz --- */
@@ -247,7 +247,7 @@
 }
 
 .print-pdf .quiz-slide .quiz-options li .option-letter {
-  background: #ED145B !important;
+  background: var(--uninove-coral) !important;
   color: #ffffff !important;
   -webkit-print-color-adjust: exact;
   print-color-adjust: exact;
@@ -263,11 +263,11 @@
 }
 
 .print-pdf .exercise-slide .exercise-container h3 {
-  color: #ED145B !important;
+  color: var(--uninove-coral) !important;
 }
 
 .print-pdf .exercise-slide .exercise-steps li::before {
-  background: #ED145B !important;
+  background: var(--uninove-coral) !important;
   color: #ffffff !important;
   -webkit-print-color-adjust: exact;
   print-color-adjust: exact;
@@ -302,14 +302,14 @@
   bottom: 24px;
   left: 24px;
   z-index: 9999;
-  background: #ED145B;
+  background: var(--uninove-coral);
   color: #ffffff;
   border: none;
   border-radius: 50%;
   width: 48px;
   height: 48px;
   cursor: pointer;
-  box-shadow: 0 4px 12px rgba(237, 20, 91, 0.4);
+  box-shadow: 0 4px 12px rgba(200, 75, 49, 0.4);
   transition: all 0.3s ease;
   display: flex;
   align-items: center;
@@ -319,9 +319,9 @@
 }
 
 .uninove-print-fab:hover {
-  background: #c9114d;
+  background: #A63C27;
   transform: scale(1.1);
-  box-shadow: 0 6px 18px rgba(237, 20, 91, 0.5);
+  box-shadow: 0 6px 18px rgba(200, 75, 49, 0.5);
 }
 
 .uninove-print-fab:active {
