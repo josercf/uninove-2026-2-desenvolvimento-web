@@ -83,7 +83,6 @@
             <h4>O professor</h4>
             <ul style="margin:0; padding-left:20px;">
               <li>José Romualdo da Costa Filho.</li>
-              <li>Mestre e Especialista em Engenharia de Software, com atuação em arquiteturas distribuídas.</li>
               <li>Contato: <code>jose.romualdo@uni9.pro.br</code></li>
             </ul>
           </div>
@@ -203,7 +202,7 @@
         <div class="decor-coral"></div>
         <div class="slide-title-area">
           <div class="accent-bar"></div>
-          <h2>Panorama da web: a arquitetura cliente-servidor</h2>
+          <h2>Panorama da web: a arquitetura cliente-servidor <a href="#/ref-slide" class="ref-badge" title="Ver referências">[1]</a></h2>
         </div>
 
         <p style="font-size:0.74em; margin-top:0;">Toda página que você abre é uma conversa entre duas máquinas. O cliente pede, o servidor responde, e o banco de dados guarda o que precisa sobreviver ao fim da conversa.</p>
@@ -422,7 +421,7 @@
         <div class="decor-coral"></div>
         <div class="slide-title-area">
           <div class="accent-bar"></div>
-          <h2>Da cópia de pasta ao Git</h2>
+          <h2>Da cópia de pasta ao Git <a href="#/ref-slide" class="ref-badge" title="Ver referências">[2]</a></h2>
         </div>
 
         <p style="font-size:0.74em; margin-top:0;">A virada decisiva foi sair do modelo <strong>centralizado e síncrono</strong>, com um servidor único que precisa estar no ar, para o <strong>distribuído</strong>, em que cada clone é um repositório completo, com todo o histórico.</p>
@@ -460,6 +459,17 @@
           </div>
         </div>
 
+        <div class="side-by-side" style="margin-top:12px;">
+          <div class="side" style="padding:12px 16px;">
+            <h4 style="margin-bottom:6px;">Centralizado, até 2005</h4>
+            <p style="margin:0; font-size:0.68em;">O histórico mora em um servidor único, que precisa estar no ar. Commitar exige rede, e a queda do servidor para o time inteiro.</p>
+          </div>
+          <div class="side" style="padding:12px 16px;">
+            <h4 style="margin-bottom:6px;">Distribuído, com o Git</h4>
+            <p style="margin:0; font-size:0.68em;">Cada clone é um repositório completo, com todo o histórico. Commit e branch funcionam sem internet, e compartilhar é um passo à parte, o <code>push</code>.</p>
+          </div>
+        </div>
+
         <div class="takeaway">
           <span class="takeaway-label">Takeaway</span>
           <p>O Git venceu porque separou o ato de versionar do ato de compartilhar. Você comita sem internet e sincroniza quando quiser.</p>
@@ -478,7 +488,7 @@
         <div class="decor-coral"></div>
         <div class="slide-title-area">
           <div class="accent-bar"></div>
-          <h2>O que é, de fato, um commit</h2>
+          <h2>O que é, de fato, um commit <a href="#/ref-slide" class="ref-badge" title="Ver referências">[2]</a></h2>
         </div>
 
         <p style="font-size:0.74em; margin-top:0;">Um commit não é a lista de linhas alteradas. É uma <strong>fotografia completa e imutável do projeto inteiro</strong>, endereçada por um hash e ligada ao commit anterior. O diff que você vê na tela é calculado entre duas fotografias; não é o que fica guardado.</p>
@@ -507,7 +517,7 @@
             <text x="150" y="224" font-size="13" fill="#FFFFFF" font-weight="600">docs: identificação</text>
             <text x="150" y="244" font-size="13" fill="#FFFFFF" font-weight="600">do aluno no README</text>
 
-            <rect x="24" y="258" width="412" height="24" rx="4" fill="#2a2a2a"/>
+            <rect x="18" y="258" width="424" height="24" rx="4" fill="#2a2a2a"/>
             <text x="230" y="275" text-anchor="middle" font-size="11" fill="#AAAAAA">mudar qualquer campo muda o hash: o histórico é à prova de adulteração</text>
           </svg>
 
@@ -542,7 +552,7 @@
         <div class="decor-coral"></div>
         <div class="slide-title-area">
           <div class="accent-bar"></div>
-          <h2>O que é, de fato, uma branch</h2>
+          <h2>O que é, de fato, uma branch <a href="#/ref-slide" class="ref-badge" title="Ver referências">[2]</a></h2>
         </div>
 
         <p style="font-size:0.72em; margin-top:0;">Uma branch <strong>não é uma cópia do projeto</strong>: é um ponteiro leve para um commit, por isso criar uma é instantâneo. Pense em linhas do tempo paralelas: do mesmo ponto da história você abre quantas realidades quiser, testa cada uma sem risco, descarta as que falharam e traz de volta só a que funcionou.</p>
@@ -600,7 +610,7 @@
         <div class="decor-coral"></div>
         <div class="slide-title-area">
           <div class="accent-bar"></div>
-          <h2>O ecossistema GitHub</h2>
+          <h2>O ecossistema GitHub <a href="#/ref-slide" class="ref-badge" title="Ver referências">[3]</a></h2>
         </div>
 
         <p style="font-size:0.74em; margin-top:0;">O Git é a ferramenta que roda na sua máquina. O GitHub é a plataforma que hospeda o repositório e acrescenta colaboração em volta dele.</p>
@@ -636,6 +646,8 @@
 
       <!-- ==================== SLIDE 14: QUIZ DE FIXAÇÃO ==================== -->
       <section class="quiz-slide content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
         <div class="decor-coral"></div>
         <div class="slide-title-area"><div class="accent-bar"></div><h2>Quiz de fixação</h2></div>
         <div class="quiz-container">
@@ -692,7 +704,7 @@
         <div class="decor-coral"></div>
         <div class="slide-title-area">
           <div class="accent-bar"></div>
-          <h2>Laboratório, passo 2 de 5: clonar o fork</h2>
+          <h2>Laboratório, passo 2 de 5: clonar o fork <a href="#/ref-slide" class="ref-badge" title="Ver referências">[4]</a></h2>
         </div>
 
         <p style="font-size:0.74em; margin-top:0;">O clone traz o repositório inteiro, com todo o histórico, para a sua máquina. Troque <code>SEU-USUARIO</code> pelo seu nome de usuário do GitHub.</p>
@@ -763,7 +775,7 @@ git config user.email</code></pre>
 
 - Nome completo: Ana Souza
 - RA: 1234567890
-- Turma: quarta-feira
+- Turma: quarta ou quinta, conforme a sua
 - O que espero aprender: publicar minha primeira aplicação web na internet.</code></pre>
 
         <pre class="code-compact"><code class="language-bash" data-trim>git status              # o README aparece como modificado
@@ -846,11 +858,56 @@ git push</code></pre>
           <p>Cliente pede e servidor responde; o commit é uma fotografia imutável encadeada na anterior; e o seu fork é o repositório onde a Clínica Vida+ vai crescer até dezembro.</p>
         </div>
 
-        <p style="font-size:0.6em; color:#777777; margin-top:16px;">Para aprofundar: <strong>Pro Git</strong>, em <code>git-scm.com/book/pt-br/v2</code>, e a documentação da <strong>MDN Web Docs</strong>, em <code>developer.mozilla.org/pt-BR/docs/Web</code>.</p>
+        <p style="font-size:0.64em; color:#555555; margin-top:16px;">Para aprofundar durante a semana: as quatro referências desta aula estão no próximo slide, com o endereço de cada uma.</p>
 
         <div class="slide-footer">
           <div class="footer-bar">01 Fechamento</div>
           <div class="footer-page">20</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 21: REFERÊNCIAS ==================== -->
+      <section id="ref-slide" class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Referências desta aula</h2>
+        </div>
+
+        <p style="font-size:0.72em; margin-top:0;">Os números entre colchetes ao lado dos títulos remetem a esta lista. Tudo aqui é material aberto e em português, para consulta durante a semana.</p>
+
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px 30px; margin-top:6px;">
+          <div class="concept-card">
+            <h4>[1] Fundamentos da web e cliente-servidor</h4>
+            <p style="font-size:0.72em; color:#444444;">MDN WEB DOCS. <em>Documentação de tecnologias da web</em>. Mozilla.<br>
+            <code style="font-size:0.9em;">developer.mozilla.org/pt-BR/docs/Web</code></p>
+          </div>
+          <div class="concept-card">
+            <h4>[2] Git: histórico, commit e branch</h4>
+            <p style="font-size:0.72em; color:#444444;">CHACON, S.; STRAUB, B. <em>Pro Git</em>. 2. ed. Apress, 2014. Edição em português, capítulos 1 a 3.<br>
+            <code style="font-size:0.9em;">git-scm.com/book/pt-br/v2</code></p>
+          </div>
+          <div class="concept-card">
+            <h4>[3] GitHub: fork, Pull Request, Actions e Pages</h4>
+            <p style="font-size:0.72em; color:#444444;">GITHUB. <em>GitHub Docs</em>, documentação oficial da plataforma.<br>
+            <code style="font-size:0.9em;">docs.github.com/pt</code></p>
+          </div>
+          <div class="concept-card">
+            <h4>[4] Referência dos comandos do Git</h4>
+            <p style="font-size:0.72em; color:#444444;">GIT. <em>Git Reference</em>, manual de cada comando usado no laboratório.<br>
+            <code style="font-size:0.9em;">git-scm.com/docs</code></p>
+          </div>
+        </div>
+
+        <div class="callout" style="margin-top:16px;">
+          <p>O repositório-esqueleto do case fica em <code>github.com/josercf/uninove-2026-2-clinica-vida</code>. É dele que sai o fork do laboratório de hoje.</p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">01 Referências</div>
+          <div class="footer-page">21</div>
         </div>
       </section>
 
@@ -891,6 +948,12 @@ git push</code></pre>
     Reveal.initialize({
       width: 1280, height: 720, center: false, margin: 0,
       hash: true, slideNumber: false,
+      // Os chevrons de navegação caem sobre a footer-bar e sobre o triângulo
+      // azul do canto inferior direito; a barra de progresso encosta no rodapé
+      // e parece um segundo rodapé. Nenhum dos dois é usado na projeção.
+      controls: false, progress: false,
+      // Um slide por página no ?print-pdf, para o PDF bater com o deck.
+      pdfMaxPagesPerSlide: 1,
       plugins: [RevealHighlight],
     });
   </script>

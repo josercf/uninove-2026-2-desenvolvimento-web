@@ -617,10 +617,30 @@
   color: #d4d4d4;
 }
 
+/* A JetBrains Mono funde `--` em um traço longo único por ligadura. Num
+   comando de terminal projetado em sala isso vira erro de digitação do
+   aluno: `git --version` seria lido como `git -version`. Desligamos as
+   ligaduras em todo código do acervo, em bloco ou em linha. */
+.reveal pre code,
+.reveal code {
+  font-variant-ligatures: none;
+  font-feature-settings: 'liga' 0, 'clig' 0, 'calt' 0;
+}
+
+/* Comentários dentro dos blocos de código. O tom original do monokai
+   (#75715e sobre #1e1e1e) rende 3,40:1, abaixo do mínimo AA de 4,5:1, e é
+   justamente onde o aluno lê o que cada comando faz. Este tom rende 6,42:1
+   e continua visivelmente mais discreto que o corpo do código (#d4d4d4). */
+.reveal pre code .hljs-comment,
+.reveal pre code .hljs-quote {
+  color: #A6A18B;
+}
+
 /* Bloco de código para slides que já trazem outro conteúdo acima, como os
-   cards de conceito do hands-on. Sem isto o código estoura os 720px. */
+   cards de conceito do hands-on. Sem isto o código estoura os 720px.
+   Piso de legibilidade: 0.6em equivale a 16,8px na projeção. */
 .reveal pre.code-compact {
-  font-size: 0.48em;
+  font-size: 0.6em;
   padding: 12px;
   margin: 10px 0;
 }
