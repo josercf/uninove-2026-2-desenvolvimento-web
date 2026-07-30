@@ -1,0 +1,898 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Aula 01, Apresentação, panorama da web, Git e GitHub | Uninove</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/theme/white.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/highlight/monokai.css">
+  <link rel="stylesheet" href="../assets/css/uninove-theme.css">
+  <link rel="stylesheet" href="../assets/css/uninove-print.css">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+      <!-- ==================== SLIDE 1: CAPA ==================== -->
+      <section class="cover-slide">
+        <img src="../assets/img/uninove-logo.png" alt="Uninove, Universidade Nove de Julho" class="uninove-logo-full"
+             style="max-width:400px; background:#FFFFFF; padding:26px 36px; border-radius:10px;">
+        <div style="margin-top:36px; color:#FFFFFF; font-size:0.95em; font-weight:800; letter-spacing:4px; text-transform:uppercase;">Desenvolvimento Web</div>
+        <div style="margin-top:12px; color:#C84B31; font-size:0.6em; font-weight:700; letter-spacing:3px; text-transform:uppercase;">Graduação, 2026.2</div>
+      </section>
+
+      <!-- ==================== SLIDE 2: TÍTULO ==================== -->
+      <section class="title-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="title-card">
+          <div class="accent-bar"></div>
+          <h1>Desenvolvimento Web</h1>
+          <h2>Apresentação, panorama da web, Git e GitHub</h2>
+          <h3>Prof. José Romualdo<br><span data-data-da-aula="1"></span></h3>
+        </div>
+        <div class="lesson-bar">AULA 01 &nbsp;|&nbsp; Módulo 1, Fundamentos da Web e Front-End</div>
+      </section>
+
+      <!-- ==================== SLIDE 3: AGENDA ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Agenda do encontro de hoje</h2>
+        </div>
+
+        <p style="font-size:0.76em; margin-top:0;">São 150 minutos corridos, em quatro ciclos. Não há intervalo formal: a troca de ciclo é o respiro da aula.</p>
+
+        <table>
+          <thead>
+            <tr><th style="width:190px;">Horário</th><th style="width:200px;">Bloco</th><th>O que acontece</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>19h30 às 20h05</td><td>Ciclo 1</td><td>A disciplina, o panorama da web e o case Clínica Vida+</td></tr>
+            <tr><td>20h05 às 20h40</td><td>Ciclo 2</td><td>Por que versionar, o commit, a branch e o GitHub</td></tr>
+            <tr><td>20h40 às 20h50</td><td>Quiz de fixação</td><td>Uma pergunta sobre o conceito central da aula</td></tr>
+            <tr><td>20h50 às 21h25</td><td>Ciclo 3</td><td>Laboratório guiado: fork, clone e configuração do Git</td></tr>
+            <tr><td>21h25 às 21h50</td><td>Ciclo 4</td><td>Laboratório: o primeiro commit e o push, que é o entregável</td></tr>
+            <tr><td>21h50 às 22h00</td><td>Fechamento</td><td>Revisão das ideias centrais e prévia da Aula 02</td></tr>
+          </tbody>
+        </table>
+
+        <div class="slide-footer">
+          <div class="footer-bar">01 Agenda do encontro</div>
+          <div class="footer-page">3</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 4: PROFESSOR E DISCIPLINA ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Quem fala com vocês e o que vamos fazer</h2>
+        </div>
+
+        <div class="side-by-side" style="margin-top:6px;">
+          <div class="side">
+            <h4>O professor</h4>
+            <ul style="margin:0; padding-left:20px;">
+              <li>José Romualdo da Costa Filho.</li>
+              <li>Mestre e Especialista em Engenharia de Software, com atuação em arquiteturas distribuídas.</li>
+              <li>Contato: <code>jose.romualdo@uni9.pro.br</code></li>
+            </ul>
+          </div>
+          <div class="side">
+            <h4>A disciplina</h4>
+            <ul style="margin:0; padding-left:20px;">
+              <li>20 encontros de 150 minutos, 50 horas-aula.</li>
+              <li>Em agosto você lê uma página pronta; em dezembro você publica na internet uma aplicação web inteira, feita por você.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="flow-diagram" style="margin:22px 0 0 0; font-size:0.85em; gap:8px;">
+          <div class="flow-item">1. Fundamentos e front-end</div>
+          <div class="flow-arrow">&rarr;</div>
+          <div class="flow-item">2. C# e ASP.NET Core MVC</div>
+          <div class="flow-arrow">&rarr;</div>
+          <div class="flow-item">3. Dados e segurança</div>
+          <div class="flow-arrow">&rarr;</div>
+          <div class="flow-item">4. Bootstrap e deploy</div>
+        </div>
+
+        <div class="callout" style="margin-top:20px;">
+          <p><strong>A ementa em uma tela:</strong> fundamentos da web e cliente-servidor, TCP/IP, DNS e HTTP, HTML semântico, CSS responsivo, JavaScript e DOM, C# e ASP.NET Core MVC, Entity Framework Core sobre MySQL, cookies e sessões, AJAX, autenticação, API REST, Bootstrap 5 e publicação em deploy.</p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">01 Apresentação</div>
+          <div class="footer-page">4</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 5: METODOLOGIA ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Como a disciplina funciona</h2>
+        </div>
+
+        <p style="font-size:0.76em; margin-top:0;">A aula é autossuficiente. Tudo o que você precisa para acompanhar chega dentro do próprio encontro.</p>
+
+        <div class="concept-cards" style="grid-template-columns: repeat(3, 1fr); margin-top:10px;">
+          <div class="concept-card">
+            <h4>Sem sala de aula invertida</h4>
+            <p>Não há leitura antecipada nem atividade obrigatória antes do encontro. Nada é cobrado antes de ter sido apresentado em sala.</p>
+          </div>
+          <div class="concept-card">
+            <h4>Aprendizagem em espiral</h4>
+            <p>Nenhum tópico se esgota em uma aula. Cada encontro retoma o anterior e acrescenta uma camada sobre o que já existe.</p>
+          </div>
+          <div class="concept-card">
+            <h4>Um único case</h4>
+            <p>Todo exemplo, laboratório e quiz sai da Clínica Vida+. Não haverá exercícios de tema aleatório.</p>
+          </div>
+        </div>
+
+        <div class="callout" style="margin-top:18px;">
+          <p><strong>O que se espera de você:</strong> estar em sala, porque o entregável nasce dentro da aula e não fora dela; trazer o notebook com o Git instalado; e manter o próprio repositório em dia, commit a commit, semana a semana.</p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">01 Metodologia</div>
+          <div class="footer-page">5</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 6: AVALIAÇÃO ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Avaliação, com os pesos na mesa</h2>
+        </div>
+
+        <div class="side-by-side" style="margin-top:6px;">
+          <div class="side">
+            <h4>Como a média é calculada</h4>
+            <ul style="margin:0; padding-left:20px;">
+              <li>AV1, checkpoints em aula: <strong>40% da AV1</strong>.</li>
+              <li>AV1, prova objetiva: <strong>60% da AV1</strong>.</li>
+              <li>AV2: avaliação institucional, com questões de todas as disciplinas.</li>
+              <li>Média igual a <code>(AV1 + AV2) / 2</code>.</li>
+              <li>Aprovação com <strong>média maior ou igual a 6,0</strong>.</li>
+            </ul>
+          </div>
+          <div class="side">
+            <h4>Critérios do projeto final</h4>
+            <ul style="margin:0; padding-left:20px;">
+              <li>Funcionalidade: <strong>30%</strong>.</li>
+              <li>Código: <strong>25%</strong>.</li>
+              <li>Banco de dados: <strong>20%</strong>.</li>
+              <li>Interface: <strong>15%</strong>.</li>
+              <li>Apresentação: <strong>10%</strong>.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="callout" style="margin-top:16px;">
+          <p><strong>Entrega:</strong> repositório no GitHub com histórico de commits de sua autoria, mais deploy funcional acessível por URL. As atividades serão postadas no Google Classroom assim que as turmas forem configuradas pela instituição.</p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">01 Avaliação</div>
+          <div class="footer-page">6</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 7: PANORAMA E CLIENTE-SERVIDOR ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Panorama da web: a arquitetura cliente-servidor</h2>
+        </div>
+
+        <p style="font-size:0.74em; margin-top:0;">Toda página que você abre é uma conversa entre duas máquinas. O cliente pede, o servidor responde, e o banco de dados guarda o que precisa sobreviver ao fim da conversa.</p>
+
+        <div class="slide-figure" style="margin-top:0;">
+          <svg viewBox="0 0 1140 245" role="img" aria-label="Cliente, servidor e banco de dados trocando requisição e resposta HTTP">
+            <defs>
+              <marker id="setaAzul" markerWidth="10" markerHeight="10" refX="9" refY="5" orient="auto">
+                <path d="M0,0 L10,5 L0,10 Z" fill="#00274D"/>
+              </marker>
+              <marker id="setaCoral" markerWidth="10" markerHeight="10" refX="9" refY="5" orient="auto">
+                <path d="M0,0 L10,5 L0,10 Z" fill="#C84B31"/>
+              </marker>
+              <marker id="setaCinza" markerWidth="10" markerHeight="10" refX="9" refY="5" orient="auto">
+                <path d="M0,0 L10,5 L0,10 Z" fill="#777777"/>
+              </marker>
+            </defs>
+
+            <!-- CLIENTE -->
+            <text x="175" y="26" text-anchor="middle" font-size="19" font-weight="800" fill="#00274D">Cliente</text>
+            <text x="175" y="48" text-anchor="middle" font-size="13" fill="#777777">o navegador do paciente ou da recepção</text>
+            <rect x="30" y="62" width="290" height="160" rx="10" fill="#F5F5F5" stroke="#00274D" stroke-width="2.5"/>
+            <text x="175" y="92" text-anchor="middle" font-size="15" font-weight="800" fill="#C84B31">FRONT-END</text>
+            <rect x="52" y="108" width="82" height="34" rx="6" fill="#00274D"/>
+            <text x="93" y="130" text-anchor="middle" font-size="13" fill="#FFFFFF" font-weight="600">HTML</text>
+            <rect x="142" y="108" width="70" height="34" rx="6" fill="#00274D"/>
+            <text x="177" y="130" text-anchor="middle" font-size="13" fill="#FFFFFF" font-weight="600">CSS</text>
+            <rect x="220" y="108" width="78" height="34" rx="6" fill="#00274D"/>
+            <text x="259" y="130" text-anchor="middle" font-size="13" fill="#FFFFFF" font-weight="600">JS</text>
+            <text x="175" y="170" text-anchor="middle" font-size="13" fill="#555555">Monta a tela e reage ao clique</text>
+            <text x="175" y="202" text-anchor="middle" font-size="12" fill="#888888">Aulas 03 a 06</text>
+
+            <!-- TROCA HTTP -->
+            <line x1="332" y1="112" x2="546" y2="112" stroke="#00274D" stroke-width="3" marker-end="url(#setaAzul)"/>
+            <text x="440" y="100" text-anchor="middle" font-size="13" font-weight="700" fill="#00274D">requisição HTTP</text>
+            <line x1="546" y1="172" x2="332" y2="172" stroke="#C84B31" stroke-width="3" marker-end="url(#setaCoral)"/>
+            <text x="440" y="196" text-anchor="middle" font-size="13" font-weight="700" fill="#C84B31">resposta: HTML, CSS, JSON</text>
+
+            <!-- SERVIDOR -->
+            <text x="705" y="26" text-anchor="middle" font-size="19" font-weight="800" fill="#00274D">Servidor</text>
+            <text x="705" y="48" text-anchor="middle" font-size="13" fill="#777777">onde a regra de negócio da clínica roda</text>
+            <rect x="560" y="62" width="290" height="160" rx="10" fill="#F5F5F5" stroke="#00274D" stroke-width="2.5"/>
+            <text x="705" y="92" text-anchor="middle" font-size="15" font-weight="800" fill="#C84B31">BACK-END</text>
+            <rect x="576" y="108" width="72" height="34" rx="6" fill="#00274D"/>
+            <text x="612" y="130" text-anchor="middle" font-size="13" fill="#FFFFFF" font-weight="600">C#</text>
+            <rect x="656" y="108" width="178" height="34" rx="6" fill="#00274D"/>
+            <text x="745" y="130" text-anchor="middle" font-size="13" fill="#FFFFFF" font-weight="600">ASP.NET Core MVC</text>
+            <text x="705" y="170" text-anchor="middle" font-size="13" fill="#555555">Decide, valida e monta a resposta</text>
+            <text x="705" y="202" text-anchor="middle" font-size="12" fill="#888888">Aulas 07 a 10</text>
+
+            <!-- LIGAÇÃO COM O BANCO -->
+            <line x1="858" y1="128" x2="920" y2="128" stroke="#777777" stroke-width="3" marker-end="url(#setaCinza)"/>
+            <line x1="920" y1="160" x2="858" y2="160" stroke="#777777" stroke-width="3" marker-end="url(#setaCinza)"/>
+
+            <!-- BANCO DE DADOS -->
+            <text x="1022" y="26" text-anchor="middle" font-size="19" font-weight="800" fill="#00274D">Banco de dados</text>
+            <text x="1022" y="48" text-anchor="middle" font-size="13" fill="#777777">o que sobrevive ao fim da conversa</text>
+            <ellipse cx="1022" cy="84" rx="80" ry="20" fill="#00274D"/>
+            <rect x="942" y="84" width="160" height="96" fill="#00274D"/>
+            <ellipse cx="1022" cy="180" rx="80" ry="20" fill="#00274D"/>
+            <text x="1022" y="138" text-anchor="middle" font-size="17" font-weight="800" fill="#FFFFFF">MySQL</text>
+            <text x="1022" y="228" text-anchor="middle" font-size="12" fill="#888888">Aulas 11 a 17</text>
+          </svg>
+        </div>
+
+        <div class="takeaway">
+          <span class="takeaway-label">Takeaway</span>
+          <p>A mesma tela pode ser montada no navegador ou no servidor. Quem decide onde é o projeto, não a tecnologia. Nesta disciplina você vai construir os dois lados da conversa.</p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">01 Panorama da web</div>
+          <div class="footer-page">7</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 8: O CASE CLÍNICA VIDA+ ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>O case do semestre: Clínica Vida+</h2>
+        </div>
+
+        <p style="font-size:0.74em; margin-top:0;">Clínica multiespecialidades cujo agendamento é feito por telefone e anotado em papel. O resultado é consulta em duplicidade, paciente sem confirmação e nenhuma visão de agenda. Os atores são o paciente, a recepção e o médico.</p>
+
+        <div class="concept-cards" style="grid-template-columns: repeat(4, 1fr); margin-top:10px;">
+          <div class="concept-card">
+            <h4>Paciente</h4>
+            <p>Quem é atendido. Nome, CPF, data de nascimento, telefone e e-mail.</p>
+          </div>
+          <div class="concept-card">
+            <h4>Médico</h4>
+            <p>Quem atende. Nome, CRM e a especialidade a que pertence.</p>
+          </div>
+          <div class="concept-card">
+            <h4>Especialidade</h4>
+            <p>Área de atuação, por exemplo Cardiologia ou Pediatria. Nome e descrição.</p>
+          </div>
+          <div class="concept-card">
+            <h4>Consulta</h4>
+            <p>O agendamento em si. Liga paciente e médico em uma data e hora, com status.</p>
+          </div>
+        </div>
+
+        <div class="flow-diagram" style="margin:18px 0 0 0; font-size:0.86em; gap:8px;">
+          <div class="flow-item">Página estática<br>Aulas 01 a 05</div>
+          <div class="flow-arrow">&rarr;</div>
+          <div class="flow-item">JavaScript<br>Aula 06</div>
+          <div class="flow-arrow">&rarr;</div>
+          <div class="flow-item">ASP.NET Core MVC<br>Aulas 07 a 10</div>
+          <div class="flow-arrow">&rarr;</div>
+          <div class="flow-item">MySQL e EF Core<br>Aulas 11 e 12</div>
+          <div class="flow-arrow">&rarr;</div>
+          <div class="flow-item">Login, API e deploy<br>Aulas 13 a 20</div>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">01 Case Clínica Vida+</div>
+          <div class="footer-page">8</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 9: POR QUE VERSIONAR ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Por que versionar: o problema real</h2>
+        </div>
+
+        <p style="font-size:0.72em; margin-top:0;">Você já viveu isso: <code>trabalho_final.docx</code>, <code>trabalho_final_v2.docx</code>, <code>trabalho_final_agora_vai.docx</code>. Sem histórico, sem volta atrás e sem resposta para "quem mudou isso e por quê". O problema fica sério no instante em que a segunda pessoa toca no mesmo arquivo.</p>
+
+        <div class="slide-figure" style="margin-top:0;">
+          <svg viewBox="0 0 1120 300" role="img" aria-label="Três cenários: uma pessoa sem versionamento, duas pessoas sem versionamento e duas pessoas com Git">
+            <defs>
+              <marker id="setaCinza2" markerWidth="9" markerHeight="9" refX="8" refY="4.5" orient="auto">
+                <path d="M0,0 L9,4.5 L0,9 Z" fill="#999999"/>
+              </marker>
+              <marker id="setaCoral2" markerWidth="9" markerHeight="9" refX="8" refY="4.5" orient="auto">
+                <path d="M0,0 L9,4.5 L0,9 Z" fill="#C84B31"/>
+              </marker>
+            </defs>
+
+            <!-- CENÁRIO 1: uma pessoa -->
+            <text x="150" y="24" text-anchor="middle" font-size="17" font-weight="800" fill="#00274D">1 pessoa</text>
+            <text x="150" y="44" text-anchor="middle" font-size="13" fill="#777777">Sem conflito, mas sem rede de proteção</text>
+            <circle cx="150" cy="95" r="24" fill="#00274D"/>
+            <circle cx="150" cy="88" r="8" fill="#FFFFFF"/>
+            <path d="M136,108 a14,12 0 0,1 28,0 Z" fill="#FFFFFF"/>
+            <line x1="150" y1="125" x2="150" y2="165" stroke="#999999" stroke-width="2.5" marker-end="url(#setaCinza2)"/>
+            <rect x="80" y="172" width="140" height="52" rx="6" fill="#F5F5F5" stroke="#CCCCCC" stroke-width="2"/>
+            <text x="150" y="195" text-anchor="middle" font-size="14" font-weight="700" fill="#333333">clinica/</text>
+            <text x="150" y="213" text-anchor="middle" font-size="12" fill="#777777">site_final_v2_OK.zip</text>
+            <text x="150" y="256" text-anchor="middle" font-size="12" fill="#c0392b" font-weight="600">Sem histórico. Sem reverter.</text>
+
+            <line x1="265" y1="150" x2="305" y2="150" stroke="#DDDDDD" stroke-width="2" stroke-dasharray="5,5"/>
+
+            <!-- CENÁRIO 2: duas pessoas, conflito -->
+            <text x="500" y="24" text-anchor="middle" font-size="17" font-weight="800" fill="#00274D">2 pessoas, sem versionamento</text>
+            <text x="500" y="44" text-anchor="middle" font-size="13" fill="#777777">Um sobrescreve o trabalho do outro</text>
+            <circle cx="415" cy="95" r="24" fill="#00274D"/>
+            <circle cx="415" cy="88" r="8" fill="#FFFFFF"/>
+            <path d="M401,108 a14,12 0 0,1 28,0 Z" fill="#FFFFFF"/>
+            <circle cx="585" cy="95" r="24" fill="#00274D"/>
+            <circle cx="585" cy="88" r="8" fill="#FFFFFF"/>
+            <path d="M571,108 a14,12 0 0,1 28,0 Z" fill="#FFFFFF"/>
+            <line x1="428" y1="118" x2="478" y2="166" stroke="#e74c3c" stroke-width="2.5" marker-end="url(#setaCinza2)"/>
+            <line x1="572" y1="118" x2="522" y2="166" stroke="#e74c3c" stroke-width="2.5" marker-end="url(#setaCinza2)"/>
+            <rect x="412" y="172" width="176" height="52" rx="6" fill="#fdedec" stroke="#e74c3c" stroke-width="2"/>
+            <text x="500" y="195" text-anchor="middle" font-size="13" font-weight="700" fill="#c0392b">agendamento.html</text>
+            <text x="500" y="213" text-anchor="middle" font-size="12" fill="#c0392b">escrita simultânea</text>
+            <text x="500" y="256" text-anchor="middle" font-size="12" fill="#c0392b" font-weight="600">Trabalho perdido silenciosamente.</text>
+
+            <line x1="620" y1="150" x2="660" y2="150" stroke="#DDDDDD" stroke-width="2" stroke-dasharray="5,5"/>
+
+            <!-- CENÁRIO 3: Git -->
+            <text x="890" y="24" text-anchor="middle" font-size="17" font-weight="800" fill="#C84B31">2 pessoas, com Git</text>
+            <text x="890" y="44" text-anchor="middle" font-size="13" fill="#777777">Branches isolam, o merge reconcilia</text>
+            <circle cx="800" cy="95" r="24" fill="#C84B31"/>
+            <circle cx="800" cy="88" r="8" fill="#FFFFFF"/>
+            <path d="M786,108 a14,12 0 0,1 28,0 Z" fill="#FFFFFF"/>
+            <circle cx="980" cy="95" r="24" fill="#C84B31"/>
+            <circle cx="980" cy="88" r="8" fill="#FFFFFF"/>
+            <path d="M966,108 a14,12 0 0,1 28,0 Z" fill="#FFFFFF"/>
+            <text x="800" y="140" text-anchor="middle" font-size="11" font-weight="700" fill="#C84B31">feature/agenda</text>
+            <text x="980" y="140" text-anchor="middle" font-size="11" font-weight="700" fill="#C84B31">feature/cadastro</text>
+            <path d="M800,150 C800,166 830,168 862,170" fill="none" stroke="#C84B31" stroke-width="2.5" marker-end="url(#setaCoral2)"/>
+            <path d="M980,150 C980,166 950,168 918,170" fill="none" stroke="#C84B31" stroke-width="2.5" marker-end="url(#setaCoral2)"/>
+            <rect x="820" y="176" width="140" height="52" rx="6" fill="#eafaf1" stroke="#27ae60" stroke-width="2"/>
+            <text x="890" y="199" text-anchor="middle" font-size="14" font-weight="700" fill="#1e8449">main</text>
+            <text x="890" y="217" text-anchor="middle" font-size="12" fill="#1e8449">merge revisado</text>
+            <text x="890" y="256" text-anchor="middle" font-size="12" fill="#1e8449" font-weight="600">Histórico completo e reversível.</text>
+          </svg>
+        </div>
+
+        <div class="takeaway">
+          <span class="takeaway-label">Takeaway</span>
+          <p>Versionar não é fazer backup. É guardar a história das decisões, com autor, data e motivo, de um jeito que permite voltar a qualquer ponto dela.</p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">01 Por que versionar</div>
+          <div class="footer-page">9</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 10: EVOLUÇÃO DO CONTROLE DE VERSÃO ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Da cópia de pasta ao Git</h2>
+        </div>
+
+        <p style="font-size:0.74em; margin-top:0;">A virada decisiva foi sair do modelo <strong>centralizado e síncrono</strong>, com um servidor único que precisa estar no ar, para o <strong>distribuído</strong>, em que cada clone é um repositório completo, com todo o histórico.</p>
+
+        <div class="timeline">
+          <div class="tl-item is-past">
+            <div class="tl-dot"></div>
+            <span class="tl-year">Antes de 1972</span>
+            <span class="tl-tool">Cópia manual</span>
+            <span class="tl-desc">Duplicar a pasta e renomear. Perdeu o disco, perdeu tudo, e ninguém sabe qual cópia vale.</span>
+          </div>
+          <div class="tl-item is-past">
+            <div class="tl-dot"></div>
+            <span class="tl-year">1990</span>
+            <span class="tl-tool">CVS</span>
+            <span class="tl-desc">Primeiro servidor central. Vários desenvolvedores no mesmo projeto, mas com merge frágil.</span>
+          </div>
+          <div class="tl-item is-past">
+            <div class="tl-dot"></div>
+            <span class="tl-year">2000</span>
+            <span class="tl-tool">Subversion</span>
+            <span class="tl-desc">Centralizado e síncrono. Commitar exige rede, e o servidor é ponto único de falha.</span>
+          </div>
+          <div class="tl-item">
+            <div class="tl-dot"></div>
+            <span class="tl-year">2005</span>
+            <span class="tl-tool">Git</span>
+            <span class="tl-desc">Nasce para o kernel do Linux. Distribuído e assíncrono: clone integral, commit e branch offline.</span>
+          </div>
+          <div class="tl-item">
+            <div class="tl-dot"></div>
+            <span class="tl-year">2008 até hoje</span>
+            <span class="tl-tool">GitHub e GitLab</span>
+            <span class="tl-desc">O Git vira plataforma: Pull Request, revisão de código e automação sobre o mesmo histórico.</span>
+          </div>
+        </div>
+
+        <div class="takeaway">
+          <span class="takeaway-label">Takeaway</span>
+          <p>O Git venceu porque separou o ato de versionar do ato de compartilhar. Você comita sem internet e sincroniza quando quiser.</p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">01 Evolução do controle de versão</div>
+          <div class="footer-page">10</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 11: O QUE É UM COMMIT ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>O que é, de fato, um commit</h2>
+        </div>
+
+        <p style="font-size:0.74em; margin-top:0;">Um commit não é a lista de linhas alteradas. É uma <strong>fotografia completa e imutável do projeto inteiro</strong>, endereçada por um hash e ligada ao commit anterior. O diff que você vê na tela é calculado entre duas fotografias; não é o que fica guardado.</p>
+
+        <div class="figure-split" style="grid-template-columns: 0.95fr 1.05fr; gap:24px; margin-top:6px; align-items:start;">
+          <svg viewBox="0 0 460 300" style="max-height:320px;" role="img" aria-label="Anatomia de um objeto commit do Git">
+            <rect x="10" y="10" width="440" height="280" rx="10" fill="#12121A"/>
+            <text x="34" y="46" font-size="17" font-weight="800" fill="#C84B31">commit a3f9c21</text>
+            <line x1="34" y1="58" x2="426" y2="58" stroke="#3a3a3a" stroke-width="1.5"/>
+
+            <text x="34" y="88" font-size="13" fill="#888888">tree</text>
+            <text x="150" y="88" font-size="13" fill="#FFFFFF" font-weight="600">9d2b0e4</text>
+            <text x="240" y="88" font-size="11" fill="#999999">estado de TODOS os arquivos</text>
+
+            <text x="34" y="122" font-size="13" fill="#888888">parent</text>
+            <text x="150" y="122" font-size="13" fill="#FFFFFF" font-weight="600">7c1a88f</text>
+            <text x="240" y="122" font-size="11" fill="#999999">o commit anterior</text>
+
+            <text x="34" y="156" font-size="13" fill="#888888">author</text>
+            <text x="150" y="156" font-size="13" fill="#FFFFFF" font-weight="600">Ana Souza</text>
+
+            <text x="34" y="190" font-size="13" fill="#888888">date</text>
+            <text x="150" y="190" font-size="13" fill="#FFFFFF" font-weight="600">2026-08-05 21:14</text>
+
+            <text x="34" y="224" font-size="13" fill="#888888">message</text>
+            <text x="150" y="224" font-size="13" fill="#FFFFFF" font-weight="600">docs: identificação</text>
+            <text x="150" y="244" font-size="13" fill="#FFFFFF" font-weight="600">do aluno no README</text>
+
+            <rect x="24" y="258" width="412" height="24" rx="4" fill="#2a2a2a"/>
+            <text x="230" y="275" text-anchor="middle" font-size="11" fill="#AAAAAA">mudar qualquer campo muda o hash: o histórico é à prova de adulteração</text>
+          </svg>
+
+          <div>
+            <div class="concept-cards" style="grid-template-columns: 1fr; gap:9px; margin-top:0;">
+              <div class="concept-card" style="padding:13px 16px;">
+                <h4>Cada commit aponta para o anterior</h4>
+                <p style="font-size:0.72em;">Essa corrente é a história do projeto. Percorrê-la de trás para frente é o que permite <code>git log</code> e <code>git revert</code>.</p>
+              </div>
+              <div class="concept-card" style="padding:13px 16px;">
+                <h4>Imutável por construção</h4>
+                <p style="font-size:0.72em;">O hash vem do próprio conteúdo. Alterar um commit antigo muda o hash dele e o de todos os seguintes: a adulteração fica evidente.</p>
+              </div>
+              <div class="concept-card" style="padding:13px 16px;">
+                <h4>O tamanho certo</h4>
+                <p style="font-size:0.72em;">Uma mudança coerente, que você reverteria sozinha. "Fim do dia" não é commit; "corrige o horário duplicado na agenda" é.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">01 O commit</div>
+          <div class="footer-page">11</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 12: O QUE É UMA BRANCH ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>O que é, de fato, uma branch</h2>
+        </div>
+
+        <p style="font-size:0.72em; margin-top:0;">Uma branch <strong>não é uma cópia do projeto</strong>: é um ponteiro leve para um commit, por isso criar uma é instantâneo. Pense em linhas do tempo paralelas: do mesmo ponto da história você abre quantas realidades quiser, testa cada uma sem risco, descarta as que falharam e traz de volta só a que funcionou.</p>
+
+        <div class="slide-figure" style="margin-top:0;">
+          <svg viewBox="0 0 1120 250" role="img" aria-label="Branches como ponteiros para commits, divergindo da main e convergindo no merge">
+            <defs>
+              <marker id="setaBr" markerWidth="9" markerHeight="9" refX="8" refY="4.5" orient="auto">
+                <path d="M0,0 L9,4.5 L0,9 Z" fill="#888888"/>
+              </marker>
+            </defs>
+
+            <line x1="90" y1="150" x2="1030" y2="150" stroke="#DDDDDD" stroke-width="3"/>
+            <circle cx="120" cy="150" r="16" fill="#00274D"/><text x="120" y="155" text-anchor="middle" font-size="11" fill="#FFFFFF">c1</text>
+            <circle cx="260" cy="150" r="16" fill="#00274D"/><text x="260" y="155" text-anchor="middle" font-size="11" fill="#FFFFFF">c2</text>
+            <circle cx="400" cy="150" r="16" fill="#00274D"/><text x="400" y="155" text-anchor="middle" font-size="11" fill="#FFFFFF">c3</text>
+            <circle cx="820" cy="150" r="16" fill="#00274D"/><text x="820" y="155" text-anchor="middle" font-size="11" fill="#FFFFFF">c6</text>
+            <circle cx="960" cy="150" r="18" fill="#27ae60"/><text x="960" y="156" text-anchor="middle" font-size="11" fill="#FFFFFF" font-weight="700">M</text>
+
+            <path d="M416,146 C470,140 480,80 562,80" fill="none" stroke="#C84B31" stroke-width="3"/>
+            <circle cx="580" cy="80" r="16" fill="#C84B31"/><text x="580" y="85" text-anchor="middle" font-size="11" fill="#FFFFFF">c4</text>
+            <line x1="596" y1="80" x2="704" y2="80" stroke="#C84B31" stroke-width="3"/>
+            <circle cx="720" cy="80" r="16" fill="#C84B31"/><text x="720" y="85" text-anchor="middle" font-size="11" fill="#FFFFFF">c5</text>
+            <path d="M736,80 C820,80 900,110 944,140" fill="none" stroke="#C84B31" stroke-width="3"/>
+
+            <rect x="898" y="192" width="124" height="30" rx="15" fill="#00274D"/>
+            <text x="960" y="212" text-anchor="middle" font-size="13" font-weight="700" fill="#FFFFFF">main</text>
+            <line x1="960" y1="190" x2="960" y2="172" stroke="#888888" stroke-width="2" marker-end="url(#setaBr)"/>
+
+            <rect x="640" y="20" width="220" height="30" rx="15" fill="#C84B31"/>
+            <text x="750" y="40" text-anchor="middle" font-size="13" font-weight="700" fill="#FFFFFF">feature/agenda-do-dia</text>
+            <line x1="720" y1="52" x2="720" y2="62" stroke="#888888" stroke-width="2" marker-end="url(#setaBr)"/>
+
+            <text x="120" y="196" text-anchor="middle" font-size="11" fill="#999999">passado</text>
+            <text x="400" y="196" text-anchor="middle" font-size="11" fill="#C84B31" font-weight="700">ponto de divergência</text>
+            <text x="960" y="244" text-anchor="middle" font-size="11" fill="#1e8449" font-weight="700">merge: as duas histórias se juntam</text>
+          </svg>
+        </div>
+
+        <div class="takeaway">
+          <span class="takeaway-label">Na prática</span>
+          <p>Como a branch é só um ponteiro, trocar de branch é o Git reescrever seus arquivos para o estado daquele commit. Por isso ele reclama quando há trabalho não commitado: não há onde guardar o que você ainda não salvou.</p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">01 A branch</div>
+          <div class="footer-page">12</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 13: ECOSSISTEMA GITHUB ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>O ecossistema GitHub</h2>
+        </div>
+
+        <p style="font-size:0.74em; margin-top:0;">O Git é a ferramenta que roda na sua máquina. O GitHub é a plataforma que hospeda o repositório e acrescenta colaboração em volta dele.</p>
+
+        <div class="concept-cards" style="grid-template-columns: repeat(4, 1fr); margin-top:12px;">
+          <div class="concept-card">
+            <h4>Repositório remoto</h4>
+            <p>A cópia do projeto hospedada na nuvem. <code>push</code> envia seus commits para lá, <code>pull</code> traz os dos outros.</p>
+          </div>
+          <div class="concept-card">
+            <h4>Fork e clone</h4>
+            <p>O fork cria uma cópia do repositório sob a sua conta. O clone traz essa cópia para a sua máquina.</p>
+          </div>
+          <div class="concept-card">
+            <h4>Issues e Pull Request</h4>
+            <p>A issue registra o que precisa ser feito. O Pull Request é onde o código é discutido e revisado antes de entrar na main.</p>
+          </div>
+          <div class="concept-card">
+            <h4>Actions e Pages</h4>
+            <p>O Actions automatiza tarefas a cada push. O Pages publica um site direto do repositório, sem servidor próprio.</p>
+          </div>
+        </div>
+
+        <div class="callout" style="margin-top:16px;">
+          <p>O <code>README.md</code> é o cartão de visitas do repositório, e o seu histórico público de commits é portfólio profissional. Recrutador lê perfil do GitHub. Escolha um nome de usuário que você mostraria numa entrevista.</p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">01 Ecossistema GitHub</div>
+          <div class="footer-page">13</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 14: QUIZ DE FIXAÇÃO ==================== -->
+      <section class="quiz-slide content-slide">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area"><div class="accent-bar"></div><h2>Quiz de fixação</h2></div>
+        <div class="quiz-container">
+          <div class="quiz-question">O que um commit representa no Git?</div>
+          <ul class="quiz-options">
+            <li data-correct="false"><span class="option-letter">A</span> Apenas as linhas alteradas desde a última vez.</li>
+            <li data-correct="true"><span class="option-letter">B</span> Uma fotografia completa e imutável do projeto, ligada ao commit anterior.</li>
+            <li data-correct="false"><span class="option-letter">C</span> Um backup do arquivo que está aberto no editor.</li>
+            <li data-correct="false"><span class="option-letter">D</span> Uma cópia do repositório remoto na sua máquina.</li>
+          </ul>
+          <div class="quiz-feedback"
+               data-correct-msg="Isso. Cada commit guarda o estado inteiro do projeto e aponta para o commit anterior, formando a história."
+               data-incorrect-msg="Não é bem isso. O commit guarda o estado inteiro do projeto, não só o que mudou, e aponta para o commit anterior."></div>
+        </div>
+        <div class="slide-footer"><div class="footer-bar">01 Quiz de fixação</div><div class="footer-page">14</div></div>
+      </section>
+
+      <!-- ==================== SLIDE 15: LAB PASSO 1 ==================== -->
+      <section class="exercise-slide content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Laboratório, passo 1 de 5: conta no GitHub e fork</h2>
+        </div>
+
+        <p style="font-size:0.74em; margin-top:0;">A missão dos próximos 60 minutos é simples e definitiva: colocar cada um de vocês de posse do próprio repositório da Clínica Vida+.</p>
+
+        <div class="exercise-container">
+          <h3>No navegador</h3>
+          <ol class="exercise-steps">
+            <li>Crie ou confirme a sua conta em <code>github.com</code>. Use um nome de usuário profissional: esse endereço vira portfólio.</li>
+            <li>Abra o repositório-esqueleto <code>github.com/josercf/uninove-2026-2-clinica-vida</code>.</li>
+            <li>Clique em <strong>Fork</strong> e confirme a criação da cópia sob a sua conta.</li>
+            <li>Confira que a página do seu repositório mostra <code>forked from josercf/uninove-2026-2-clinica-vida</code>.</li>
+          </ol>
+        </div>
+
+        <div class="callout" style="margin-top:14px;">
+          <p>Esse fork é o <strong>seu repositório do semestre inteiro</strong>. As 20 aulas evoluem esse mesmo projeto, aula após aula. Não crie um repositório novo a cada encontro.</p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">01 Laboratório, passo 1, fork</div>
+          <div class="footer-page">15</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 16: LAB PASSO 2 ==================== -->
+      <section class="exercise-slide content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Laboratório, passo 2 de 5: clonar o fork</h2>
+        </div>
+
+        <p style="font-size:0.74em; margin-top:0;">O clone traz o repositório inteiro, com todo o histórico, para a sua máquina. Troque <code>SEU-USUARIO</code> pelo seu nome de usuário do GitHub.</p>
+
+        <pre><code class="language-bash" data-trim>git --version
+
+git clone https://github.com/SEU-USUARIO/uninove-2026-2-clinica-vida.git
+cd uninove-2026-2-clinica-vida
+
+git log --oneline</code></pre>
+
+        <div class="callout" style="margin-top:6px;">
+          <p>Repare no <code>git log</code>: o histórico do projeto veio junto. Isso é o Git ser <strong>distribuído</strong>. Abra a pasta no editor e leia o <code>README.md</code> antes de seguir.</p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">01 Laboratório, passo 2, clone</div>
+          <div class="footer-page">16</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 17: LAB PASSO 3 ==================== -->
+      <section class="exercise-slide content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Laboratório, passo 3 de 5: identidade no Git</h2>
+        </div>
+
+        <p style="font-size:0.74em; margin-top:0;">A identidade é o que assina cada commit. Sem ela configurada, o seu trabalho não é atribuído a você.</p>
+
+        <pre><code class="language-bash" data-trim>git config --global user.name "Nome Sobrenome"
+git config --global user.email "email@exemplo.com"
+
+git config user.name
+git config user.email</code></pre>
+
+        <div class="callout" style="margin-top:6px;">
+          <p>O e-mail precisa ser <strong>o mesmo cadastrado no GitHub</strong>. Se for outro, os commits aparecem no repositório mas não contam no seu perfil, e o checkpoint da aula fica sem dono.</p>
+        </div>
+
+        <div class="takeaway">
+          <span class="takeaway-label">Checkpoint</span>
+          <p>O professor passa de mesa em mesa conferindo que o clone funcionou e que os dois últimos comandos devolvem o seu nome e o seu e-mail.</p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">01 Laboratório, passo 3, identidade</div>
+          <div class="footer-page">17</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 18: LAB PASSO 4 ==================== -->
+      <section class="exercise-slide content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Laboratório, passo 4 de 5: editar o README</h2>
+        </div>
+
+        <p style="font-size:0.74em; margin-top:0;">Acrescente ao <code>README.md</code> do seu fork uma seção de identificação, com nome completo, RA e turma.</p>
+
+        <pre><code class="language-markdown" data-trim>## Identificação
+
+- Nome completo: Ana Souza
+- RA: 1234567890
+- Turma: quarta-feira
+- O que espero aprender: publicar minha primeira aplicação web na internet.</code></pre>
+
+        <pre class="code-compact"><code class="language-bash" data-trim>git status              # o README aparece como modificado
+git add README.md
+git status              # agora ele aparece pronto para o commit</code></pre>
+
+        <div class="callout" style="margin-top:6px;">
+          <p>O <code>git add</code> não salva nada: ele escolhe <strong>o que vai entrar na próxima fotografia</strong>. É por isso que o <code>git status</code> muda de resposta entre um comando e outro.</p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">01 Laboratório, passo 4, README</div>
+          <div class="footer-page">18</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 19: LAB PASSO 5 ==================== -->
+      <section class="exercise-slide content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Laboratório, passo 5 de 5: commit e push</h2>
+        </div>
+
+        <p style="font-size:0.74em; margin-top:0;">Agora a fotografia é tirada e enviada para o GitHub.</p>
+
+        <pre><code class="language-bash" data-trim>git commit -m "docs: identificação do aluno no README"
+
+git log --oneline       # o seu commit, com o hash, no histórico
+
+git push</code></pre>
+
+        <div class="callout" style="margin-top:6px;">
+          <p>Repare no padrão da mensagem: <strong>verbo no presente, escopo curto e a intenção explícita</strong>. Uma mensagem boa responde "por que" para quem ler o histórico daqui a seis meses.</p>
+        </div>
+
+        <div class="takeaway">
+          <span class="takeaway-label">Confira</span>
+          <p>Atualize a página do seu fork no GitHub. O commit precisa aparecer no histórico, com o seu nome ao lado.</p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">01 Laboratório, passo 5, commit e push</div>
+          <div class="footer-page">19</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 20: ENTREGÁVEL E PRÉVIA ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Entregável de hoje e prévia da Aula 02</h2>
+        </div>
+
+        <div class="side-by-side" style="margin-top:6px;">
+          <div class="side">
+            <h4>Entregável desta aula</h4>
+            <ul style="margin:0; padding-left:20px;">
+              <li>Link do seu fork no GitHub.</li>
+              <li>Pelo menos <strong>um commit de sua autoria</strong>, visível no histórico.</li>
+              <li>Commit assinado com o nome e o e-mail que você configurou.</li>
+            </ul>
+          </div>
+          <div class="side">
+            <h4>Prévia da Aula 02</h4>
+            <ul style="margin:0; padding-left:20px;">
+              <li>O que acontece, camada por camada, entre digitar um endereço e a página aparecer na tela.</li>
+              <li>TCP/IP, DNS e HTTP, com as evidências coletadas ao vivo.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="takeaway" style="margin-top:18px;">
+          <span class="takeaway-label">As três ideias da semana</span>
+          <p>Cliente pede e servidor responde; o commit é uma fotografia imutável encadeada na anterior; e o seu fork é o repositório onde a Clínica Vida+ vai crescer até dezembro.</p>
+        </div>
+
+        <p style="font-size:0.6em; color:#777777; margin-top:16px;">Para aprofundar: <strong>Pro Git</strong>, em <code>git-scm.com/book/pt-br/v2</code>, e a documentação da <strong>MDN Web Docs</strong>, em <code>developer.mozilla.org/pt-BR/docs/Web</code>.</p>
+
+        <div class="slide-footer">
+          <div class="footer-bar">01 Fechamento</div>
+          <div class="footer-page">20</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 21: ENCERRAMENTO ==================== -->
+      <section class="end-slide">
+        <img src="../assets/img/uninove-logo.png" alt="Uninove, Universidade Nove de Julho"
+             style="max-width:300px; background:#FFFFFF; padding:20px 28px; border-radius:8px;">
+        <div class="copyright">
+          Copyright &copy; 2026<br>
+          Prof. José Romualdo da Costa Filho<br><br>
+          Todos os direitos reservados. É expressamente proibida a reprodução, divulgação<br>
+          total ou parcial, deste material acadêmico sem autorização formal,<br>
+          por escrito, do Professor autor da ementa.
+        </div>
+      </section>
+
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/highlight/highlight.js"></script>
+  <script src="../assets/js/uninove-quiz.js"></script>
+  <script type="module">
+    import { TURMAS, resolverTurma, dataDaAula, formatarData } from '../assets/js/turmas.js';
+    const turma = resolverTurma({
+      hoje: new Date(),
+      salva: localStorage.getItem('uninove-turma'),
+    });
+    const alvo = document.querySelector('[data-data-da-aula]');
+    if (alvo) {
+      const n = Number(alvo.getAttribute('data-data-da-aula'));
+      alvo.textContent = turma
+        ? `${TURMAS[turma].rotulo}, ${formatarData(dataDaAula(turma, n))}`
+        : `Quarta ${formatarData(dataDaAula('quarta', n))} ou quinta ${formatarData(dataDaAula('quinta', n))}`;
+    }
+  </script>
+  <script>
+    Reveal.initialize({
+      width: 1280, height: 720, center: false, margin: 0,
+      hash: true, slideNumber: false,
+      plugins: [RevealHighlight],
+    });
+  </script>
+</body>
+</html>
