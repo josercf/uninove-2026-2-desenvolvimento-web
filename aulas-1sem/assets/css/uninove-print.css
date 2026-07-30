@@ -201,7 +201,7 @@
 
 /* --- Callout --- */
 .print-pdf .callout {
-  background: linear-gradient(135deg, #fff5f8 0%, #ffe8ef 100%) !important;
+  background: linear-gradient(135deg, #FFF7F5 0%, #FFECE8 100%) !important;
   border-left: 4px solid var(--uninove-coral) !important;
   -webkit-print-color-adjust: exact;
   print-color-adjust: exact;

@@ -380,7 +380,7 @@
 .quiz-slide .quiz-options label:hover {
   border-color: var(--uninove-coral);
   border-left-color: var(--uninove-coral);
-  background: #fff5f8;
+  background: #FFF7F5;
 }
 
 .quiz-slide .quiz-options label input[type="radio"] {
@@ -423,7 +423,7 @@
 .quiz-slide .quiz-options li:hover {
   border-color: var(--uninove-coral);
   border-left-color: var(--uninove-coral);
-  background: #fff5f8;
+  background: #FFF7F5;
 }
 
 .quiz-slide .quiz-options .option-letter {
@@ -492,7 +492,7 @@
 .quiz-slide button.quiz-option:hover {
   border-color: var(--uninove-coral);
   border-left-color: var(--uninove-coral);
-  background: #fff5f8;
+  background: #FFF7F5;
 }
 
 /* Quiz feedback */
@@ -711,7 +711,7 @@
 
 /* --- Destaque / Callout --- */
 .callout {
-  background: linear-gradient(135deg, #fff5f8 0%, #ffe8ef 100%);
+  background: linear-gradient(135deg, #FFF7F5 0%, #FFECE8 100%);
   border-left: 4px solid var(--uninove-coral);
   border-radius: 0 8px 8px 0;
   padding: 15px 20px;
@@ -823,7 +823,7 @@
   transition: all 0.2s ease;
 }
 .pdf-print-btn:hover {
-  background: #c70c49;
+  background: #A63C27;
   transform: translateY(-2px);
 }
 
