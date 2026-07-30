@@ -1,0 +1,1 @@
+../../../../FIAP/FIAP-2026-2-3SI/tools/check_slides.py
