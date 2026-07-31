@@ -1,0 +1,1385 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Aula 03, Introdução ao HTML | Uninove</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/theme/white.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/highlight/monokai.css">
+  <link rel="stylesheet" href="../assets/css/uninove-theme.css">
+  <link rel="stylesheet" href="../assets/css/uninove-print.css">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+      <!-- ==================== SLIDE 1: CAPA ==================== -->
+      <section class="cover-slide">
+        <img src="../assets/img/uninove-logo.png" alt="Uninove, Universidade Nove de Julho" class="uninove-logo-full"
+             style="max-width:400px; background:#FFFFFF; padding:26px 36px; border-radius:10px;">
+        <div style="margin-top:36px; color:#FFFFFF; font-size:0.95em; font-weight:800; letter-spacing:4px; text-transform:uppercase;">Desenvolvimento Web</div>
+        <div style="margin-top:12px; color:#C84B31; font-size:0.6em; font-weight:700; letter-spacing:3px; text-transform:uppercase;">Graduação, 2026.2</div>
+      </section>
+
+      <!-- ==================== SLIDE 2: TÍTULO ==================== -->
+      <section class="title-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="title-card">
+          <div class="accent-bar"></div>
+          <h1>Desenvolvimento Web</h1>
+          <h2>Introdução ao HTML</h2>
+          <h3>Prof. José Romualdo<br><span data-data-da-aula="3"></span></h3>
+        </div>
+        <div class="lesson-bar">AULA 03 &nbsp;|&nbsp; Módulo 1, Fundamentos da Web e Front-End</div>
+      </section>
+
+      <!-- ==================== SLIDE 3: AGENDA ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Agenda do encontro de hoje</h2>
+        </div>
+
+        <p style="font-size:0.76em; margin-top:0;">São 150 minutos corridos, em quatro ciclos. Hoje começa a construção real do site da Clínica Vida+.</p>
+
+        <table>
+          <thead>
+            <tr><th style="width:190px;">Horário</th><th style="width:200px;">Bloco</th><th>O que acontece</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>19h30 às 20h05</td><td>Ciclo 1</td><td>O que é HTML, a estrutura mínima e a árvore do documento</td></tr>
+            <tr><td>20h05 às 20h40</td><td>Ciclo 2</td><td>HTML semântico, listas, links, tabelas e a retomada do Git</td></tr>
+            <tr><td>20h40 às 20h50</td><td>Quiz de fixação</td><td>Uma pergunta sobre o conceito central da aula</td></tr>
+            <tr><td>20h50 às 21h25</td><td>Ciclo 3</td><td>Laboratório guiado: a branch e o esqueleto da página inicial</td></tr>
+            <tr><td>21h25 às 21h50</td><td>Ciclo 4</td><td>Laboratório: conteúdo, validação no W3C e Pull Request</td></tr>
+            <tr><td>21h50 às 22h00</td><td>Fechamento</td><td>Revisão de dois Pull Requests e prévia da Aula 04</td></tr>
+          </tbody>
+        </table>
+
+        <div class="slide-footer">
+          <div class="footer-bar">03 Agenda do encontro</div>
+          <div class="footer-page">3</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 4: RECAPITULAÇÃO DA AULA 02 ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>De onde viemos: a Aula 02</h2>
+        </div>
+
+        <p style="font-size:0.76em; margin-top:0;">Na semana passada você entregou <code>docs/arquitetura.md</code>, commitado e enviado ao seu fork, com o caminho da requisição desenhado e as evidências do DevTools.</p>
+
+        <div class="side-by-side" style="margin-top:8px;">
+          <div class="side">
+            <h4>O que ficou da Aula 02</h4>
+            <ul style="margin:0; padding-left:20px;">
+              <li>O navegador resolve o nome no DNS, abre a conexão e envia uma requisição HTTP.</li>
+              <li>O servidor responde com um código de status e um corpo.</li>
+              <li>O HTTPS protege esse corpo em trânsito.</li>
+            </ul>
+          </div>
+          <div class="side">
+            <h4>A ponte para hoje</h4>
+            <ul style="margin:0; padding-left:20px;">
+              <li>Aquele corpo da resposta, no fim das contas, é <strong>um documento HTML</strong>.</li>
+              <li>Até hoje você observou esse documento chegar. A partir de agora, você escreve ele.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="takeaway" style="margin-top:16px;">
+          <span class="takeaway-label">Hoje</span>
+          <p>A primeira página real da Clínica Vida+ nasce nesta aula, em uma branch própria, e vai para o GitHub em um Pull Request aberto por você.</p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">03 Recapitulação da Aula 02</div>
+          <div class="footer-page">4</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 5: O QUE É HTML ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>O que é HTML, e o que ele não é <a href="#/ref-slide" class="ref-badge" title="Ver referências">[1]</a></h2>
+        </div>
+
+        <p style="font-size:0.76em; margin-top:0;">HTML é a sigla de <em>HyperText Markup Language</em>: uma linguagem de <strong>marcação</strong>. Marcar é envolver um pedaço de conteúdo com uma etiqueta que diz o que aquele pedaço é.</p>
+
+        <div class="side-by-side" style="margin-top:8px;">
+          <div class="side">
+            <h4>O que o HTML é</h4>
+            <ul style="margin:0; padding-left:20px;">
+              <li>Uma descrição do <strong>significado e da estrutura</strong> do conteúdo.</li>
+              <li>Texto puro, legível por gente e por máquina.</li>
+              <li>O contrato que o navegador, o leitor de tela e o buscador leem.</li>
+            </ul>
+          </div>
+          <div class="side">
+            <h4>O que o HTML não é</h4>
+            <ul style="margin:0; padding-left:20px;">
+              <li>Não é linguagem de programação: não tem variável, condição nem laço.</li>
+              <li>Não cuida da aparência. Isso é o CSS, na Aula 04.</li>
+              <li>Não cuida do comportamento. Isso é o JavaScript, na Aula 06.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="takeaway">
+          <span class="takeaway-label">Takeaway</span>
+          <p>HTML responde "o que é isto". CSS responde "como isto aparece". JavaScript responde "o que acontece quando o paciente clica". Cada pergunta tem o seu arquivo.</p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">03 O que é HTML</div>
+          <div class="footer-page">5</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 6: ANATOMIA DE UM ELEMENTO ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Anatomia de um elemento <a href="#/ref-slide" class="ref-badge" title="Ver referências">[1]</a></h2>
+        </div>
+
+        <div class="slide-figure" style="margin-top:4px;">
+          <svg viewBox="0 0 1100 280" style="max-height:300px;" role="img" aria-label="Um elemento a com atributos href e class, anotado com tag de abertura, atributos, conteúdo e tag de fechamento">
+            <defs>
+              <marker id="pt1" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
+                <path d="M0,0 L8,4 L0,8 Z" fill="#888888"/>
+              </marker>
+            </defs>
+
+            <rect x="70" y="70" width="910" height="66" rx="8" fill="#12121A"/>
+
+            <text font-family="'JetBrains Mono', monospace" font-size="26" y="112">
+              <tspan x="110" textLength="46.8" lengthAdjust="spacingAndGlyphs" fill="#7EC8FF">&lt;a </tspan>
+              <tspan x="156.8" textLength="234" lengthAdjust="spacingAndGlyphs" fill="#F0A868">href="#contato"</tspan>
+              <tspan x="406.4" textLength="202.8" lengthAdjust="spacingAndGlyphs" fill="#F0A868">class="botao"</tspan>
+              <tspan x="609.2" textLength="15.6" lengthAdjust="spacingAndGlyphs" fill="#7EC8FF">&gt;</tspan>
+              <tspan x="624.8" textLength="249.6" lengthAdjust="spacingAndGlyphs" fill="#FFFFFF">Agendar consulta</tspan>
+              <tspan x="874.4" textLength="62.4" lengthAdjust="spacingAndGlyphs" fill="#7EC8FF">&lt;/a&gt;</tspan>
+            </text>
+
+            <!-- conteúdo, acima -->
+            <line x1="750" y1="66" x2="750" y2="42" stroke="#888888" stroke-width="2" marker-end="url(#pt1)"/>
+            <text x="750" y="30" text-anchor="middle" font-size="15" font-weight="700" fill="#00274D">conteúdo: o texto que o paciente lê</text>
+
+            <!-- abertura -->
+            <line x1="133" y1="140" x2="133" y2="168" stroke="#888888" stroke-width="2" marker-end="url(#pt1)"/>
+            <text x="133" y="186" text-anchor="middle" font-size="15" font-weight="700" fill="#C84B31">tag de abertura</text>
+            <text x="133" y="205" text-anchor="middle" font-size="13" fill="#777777">nome do elemento</text>
+
+            <!-- href -->
+            <line x1="273" y1="140" x2="273" y2="216" stroke="#888888" stroke-width="2" marker-end="url(#pt1)"/>
+            <text x="290" y="238" text-anchor="middle" font-size="15" font-weight="700" fill="#C84B31">atributo: nome="valor"</text>
+            <text x="290" y="257" text-anchor="middle" font-size="13" fill="#777777">para onde o link leva</text>
+
+            <!-- class -->
+            <line x1="508" y1="140" x2="508" y2="168" stroke="#888888" stroke-width="2" marker-end="url(#pt1)"/>
+            <text x="560" y="186" text-anchor="middle" font-size="15" font-weight="700" fill="#C84B31">outro atributo</text>
+            <text x="560" y="205" text-anchor="middle" font-size="13" fill="#777777">o CSS vai usar este, na Aula 04</text>
+
+            <!-- fechamento -->
+            <line x1="905" y1="140" x2="905" y2="216" stroke="#888888" stroke-width="2" marker-end="url(#pt1)"/>
+            <text x="880" y="238" text-anchor="middle" font-size="15" font-weight="700" fill="#C84B31">tag de fechamento</text>
+            <text x="880" y="257" text-anchor="middle" font-size="13" fill="#777777">a mesma tag, com barra</text>
+          </svg>
+        </div>
+
+        <div class="callout" style="margin-top:6px;">
+          <p><strong>Elemento</strong> é o conjunto inteiro: abertura, atributos, conteúdo e fechamento. Alguns elementos não têm conteúdo e por isso não têm fechamento, como <code>&lt;br&gt;</code>, <code>&lt;hr&gt;</code>, <code>&lt;meta&gt;</code> e <code>&lt;img&gt;</code>.</p>
+        </div>
+
+        <div class="takeaway">
+          <span class="takeaway-label">Atributo</span>
+          <p>Sempre no formato <code>nome="valor"</code>, com aspas, separado por espaço, e sempre dentro da <strong>tag de abertura</strong>. Nunca na de fechamento. Cada atributo acrescenta uma informação que o conteúdo sozinho não dá.</p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">03 Anatomia de um elemento</div>
+          <div class="footer-page">6</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 7: ESTRUTURA MÍNIMA ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>A estrutura mínima de um documento HTML5 <a href="#/ref-slide" class="ref-badge" title="Ver referências">[2]</a></h2>
+        </div>
+
+        <p style="font-size:0.74em; margin-top:0;">Todo arquivo <code>.html</code> começa assim. Decore este esqueleto: você vai escrevê-lo dezenas de vezes até dezembro.</p>
+
+        <pre class="code-compact"><code class="language-html" data-trim>&lt;!DOCTYPE html&gt;
+&lt;html lang="pt-BR"&gt;
+&lt;head&gt;
+  &lt;meta charset="UTF-8"&gt;
+  &lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;
+  &lt;title&gt;Clínica Vida+&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;h1&gt;Clínica Vida+&lt;/h1&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+
+        <div class="concept-cards" style="grid-template-columns: repeat(3, 1fr); gap:14px; margin-top:12px;">
+          <div class="concept-card" style="padding:14px 18px;">
+            <h4>O idioma da página</h4>
+            <p style="font-size:0.68em;">O <code>lang="pt-BR"</code> diz em que língua a página está. O leitor de tela escolhe a pronúncia por aqui.</p>
+          </div>
+          <div class="concept-card" style="padding:14px 18px;">
+            <h4>A codificação</h4>
+            <p style="font-size:0.68em;">Sem <code>charset="UTF-8"</code>, "Cardiologia" e "São Paulo" chegam com acentos quebrados na tela.</p>
+          </div>
+          <div class="concept-card" style="padding:14px 18px;">
+            <h4>head e body</h4>
+            <p style="font-size:0.68em;">O <code>head</code> traz informação sobre a página. O <code>body</code> traz o que aparece na tela.</p>
+          </div>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">03 Estrutura mínima</div>
+          <div class="footer-page">7</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 8: A ÁRVORE DO DOCUMENTO ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Elementos aninhados formam uma árvore</h2>
+        </div>
+
+        <p style="font-size:0.74em; margin-top:0;">O navegador não lê o seu HTML como texto corrido: ele monta uma <strong>árvore</strong>, em que cada elemento é filho de outro. É essa árvore que o CSS vai estilizar e que o JavaScript vai percorrer.</p>
+
+        <div class="slide-figure" style="margin-top:0;">
+          <svg viewBox="0 0 1080 360" style="max-height:330px;" role="img" aria-label="Árvore do documento com html na raiz, head e body como filhos, e os elementos de cada um">
+            <!-- ligações -->
+            <g stroke="#BBBBBB" stroke-width="2.5" fill="none">
+              <path d="M540,64 L540,84 L280,84 L280,110"/>
+              <path d="M540,64 L540,84 L800,84 L800,110"/>
+              <path d="M280,154 L280,174 L140,174 L140,200"/>
+              <path d="M280,154 L280,174 L420,174 L420,200"/>
+              <path d="M800,154 L800,174 L640,174 L640,200"/>
+              <path d="M800,154 L800,174 L800,200"/>
+              <path d="M800,154 L800,174 L960,174 L960,200"/>
+              <path d="M420,244 L420,280" stroke-dasharray="5,4"/>
+              <path d="M800,244 L800,264 L730,264 L730,290"/>
+              <path d="M800,244 L800,264 L870,264 L870,290"/>
+            </g>
+
+            <!-- html -->
+            <rect x="470" y="20" width="140" height="44" rx="8" fill="#00274D"/>
+            <text x="540" y="48" text-anchor="middle" font-size="19" font-weight="700" fill="#FFFFFF" font-family="'JetBrains Mono', monospace">html</text>
+
+            <!-- head e body -->
+            <rect x="210" y="110" width="140" height="44" rx="8" fill="#00274D"/>
+            <text x="280" y="138" text-anchor="middle" font-size="19" font-weight="700" fill="#FFFFFF" font-family="'JetBrains Mono', monospace">head</text>
+            <rect x="730" y="110" width="140" height="44" rx="8" fill="#00274D"/>
+            <text x="800" y="138" text-anchor="middle" font-size="19" font-weight="700" fill="#FFFFFF" font-family="'JetBrains Mono', monospace">body</text>
+
+            <!-- filhos do head -->
+            <rect x="75" y="200" width="130" height="44" rx="8" fill="#F5F5F5" stroke="#00274D" stroke-width="2"/>
+            <text x="140" y="228" text-anchor="middle" font-size="17" font-weight="600" fill="#00274D" font-family="'JetBrains Mono', monospace">meta</text>
+            <rect x="355" y="200" width="130" height="44" rx="8" fill="#F5F5F5" stroke="#00274D" stroke-width="2"/>
+            <text x="420" y="228" text-anchor="middle" font-size="17" font-weight="600" fill="#00274D" font-family="'JetBrains Mono', monospace">title</text>
+
+            <!-- nó de texto -->
+            <rect x="330" y="290" width="180" height="40" rx="8" fill="#FFFFFF" stroke="#C84B31" stroke-width="2" stroke-dasharray="6,4"/>
+            <text x="420" y="316" text-anchor="middle" font-size="15" fill="#C84B31">"Clínica Vida+"</text>
+
+            <!-- filhos do body -->
+            <rect x="575" y="200" width="130" height="44" rx="8" fill="#F5F5F5" stroke="#00274D" stroke-width="2"/>
+            <text x="640" y="228" text-anchor="middle" font-size="17" font-weight="600" fill="#00274D" font-family="'JetBrains Mono', monospace">header</text>
+            <rect x="735" y="200" width="130" height="44" rx="8" fill="#F5F5F5" stroke="#00274D" stroke-width="2"/>
+            <text x="800" y="228" text-anchor="middle" font-size="17" font-weight="600" fill="#00274D" font-family="'JetBrains Mono', monospace">main</text>
+            <rect x="895" y="200" width="130" height="44" rx="8" fill="#F5F5F5" stroke="#00274D" stroke-width="2"/>
+            <text x="960" y="228" text-anchor="middle" font-size="17" font-weight="600" fill="#00274D" font-family="'JetBrains Mono', monospace">footer</text>
+
+            <!-- netos do body -->
+            <rect x="670" y="290" width="120" height="40" rx="8" fill="#FDECE8" stroke="#C84B31" stroke-width="2"/>
+            <text x="730" y="316" text-anchor="middle" font-size="16" font-weight="600" fill="#C84B31" font-family="'JetBrains Mono', monospace">h2</text>
+            <rect x="810" y="290" width="120" height="40" rx="8" fill="#FDECE8" stroke="#C84B31" stroke-width="2"/>
+            <text x="870" y="316" text-anchor="middle" font-size="16" font-weight="600" fill="#C84B31" font-family="'JetBrains Mono', monospace">p</text>
+
+            <text x="140" y="316" text-anchor="middle" font-size="14" fill="#888888">elemento vazio</text>
+            <text x="1010" y="316" text-anchor="middle" font-size="14" fill="#888888">e assim por diante</text>
+          </svg>
+        </div>
+
+        <div class="takeaway">
+          <span class="takeaway-label">Regra de ouro</span>
+          <p>Quem abre por último fecha primeiro. <code>&lt;p&gt;&lt;strong&gt;texto&lt;/strong&gt;&lt;/p&gt;</code> é uma árvore válida; <code>&lt;p&gt;&lt;strong&gt;texto&lt;/p&gt;&lt;/strong&gt;</code> não é, e o navegador vai adivinhar por você.</p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">03 A árvore do documento</div>
+          <div class="footer-page">8</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 9: TÍTULOS E HIERARQUIA ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Títulos de h1 a h6: hierarquia, não tamanho</h2>
+        </div>
+
+        <p style="font-size:0.74em; margin-top:0;">Os seis níveis de título formam o <strong>sumário</strong> da página. Escolha o nível pelo lugar do assunto na hierarquia, nunca pelo tamanho que a fonte ficou na tela.</p>
+
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:22px; margin-top:10px;">
+          <div>
+            <h4 style="font-size:0.72em; color:#1e8449; margin:0 0 6px 0;">Correto: o sumário faz sentido</h4>
+            <pre class="code-compact" style="margin-top:0;"><code class="language-html" data-trim>&lt;h1&gt;Clínica Vida+&lt;/h1&gt;
+  &lt;h2&gt;Especialidades&lt;/h2&gt;
+    &lt;h3&gt;Cardiologia&lt;/h3&gt;
+    &lt;h3&gt;Pediatria&lt;/h3&gt;
+  &lt;h2&gt;Corpo clínico&lt;/h2&gt;</code></pre>
+          </div>
+          <div>
+            <h4 style="font-size:0.72em; color:#c0392b; margin:0 0 6px 0;">Errado: nível escolhido pela aparência</h4>
+            <pre class="code-compact" style="margin-top:0;"><code class="language-html" data-trim>&lt;h1&gt;Clínica Vida+&lt;/h1&gt;
+  &lt;h4&gt;Especialidades&lt;/h4&gt;
+    &lt;h2&gt;Cardiologia&lt;/h2&gt;
+    &lt;h6&gt;Pediatria&lt;/h6&gt;
+  &lt;h4&gt;Corpo clínico&lt;/h4&gt;</code></pre>
+          </div>
+        </div>
+
+        <div class="callout" style="margin-top:12px;">
+          <p><strong>Um <code>h1</code> por página</strong>, com o assunto principal dela. Quem usa leitor de tela navega saltando de título em título: uma hierarquia furada transforma a página num sumário sem sentido.</p>
+        </div>
+
+        <div class="takeaway">
+          <span class="takeaway-label">Teste rápido</span>
+          <p>Leia só os títulos da sua página, de cima para baixo. Se isso soar como o índice de um livro, a hierarquia está certa. Se soar como uma lista embaralhada, algum nível está no lugar errado.</p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">03 Títulos e hierarquia</div>
+          <div class="footer-page">9</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 10: PARÁGRAFOS, ÊNFASE E ENTIDADES ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Parágrafos, ênfase, quebras e entidades</h2>
+        </div>
+
+        <div style="display:grid; grid-template-columns:1.25fr 1fr; gap:24px; margin-top:4px; align-items:start;">
+          <div>
+            <pre class="code-compact" style="margin-top:0;"><code class="language-html" data-trim>&lt;p&gt;A &lt;strong&gt;Clínica Vida+&lt;/strong&gt; atende em
+   &lt;em&gt;seis especialidades&lt;/em&gt;.&lt;/p&gt;
+
+&lt;p&gt;Recepção: 8h às 18h.&lt;br&gt;
+   Telefone: (11) 4002-8922&lt;/p&gt;
+
+&lt;p&gt;Retorno em at&amp;eacute; 30 dias.&lt;/p&gt;</code></pre>
+            <div class="callout" style="margin-top:10px;">
+              <p><code>&lt;strong&gt;</code> e <code>&lt;em&gt;</code> marcam <strong>importância e ênfase</strong>, e o leitor de tela muda a entonação. <code>&lt;b&gt;</code> e <code>&lt;i&gt;</code> só engordam e inclinam a letra, sem significado nenhum.</p>
+            </div>
+          </div>
+          <div>
+            <table style="margin-top:0; font-size:0.68em;">
+              <thead>
+                <tr><th>Entidade</th><th>Resultado</th></tr>
+              </thead>
+              <tbody>
+                <tr><td><code>&amp;lt;</code></td><td>&lt;</td></tr>
+                <tr><td><code>&amp;gt;</code></td><td>&gt;</td></tr>
+                <tr><td><code>&amp;amp;</code></td><td>&amp;</td></tr>
+                <tr><td><code>&amp;nbsp;</code></td><td>espaço que não quebra a linha</td></tr>
+                <tr><td><code>&amp;eacute;</code></td><td>é</td></tr>
+              </tbody>
+            </table>
+            <p style="font-size:0.62em; color:#666666; margin-top:8px;">Entidades existem para escrever caracteres que o próprio HTML usa como sintaxe. Com <code>charset="UTF-8"</code>, os acentos podem ser digitados direto.</p>
+          </div>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">03 Parágrafos, ênfase e entidades</div>
+          <div class="footer-page">10</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 11: DEMONSTRAÇÃO AO VIVO ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Demonstração: a primeira página da clínica</h2>
+        </div>
+
+        <p style="font-size:0.74em; margin-top:0;">Escrito à esquerda, salvo, aberto no navegador à direita. A cada linha nova, um <em>refresh</em>: é assim que se aprende HTML.</p>
+
+        <div class="figure-split" style="grid-template-columns:1.05fr 1fr; gap:26px; margin-top:6px; align-items:center;">
+          <pre class="code-compact" style="margin:0;"><code class="language-html" data-trim>&lt;body&gt;
+  &lt;h1&gt;Clínica Vida+&lt;/h1&gt;
+  &lt;p&gt;Atendimento em seis especialidades,
+     com agendamento em poucos cliques.&lt;/p&gt;
+
+  &lt;h2&gt;Onde estamos&lt;/h2&gt;
+  &lt;p&gt;Rua das Acácias, 120, São Paulo.&lt;br&gt;
+     Telefone: (11) 4002-8922&lt;/p&gt;
+&lt;/body&gt;</code></pre>
+
+          <svg viewBox="0 0 520 290" role="img" aria-label="A mesma página aberta no navegador, com o estilo padrão do navegador">
+            <rect x="6" y="6" width="508" height="278" rx="10" fill="#FFFFFF" stroke="#CCCCCC" stroke-width="2"/>
+            <rect x="6" y="6" width="508" height="40" rx="10" fill="#EFEFEF"/>
+            <rect x="6" y="36" width="508" height="10" fill="#EFEFEF"/>
+            <circle cx="30" cy="26" r="6" fill="#e74c3c"/>
+            <circle cx="52" cy="26" r="6" fill="#f1c40f"/>
+            <circle cx="74" cy="26" r="6" fill="#27ae60"/>
+            <rect x="96" y="14" width="400" height="24" rx="12" fill="#FFFFFF" stroke="#DDDDDD"/>
+            <text x="112" y="31" font-size="12" fill="#888888" font-family="'JetBrains Mono', monospace">file:///.../clinica-vida/index.html</text>
+
+            <text x="34" y="98" font-size="30" font-weight="800" fill="#111111">Clínica Vida+</text>
+            <text x="34" y="132" font-size="15" fill="#333333">Atendimento em seis especialidades, com</text>
+            <text x="34" y="154" font-size="15" fill="#333333">agendamento em poucos cliques.</text>
+            <text x="34" y="200" font-size="23" font-weight="800" fill="#111111">Onde estamos</text>
+            <text x="34" y="232" font-size="15" fill="#333333">Rua das Acácias, 120, São Paulo.</text>
+            <text x="34" y="254" font-size="15" fill="#333333">Telefone: (11) 4002-8922</text>
+          </svg>
+        </div>
+
+        <div class="takeaway">
+          <span class="takeaway-label">Repare</span>
+          <p>Ninguém escreveu nenhuma regra de estilo, e mesmo assim o <code>h1</code> saiu grande e em negrito. Esse é o estilo padrão do navegador. Na Aula 04 você toma essa decisão de volta com o CSS.</p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">03 Demonstração ao vivo</div>
+          <div class="footer-page">11</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 12: EXERCÍCIO DO CICLO 1 ==================== -->
+      <section class="exercise-slide content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Exercício do Ciclo 1: a sua primeira página</h2>
+        </div>
+
+        <p style="font-size:0.74em; margin-top:0;">Oito minutos, na sua máquina. Ainda não é o laboratório: é para o esqueleto sair dos dedos sem consultar o slide.</p>
+
+        <div class="exercise-container">
+          <h3>No VS Code, dentro da pasta do seu fork</h3>
+          <ol class="exercise-steps">
+            <li>Crie um arquivo chamado <code>index.html</code> na raiz do repositório.</li>
+            <li>Escreva o esqueleto completo: <code>&lt;!DOCTYPE html&gt;</code>, <code>html</code> com <code>lang</code>, <code>head</code> com <code>meta charset</code> e <code>title</code>, e <code>body</code>.</li>
+            <li>No <code>body</code>, coloque um <code>&lt;h1&gt;</code> com o nome da clínica e um <code>&lt;p&gt;</code> de duas linhas apresentando-a.</li>
+            <li>Use <code>&lt;strong&gt;</code> em pelo menos uma expressão do parágrafo.</li>
+            <li>Abra o arquivo no navegador e confira o título da aba: ele vem do <code>&lt;title&gt;</code>, não do <code>&lt;h1&gt;</code>.</li>
+          </ol>
+        </div>
+
+        <div class="callout" style="margin-top:12px;">
+          <p><strong>Não commite ainda.</strong> No laboratório, daqui a pouco, este arquivo vai nascer dentro de uma branch própria. Deixe-o salvo e siga.</p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">03 Exercício do Ciclo 1</div>
+          <div class="footer-page">12</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 13: HTML SEMÂNTICO, POR QUÊ ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>HTML semântico: a mesma tela, dois códigos <a href="#/ref-slide" class="ref-badge" title="Ver referências">[1]</a></h2>
+        </div>
+
+        <p style="font-size:0.74em; margin-top:0;">Os dois trechos abaixo produzem exatamente o mesmo desenho na tela. Para o navegador, o leitor de tela e o buscador, eles não valem a mesma coisa.</p>
+
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:22px; margin-top:8px;">
+          <div>
+            <h4 style="font-size:0.72em; color:#c0392b; margin:0 0 6px 0;">Sopa de div: sem significado nenhum</h4>
+            <pre class="code-compact" style="margin-top:0;"><code class="language-html" data-trim>&lt;div class="topo"&gt;
+  &lt;div class="menu"&gt;...&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="conteudo"&gt;
+  &lt;div class="bloco"&gt;...&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="rodape"&gt;...&lt;/div&gt;</code></pre>
+          </div>
+          <div>
+            <h4 style="font-size:0.72em; color:#1e8449; margin:0 0 6px 0;">Semântico: cada caixa se apresenta</h4>
+            <pre class="code-compact" style="margin-top:0;"><code class="language-html" data-trim>&lt;header&gt;
+  &lt;nav&gt;...&lt;/nav&gt;
+&lt;/header&gt;
+&lt;main&gt;
+  &lt;section&gt;...&lt;/section&gt;
+&lt;/main&gt;
+&lt;footer&gt;...&lt;/footer&gt;</code></pre>
+          </div>
+        </div>
+
+        <div class="concept-cards" style="grid-template-columns: repeat(3, 1fr); gap:14px; margin-top:14px;">
+          <div class="concept-card" style="padding:13px 17px;">
+            <h4>Acessibilidade</h4>
+            <p style="font-size:0.67em;">O leitor de tela oferece "pular para o conteúdo principal" porque existe um <code>main</code>. Com <code>div</code>, ele não tem como saber.</p>
+          </div>
+          <div class="concept-card" style="padding:13px 17px;">
+            <h4>Buscadores</h4>
+            <p style="font-size:0.67em;">O robô do Google distingue o conteúdo do menu e do rodapé, e indexa melhor a página da clínica.</p>
+          </div>
+          <div class="concept-card" style="padding:13px 17px;">
+            <h4>Manutenção</h4>
+            <p style="font-size:0.67em;">Daqui a seis meses, <code>&lt;/footer&gt;</code> diz o que fechou. <code>&lt;/div&gt;</code>, no meio de trinta iguais, não diz nada.</p>
+          </div>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">03 Por que HTML semântico</div>
+          <div class="footer-page">13</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 14: MAPA DAS TAGS SEMÂNTICAS ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>O mapa das tags na página da Clínica Vida+ <a href="#/ref-slide" class="ref-badge" title="Ver referências">[1]</a></h2>
+        </div>
+
+        <div class="slide-figure" style="margin-top:2px;">
+          <svg viewBox="0 0 1080 430" style="max-height:462px;" role="img" aria-label="Wireframe da página inicial da Clínica Vida+ com as regiões marcadas por header, nav, main, section, article, aside e footer">
+            <!-- header -->
+            <rect x="20" y="10" width="1040" height="62" rx="6" fill="#FDECE8" stroke="#C84B31" stroke-width="2.5"/>
+            <text x="40" y="38" font-size="20" font-weight="700" fill="#C84B31" font-family="'JetBrains Mono', monospace">&lt;header&gt;</text>
+            <text x="40" y="60" font-size="15" fill="#777777">Nome da clínica, slogan e identidade. Vem uma vez, no alto da página.</text>
+
+            <!-- nav -->
+            <rect x="20" y="80" width="1040" height="56" rx="6" fill="#FDECE8" stroke="#C84B31" stroke-width="2.5"/>
+            <text x="40" y="106" font-size="20" font-weight="700" fill="#C84B31" font-family="'JetBrains Mono', monospace">&lt;nav&gt;</text>
+            <text x="40" y="127" font-size="15" fill="#777777">Menu de navegação: Início, Especialidades, Corpo clínico, Contato.</text>
+
+            <!-- main -->
+            <rect x="20" y="144" width="770" height="226" rx="6" fill="#FFFFFF" stroke="#00274D" stroke-width="2.5" stroke-dasharray="8,5"/>
+            <text x="38" y="170" font-size="20" font-weight="700" fill="#00274D" font-family="'JetBrains Mono', monospace">&lt;main&gt;</text>
+            <text x="152" y="169" font-size="14" fill="#888888">o conteúdo principal, único por página</text>
+
+            <!-- section apresentação -->
+            <rect x="38" y="182" width="734" height="62" rx="5" fill="#F5F5F5" stroke="#AAAAAA" stroke-width="2"/>
+            <text x="56" y="206" font-size="17" font-weight="700" fill="#00274D" font-family="'JetBrains Mono', monospace">&lt;section&gt;</text>
+            <text x="56" y="228" font-size="14" fill="#777777">Apresentação da clínica: um h2 e dois parágrafos.</text>
+
+            <!-- section especialidades -->
+            <rect x="38" y="254" width="734" height="102" rx="5" fill="#F5F5F5" stroke="#AAAAAA" stroke-width="2"/>
+            <text x="56" y="277" font-size="17" font-weight="700" fill="#00274D" font-family="'JetBrains Mono', monospace">&lt;section&gt;</text>
+            <text x="184" y="276" font-size="14" fill="#888888">Especialidades, cada uma em um article</text>
+
+            <rect x="56" y="288" width="228" height="54" rx="5" fill="#FFFFFF" stroke="#C84B31" stroke-width="2"/>
+            <text x="70" y="309" font-size="15" font-weight="700" fill="#C84B31" font-family="'JetBrains Mono', monospace">&lt;article&gt;</text>
+            <text x="70" y="330" font-size="13" fill="#777777">Cardiologia</text>
+
+            <rect x="298" y="288" width="228" height="54" rx="5" fill="#FFFFFF" stroke="#C84B31" stroke-width="2"/>
+            <text x="312" y="309" font-size="15" font-weight="700" fill="#C84B31" font-family="'JetBrains Mono', monospace">&lt;article&gt;</text>
+            <text x="312" y="330" font-size="13" fill="#777777">Pediatria</text>
+
+            <rect x="540" y="288" width="228" height="54" rx="5" fill="#FFFFFF" stroke="#C84B31" stroke-width="2"/>
+            <text x="554" y="309" font-size="15" font-weight="700" fill="#C84B31" font-family="'JetBrains Mono', monospace">&lt;article&gt;</text>
+            <text x="554" y="330" font-size="13" fill="#777777">Dermatologia</text>
+
+            <!-- aside -->
+            <rect x="806" y="144" width="254" height="226" rx="6" fill="#F5F5F5" stroke="#C84B31" stroke-width="2.5"/>
+            <text x="824" y="172" font-size="20" font-weight="700" fill="#C84B31" font-family="'JetBrains Mono', monospace">&lt;aside&gt;</text>
+            <text x="824" y="200" font-size="14" fill="#777777">Conteúdo relacionado,</text>
+            <text x="824" y="220" font-size="14" fill="#777777">mas secundário:</text>
+            <text x="824" y="248" font-size="14" fill="#555555">horário de atendimento,</text>
+            <text x="824" y="268" font-size="14" fill="#555555">convênios aceitos e</text>
+            <text x="824" y="288" font-size="14" fill="#555555">telefone da recepção.</text>
+            <text x="824" y="330" font-size="13" fill="#999999">Sai da página sem quebrar</text>
+            <text x="824" y="350" font-size="13" fill="#999999">o sentido do conteúdo.</text>
+
+            <!-- footer -->
+            <rect x="20" y="378" width="1040" height="48" rx="6" fill="#FDECE8" stroke="#C84B31" stroke-width="2.5"/>
+            <text x="40" y="402" font-size="20" font-weight="700" fill="#C84B31" font-family="'JetBrains Mono', monospace">&lt;footer&gt;</text>
+            <text x="180" y="401" font-size="15" fill="#777777">Endereço, telefone, CNPJ e direitos autorais. Fecha a página.</text>
+          </svg>
+        </div>
+
+        <div class="takeaway">
+          <span class="takeaway-label">Sete tags</span>
+          <p>Este mapa resolve a estrutura de quase qualquer página da web. Antes de escrever o HTML de uma tela nova, desenhe as caixas e escreva o nome da tag dentro de cada uma.</p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">03 Mapa das tags semânticas</div>
+          <div class="footer-page">14</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 15: SECTION E ARTICLE ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>section, article e a dúvida de sempre</h2>
+        </div>
+
+        <p style="font-size:0.74em; margin-top:0;">A pergunta que decide entre as duas: <strong>este bloco continua fazendo sentido sozinho, fora da página?</strong> Se sim, é <code>article</code>. Se ele só existe como parte de um todo, é <code>section</code>.</p>
+
+        <div class="side-by-side" style="margin-top:8px;">
+          <div class="side">
+            <h4>section</h4>
+            <ul style="margin:0; padding-left:20px;">
+              <li>Agrupa conteúdo relacionado dentro da página e quase sempre começa com um título, um <code>h2</code> ou <code>h3</code>.</li>
+              <li>Na clínica: a seção "Especialidades" inteira.</li>
+            </ul>
+          </div>
+          <div class="side">
+            <h4>article</h4>
+            <ul style="margin:0; padding-left:20px;">
+              <li>Bloco independente, que sobrevive fora do contexto e é reaproveitável em outra página.</li>
+              <li>Na clínica: cada especialidade, com nome e descrição.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="callout" style="margin-top:14px;">
+          <p><strong>A <code>div</code> não morreu.</strong> Ela continua certa quando o agrupamento existe só para efeito de layout, sem significado nenhum para o conteúdo. O erro não é usar <code>div</code>: é usar <code>div</code> onde existe uma tag que diz o que aquilo é.</p>
+        </div>
+
+        <div class="takeaway">
+          <span class="takeaway-label">Na dúvida</span>
+          <p>Leia só as tags do seu arquivo, ignorando o texto. Se dá para descrever a página por elas, a marcação está semântica.</p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">03 section e article</div>
+          <div class="footer-page">15</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 16: LISTAS ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Listas: quando a ordem importa e quando não</h2>
+        </div>
+
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:22px; margin-top:6px;">
+          <div>
+            <h4 style="font-size:0.72em; color:#C84B31; margin:0 0 6px 0;">ul: a ordem não importa</h4>
+            <pre class="code-compact" style="margin-top:0;"><code class="language-html" data-trim>&lt;h2&gt;Especialidades&lt;/h2&gt;
+&lt;ul&gt;
+  &lt;li&gt;Cardiologia&lt;/li&gt;
+  &lt;li&gt;Pediatria&lt;/li&gt;
+  &lt;li&gt;Dermatologia&lt;/li&gt;
+&lt;/ul&gt;</code></pre>
+          </div>
+          <div>
+            <h4 style="font-size:0.72em; color:#C84B31; margin:0 0 6px 0;">ol: a ordem é o conteúdo</h4>
+            <pre class="code-compact" style="margin-top:0;"><code class="language-html" data-trim>&lt;h2&gt;Como agendar&lt;/h2&gt;
+&lt;ol&gt;
+  &lt;li&gt;Escolha a especialidade.&lt;/li&gt;
+  &lt;li&gt;Escolha o médico e o horário.&lt;/li&gt;
+  &lt;li&gt;Confirme por e-mail.&lt;/li&gt;
+&lt;/ol&gt;</code></pre>
+          </div>
+        </div>
+
+        <div class="callout" style="margin-top:12px;">
+          <p>Dentro de <code>&lt;ul&gt;</code> e <code>&lt;ol&gt;</code> só entra <code>&lt;li&gt;</code>, e dentro do <code>&lt;li&gt;</code> entra o que você quiser, inclusive outra lista. O menu do <code>&lt;nav&gt;</code> é uma <code>&lt;ul&gt;</code> de links: um menu é uma lista de destinos, não um monte de <code>&lt;a&gt;</code> soltos.</p>
+        </div>
+
+        <div class="takeaway">
+          <span class="takeaway-label">Por que importa</span>
+          <p>O leitor de tela anuncia "lista com seis itens" e permite pular a lista inteira. Um parágrafo com hífens no começo de cada linha não dá nada disso a ninguém.</p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">03 Listas</div>
+          <div class="footer-page">16</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 17: LINKS E IMAGENS ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Links e imagens acessíveis <a href="#/ref-slide" class="ref-badge" title="Ver referências">[1]</a></h2>
+        </div>
+
+        <pre class="code-compact" style="margin-top:2px;"><code class="language-html" data-trim>&lt;a href="#especialidades"&gt;Especialidades&lt;/a&gt;                    &lt;!-- interno: rola até o id da página --&gt;
+&lt;a href="contato.html"&gt;Fale com a recepção&lt;/a&gt;                  &lt;!-- relativo: outro arquivo do site --&gt;
+&lt;a href="https://cfm.org.br" target="_blank"
+   rel="noopener"&gt;Conselho Federal de Medicina&lt;/a&gt;              &lt;!-- externo: abre em outra aba --&gt;
+
+&lt;img src="img/recepcao.jpg"
+     alt="Recepção da Clínica Vida+, com balcão de atendimento e cadeiras de espera"&gt;</code></pre>
+
+        <div class="side-by-side" style="margin-top:12px;">
+          <div class="side" style="padding:14px 18px;">
+            <h4 style="margin-bottom:6px;">O texto do link é o link</h4>
+            <p style="margin:0; font-size:0.68em;">Quem usa leitor de tela pede a lista de links da página e ouve só esses textos. "Clique aqui", fora de contexto, não leva a lugar nenhum.</p>
+          </div>
+          <div class="side" style="padding:14px 18px;">
+            <h4 style="margin-bottom:6px;">O alt não é opcional</h4>
+            <p style="margin:0; font-size:0.68em;">Descreva a função da imagem, não o arquivo. Se ela for puramente decorativa, escreva <code>alt=""</code>: assim o leitor de tela a ignora de propósito.</p>
+          </div>
+        </div>
+
+        <div class="takeaway">
+          <span class="takeaway-label">Takeaway</span>
+          <p>Link e imagem são os dois pontos onde a acessibilidade da página se decide. Texto de link inútil e <code>img</code> sem <code>alt</code> são erro de conteúdo, não de estilo, e o CSS não conserta nenhum dos dois.</p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">03 Links e imagens</div>
+          <div class="footer-page">17</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 18: TABELAS ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Tabelas: para dados, nunca para layout</h2>
+        </div>
+
+        <p style="font-size:0.74em; margin-top:0;">O corpo clínico da Vida+ é um conjunto de dados com linhas e colunas. Esse é o caso legítimo de <code>&lt;table&gt;</code>.</p>
+
+        <div class="figure-split" style="grid-template-columns:1.1fr 1fr; gap:26px; margin-top:6px; align-items:start;">
+          <pre class="code-compact" style="margin:0;"><code class="language-html" data-trim>&lt;table&gt;
+  &lt;caption&gt;Corpo clínico&lt;/caption&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th scope="col"&gt;Nome&lt;/th&gt;
+      &lt;th scope="col"&gt;CRM&lt;/th&gt;
+      &lt;th scope="col"&gt;Especialidade&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td&gt;Ana Prado&lt;/td&gt;
+      &lt;td&gt;CRM-SP 112233&lt;/td&gt;
+      &lt;td&gt;Cardiologia&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;</code></pre>
+
+          <div>
+            <table style="margin-top:0; font-size:0.66em;">
+              <caption style="text-align:left; font-weight:700; color:#00274D; padding-bottom:6px;">Corpo clínico</caption>
+              <thead>
+                <tr><th>Nome</th><th>CRM</th><th>Especialidade</th></tr>
+              </thead>
+              <tbody>
+                <tr><td>Ana Prado</td><td>CRM-SP 112233</td><td>Cardiologia</td></tr>
+                <tr><td>Bruno Lima</td><td>CRM-SP 445566</td><td>Pediatria</td></tr>
+                <tr><td>Carla Reis</td><td>CRM-SP 778899</td><td>Dermatologia</td></tr>
+              </tbody>
+            </table>
+            <p style="font-size:0.62em; color:#666666; margin-top:10px;">O <code>caption</code> dá título à tabela. O <code>th</code> com <code>scope</code> diz de qual coluna cada célula é, e é o que permite ao leitor de tela anunciar "Especialidade: Cardiologia" ao entrar na célula.</p>
+          </div>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">03 Tabelas</div>
+          <div class="footer-page">18</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 19: VALIDADOR DO W3C ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>O validador do W3C <a href="#/ref-slide" class="ref-badge" title="Ver referências">[3]</a></h2>
+        </div>
+
+        <p style="font-size:0.74em; margin-top:0;">O navegador conserta HTML quebrado em silêncio, cada um do seu jeito. O validador em <code>validator.w3.org/nu</code> não conserta: ele denuncia. É o seu revisor gratuito, e passar por ele é critério do entregável de hoje.</p>
+
+        <table style="margin-top:12px; font-size:0.68em;">
+          <thead>
+            <tr><th style="width:340px;">O que o validador diz</th><th style="width:290px;">O que está acontecendo</th><th>Como corrigir</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><code>End tag "div" seen, but there were open elements</code></td><td>Uma tag ficou aberta dentro de outra</td><td>Fechar na ordem inversa da abertura</td></tr>
+            <tr><td><code>An "img" element must have an "alt" attribute</code></td><td>Imagem sem descrição alternativa</td><td>Acrescentar <code>alt</code>, mesmo que vazio</td></tr>
+            <tr><td><code>Element "h2" not allowed as child of element "ul"</code></td><td>Filho inválido dentro da lista</td><td>Dentro de <code>ul</code>, só <code>li</code></td></tr>
+            <tr><td><code>Duplicate ID "contato"</code></td><td>Dois elementos com o mesmo id</td><td>O <code>id</code> é único na página inteira</td></tr>
+          </tbody>
+        </table>
+
+        <div class="takeaway">
+          <span class="takeaway-label">Takeaway</span>
+          <p>Página válida não é página bonita nem página acessível: é o piso. Validar garante que todo navegador vai montar a mesma árvore a partir do seu arquivo, em vez de cada um adivinhar de um jeito.</p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">03 Validador do W3C</div>
+          <div class="footer-page">19</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 20: EXERCÍCIO DO CICLO 2 ==================== -->
+      <section class="exercise-slide content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Exercício do Ciclo 2: tirar a sopa de div</h2>
+        </div>
+
+        <p style="font-size:0.72em; margin-top:0;">Cinco minutos, no papel ou no editor. Reescreva o trecho abaixo trocando cada <code>div</code> pela tag semântica correta.</p>
+
+        <pre class="code-compact" style="margin-top:0;"><code class="language-html" data-trim>&lt;div id="topo"&gt;
+  &lt;h1&gt;Clínica Vida+&lt;/h1&gt;
+  &lt;div id="menu"&gt;&lt;ul&gt;&lt;li&gt;&lt;a href="#inicio"&gt;Início&lt;/a&gt;&lt;/li&gt;&lt;/ul&gt;&lt;/div&gt;
+&lt;/div&gt;
+&lt;div id="miolo"&gt;
+  &lt;div class="bloco"&gt;&lt;h2&gt;Especialidades&lt;/h2&gt;&lt;/div&gt;
+  &lt;div class="lateral"&gt;&lt;h2&gt;Convênios aceitos&lt;/h2&gt;&lt;/div&gt;
+&lt;/div&gt;
+&lt;div id="rodape"&gt;&lt;p&gt;Rua das Acácias, 120&lt;/p&gt;&lt;/div&gt;</code></pre>
+
+        <div class="callout" style="margin-top:12px;">
+          <p><strong>Cuidado com a lateral.</strong> Ela está dentro do miolo, mas é conteúdo secundário, e por isso não pertence ao <code>main</code>. Duas respostas defensáveis: <code>aside</code> dentro do <code>main</code> ou irmão dele. Vamos discutir a diferença na tela.</p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">03 Exercício do Ciclo 2</div>
+          <div class="footer-page">20</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 21: RETOMADA DE GIT, FLUXO ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Retomada do Git: uma branch por funcionalidade <a href="#/ref-slide" class="ref-badge" title="Ver referências">[4]</a></h2>
+        </div>
+
+        <p style="font-size:0.72em; margin-top:0;">Na Aula 01 você commitou direto na <code>main</code>, porque ainda não havia código. Agora há. A partir de hoje, cada funcionalidade nasce na própria branch e entra na <code>main</code> por um <strong>Pull Request</strong> revisado.</p>
+
+        <div class="slide-figure" style="margin-top:0;">
+          <svg viewBox="0 0 1120 260" style="max-height:284px;" role="img" aria-label="Fluxo de trabalho: branch feature barra pagina-inicial com três commits, push, Pull Request e merge na main">
+            <defs>
+              <marker id="stG" markerWidth="9" markerHeight="9" refX="8" refY="4.5" orient="auto">
+                <path d="M0,0 L9,4.5 L0,9 Z" fill="#888888"/>
+              </marker>
+              <marker id="stC" markerWidth="9" markerHeight="9" refX="8" refY="4.5" orient="auto">
+                <path d="M0,0 L9,4.5 L0,9 Z" fill="#C84B31"/>
+              </marker>
+            </defs>
+
+            <line x1="130" y1="190" x2="1070" y2="190" stroke="#DDDDDD" stroke-width="3"/>
+            <circle cx="180" cy="190" r="15" fill="#00274D"/>
+            <circle cx="270" cy="190" r="15" fill="#00274D"/>
+            <text x="225" y="230" text-anchor="middle" font-size="13" fill="#888888">o que já está na main</text>
+
+            <path d="M282,180 C330,176 320,100 366,95" fill="none" stroke="#C84B31" stroke-width="3"/>
+            <text x="298" y="140" text-anchor="end" font-size="13" font-weight="700" fill="#C84B31">git switch -c</text>
+
+            <circle cx="380" cy="94" r="15" fill="#C84B31"/>
+            <line x1="395" y1="94" x2="485" y2="94" stroke="#C84B31" stroke-width="3"/>
+            <circle cx="500" cy="94" r="15" fill="#C84B31"/>
+            <line x1="515" y1="94" x2="605" y2="94" stroke="#C84B31" stroke-width="3"/>
+            <circle cx="620" cy="94" r="15" fill="#C84B31"/>
+
+            <text x="380" y="136" text-anchor="middle" font-size="12" fill="#777777">esqueleto</text>
+            <text x="500" y="136" text-anchor="middle" font-size="12" fill="#777777">conteúdo</text>
+            <text x="620" y="136" text-anchor="middle" font-size="12" fill="#777777">validação</text>
+
+            <rect x="300" y="24" width="300" height="30" rx="15" fill="#C84B31"/>
+            <text x="450" y="45" text-anchor="middle" font-size="14" font-weight="700" fill="#FFFFFF" font-family="'JetBrains Mono', monospace">feature/pagina-inicial</text>
+            <line x1="450" y1="56" x2="450" y2="74" stroke="#888888" stroke-width="2" marker-end="url(#stG)"/>
+
+            <line x1="638" y1="94" x2="700" y2="94" stroke="#C84B31" stroke-width="3" marker-end="url(#stC)"/>
+            <text x="672" y="80" text-anchor="middle" font-size="12" font-weight="700" fill="#C84B31">push</text>
+
+            <rect x="712" y="60" width="248" height="70" rx="8" fill="#00274D"/>
+            <text x="836" y="88" text-anchor="middle" font-size="16" font-weight="800" fill="#FFFFFF">Pull Request</text>
+            <text x="836" y="112" text-anchor="middle" font-size="13" fill="#BBBBBB">revisão antes de integrar</text>
+
+            <path d="M960,116 C1010,140 1010,160 1022,172" fill="none" stroke="#27ae60" stroke-width="3" marker-end="url(#stG)"/>
+            <circle cx="1035" cy="190" r="18" fill="#27ae60"/>
+            <text x="1035" y="196" text-anchor="middle" font-size="13" font-weight="700" fill="#FFFFFF">M</text>
+            <text x="1035" y="232" text-anchor="middle" font-size="13" font-weight="700" fill="#1e8449">merge</text>
+
+            <rect x="20" y="176" width="90" height="28" rx="14" fill="#00274D"/>
+            <text x="65" y="196" text-anchor="middle" font-size="13" font-weight="700" fill="#FFFFFF" font-family="'JetBrains Mono', monospace">main</text>
+          </svg>
+        </div>
+
+        <div class="callout" style="margin-top:10px;">
+          <p><strong>Uma branch, um assunto.</strong> Se você precisa da palavra "e" para explicar o que a sua branch faz, provavelmente são duas branches e dois Pull Requests.</p>
+        </div>
+
+        <div class="takeaway">
+          <span class="takeaway-label">Por quê</span>
+          <p>A <code>main</code> tem que estar sempre funcionando. Enquanto a página está pela metade, ela vive na branch, sem estragar nada. O Pull Request é o lugar onde o código é lido antes de virar oficial.</p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">03 Branch por funcionalidade</div>
+          <div class="footer-page">21</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 22: OS COMANDOS DO FLUXO ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Os comandos do fluxo, na ordem <a href="#/ref-slide" class="ref-badge" title="Ver referências">[4]</a></h2>
+        </div>
+
+        <pre class="code-compact" style="margin-top:2px;"><code class="language-bash" data-trim>git switch main                                  # parte sempre da main atualizada
+git pull
+
+git switch -c feature/pagina-inicial             # cria a branch e já muda para ela
+git status                                       # confirma: On branch feature/pagina-inicial
+
+git add index.html                               # commits pequenos, um assunto cada
+git commit -m "feat: esqueleto semantico da pagina inicial"
+
+git push -u origin feature/pagina-inicial        # publica a branch no seu fork</code></pre>
+
+        <div class="side-by-side" style="margin-top:14px;">
+          <div class="side" style="padding:14px 18px;">
+            <h4 style="margin-bottom:6px;">O nome da branch comunica</h4>
+            <p style="margin:0; font-size:0.68em;">Prefixo de tipo e assunto em minúsculas com hífen: <code>feature/pagina-inicial</code>, <code>fix/tabela-corpo-clinico</code>. Quem vê a lista de branches entende o que está em andamento.</p>
+          </div>
+          <div class="side" style="padding:14px 18px;">
+            <h4 style="margin-bottom:6px;">O -u da primeira vez</h4>
+            <p style="margin:0; font-size:0.68em;">O <code>-u</code> liga a sua branch local à do GitHub. Depois dele, <code>git push</code> sozinho já sabe para onde ir. O GitHub responde com o link de abrir o Pull Request.</p>
+          </div>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">03 Comandos do fluxo</div>
+          <div class="footer-page">22</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 23: QUIZ DE FIXAÇÃO ==================== -->
+      <section class="quiz-slide content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area"><div class="accent-bar"></div><h2>Quiz de fixação</h2></div>
+        <div class="quiz-container">
+          <div class="quiz-question">Por que usar <code>&lt;header&gt;</code>, <code>&lt;nav&gt;</code> e <code>&lt;main&gt;</code> em vez de <code>&lt;div&gt;</code> para tudo?</div>
+          <ul class="quiz-options">
+            <li data-correct="true"><span class="option-letter">A</span><span class="option-text">Porque elas dão significado ao conteúdo, o que ajuda leitores de tela, buscadores e a manutenção do próprio código.</span></li>
+            <li data-correct="false"><span class="option-letter">B</span><span class="option-text">Porque elas são processadas mais rápido que a <code>&lt;div&gt;</code>, o que reduz de forma perceptível o tempo de renderização.</span></li>
+            <li data-correct="false"><span class="option-letter">C</span><span class="option-text">Porque somente elas aceitam regras de CSS, já que a <code>&lt;div&gt;</code> não pode receber nem classe nem identificador próprio.</span></li>
+            <li data-correct="false"><span class="option-letter">D</span><span class="option-text">Porque a <code>&lt;div&gt;</code> foi removida do HTML5 e só é mantida por compatibilidade com páginas escritas antes da versão 5.</span></li>
+          </ul>
+          <div class="quiz-feedback"
+               data-correct-msg="Isso. As tags semânticas descrevem o papel de cada região, e é esse significado que o leitor de tela, o buscador e o próximo desenvolvedor consomem."
+               data-incorrect-msg="Não é isso. Elas desenham igual e não são mais rápidas; a div continua existindo e aceita classe e id. O ganho é de significado."></div>
+        </div>
+        <div class="slide-footer"><div class="footer-bar">03 Quiz de fixação</div><div class="footer-page">23</div></div>
+      </section>
+
+      <!-- ==================== SLIDE 24: LAB PASSO 1 ==================== -->
+      <section class="exercise-slide content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Laboratório, passo 1 de 6: a branch</h2>
+        </div>
+
+        <p style="font-size:0.74em; margin-top:0;">Missão dos próximos 60 minutos: entregar a página inicial da Clínica Vida+ com estrutura semântica completa, validada e em Pull Request.</p>
+
+        <pre class="code-compact" style="margin-top:2px;"><code class="language-bash" data-trim>cd uninove-2026-2-clinica-vida
+
+git switch main
+git pull
+
+git switch -c feature/pagina-inicial
+git status          # On branch feature/pagina-inicial</code></pre>
+
+        <div class="callout" style="margin-top:10px;">
+          <p>Se o <code>git status</code> ainda disser <code>On branch main</code>, pare aqui e chame o professor. Todo o trabalho de hoje precisa nascer dentro da branch, senão não haverá o que revisar no Pull Request.</p>
+        </div>
+
+        <div class="takeaway">
+          <span class="takeaway-label">Checkpoint</span>
+          <p>O professor passa de mesa em mesa conferindo o nome da branch antes de qualquer linha de HTML ser escrita.</p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">03 Laboratório, passo 1, branch</div>
+          <div class="footer-page">24</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 25: LAB PASSO 2 ==================== -->
+      <section class="exercise-slide content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Laboratório, passo 2 de 6: header, nav e a abertura do main</h2>
+        </div>
+
+        <p style="font-size:0.72em; margin-top:0;">Junto com o professor, na raiz do repositório, em <code>index.html</code>. O menu é uma lista de links, não links soltos.</p>
+
+        <pre class="code-compact" style="margin-top:0;"><code class="language-html" data-trim>&lt;body&gt;
+  &lt;header&gt;
+    &lt;h1&gt;Clínica Vida+&lt;/h1&gt;
+    &lt;p&gt;Agendamento de consultas em seis especialidades.&lt;/p&gt;
+  &lt;/header&gt;
+
+  &lt;nav&gt;
+    &lt;ul&gt;
+      &lt;li&gt;&lt;a href="#apresentacao"&gt;A clínica&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href="#especialidades"&gt;Especialidades&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href="#corpo-clinico"&gt;Corpo clínico&lt;/a&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/nav&gt;
+
+  &lt;main&gt;
+    &lt;!-- passo 3 e passo 4 entram aqui --&gt;
+  &lt;/main&gt;
+&lt;/body&gt;</code></pre>
+
+        <div class="slide-footer">
+          <div class="footer-bar">03 Laboratório, passo 2, header e nav</div>
+          <div class="footer-page">25</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 26: LAB PASSO 3 ==================== -->
+      <section class="exercise-slide content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Laboratório, passo 3 de 6: apresentação e especialidades</h2>
+        </div>
+
+        <p style="font-size:0.72em; margin-top:0;">Agora sozinho, dentro do <code>&lt;main&gt;</code>. Repare nos <code>id</code>: são eles que fazem os links do menu funcionarem.</p>
+
+        <pre class="code-compact" style="margin-top:0;"><code class="language-html" data-trim>&lt;section id="apresentacao"&gt;
+  &lt;h2&gt;A clínica&lt;/h2&gt;
+  &lt;p&gt;Dois parágrafos apresentando a Clínica Vida+ e o problema
+     que o agendamento por telefone causa hoje.&lt;/p&gt;
+&lt;/section&gt;
+
+&lt;section id="especialidades"&gt;
+  &lt;h2&gt;Especialidades&lt;/h2&gt;
+  &lt;ul&gt;
+    &lt;li&gt;Cardiologia&lt;/li&gt;
+    &lt;li&gt;Pediatria&lt;/li&gt;
+    &lt;li&gt;Dermatologia&lt;/li&gt;
+  &lt;/ul&gt;
+&lt;/section&gt;</code></pre>
+
+        <div class="callout" style="margin-top:10px;">
+          <p>São <strong>seis especialidades</strong> no seu entregável, não três. E cada <code>id</code> aparece uma única vez na página inteira: o validador reclama de duplicata.</p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">03 Laboratório, passo 3, main</div>
+          <div class="footer-page">26</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 27: LAB PASSO 4 ==================== -->
+      <section class="exercise-slide content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Laboratório, passo 4 de 6: corpo clínico e rodapé</h2>
+        </div>
+
+        <p style="font-size:0.72em; margin-top:0;">A tabela fecha o <code>&lt;main&gt;</code>. O <code>&lt;footer&gt;</code> vem depois dele, como irmão, e não dentro.</p>
+
+        <pre class="code-compact" style="margin-top:0;"><code class="language-html" data-trim>  &lt;section id="corpo-clinico"&gt;
+    &lt;h2&gt;Corpo clínico&lt;/h2&gt;
+    &lt;table&gt;
+      &lt;caption&gt;Médicos da Clínica Vida+&lt;/caption&gt;
+      &lt;thead&gt;
+        &lt;tr&gt;&lt;th scope="col"&gt;Nome&lt;/th&gt;&lt;th scope="col"&gt;CRM&lt;/th&gt;&lt;th scope="col"&gt;Especialidade&lt;/th&gt;&lt;/tr&gt;
+      &lt;/thead&gt;
+      &lt;tbody&gt;
+        &lt;tr&gt;&lt;td&gt;Ana Prado&lt;/td&gt;&lt;td&gt;CRM-SP 112233&lt;/td&gt;&lt;td&gt;Cardiologia&lt;/td&gt;&lt;/tr&gt;
+      &lt;/tbody&gt;
+    &lt;/table&gt;
+  &lt;/section&gt;
+&lt;/main&gt;
+
+&lt;footer&gt;
+  &lt;p&gt;Rua das Acácias, 120, São Paulo. Telefone: (11) 4002-8922&lt;/p&gt;
+&lt;/footer&gt;</code></pre>
+
+        <div class="slide-footer">
+          <div class="footer-bar">03 Laboratório, passo 4, tabela e rodapé</div>
+          <div class="footer-page">27</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 28: LAB PASSO 5 ==================== -->
+      <section class="exercise-slide content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Laboratório, passo 5 de 6: validar no W3C <a href="#/ref-slide" class="ref-badge" title="Ver referências">[3]</a></h2>
+        </div>
+
+        <div class="exercise-container">
+          <h3>No navegador, com o arquivo pronto</h3>
+          <ol class="exercise-steps">
+            <li>Abra <code>validator.w3.org/nu</code> e escolha a aba <strong>Check by file upload</strong>.</li>
+            <li>Envie o seu <code>index.html</code> e clique em <strong>Check</strong>.</li>
+            <li>Leia cada mensagem: o validador informa a <strong>linha</strong> e a <strong>coluna</strong> do problema.</li>
+            <li>Corrija os erros no editor e envie de novo, até a página ficar sem nenhum erro.</li>
+            <li>Os avisos em amarelo, os <em>warnings</em>, não bloqueiam a entrega, mas leia o que cada um diz.</li>
+          </ol>
+        </div>
+
+        <div class="callout" style="margin-top:12px;">
+          <p><strong>Zero erro é critério de aceitação do checkpoint de hoje.</strong> Guarde a tela do validador com a mensagem verde: ela vai no comentário do seu Pull Request.</p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">03 Laboratório, passo 5, validação</div>
+          <div class="footer-page">28</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 29: LAB PASSO 6 ==================== -->
+      <section class="exercise-slide content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Laboratório, passo 6 de 6: push e Pull Request <a href="#/ref-slide" class="ref-badge" title="Ver referências">[4]</a></h2>
+        </div>
+
+        <pre class="code-compact" style="margin-top:2px;"><code class="language-bash" data-trim>git add index.html
+git commit -m "feat: pagina inicial semantica da Clinica Vida+"
+
+git push -u origin feature/pagina-inicial</code></pre>
+
+        <div class="exercise-container" style="margin-top:12px;">
+          <h3>No GitHub, na página do seu fork</h3>
+          <ol class="exercise-steps">
+            <li>Clique em <strong>Compare &amp; pull request</strong>, no aviso que aparece no topo.</li>
+            <li>Confira o destino: da sua <code>feature/pagina-inicial</code> para a <code>main</code> <strong>do seu próprio fork</strong>.</li>
+            <li>Escreva um título claro e, na descrição, o que foi feito e a evidência da validação no W3C.</li>
+            <li>Clique em <strong>Create pull request</strong>. Não faça o merge: o PR aberto é o entregável.</li>
+          </ol>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">03 Laboratório, passo 6, Pull Request</div>
+          <div class="footer-page">29</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 30: FECHAMENTO ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Entregável de hoje e prévia da Aula 04</h2>
+        </div>
+
+        <div class="side-by-side" style="margin-top:6px;">
+          <div class="side">
+            <h4>Entregável desta aula</h4>
+            <ul style="margin:0; padding-left:20px;">
+              <li><code>index.html</code> semântico, com <code>header</code>, <code>nav</code>, <code>main</code>, <code>section</code>, tabela e <code>footer</code>.</li>
+              <li>Sem nenhum erro no validador do W3C.</li>
+              <li>Na branch <code>feature/pagina-inicial</code>, com <strong>Pull Request aberto</strong> no seu fork.</li>
+            </ul>
+          </div>
+          <div class="side">
+            <h4>Prévia da Aula 04</h4>
+            <ul style="margin:0; padding-left:20px;">
+              <li>Esta mesma página ganha identidade visual com CSS.</li>
+              <li>Seletores, cascata, especificidade, box model e um layout em Flexbox.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="takeaway" style="margin-top:16px;">
+          <span class="takeaway-label">As três ideias da semana</span>
+          <p>HTML descreve significado, não aparência; a tag certa é a que diz o que o conteúdo é; e todo código novo entra na main por uma branch e um Pull Request revisado.</p>
+        </div>
+
+        <p style="font-size:0.64em; color:#555555; margin-top:14px;">Fechamos revisando dois Pull Requests na tela, escolhidos entre os de vocês. As quatro referências desta aula estão no próximo slide.</p>
+
+        <div class="slide-footer">
+          <div class="footer-bar">03 Fechamento</div>
+          <div class="footer-page">30</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 31: REFERÊNCIAS ==================== -->
+      <section id="ref-slide" class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Referências desta aula</h2>
+        </div>
+
+        <p style="font-size:0.72em; margin-top:0;">Os números entre colchetes ao lado dos títulos remetem a esta lista. Tudo aqui é material aberto, e as três primeiras têm versão em português.</p>
+
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px 30px; margin-top:6px;">
+          <div class="concept-card">
+            <h4>[1] Elementos do HTML e semântica</h4>
+            <p style="font-size:0.72em; color:#444444;">MDN WEB DOCS. <em>HTML: linguagem de marcação de hipertexto</em>. Mozilla.<br>
+            <code style="font-size:0.9em;">developer.mozilla.org/pt-BR/docs/Web/HTML</code></p>
+          </div>
+          <div class="concept-card">
+            <h4>[2] A especificação da linguagem</h4>
+            <p style="font-size:0.72em; color:#444444;">WHATWG. <em>HTML Living Standard</em>, a norma que os navegadores implementam.<br>
+            <code style="font-size:0.9em;">html.spec.whatwg.org/multipage</code></p>
+          </div>
+          <div class="concept-card">
+            <h4>[3] Validador de marcação</h4>
+            <p style="font-size:0.72em; color:#444444;">W3C. <em>Nu Html Checker</em>, o validador usado no laboratório de hoje.<br>
+            <code style="font-size:0.9em;">validator.w3.org/nu</code></p>
+          </div>
+          <div class="concept-card">
+            <h4>[4] Branch e Pull Request</h4>
+            <p style="font-size:0.72em; color:#444444;">GITHUB. <em>Sobre pull requests</em>. Ver também CHACON; STRAUB, <em>Pro Git</em>, cap. 3.<br>
+            <code style="font-size:0.9em;">docs.github.com/pt/pull-requests</code></p>
+          </div>
+        </div>
+
+        <div class="callout" style="margin-top:16px;">
+          <p>O roteiro completo do laboratório, com os critérios de aceitação do checkpoint, está no kit da Aula 03, no portal da disciplina.</p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">03 Referências</div>
+          <div class="footer-page">31</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 32: ENCERRAMENTO ==================== -->
+      <section class="end-slide">
+        <img src="../assets/img/uninove-logo.png" alt="Uninove, Universidade Nove de Julho"
+             style="max-width:300px; background:#FFFFFF; padding:20px 28px; border-radius:8px;">
+        <div class="copyright">
+          Copyright &copy; 2026<br>
+          Prof. José Romualdo da Costa Filho<br><br>
+          Todos os direitos reservados. É expressamente proibida a reprodução, divulgação<br>
+          total ou parcial, deste material acadêmico sem autorização formal,<br>
+          por escrito, do Professor autor da ementa.
+        </div>
+      </section>
+
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/highlight/highlight.js"></script>
+  <script src="../assets/js/uninove-quiz.js"></script>
+  <script type="module">
+    import { TURMAS, resolverTurma, dataDaAula, formatarData } from '../assets/js/turmas.js';
+    const turma = resolverTurma({
+      hoje: new Date(),
+      salva: localStorage.getItem('uninove-turma'),
+    });
+    const alvo = document.querySelector('[data-data-da-aula]');
+    if (alvo) {
+      const n = Number(alvo.getAttribute('data-data-da-aula'));
+      alvo.textContent = turma
+        ? `${TURMAS[turma].rotulo}, ${formatarData(dataDaAula(turma, n))}`
+        : `Quarta ${formatarData(dataDaAula('quarta', n))} ou quinta ${formatarData(dataDaAula('quinta', n))}`;
+    }
+  </script>
+  <script>
+    Reveal.initialize({
+      width: 1280, height: 720, center: false, margin: 0,
+      hash: true, slideNumber: false,
+      // Os chevrons de navegação caem sobre a footer-bar e sobre o triângulo
+      // azul do canto inferior direito; a barra de progresso encosta no rodapé
+      // e parece um segundo rodapé. Nenhum dos dois é usado na projeção.
+      controls: false, progress: false,
+      // Um slide por página no ?print-pdf, para o PDF bater com o deck.
+      pdfMaxPagesPerSlide: 1,
+      plugins: [RevealHighlight],
+    });
+  </script>
+</body>
+</html>

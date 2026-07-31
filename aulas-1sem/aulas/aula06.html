@@ -1,0 +1,1102 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Aula 06, Introdução ao JavaScript | Uninove</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/theme/white.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/highlight/monokai.css">
+  <link rel="stylesheet" href="../assets/css/uninove-theme.css">
+  <link rel="stylesheet" href="../assets/css/uninove-print.css">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+      <!-- ==================== SLIDE 1: CAPA ==================== -->
+      <section class="cover-slide">
+        <img src="../assets/img/uninove-logo.png" alt="Uninove, Universidade Nove de Julho" class="uninove-logo-full"
+             style="max-width:400px; background:#FFFFFF; padding:26px 36px; border-radius:10px;">
+        <div style="margin-top:36px; color:#FFFFFF; font-size:0.95em; font-weight:800; letter-spacing:4px; text-transform:uppercase;">Desenvolvimento Web</div>
+        <div style="margin-top:12px; color:#C84B31; font-size:0.6em; font-weight:700; letter-spacing:3px; text-transform:uppercase;">Graduação, 2026.2</div>
+      </section>
+
+      <!-- ==================== SLIDE 2: TÍTULO ==================== -->
+      <section class="title-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="title-card">
+          <div class="accent-bar"></div>
+          <h1>Desenvolvimento Web</h1>
+          <h2>Introdução ao JavaScript</h2>
+          <h3>Prof. José Romualdo<br><span data-data-da-aula="6"></span></h3>
+        </div>
+        <div class="lesson-bar">AULA 06 &nbsp;|&nbsp; Módulo 1, Fundamentos da Web e Front-End</div>
+      </section>
+
+      <!-- ==================== SLIDE 3: AGENDA ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Agenda do encontro de hoje</h2>
+        </div>
+
+        <p style="font-size:0.76em; margin-top:0;">São 150 minutos corridos, em quatro ciclos. Hoje a página da Clínica Vida+ deixa de ser só marcação e estilo: ela passa a reagir.</p>
+
+        <table>
+          <thead>
+            <tr><th style="width:190px;">Horário</th><th style="width:200px;">Bloco</th><th>O que acontece</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>19h30 às 20h05</td><td>Ciclo 1</td><td>A linguagem: variáveis, tipos, condicionais, funções e arrays</td></tr>
+            <tr><td>20h05 às 20h40</td><td>Ciclo 2</td><td>O DOM, os eventos e a interceptação do envio do formulário</td></tr>
+            <tr><td>20h40 às 20h50</td><td>Quiz de fixação</td><td>Uma pergunta sobre o conceito central da aula</td></tr>
+            <tr><td>20h50 às 21h25</td><td>Ciclo 3</td><td>Laboratório guiado: criar o <code>agendamento.js</code> e validar o CPF</td></tr>
+            <tr><td>21h25 às 21h50</td><td>Ciclo 4</td><td>Laboratório: regras de negócio, resumo na tela e filtro de busca</td></tr>
+            <tr><td>21h50 às 22h00</td><td>Fechamento</td><td>Fim do Módulo 1 e prévia da Aula 07</td></tr>
+          </tbody>
+        </table>
+
+        <div class="slide-footer">
+          <div class="footer-bar">06 Agenda do encontro</div>
+          <div class="footer-page">3</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 4: RECAPITULAÇÃO DA AULA 05 ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>De onde viemos: o formulário da Aula 05</h2>
+        </div>
+
+        <p style="font-size:0.72em; margin-top:0;">Você entregou o <code>agendamento.html</code> responsivo, com Grid, media queries, o formulário completo e a validação nativa ligada. Ela funciona, e hoje descobrimos onde ela para.</p>
+
+        <div class="side-by-side" style="margin-top:6px;">
+          <div class="side">
+            <h4>O que a validação nativa resolve</h4>
+            <ul style="margin:0; padding-left:20px;">
+              <li><code>required</code>: o campo não pode ficar vazio.</li>
+              <li><code>type="email"</code>: o texto precisa parecer um e-mail.</li>
+              <li><code>minlength</code> e <code>pattern</code>: formato do texto.</li>
+              <li>Tudo isso sem uma linha de código escrita por você.</li>
+            </ul>
+          </div>
+          <div class="side">
+            <h4>O que ela não sabe dizer</h4>
+            <ul style="margin:0; padding-left:20px;">
+              <li>Que a data da consulta precisa estar <strong>no futuro</strong>.</li>
+              <li>Que o horário precisa cair dentro do expediente da clínica.</li>
+              <li>Que o CPF digitado tem que somar 11 dígitos de verdade.</li>
+              <li>Como responder ao paciente sem recarregar a página.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="callout" style="margin-top:16px;">
+          <p><strong>O limite é conceitual:</strong> o HTML descreve a <em>forma</em> do dado. Regra de negócio é <strong>comportamento</strong>, e comportamento no navegador tem um nome só: JavaScript.</p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">06 Recapitulação da Aula 05</div>
+          <div class="footer-page">4</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 5: ONDE O JAVASCRIPT RODA ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Onde o JavaScript roda e como ele chega à página <a href="#/ref-slide" class="ref-badge" title="Ver referências">[4]</a></h2>
+        </div>
+
+        <p style="font-size:0.72em; margin-top:0;">O JavaScript é executado <strong>dentro do navegador do paciente</strong>, na máquina dele, não no servidor da clínica. O navegador lê o HTML de cima para baixo, e onde ele encontra um <code>&lt;script&gt;</code> ele para para executar. O atributo <code>defer</code> é o que evita essa parada.</p>
+
+        <div class="slide-figure" style="margin-top:0;">
+          <svg viewBox="0 0 1140 214" role="img" aria-label="Linha do tempo do carregamento da página sem defer e com defer">
+            <defs>
+              <marker id="a06seta" markerWidth="9" markerHeight="9" refX="8" refY="4.5" orient="auto">
+                <path d="M0,0 L9,4.5 L0,9 Z" fill="#888888"/>
+              </marker>
+            </defs>
+
+            <text x="16" y="30" font-size="15" font-weight="800" fill="#c0392b">Sem defer, no meio do HTML</text>
+            <rect x="16" y="44" width="300" height="40" rx="6" fill="#00274D"/>
+            <text x="166" y="69" text-anchor="middle" font-size="14" fill="#FFFFFF" font-weight="600">lendo o HTML</text>
+            <rect x="322" y="44" width="230" height="40" rx="6" fill="#c0392b"/>
+            <text x="437" y="69" text-anchor="middle" font-size="14" fill="#FFFFFF" font-weight="700">PARA e executa o script</text>
+            <rect x="558" y="44" width="300" height="40" rx="6" fill="#00274D"/>
+            <text x="708" y="69" text-anchor="middle" font-size="14" fill="#FFFFFF" font-weight="600">volta a ler o HTML</text>
+            <text x="878" y="60" font-size="13" fill="#c0392b" font-weight="700">a tela demora mais</text>
+            <text x="878" y="79" font-size="13" fill="#c0392b">e o script não acha</text>
+            <text x="878" y="98" font-size="13" fill="#c0392b">o que ainda não foi lido</text>
+
+            <line x1="16" y1="108" x2="1124" y2="108" stroke="#e0e0e0" stroke-width="2"/>
+
+            <text x="16" y="140" font-size="15" font-weight="800" fill="#1e8449">Com defer, no head</text>
+            <rect x="16" y="154" width="620" height="40" rx="6" fill="#00274D"/>
+            <text x="326" y="179" text-anchor="middle" font-size="14" fill="#FFFFFF" font-weight="600">lê o HTML inteiro, sem parar (o script baixa em paralelo)</text>
+            <line x1="640" y1="174" x2="678" y2="174" stroke="#888888" stroke-width="2.5" marker-end="url(#a06seta)"/>
+            <rect x="684" y="154" width="250" height="40" rx="6" fill="#1e8449"/>
+            <text x="809" y="179" text-anchor="middle" font-size="14" fill="#FFFFFF" font-weight="700">executa o script</text>
+            <text x="950" y="172" font-size="13" fill="#1e8449" font-weight="700">o DOM já existe inteiro</text>
+            <text x="950" y="191" font-size="13" fill="#1e8449">quando o código roda</text>
+          </svg>
+        </div>
+
+        <pre class="code-compact"><code class="language-html" data-trim>&lt;!-- em agendamento.html, no fim do head: o script espera o HTML terminar --&gt;
+&lt;script src="assets/js/agendamento.js" defer&gt;&lt;/script&gt;</code></pre>
+
+        <div class="slide-footer">
+          <div class="footer-bar">06 Onde o JavaScript roda</div>
+          <div class="footer-page">5</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 6: LET E CONST ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Variáveis: <code>const</code> por padrão, <code>let</code> quando muda <a href="#/ref-slide" class="ref-badge" title="Ver referências">[1]</a></h2>
+        </div>
+
+        <p style="font-size:0.74em; margin-top:0;">A pergunta certa não é "qual usar", é "isto vai ser reatribuído?". Se não vai, use <code>const</code>.</p>
+
+        <pre><code class="language-javascript" data-trim>const NOME_DA_CLINICA = 'Clínica Vida+';   // nunca muda: const
+let pacientesNaFila = 3;                   // muda ao longo do dia: let
+pacientesNaFila = pacientesNaFila + 1;     // agora vale 4
+
+const especialidades = ['Cardiologia', 'Pediatria'];
+especialidades.push('Ortopedia');          // permitido: o array continua o mesmo
+// especialidades = [];                    // erro: isto seria reatribuir a const</code></pre>
+
+        <div class="callout" style="margin-top:6px;">
+          <p><strong>E o <code>var</code>?</strong> Existe, você vai encontrar em código antigo, e vaza para fora do bloco em que foi declarado, o que produz bug difícil de achar. <code>let</code> e <code>const</code> respeitam as chaves. Nesta disciplina, <strong>não usamos <code>var</code></strong>.</p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">06 Variáveis, let e const</div>
+          <div class="footer-page">6</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 7: TIPOS E COMPARAÇÃO ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Tipos, <code>typeof</code> e por que <code>===</code> e nunca <code>==</code> <a href="#/ref-slide" class="ref-badge" title="Ver referências">[1]</a></h2>
+        </div>
+
+        <p style="font-size:0.72em; margin-top:0;">Todo valor lido de um campo de formulário chega como <strong>texto</strong>, mesmo que o campo seja <code>type="number"</code>. É aí que a comparação frouxa cobra o preço.</p>
+
+        <pre><code class="language-javascript" data-trim>typeof 'Ana Souza'     // 'string'      typeof 42          // 'number'
+typeof true            // 'boolean'     typeof undefined   // 'undefined'
+
+const idade = campoIdade.value;   // '18', com aspas: veio de um input
+
+idade == 18           // true  ... o == converte o tipo antes de comparar
+idade === 18          // false ... o === compara valor E tipo
+Number(idade) === 18  // true  ... você converte, de propósito, e sabe disso</code></pre>
+
+        <div class="takeaway">
+          <span class="takeaway-label">Takeaway</span>
+          <p>Use sempre <code>===</code> e <code>!==</code>. A conversão automática do <code>==</code> segue regras que ninguém memoriza, e o bug que ela produz aparece meses depois, em produção.</p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">06 Tipos e comparação</div>
+          <div class="footer-page">7</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 8: CONDICIONAIS E LAÇOS ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Condicionais e laços <a href="#/ref-slide" class="ref-badge" title="Ver referências">[1]</a></h2>
+        </div>
+
+        <p style="font-size:0.72em; margin-top:0;">A clínica atende das 07h às 19h. Essa frase é regra de negócio, e vira condicional.</p>
+
+        <pre><code class="language-javascript" data-trim>const hora = 8;
+
+if (hora &lt; 7 || hora &gt;= 19) {
+  console.log('Fora do expediente da Clínica Vida+');
+} else {
+  console.log('Dentro do expediente');
+}
+
+const especialidades = ['Cardiologia', 'Pediatria', 'Ortopedia'];
+
+for (const nome of especialidades) {   // percorre os VALORES do array
+  console.log(nome);
+}</code></pre>
+
+        <div class="callout" style="margin-top:6px;">
+          <p>Existem também o <code>for</code> clássico e o <code>while</code>. Para percorrer array, prefira <code>for...of</code>.</p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">06 Condicionais e laços</div>
+          <div class="footer-page">8</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 9: FUNÇÕES ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Funções: dar nome a uma regra da clínica <a href="#/ref-slide" class="ref-badge" title="Ver referências">[1]</a></h2>
+        </div>
+
+        <p style="font-size:0.72em; margin-top:0;">Uma função embrulha uma decisão e lhe dá um nome. Depois disso, a regra é lida e testada em um lugar só.</p>
+
+        <pre><code class="language-javascript" data-trim>function calcularIdade(dataNascimento) {
+  const hoje = new Date();
+  return hoje.getFullYear() - dataNascimento.getFullYear();
+}
+
+const dentroDoExpediente = (hora) =&gt; hora &gt;= 7 &amp;&amp; hora &lt; 19;
+
+console.log(calcularIdade(new Date(1990, 4, 12)));   // 36
+console.log(dentroDoExpediente(8));                  // true</code></pre>
+
+        <div class="side-by-side" style="margin-top:10px;">
+          <div class="side" style="padding:12px 16px;">
+            <h4 style="margin-bottom:6px;">Função declarada</h4>
+            <p style="margin:0; font-size:0.68em;">Começa com <code>function</code> e tem nome próprio. Boa para regras com várias linhas, como <code>calcularIdade</code>.</p>
+          </div>
+          <div class="side" style="padding:12px 16px;">
+            <h4 style="margin-bottom:6px;">Função de seta</h4>
+            <p style="margin:0; font-size:0.68em;">A sintaxe <code>(x) =&gt; ...</code>, curta, guardada em uma <code>const</code>. Sem chaves, o valor da expressão já é o retorno.</p>
+          </div>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">06 Funções</div>
+          <div class="footer-page">9</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 10: ARRAYS E MÉTODOS ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Arrays: <code>push</code>, <code>filter</code>, <code>map</code> e <code>find</code> <a href="#/ref-slide" class="ref-badge" title="Ver referências">[1]</a></h2>
+        </div>
+
+        <p style="font-size:0.72em; margin-top:0;">O corpo clínico da Vida+ é uma lista de objetos. Quase tudo que a recepção pede é uma dessas quatro operações.</p>
+
+        <pre><code class="language-javascript" data-trim>const medicos = [
+  { nome: 'Dra. Helena Prado', crm: '34211', especialidade: 'Cardiologia' },
+  { nome: 'Dr. Caio Nunes',    crm: '41880', especialidade: 'Pediatria'   },
+  { nome: 'Dra. Marta Lisboa', crm: '55307', especialidade: 'Cardiologia' },
+];
+
+medicos.push({ nome: 'Dr. Ivo Reis', crm: '60912', especialidade: 'Ortopedia' });
+
+medicos.filter((m) =&gt; m.especialidade === 'Cardiologia');  // um array com 2
+medicos.map((m) =&gt; m.nome);                                // um array de nomes
+medicos.find((m) =&gt; m.crm === '41880');                    // 1 objeto ou undefined</code></pre>
+
+        <div class="takeaway">
+          <span class="takeaway-label">Takeaway</span>
+          <p><code>filter</code> devolve <strong>vários</strong>, <code>find</code> devolve <strong>um só</strong>, <code>map</code> devolve <strong>outra coisa</strong> com o mesmo tamanho. Nenhum dos três altera o array original; só o <code>push</code> altera.</p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">06 Arrays e seus métodos</div>
+          <div class="footer-page">10</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 11: TEMPLATE LITERALS E CONSOLE ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Template literals e o console como ferramenta</h2>
+        </div>
+
+        <p style="font-size:0.72em; margin-top:0;">Crase no lugar de aspas, e <code>${...}</code> para injetar valor no meio do texto. O console não é enfeite: é onde você descobre o que o seu código realmente fez.</p>
+
+        <pre><code class="language-javascript" data-trim>const paciente = 'Ana Souza';
+const especialidade = 'Cardiologia';
+
+console.log(`Consulta de ${paciente} em ${especialidade}`);
+console.table(medicos);            // lista de objetos em formato de tabela
+console.error('CPF inválido');     // destacado em vermelho no console</code></pre>
+
+        <div class="callout" style="margin-top:6px;">
+          <p><strong>Abra o console agora:</strong> <code>F12</code> ou <code>Ctrl+Shift+I</code>, aba <em>Console</em>. Nele você digita JavaScript direto na página aberta, sem editar arquivo nenhum. É o laboratório mais rápido que existe para testar uma ideia.</p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">06 Template literals e console</div>
+          <div class="footer-page">11</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 12: EXERCÍCIO CURTO, CICLO 1 ==================== -->
+      <section class="exercise-slide content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Exercício do Ciclo 1: filtrar médicos por especialidade</h2>
+        </div>
+
+        <div class="exercise-container">
+          <h3>No console do navegador, 8 minutos</h3>
+          <ol class="exercise-steps">
+            <li>Cole na sua página o array <code>medicos</code> do slide anterior.</li>
+            <li>Escreva a função <code>medicosDe(lista, especialidade)</code>, que devolve <strong>apenas</strong> os médicos daquela especialidade.</li>
+            <li>Teste com <code>'Cardiologia'</code>: precisa voltar um array com dois objetos.</li>
+            <li>Teste com <code>'Dermatologia'</code>: precisa voltar um array vazio, e não um erro.</li>
+          </ol>
+        </div>
+
+        <pre class="code-compact"><code class="language-javascript" data-trim>function medicosDe(lista, especialidade) {
+  return /* o seu filtro aqui */;
+}
+console.log(medicosDe(medicos, 'Cardiologia').length);   // esperado: 2</code></pre>
+
+        <div class="slide-footer">
+          <div class="footer-bar">06 Exercício do Ciclo 1</div>
+          <div class="footer-page">12</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 13: O DOM COMO ÁRVORE ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>O DOM: o seu HTML virado árvore de objetos <a href="#/ref-slide" class="ref-badge" title="Ver referências">[2]</a></h2>
+        </div>
+
+        <p style="font-size:0.72em; margin-top:0;">Ao ler o <code>agendamento.html</code>, o navegador não guarda texto: ele constrói uma <strong>árvore de objetos vivos</strong>. Mexer nessa árvore muda a tela na hora, sem recarregar nada.</p>
+
+        <div class="slide-figure" style="margin-top:0;">
+          <svg viewBox="0 0 1140 320" role="img" aria-label="O HTML da página de agendamento da Clínica Vida+ à esquerda e a árvore do DOM correspondente à direita">
+            <defs>
+              <marker id="a06setaDom" markerWidth="9" markerHeight="9" refX="8" refY="4.5" orient="auto">
+                <path d="M0,0 L9,4.5 L0,9 Z" fill="#C84B31"/>
+              </marker>
+            </defs>
+
+            <rect x="8" y="8" width="452" height="300" rx="10" fill="#12121A"/>
+            <text x="28" y="36" font-size="13" font-weight="700" fill="#C84B31">agendamento.html</text>
+            <g font-size="14" font-family="'JetBrains Mono', monospace" fill="#d4d4d4" style="font-variant-ligatures:none;">
+              <text x="28" y="68">&lt;body&gt;</text>
+              <text x="46" y="92">&lt;header&gt;</text>
+              <text x="64" y="116">&lt;h1&gt;Clínica Vida+&lt;/h1&gt;</text>
+              <text x="46" y="140">&lt;/header&gt;</text>
+              <text x="46" y="164">&lt;main&gt;</text>
+              <text x="64" y="188">&lt;form id="form-agendamento"&gt;</text>
+              <text x="82" y="212">&lt;input id="cpf" required&gt;</text>
+              <text x="82" y="236">&lt;button&gt;Agendar&lt;/button&gt;</text>
+              <text x="64" y="260">&lt;/form&gt;</text>
+              <text x="46" y="284">&lt;/main&gt;</text>
+              <text x="28" y="304">&lt;/body&gt;</text>
+            </g>
+
+            <line x1="468" y1="158" x2="498" y2="158" stroke="#C84B31" stroke-width="3" marker-end="url(#a06setaDom)"/>
+            <text x="483" y="140" text-anchor="middle" font-size="12" font-weight="700" fill="#C84B31">o navegador</text>
+            <text x="483" y="184" text-anchor="middle" font-size="12" font-weight="700" fill="#C84B31">monta o DOM</text>
+
+            <line x1="605" y1="158" x2="625" y2="158" stroke="#999999" stroke-width="2"/>
+            <line x1="695" y1="158" x2="715" y2="158" stroke="#999999" stroke-width="2"/>
+            <line x1="785" y1="158" x2="795" y2="158" stroke="#999999" stroke-width="2"/>
+            <path d="M795,158 L795,105 L805,105" fill="none" stroke="#999999" stroke-width="2"/>
+            <path d="M795,158 L795,230 L805,230" fill="none" stroke="#999999" stroke-width="2"/>
+            <line x1="895" y1="105" x2="925" y2="105" stroke="#999999" stroke-width="2"/>
+            <line x1="880" y1="230" x2="900" y2="230" stroke="#999999" stroke-width="2"/>
+            <path d="M975,230 L995,230 L995,195 L1010,195" fill="none" stroke="#999999" stroke-width="2"/>
+            <path d="M975,230 L995,230 L995,265 L1010,265" fill="none" stroke="#999999" stroke-width="2"/>
+
+            <rect x="505" y="143" width="100" height="30" rx="6" fill="#00274D"/>
+            <text x="555" y="163" text-anchor="middle" font-size="13" fill="#FFFFFF" font-weight="700">document</text>
+            <rect x="625" y="143" width="70" height="30" rx="6" fill="#00274D"/>
+            <text x="660" y="163" text-anchor="middle" font-size="13" fill="#FFFFFF" font-weight="600">html</text>
+            <rect x="715" y="143" width="70" height="30" rx="6" fill="#00274D"/>
+            <text x="750" y="163" text-anchor="middle" font-size="13" fill="#FFFFFF" font-weight="600">body</text>
+            <rect x="805" y="90" width="90" height="30" rx="6" fill="#00274D"/>
+            <text x="850" y="110" text-anchor="middle" font-size="13" fill="#FFFFFF" font-weight="600">header</text>
+            <rect x="805" y="215" width="75" height="30" rx="6" fill="#00274D"/>
+            <text x="842" y="235" text-anchor="middle" font-size="13" fill="#FFFFFF" font-weight="600">main</text>
+            <rect x="925" y="90" width="60" height="30" rx="6" fill="#00274D"/>
+            <text x="955" y="110" text-anchor="middle" font-size="13" fill="#FFFFFF" font-weight="600">h1</text>
+            <rect x="900" y="215" width="75" height="30" rx="6" fill="#C84B31"/>
+            <text x="937" y="235" text-anchor="middle" font-size="13" fill="#FFFFFF" font-weight="700">form</text>
+            <rect x="1010" y="180" width="80" height="30" rx="6" fill="#C84B31"/>
+            <text x="1050" y="200" text-anchor="middle" font-size="13" fill="#FFFFFF" font-weight="700">input</text>
+            <rect x="1010" y="250" width="90" height="30" rx="6" fill="#C84B31"/>
+            <text x="1055" y="270" text-anchor="middle" font-size="13" fill="#FFFFFF" font-weight="700">button</text>
+
+            <text x="930" y="315" text-anchor="middle" font-size="12" fill="#C84B31" font-weight="700">os nós que o seu código busca hoje</text>
+          </svg>
+        </div>
+
+        <div class="takeaway">
+          <span class="takeaway-label">Takeaway</span>
+          <p>O arquivo <code>.html</code> é lido uma vez, no carregamento. Depois disso, o que existe é o DOM, e é ele que o seu JavaScript altera. Por isso a tela muda sem o arquivo mudar, e por isso tudo volta ao original quando a página recarrega.</p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">06 O DOM como árvore</div>
+          <div class="footer-page">13</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 14: SELECIONAR E ALTERAR ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Selecionar um nó e ler ou escrever nele <a href="#/ref-slide" class="ref-badge" title="Ver referências">[2]</a></h2>
+        </div>
+
+        <p style="font-size:0.72em; margin-top:0;">O seletor é o mesmo que você já escreve em CSS desde a Aula 04. O que muda é que agora ele devolve um objeto para o seu código manipular.</p>
+
+        <pre><code class="language-javascript" data-trim>const form  = document.querySelector('#form-agendamento');   // o primeiro que casa
+const cpf   = document.querySelector('#cpf');
+const cards = document.querySelectorAll('.lista-especialidades li'); // TODOS que casam
+
+cpf.value;                       // lê o que o paciente digitou no campo
+cpf.value = '';                  // escreve, e a tela muda na hora
+document.querySelector('h1').textContent = 'Clínica Vida+ | Agenda';
+cpf.setAttribute('aria-invalid', 'true');   // atributos também são acessíveis</code></pre>
+
+        <div class="side-by-side" style="margin-top:10px;">
+          <div class="side" style="padding:12px 16px;">
+            <h4 style="margin-bottom:6px;">querySelector</h4>
+            <p style="margin:0; font-size:0.68em;">Devolve <strong>um elemento só</strong>, o primeiro que casa, ou <code>null</code> se nenhum casar. É o que você usa com <code>id</code>.</p>
+          </div>
+          <div class="side" style="padding:12px 16px;">
+            <h4 style="margin-bottom:6px;">querySelectorAll</h4>
+            <p style="margin:0; font-size:0.68em;">Devolve uma <strong>lista</strong>, com <code>length</code> e <code>forEach</code>. Lista vazia quando nada casa, nunca <code>null</code>.</p>
+          </div>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">06 Selecionar e alterar o DOM</div>
+          <div class="footer-page">14</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 15: CLASSLIST ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2><code>classList</code>: o JavaScript manda, o CSS desenha <a href="#/ref-slide" class="ref-badge" title="Ver referências">[2]</a></h2>
+        </div>
+
+        <p style="font-size:0.72em; margin-top:0;">Não escreva estilo no JavaScript. Declare a aparência no CSS, como você já fez nas Aulas 04 e 05, e deixe o JavaScript apenas ligar e desligar a classe.</p>
+
+        <pre class="code-compact"><code class="language-css" data-trim>/* em assets/css/site.css, escrito uma vez */
+.oculto { display: none; }
+.campo-invalido { border-color: #C84B31; }</code></pre>
+
+        <pre class="code-compact"><code class="language-javascript" data-trim>const avisoCpf = document.querySelector('#aviso-cpf');
+
+avisoCpf.classList.add('campo-invalido');       // marca o erro
+avisoCpf.classList.remove('campo-invalido');    // desfaz a marcação
+avisoCpf.classList.toggle('oculto');            // inverte o estado atual
+avisoCpf.classList.toggle('oculto', escondido); // liga ou desliga por condição</code></pre>
+
+        <div class="takeaway">
+          <span class="takeaway-label">Takeaway</span>
+          <p>Separação de responsabilidades: HTML descreve o conteúdo, CSS descreve a aparência, JavaScript decide <strong>quando</strong> cada aparência vale. Misturar os três no mesmo lugar é o que torna a página impossível de manter.</p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">06 classList</div>
+          <div class="footer-page">15</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 16: EVENTOS ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Eventos: reagir ao que o paciente faz <a href="#/ref-slide" class="ref-badge" title="Ver referências">[3]</a></h2>
+        </div>
+
+        <p style="font-size:0.72em; margin-top:0;">Você não pergunta ao navegador se algo aconteceu. Você <strong>registra um tratador</strong> e o navegador o chama quando acontecer.</p>
+
+        <pre><code class="language-javascript" data-trim>const form  = document.querySelector('#form-agendamento');
+const busca = document.querySelector('#busca-especialidade');
+
+form.addEventListener('submit', (event) =&gt; { /* ao enviar o formulário */ });
+busca.addEventListener('input', (event) =&gt; { /* a cada tecla digitada  */ });
+select.addEventListener('change', (event) =&gt; { /* ao trocar a opção    */ });
+botao.addEventListener('click', (event) =&gt; { /* ao clicar             */ });</code></pre>
+
+        <div class="concept-cards" style="grid-template-columns: repeat(4, 1fr); margin-top:12px;">
+          <div class="concept-card" style="padding:12px 14px;">
+            <h4>click</h4>
+            <p style="font-size:0.66em;">Botão pressionado. O mais comum de todos.</p>
+          </div>
+          <div class="concept-card" style="padding:12px 14px;">
+            <h4>input</h4>
+            <p style="font-size:0.66em;">Dispara a cada tecla. É o do filtro de busca.</p>
+          </div>
+          <div class="concept-card" style="padding:12px 14px;">
+            <h4>change</h4>
+            <p style="font-size:0.66em;">O valor mudou e o campo perdeu o foco. É o do <code>select</code>.</p>
+          </div>
+          <div class="concept-card" style="padding:12px 14px;">
+            <h4>submit</h4>
+            <p style="font-size:0.66em;">Do <code>form</code>, não do botão. É o evento de hoje.</p>
+          </div>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">06 Eventos e addEventListener</div>
+          <div class="footer-page">16</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 17: PREVENTDEFAULT ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>O objeto <code>event</code> e o <code>preventDefault()</code> <a href="#/ref-slide" class="ref-badge" title="Ver referências">[3]</a></h2>
+        </div>
+
+        <p style="font-size:0.72em; margin-top:0;">Todo tratador recebe um objeto <code>event</code>, com o que aconteceu e quem disparou. Nele está o método que muda tudo no <code>submit</code>.</p>
+
+        <div class="slide-figure" style="margin-top:0;">
+          <svg viewBox="0 0 1140 262" role="img" aria-label="Comparação do envio do formulário sem e com event.preventDefault">
+            <text x="270" y="24" text-anchor="middle" font-size="16" font-weight="800" fill="#c0392b">Sem event.preventDefault()</text>
+            <rect x="30" y="40" width="480" height="38" rx="6" fill="#F5F5F5" stroke="#00274D" stroke-width="2"/>
+            <text x="270" y="64" text-anchor="middle" font-size="14" fill="#00274D" font-weight="600">O paciente clica em Agendar</text>
+            <rect x="30" y="92" width="480" height="38" rx="6" fill="#F5F5F5" stroke="#00274D" stroke-width="2"/>
+            <text x="270" y="116" text-anchor="middle" font-size="14" fill="#00274D" font-weight="600">O seu tratador de submit executa</text>
+            <rect x="30" y="144" width="480" height="38" rx="6" fill="#fdedec" stroke="#c0392b" stroke-width="2"/>
+            <text x="270" y="168" text-anchor="middle" font-size="14" fill="#c0392b" font-weight="700">O navegador envia o formulário assim mesmo</text>
+            <rect x="30" y="196" width="480" height="38" rx="6" fill="#fdedec" stroke="#c0392b" stroke-width="2"/>
+            <text x="270" y="220" text-anchor="middle" font-size="14" fill="#c0392b" font-weight="700">A página recarrega e apaga o que o JS escreveu</text>
+            <text x="270" y="252" text-anchor="middle" font-size="13" fill="#c0392b">o paciente nunca vê a sua mensagem</text>
+
+            <line x1="570" y1="16" x2="570" y2="246" stroke="#e0e0e0" stroke-width="2"/>
+
+            <text x="870" y="24" text-anchor="middle" font-size="16" font-weight="800" fill="#1e8449">Com event.preventDefault()</text>
+            <rect x="630" y="40" width="480" height="38" rx="6" fill="#F5F5F5" stroke="#00274D" stroke-width="2"/>
+            <text x="870" y="64" text-anchor="middle" font-size="14" fill="#00274D" font-weight="600">O paciente clica em Agendar</text>
+            <rect x="630" y="92" width="480" height="38" rx="6" fill="#F5F5F5" stroke="#00274D" stroke-width="2"/>
+            <text x="870" y="116" text-anchor="middle" font-size="14" fill="#00274D" font-weight="600">O seu tratador de submit executa</text>
+            <rect x="630" y="144" width="480" height="38" rx="6" fill="#FFECE8" stroke="#C84B31" stroke-width="2"/>
+            <text x="870" y="168" text-anchor="middle" font-size="14" fill="#C84B31" font-weight="700">preventDefault() cancela o comportamento padrão</text>
+            <rect x="630" y="196" width="480" height="38" rx="6" fill="#eafaf1" stroke="#1e8449" stroke-width="2"/>
+            <text x="870" y="220" text-anchor="middle" font-size="14" fill="#1e8449" font-weight="700">O seu código valida e escreve na mesma tela</text>
+            <text x="870" y="252" text-anchor="middle" font-size="13" fill="#1e8449">o controle fica com o JavaScript</text>
+          </svg>
+        </div>
+
+        <pre class="code-compact"><code class="language-javascript" data-trim>form.addEventListener('submit', (event) =&gt; {
+  event.preventDefault();   // sem esta linha, a página recarrega e o resto se perde
+  console.log('quem disparou:', event.target.id);
+});</code></pre>
+
+        <div class="slide-footer">
+          <div class="footer-bar">06 O objeto event e preventDefault</div>
+          <div class="footer-page">17</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 18: EXERCÍCIO CURTO, CICLO 2 ==================== -->
+      <section class="exercise-slide content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Exercício do Ciclo 2: mostrar e esconder um bloco</h2>
+        </div>
+
+        <div class="exercise-container">
+          <h3>No seu agendamento.html, 8 minutos</h3>
+          <ol class="exercise-steps">
+            <li>Acrescente a regra <code>.oculto { display: none; }</code> ao <code>site.css</code>.</li>
+            <li>Crie um botão <strong>Ver observações</strong> e um bloco com a classe <code>oculto</code> logo abaixo dele.</li>
+            <li>Registre um tratador de <code>click</code> no botão e use <code>classList.toggle('oculto')</code> no bloco.</li>
+            <li>Clique duas vezes: o bloco precisa aparecer e sumir, sem a página recarregar.</li>
+          </ol>
+        </div>
+
+        <pre class="code-compact"><code class="language-javascript" data-trim>const botao = document.querySelector('#ver-observacoes');
+const bloco = document.querySelector('#bloco-observacoes');
+botao.addEventListener('click', () =&gt; { /* o seu toggle aqui */ });</code></pre>
+
+        <div class="slide-footer">
+          <div class="footer-bar">06 Exercício do Ciclo 2</div>
+          <div class="footer-page">18</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 19: QUIZ DE FIXAÇÃO ==================== -->
+      <section class="quiz-slide content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area"><div class="accent-bar"></div><h2>Quiz de fixação</h2></div>
+        <div class="quiz-container">
+          <div class="quiz-question">Para que serve <code>event.preventDefault()</code> dentro do tratador do evento <code>submit</code> de um formulário?</div>
+          <ul class="quiz-options">
+            <li data-correct="true"><span class="option-letter">A</span> Impede o comportamento padrão do navegador, que é enviar o formulário e recarregar a página, deixando o controle com o código JavaScript.</li>
+            <li data-correct="false"><span class="option-letter">B</span> Limpa todos os campos do formulário, devolvendo cada um ao valor que tinha quando a página foi carregada pela primeira vez.</li>
+            <li data-correct="false"><span class="option-letter">C</span><span class="option-text">Envia o formulário por AJAX automaticamente, montando a requisição a partir dos campos declarados dentro do elemento <code>form</code>.</span></li>
+            <li data-correct="false"><span class="option-letter">D</span> Valida sozinho todos os campos obrigatórios do formulário, exibindo as mensagens de erro que o navegador traz por padrão.</li>
+          </ul>
+          <div class="quiz-feedback"
+               data-correct-msg="Isso. O padrão do submit é enviar e recarregar. Cancelado esse padrão, o seu código fica no comando: valida, decide e escreve a resposta na mesma tela."
+               data-incorrect-msg="Não é isso. O preventDefault não limpa, não envia e não valida nada: ele apenas cancela o comportamento padrão do navegador, que no submit é enviar o formulário e recarregar a página."></div>
+        </div>
+        <div class="slide-footer"><div class="footer-bar">06 Quiz de fixação</div><div class="footer-page">19</div></div>
+      </section>
+
+      <!-- ==================== SLIDE 20: LAB PASSO 1 ==================== -->
+      <section class="exercise-slide content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Laboratório, passo 1 de 6: a branch e o arquivo</h2>
+        </div>
+
+        <p style="font-size:0.72em; margin-top:0;">Missão dos próximos 60 minutos: dar comportamento ao site da Clínica Vida+.</p>
+
+        <div class="exercise-container">
+          <h3>No seu fork, a partir da main atualizada</h3>
+          <ol class="exercise-steps">
+            <li>Crie a branch <code>feature/js-agendamento</code>.</li>
+            <li>Crie o arquivo <code>assets/js/agendamento.js</code>.</li>
+            <li>Ligue o script no fim do <code>&lt;head&gt;</code> do <code>agendamento.html</code>, com <code>defer</code>.</li>
+            <li>Escreva um <code>console.log</code> no arquivo e confirme, no console, que ele apareceu.</li>
+          </ol>
+        </div>
+
+        <pre class="code-compact"><code class="language-bash" data-trim>git checkout main &amp;&amp; git pull
+git checkout -b feature/js-agendamento
+mkdir -p assets/js</code></pre>
+
+        <div class="slide-footer">
+          <div class="footer-bar">06 Laboratório, passo 1, branch e arquivo</div>
+          <div class="footer-page">20</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 21: LAB PASSO 2 ==================== -->
+      <section class="exercise-slide content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Laboratório, passo 2 de 6: interceptar o submit</h2>
+        </div>
+
+        <p style="font-size:0.72em; margin-top:0;">Primeiro dê um <code>id</code> ao formulário e a cada campo que o código precisa ler. Sem <code>id</code>, não há como selecionar o nó.</p>
+
+        <pre class="code-compact"><code class="language-html" data-trim>&lt;form id="form-agendamento" action="#" method="post"&gt;
+  &lt;input type="text" id="cpf" name="cpf" required&gt;
+  &lt;span class="aviso" id="aviso-cpf"&gt;&lt;/span&gt;</code></pre>
+
+        <pre class="code-compact"><code class="language-javascript" data-trim>const form = document.querySelector('#form-agendamento');
+
+form.addEventListener('submit', (event) =&gt; {
+  event.preventDefault();
+  console.log('submit interceptado, a página não recarregou');
+});</code></pre>
+
+        <div class="callout" style="margin-top:6px;">
+          <p>Envie o formulário e olhe a barra de endereços: ela <strong>não</strong> mudou e a página <strong>não</strong> piscou. A partir daqui, quem manda no envio é o seu código.</p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">06 Laboratório, passo 2, interceptar o submit</div>
+          <div class="footer-page">21</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 22: LAB PASSO 3 ==================== -->
+      <section class="exercise-slide content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Laboratório, passo 3 de 6: o CPF com 11 dígitos</h2>
+        </div>
+
+        <p style="font-size:0.72em; margin-top:0;">A primeira regra que o HTML não expressa. A mensagem aparece <strong>ao lado do campo</strong>, não em um alerta.</p>
+
+        <pre><code class="language-javascript" data-trim>const cpf = document.querySelector('#cpf');
+const avisoCpf = document.querySelector('#aviso-cpf');
+
+function validarCpf(campo, aviso) {
+  const digitos = campo.value.replace(/\D/g, '');   // descarta ponto e traço
+  const valido = digitos.length === 11;
+  aviso.textContent = valido ? '' : 'O CPF precisa ter 11 dígitos.';
+  campo.classList.toggle('campo-invalido', !valido);
+  return valido;
+}</code></pre>
+
+        <div class="callout" style="margin-top:6px;">
+          <p>Repare no <strong>contrato da função</strong>: ela escreve a mensagem e devolve <code>true</code> ou <code>false</code>. As três validações do passo seguinte seguem exatamente esse mesmo contrato.</p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">06 Laboratório, passo 3, validação do CPF</div>
+          <div class="footer-page">22</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 23: LAB PASSO 4 ==================== -->
+      <section class="exercise-slide content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Laboratório, passo 4 de 6: data futura e expediente</h2>
+        </div>
+
+        <p style="font-size:0.72em; margin-top:0;">Ciclo 4, sozinho. As duas regras que nenhum atributo do HTML consegue declarar.</p>
+
+        <pre class="code-compact"><code class="language-javascript" data-trim>function validarData(campo, aviso) {
+  const hoje = new Date();
+  hoje.setHours(0, 0, 0, 0);
+  const escolhida = new Date(`${campo.value}T00:00:00`);   // evita o fuso UTC
+  const valida = escolhida &gt; hoje;
+  aviso.textContent = valida ? '' : 'A consulta precisa ser em uma data futura.';
+  return valida;
+}
+
+function validarHorario(campo, aviso) {
+  const hora = Number(campo.value.split(':')[0]);
+  const valida = hora &gt;= 7 &amp;&amp; hora &lt; 19;
+  aviso.textContent = valida ? '' : 'A Clínica Vida+ atende das 07h às 19h.';
+  return valida;
+}</code></pre>
+
+        <div class="callout" style="margin-top:6px;">
+          <p>Teste os dois extremos: uma data de <strong>ontem</strong> e o horário <strong>21h00</strong>. Cada mensagem precisa aparecer ao lado do seu campo, com a página parada.</p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">06 Laboratório, passo 4, regras de negócio</div>
+          <div class="footer-page">23</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 24: LAB PASSO 5 ==================== -->
+      <section class="exercise-slide content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Laboratório, passo 5 de 6: o resumo na tela</h2>
+        </div>
+
+        <p style="font-size:0.72em; margin-top:0;">Todas as regras precisam rodar, e não só até a primeira falhar: o paciente merece ver os erros de uma vez.</p>
+
+        <pre class="code-compact"><code class="language-javascript" data-trim>const resumo = document.querySelector('#resumo-agendamento');
+
+form.addEventListener('submit', (event) =&gt; {
+  event.preventDefault();
+
+  const resultados = [
+    validarCpf(cpf, avisoCpf),
+    validarData(data, avisoData),
+    validarHorario(horario, avisoHorario),
+  ];
+  if (resultados.includes(false)) return;   // alguma regra falhou
+
+  resumo.textContent =
+    `${nome.value} agendou ${especialidade.value} em ${data.value} às ${horario.value}.`;
+  resumo.classList.remove('oculto');
+});</code></pre>
+
+        <div class="slide-footer">
+          <div class="footer-bar">06 Laboratório, passo 5, resumo na tela</div>
+          <div class="footer-page">24</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 25: LAB PASSO 6 ==================== -->
+      <section class="exercise-slide content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Laboratório, passo 6 de 6: o filtro de especialidades</h2>
+        </div>
+
+        <p style="font-size:0.72em; margin-top:0;">Na página inicial, um campo de busca que filtra os cards de especialidade enquanto o paciente digita. Aqui o evento é <code>input</code>, não <code>submit</code>.</p>
+
+        <pre><code class="language-javascript" data-trim>const busca = document.querySelector('#busca-especialidade');
+const cards = document.querySelectorAll('.lista-especialidades li');
+
+busca.addEventListener('input', () =&gt; {
+  const termo = busca.value.trim().toLowerCase();
+  cards.forEach((card) =&gt; {
+    const nome = card.textContent.toLowerCase();
+    card.classList.toggle('oculto', !nome.includes(termo));
+  });
+});</code></pre>
+
+        <div class="callout" style="margin-top:6px;">
+          <p>Campo vazio significa <code>termo</code> vazio, e <code>includes('')</code> é sempre <code>true</code>: todos os cards voltam sozinhos. Regra bem escrita não precisa de caso especial.</p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">06 Laboratório, passo 6, filtro de busca</div>
+          <div class="footer-page">25</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 26: ENTREGÁVEL, COMMIT E PUSH ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Entregável de hoje, commit e push</h2>
+        </div>
+
+        <div class="side-by-side" style="margin-top:6px;">
+          <div class="side">
+            <h4>O que precisa estar funcionando</h4>
+            <ul style="margin:0; padding-left:20px;">
+              <li><code>assets/js/agendamento.js</code> ligado com <code>defer</code>.</li>
+              <li>O <code>submit</code> interceptado, sem recarregar a página.</li>
+              <li>As três regras: CPF, data futura e expediente.</li>
+              <li>O resumo do agendamento exibido em caso de sucesso.</li>
+              <li>O filtro de especialidades na página inicial.</li>
+            </ul>
+          </div>
+          <div class="side">
+            <h4>Como o professor confere</h4>
+            <ul style="margin:0; padding-left:20px;">
+              <li>Envio vazio: mensagens aparecem, a página não recarrega.</li>
+              <li>Data de ontem: recusada com a mensagem certa.</li>
+              <li>Horário 21h00: recusado com a mensagem do expediente.</li>
+              <li>Tudo válido: o resumo aparece na tela.</li>
+              <li>Console sem nenhum erro em vermelho.</li>
+            </ul>
+          </div>
+        </div>
+
+        <pre class="code-compact" style="margin-top:14px;"><code class="language-bash" data-trim>git add assets/js/agendamento.js agendamento.html index.html assets/css/site.css
+git commit -m "feat: validacao e filtro em JavaScript no agendamento"
+git push -u origin feature/js-agendamento</code></pre>
+
+        <div class="slide-footer">
+          <div class="footer-bar">06 Entregável, commit e push</div>
+          <div class="footer-page">26</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 27: FECHAMENTO DO MÓDULO 1 ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Módulo 1 fechado: o front-end da Clínica Vida+ está de pé</h2>
+        </div>
+
+        <p style="font-size:0.72em; margin-top:0;">Seis encontros atrás você não tinha repositório. Agora existe um site semântico, estilizado, responsivo e com comportamento próprio, versionado commit a commit por você.</p>
+
+        <div class="timeline">
+          <div class="tl-item is-past">
+            <div class="tl-dot"></div>
+            <span class="tl-year">Aula 01</span>
+            <span class="tl-tool">Git e GitHub</span>
+            <span class="tl-desc">O fork e o primeiro commit de autoria sua.</span>
+          </div>
+          <div class="tl-item is-past">
+            <div class="tl-dot"></div>
+            <span class="tl-year">Aula 02</span>
+            <span class="tl-tool">TCP/IP e HTTP</span>
+            <span class="tl-desc">A viagem da requisição, documentada na arquitetura.</span>
+          </div>
+          <div class="tl-item is-past">
+            <div class="tl-dot"></div>
+            <span class="tl-year">Aula 03</span>
+            <span class="tl-tool">HTML semântico</span>
+            <span class="tl-desc">O <code>index.html</code> da clínica, validado.</span>
+          </div>
+          <div class="tl-item is-past">
+            <div class="tl-dot"></div>
+            <span class="tl-year">Aula 04</span>
+            <span class="tl-tool">CSS e Flexbox</span>
+            <span class="tl-desc">A identidade visual no <code>site.css</code>.</span>
+          </div>
+          <div class="tl-item is-past">
+            <div class="tl-dot"></div>
+            <span class="tl-year">Aula 05</span>
+            <span class="tl-tool">Grid e formulário</span>
+            <span class="tl-desc">O <code>agendamento.html</code> responsivo.</span>
+          </div>
+          <div class="tl-item">
+            <div class="tl-dot"></div>
+            <span class="tl-year">Aula 06</span>
+            <span class="tl-tool">JavaScript e DOM</span>
+            <span class="tl-desc">A página passa a decidir e a responder.</span>
+          </div>
+        </div>
+
+        <div class="callout" style="margin-top:14px;">
+          <p><strong>Prévia da Aula 07:</strong> feche o navegador e recarregue a página. O agendamento sumiu. Nada do que você digitou sobreviveu, porque tudo aconteceu na memória do cliente. Guardar exige servidor, e é aí que começa o Módulo 2, com <strong>C# e a plataforma .NET</strong>. Quem puder, traga o notebook com <strong>espaço em disco livre para o SDK</strong>.</p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">06 Fechamento do Módulo 1</div>
+          <div class="footer-page">27</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 28: REFERÊNCIAS ==================== -->
+      <section id="ref-slide" class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Referências desta aula</h2>
+        </div>
+
+        <p style="font-size:0.72em; margin-top:0;">Os números entre colchetes ao lado dos títulos remetem a esta lista. Todas estão em português, são abertas e formam a documentação que você vai consultar a vida inteira.</p>
+
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px 30px; margin-top:6px;">
+          <div class="concept-card">
+            <h4>[1] A linguagem: variáveis, tipos, funções e arrays</h4>
+            <p style="font-size:0.72em; color:#444444;">MDN WEB DOCS. <em>Guia de JavaScript</em>. Mozilla.<br>
+            <code style="font-size:0.9em;">developer.mozilla.org/pt-BR/docs/Web/JavaScript/Guide</code></p>
+          </div>
+          <div class="concept-card">
+            <h4>[2] O DOM, seletores e classList</h4>
+            <p style="font-size:0.72em; color:#444444;">MDN WEB DOCS. <em>Introdução ao DOM</em>. Mozilla.<br>
+            <code style="font-size:0.9em;">developer.mozilla.org/pt-BR/docs/Web/API/Document_Object_Model</code></p>
+          </div>
+          <div class="concept-card">
+            <h4>[3] Eventos, addEventListener e preventDefault</h4>
+            <p style="font-size:0.72em; color:#444444;">MDN WEB DOCS. <em>Introdução a eventos</em>. Mozilla.<br>
+            <code style="font-size:0.9em;">developer.mozilla.org/pt-BR/docs/Learn/JavaScript/Building_blocks/Events</code></p>
+          </div>
+          <div class="concept-card">
+            <h4>[4] Onde o script roda e o atributo defer</h4>
+            <p style="font-size:0.72em; color:#444444;">MDN WEB DOCS. <em>O elemento script</em>. Mozilla.<br>
+            <code style="font-size:0.9em;">developer.mozilla.org/pt-BR/docs/Web/HTML/Element/script</code></p>
+          </div>
+        </div>
+
+        <div class="callout" style="margin-top:16px;">
+          <p>O seu repositório do case continua sendo o fork de <code>github.com/josercf/uninove-2026-2-clinica-vida</code>. O roteiro completo do laboratório de hoje está no portal da disciplina, em <code>labs/aula06-lab/</code>.</p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">06 Referências</div>
+          <div class="footer-page">28</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 29: ENCERRAMENTO ==================== -->
+      <section class="end-slide">
+        <img src="../assets/img/uninove-logo.png" alt="Uninove, Universidade Nove de Julho"
+             style="max-width:300px; background:#FFFFFF; padding:20px 28px; border-radius:8px;">
+        <div class="copyright">
+          Copyright &copy; 2026<br>
+          Prof. José Romualdo da Costa Filho<br><br>
+          Todos os direitos reservados. É expressamente proibida a reprodução, divulgação<br>
+          total ou parcial, deste material acadêmico sem autorização formal,<br>
+          por escrito, do Professor autor da ementa.
+        </div>
+      </section>
+
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/highlight/highlight.js"></script>
+  <script src="../assets/js/uninove-quiz.js"></script>
+  <script type="module">
+    import { TURMAS, resolverTurma, dataDaAula, formatarData } from '../assets/js/turmas.js';
+    const turma = resolverTurma({
+      hoje: new Date(),
+      salva: localStorage.getItem('uninove-turma'),
+    });
+    const alvo = document.querySelector('[data-data-da-aula]');
+    if (alvo) {
+      const n = Number(alvo.getAttribute('data-data-da-aula'));
+      alvo.textContent = turma
+        ? `${TURMAS[turma].rotulo}, ${formatarData(dataDaAula(turma, n))}`
+        : `Quarta ${formatarData(dataDaAula('quarta', n))} ou quinta ${formatarData(dataDaAula('quinta', n))}`;
+    }
+  </script>
+  <script>
+    Reveal.initialize({
+      width: 1280, height: 720, center: false, margin: 0,
+      hash: true, slideNumber: false,
+      // Os chevrons de navegação caem sobre a footer-bar e sobre o triângulo
+      // azul do canto inferior direito; a barra de progresso encosta no rodapé
+      // e parece um segundo rodapé. Nenhum dos dois é usado na projeção.
+      controls: false, progress: false,
+      // Um slide por página no ?print-pdf, para o PDF bater com o deck.
+      pdfMaxPagesPerSlide: 1,
+      plugins: [RevealHighlight],
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,989 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Aula 05, CSS avançado e formulários HTML | Uninove</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/theme/white.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/highlight/monokai.css">
+  <link rel="stylesheet" href="../assets/css/uninove-theme.css">
+  <link rel="stylesheet" href="../assets/css/uninove-print.css">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+      <!-- ==================== SLIDE 1: CAPA ==================== -->
+      <section class="cover-slide">
+        <img src="../assets/img/uninove-logo.png" alt="Uninove, Universidade Nove de Julho" class="uninove-logo-full"
+             style="max-width:400px; background:#FFFFFF; padding:26px 36px; border-radius:10px;">
+        <div style="margin-top:36px; color:#FFFFFF; font-size:0.95em; font-weight:800; letter-spacing:4px; text-transform:uppercase;">Desenvolvimento Web</div>
+        <div style="margin-top:12px; color:#C84B31; font-size:0.6em; font-weight:700; letter-spacing:3px; text-transform:uppercase;">Graduação, 2026.2</div>
+      </section>
+
+      <!-- ==================== SLIDE 2: TÍTULO ==================== -->
+      <section class="title-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="title-card">
+          <div class="accent-bar"></div>
+          <h1>Desenvolvimento Web</h1>
+          <h2>CSS avançado e formulários HTML</h2>
+          <h3>Prof. José Romualdo<br><span data-data-da-aula="5"></span></h3>
+        </div>
+        <div class="lesson-bar">AULA 05 &nbsp;|&nbsp; Módulo 1, Fundamentos da Web e Front-End</div>
+      </section>
+
+      <!-- ==================== SLIDE 3: AGENDA ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Agenda do encontro de hoje</h2>
+        </div>
+
+        <p style="font-size:0.76em; margin-top:0;">São 150 minutos corridos, em quatro ciclos. Ao fim da noite a Clínica Vida+ terá uma página de agendamento que funciona em qualquer largura de tela.</p>
+
+        <table>
+          <thead>
+            <tr><th style="width:190px;">Horário</th><th style="width:200px;">Bloco</th><th>O que acontece</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>19h30 às 20h05</td><td>Ciclo 1</td><td>CSS Grid, media queries e a abordagem mobile first</td></tr>
+            <tr><td>20h05 às 20h40</td><td>Ciclo 2</td><td>Formulários HTML, tipos de campo e validação nativa</td></tr>
+            <tr><td>20h40 às 20h50</td><td>Quiz de fixação</td><td>Uma pergunta sobre o conceito central da aula</td></tr>
+            <tr><td>20h50 às 21h25</td><td>Ciclo 3</td><td>Laboratório guiado: <code>agendamento.html</code> e os dados do paciente</td></tr>
+            <tr><td>21h25 às 21h50</td><td>Ciclo 4</td><td>Laboratório: a consulta, o Grid responsivo e a validação</td></tr>
+            <tr><td>21h50 às 22h00</td><td>Fechamento</td><td>Teste em três larguras e prévia da Aula 06</td></tr>
+          </tbody>
+        </table>
+
+        <div class="slide-footer">
+          <div class="footer-bar">05 Agenda do encontro</div>
+          <div class="footer-page">3</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 4: RECAPITULAÇÃO DA AULA 04 ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>De onde partimos: o CSS da Aula 04</h2>
+        </div>
+
+        <p style="font-size:0.74em; margin-top:0;">Na semana passada você entregou <code>assets/css/site.css</code> aplicado ao <code>index.html</code>, com a página inicial da Clínica Vida+ estilizada. Hoje esse mesmo arquivo cresce, e o site ganha a primeira página que recebe dados.</p>
+
+        <div class="concept-cards" style="grid-template-columns: repeat(4, 1fr); margin-top:8px;">
+          <div class="concept-card">
+            <h4>Seletores e cascata</h4>
+            <p>Tipo, classe, identificador e descendência. Quando duas regras brigam, quem vence é a mais específica, e depois a última declarada.</p>
+          </div>
+          <div class="concept-card">
+            <h4>Box model</h4>
+            <p>Conteúdo, <code>padding</code>, <code>border</code> e <code>margin</code>. Com <code>border-box</code>, o <code>width</code> passa a incluir padding e borda.</p>
+          </div>
+          <div class="concept-card">
+            <h4>Flexbox</h4>
+            <p>Os cards de especialidade viraram uma fileira com <code>display: flex</code>, <code>justify-content</code> e <code>gap</code>.</p>
+          </div>
+          <div class="concept-card">
+            <h4>O entregável</h4>
+            <p>A branch <code>feature/estilo-inicial</code> com o <code>site.css</code> commitado e enviado. É dele que a aula de hoje parte.</p>
+          </div>
+        </div>
+
+        <div class="flow-diagram" style="margin:18px 0 0 0; font-size:0.9em; gap:8px;">
+          <div class="flow-item">Aula 03<br>HTML semântico</div>
+          <div class="flow-arrow">&rarr;</div>
+          <div class="flow-item">Aula 04<br>CSS e Flexbox</div>
+          <div class="flow-arrow">&rarr;</div>
+          <div class="flow-item">Aula 05, hoje<br>Grid, responsivo e formulário</div>
+          <div class="flow-arrow">&rarr;</div>
+          <div class="flow-item">Aula 06<br>JavaScript no formulário</div>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">05 Recapitulação da Aula 04</div>
+          <div class="footer-page">4</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 5: CSS GRID, A GRADE BIDIMENSIONAL ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>CSS Grid: uma grade de linhas e colunas <a href="#/ref-slide" class="ref-badge" title="Ver referências">[1]</a></h2>
+        </div>
+
+        <p style="font-size:0.72em; margin-top:0;">O Flexbox distribui itens ao longo de <strong>um eixo</strong>. O Grid desenha uma <strong>grade inteira</strong>, com colunas e linhas ao mesmo tempo, e encaixa os itens nela. Você declara a grade no contêiner; os filhos não precisam saber de nada.</p>
+
+        <div class="slide-figure" style="margin-top:0;">
+          <svg viewBox="0 0 1120 272" role="img" aria-label="Grade de três colunas e duas linhas com os cards de especialidade, com as unidades fr e minmax explicadas ao lado">
+            <text x="420" y="20" text-anchor="middle" font-size="15" font-weight="800" fill="#00274D">grid-template-columns: repeat(3, 1fr)</text>
+
+            <!-- medidas das colunas -->
+            <text x="236" y="44" text-anchor="middle" font-size="13" font-weight="700" fill="#C84B31">1fr</text>
+            <text x="419" y="44" text-anchor="middle" font-size="13" font-weight="700" fill="#C84B31">1fr</text>
+            <text x="602" y="44" text-anchor="middle" font-size="13" font-weight="700" fill="#C84B31">1fr</text>
+
+            <!-- contêiner -->
+            <rect x="140" y="52" width="560" height="196" rx="8" fill="#FFFFFF" stroke="#00274D" stroke-width="2.5" stroke-dasharray="7,5"/>
+
+            <!-- linha 1 -->
+            <rect x="155" y="66" width="163" height="76" rx="6" fill="#F5F5F5" stroke="#00274D" stroke-width="2"/>
+            <text x="236" y="110" text-anchor="middle" font-size="13" font-weight="600" fill="#00274D">Cardiologia</text>
+            <rect x="338" y="66" width="163" height="76" rx="6" fill="#F5F5F5" stroke="#00274D" stroke-width="2"/>
+            <text x="419" y="110" text-anchor="middle" font-size="13" font-weight="600" fill="#00274D">Pediatria</text>
+            <rect x="521" y="66" width="163" height="76" rx="6" fill="#F5F5F5" stroke="#00274D" stroke-width="2"/>
+            <text x="602" y="110" text-anchor="middle" font-size="13" font-weight="600" fill="#00274D">Ortopedia</text>
+
+            <!-- linha 2 -->
+            <rect x="155" y="162" width="163" height="76" rx="6" fill="#F5F5F5" stroke="#00274D" stroke-width="2"/>
+            <text x="236" y="206" text-anchor="middle" font-size="13" font-weight="600" fill="#00274D">Dermatologia</text>
+            <rect x="338" y="162" width="163" height="76" rx="6" fill="#F5F5F5" stroke="#00274D" stroke-width="2"/>
+            <text x="419" y="206" text-anchor="middle" font-size="13" font-weight="600" fill="#00274D">Ginecologia</text>
+            <rect x="521" y="162" width="163" height="76" rx="6" fill="#F5F5F5" stroke="#00274D" stroke-width="2"/>
+            <text x="602" y="206" text-anchor="middle" font-size="13" font-weight="600" fill="#00274D">Clínica geral</text>
+
+            <!-- gap -->
+            <rect x="318" y="66" width="20" height="76" fill="#C84B31" opacity="0.18"/>
+            <rect x="501" y="66" width="20" height="76" fill="#C84B31" opacity="0.18"/>
+            <rect x="155" y="142" width="529" height="20" fill="#C84B31" opacity="0.18"/>
+            <text x="112" y="158" text-anchor="end" font-size="12" font-weight="700" fill="#C84B31">gap: 20px</text>
+            <line x1="118" y1="152" x2="152" y2="152" stroke="#C84B31" stroke-width="2"/>
+
+            <text x="112" y="110" text-anchor="end" font-size="12" fill="#777777">linha 1</text>
+            <text x="112" y="206" text-anchor="end" font-size="12" fill="#777777">linha 2</text>
+
+            <!-- painel explicativo -->
+            <rect x="736" y="40" width="366" height="96" rx="8" fill="#F5F5F5" stroke="#C84B31" stroke-width="0"/>
+            <rect x="736" y="40" width="5" height="96" fill="#C84B31"/>
+            <text x="758" y="66" font-size="14" font-weight="800" fill="#00274D">fr, a fração do espaço livre</text>
+            <text x="758" y="90" font-size="12.5" fill="#555555">Sobrou espaço depois do gap e das margens?</text>
+            <text x="758" y="110" font-size="12.5" fill="#555555">1fr 1fr 1fr divide esse resto em três partes</text>
+            <text x="758" y="130" font-size="12.5" fill="#555555">iguais. Não é porcentagem da tela.</text>
+
+            <rect x="736" y="150" width="366" height="98" rx="8" fill="#F5F5F5"/>
+            <rect x="736" y="150" width="5" height="98" fill="#C84B31"/>
+            <text x="758" y="176" font-size="14" font-weight="800" fill="#00274D">repeat com minmax</text>
+            <text x="758" y="200" font-size="12.5" fill="#555555">repeat(auto-fit, minmax(240px, 1fr)):</text>
+            <text x="758" y="220" font-size="12.5" fill="#555555">nenhum card fica menor que 240px, e a</text>
+            <text x="758" y="240" font-size="12.5" fill="#555555">própria grade quebra a linha quando aperta.</text>
+          </svg>
+        </div>
+
+        <div class="takeaway">
+          <span class="takeaway-label">Takeaway</span>
+          <p>No Grid, o layout mora no contêiner. Trocar de três para uma coluna é mudar uma única declaração, não reescrever o HTML.</p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">05 CSS Grid, a grade</div>
+          <div class="footer-page">5</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 6: DEFININDO AS COLUNAS ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Declarando a grade das especialidades <a href="#/ref-slide" class="ref-badge" title="Ver referências">[1]</a></h2>
+        </div>
+
+        <p style="font-size:0.72em; margin-top:0;">A mesma lista de especialidades que na Aula 04 virou uma fileira de Flexbox agora vira uma grade de verdade, com controle sobre linhas e colunas.</p>
+
+        <pre><code class="language-css" data-trim>.especialidades {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);  /* três colunas iguais */
+  grid-template-rows: auto auto;          /* duas linhas pelo conteúdo */
+  gap: 20px;                              /* entre linhas e colunas */
+}
+
+/* A grade que se adapta sozinha, ainda sem nenhuma media query */
+.especialidades {
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+}</code></pre>
+
+        <div class="takeaway">
+          <span class="takeaway-label">Takeaway</span>
+          <p>Com <code>auto-fit</code> e <code>minmax</code>, o navegador calcula quantas colunas cabem. Media query só entra quando o layout precisa mudar de forma, não só de tamanho.</p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">05 Colunas, fr e minmax</div>
+          <div class="footer-page">6</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 7: GRID-TEMPLATE-AREAS ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Nomeando as regiões com <code>grid-template-areas</code> <a href="#/ref-slide" class="ref-badge" title="Ver referências">[1]</a></h2>
+        </div>
+
+        <div class="figure-split" style="grid-template-columns: 1fr 1.05fr; gap:24px; margin-top:4px; align-items:center;">
+          <svg viewBox="0 0 470 268" style="max-height:284px;" role="img" aria-label="Página da clínica dividida em quatro regiões nomeadas: cabecalho, menu, conteudo e rodape">
+            <rect x="8" y="8" width="454" height="252" rx="8" fill="#FFFFFF" stroke="#00274D" stroke-width="2.5" stroke-dasharray="7,5"/>
+
+            <rect x="24" y="24" width="422" height="46" rx="6" fill="#00274D"/>
+            <text x="235" y="53" text-anchor="middle" font-size="15" font-weight="700" fill="#FFFFFF">cabecalho</text>
+
+            <rect x="24" y="82" width="120" height="118" rx="6" fill="#C84B31"/>
+            <text x="84" y="147" text-anchor="middle" font-size="15" font-weight="700" fill="#FFFFFF">menu</text>
+
+            <rect x="156" y="82" width="290" height="118" rx="6" fill="#F5F5F5" stroke="#00274D" stroke-width="2"/>
+            <text x="301" y="141" text-anchor="middle" font-size="15" font-weight="700" fill="#00274D">conteudo</text>
+            <text x="301" y="163" text-anchor="middle" font-size="12" fill="#777777">agenda, cards, formulário</text>
+
+            <rect x="24" y="212" width="422" height="36" rx="6" fill="#00274D"/>
+            <text x="235" y="236" text-anchor="middle" font-size="15" font-weight="700" fill="#FFFFFF">rodape</text>
+
+            <text x="84" y="20" text-anchor="middle" font-size="11" font-weight="700" fill="#C84B31">220px</text>
+            <text x="301" y="20" text-anchor="middle" font-size="11" font-weight="700" fill="#C84B31">1fr</text>
+          </svg>
+
+          <div>
+            <pre class="code-compact" style="margin-top:0;"><code class="language-css" data-trim>.pagina {
+  display: grid;
+  grid-template-columns: 220px 1fr;
+  grid-template-areas:
+    "cabecalho cabecalho"
+    "menu      conteudo"
+    "rodape    rodape";
+  gap: 16px;
+}
+
+header { grid-area: cabecalho; }
+nav    { grid-area: menu; }
+main   { grid-area: conteudo; }
+footer { grid-area: rodape; }</code></pre>
+          </div>
+        </div>
+
+        <div class="takeaway">
+          <span class="takeaway-label">Takeaway</span>
+          <p>O desenho da página fica legível dentro do próprio CSS. Reorganizar o layout no celular é reescrever as aspas, uma região por linha.</p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">05 grid-template-areas</div>
+          <div class="footer-page">7</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 8: GRID CONTRA FLEXBOX ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Grid contra Flexbox: o critério de escolha <a href="#/ref-slide" class="ref-badge" title="Ver referências">[1]</a></h2>
+        </div>
+
+        <p style="font-size:0.72em; margin-top:0;">Não é rivalidade e não há um vencedor: os dois convivem no mesmo projeto. A pergunta que decide é <strong>quantas dimensões o alinhamento precisa controlar</strong>.</p>
+
+        <div class="figure-split" style="grid-template-columns: 1fr 1fr; gap:26px; margin-top:2px; align-items:start;">
+          <svg viewBox="0 0 520 262" style="max-height:262px;" role="img" aria-label="Flexbox alinha itens em uma única dimensão, ao longo de um eixo">
+            <rect x="8" y="8" width="504" height="246" rx="8" fill="#FFFFFF" stroke="#00274D" stroke-width="2"/>
+            <text x="260" y="38" text-anchor="middle" font-size="17" font-weight="800" fill="#00274D">Flexbox: uma dimensão</text>
+
+            <rect x="32" y="64" width="104" height="72" rx="6" fill="#F5F5F5" stroke="#00274D" stroke-width="2"/>
+            <rect x="150" y="64" width="104" height="72" rx="6" fill="#F5F5F5" stroke="#00274D" stroke-width="2"/>
+            <rect x="268" y="64" width="104" height="72" rx="6" fill="#F5F5F5" stroke="#00274D" stroke-width="2"/>
+            <rect x="386" y="64" width="104" height="72" rx="6" fill="#F5F5F5" stroke="#00274D" stroke-width="2"/>
+
+            <line x1="32" y1="160" x2="478" y2="160" stroke="#C84B31" stroke-width="3"/>
+            <path d="M478,160 L466,154 L466,166 Z" fill="#C84B31"/>
+            <text x="255" y="184" text-anchor="middle" font-size="13" font-weight="700" fill="#C84B31">um eixo, o conteúdo decide onde quebra</text>
+
+            <text x="32" y="214" font-size="13" fill="#555555">Menu de navegação, barra de botões,</text>
+            <text x="32" y="234" font-size="13" fill="#555555">fileira de cards que apenas se distribui.</text>
+          </svg>
+
+          <svg viewBox="0 0 520 262" style="max-height:262px;" role="img" aria-label="Grid alinha itens em duas dimensões, linhas e colunas ao mesmo tempo">
+            <rect x="8" y="8" width="504" height="246" rx="8" fill="#FFFFFF" stroke="#C84B31" stroke-width="2"/>
+            <text x="260" y="38" text-anchor="middle" font-size="17" font-weight="800" fill="#C84B31">Grid: duas dimensões</text>
+
+            <rect x="76" y="58" width="122" height="52" rx="6" fill="#F5F5F5" stroke="#00274D" stroke-width="2"/>
+            <rect x="212" y="58" width="122" height="52" rx="6" fill="#F5F5F5" stroke="#00274D" stroke-width="2"/>
+            <rect x="348" y="58" width="122" height="52" rx="6" fill="#F5F5F5" stroke="#00274D" stroke-width="2"/>
+            <rect x="76" y="124" width="122" height="52" rx="6" fill="#F5F5F5" stroke="#00274D" stroke-width="2"/>
+            <rect x="212" y="124" width="122" height="52" rx="6" fill="#F5F5F5" stroke="#00274D" stroke-width="2"/>
+            <rect x="348" y="124" width="122" height="52" rx="6" fill="#F5F5F5" stroke="#00274D" stroke-width="2"/>
+
+            <line x1="76" y1="44" x2="470" y2="44" stroke="#C84B31" stroke-width="3"/>
+            <path d="M470,44 L458,38 L458,50 Z" fill="#C84B31"/>
+            <line x1="58" y1="58" x2="58" y2="176" stroke="#C84B31" stroke-width="3"/>
+            <path d="M58,176 L52,164 L64,164 Z" fill="#C84B31"/>
+            <text x="273" y="198" text-anchor="middle" font-size="13" font-weight="700" fill="#C84B31">dois eixos, o layout decide onde cada item entra</text>
+
+            <text x="32" y="222" font-size="13" fill="#555555">Estrutura da página, painel da agenda,</text>
+            <text x="32" y="242" font-size="13" fill="#555555">formulário com campos alinhados em colunas.</text>
+          </svg>
+        </div>
+
+        <div class="takeaway">
+          <span class="takeaway-label">Como decidir</span>
+          <p>Se você consegue descrever o alinhamento em uma frase com uma só direção, use Flexbox. Se precisa dizer "esta coluna e esta linha" na mesma frase, use Grid.</p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">05 Grid contra Flexbox</div>
+          <div class="footer-page">8</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 9: MEDIA QUERIES E MOBILE FIRST ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Mobile first: o formulário em três larguras <a href="#/ref-slide" class="ref-badge" title="Ver referências">[2]</a></h2>
+        </div>
+
+        <p style="font-size:0.72em; margin-top:0;">Mobile first é escrever primeiro o layout mais simples, o de uma coluna, e ir <strong>acrescentando</strong> colunas conforme a tela cresce, com <code>min-width</code>. O caminho contrário obriga a desfazer regra a regra.</p>
+
+        <div class="slide-figure" style="margin-top:0;">
+          <svg viewBox="0 0 1120 292" role="img" aria-label="O formulário de agendamento em três larguras: uma coluna no celular, duas no tablet e três no desktop">
+            <!-- CELULAR -->
+            <text x="150" y="22" text-anchor="middle" font-size="15" font-weight="800" fill="#00274D">Celular, 360px</text>
+            <rect x="72" y="36" width="156" height="196" rx="10" fill="#FFFFFF" stroke="#00274D" stroke-width="2.5"/>
+            <rect x="86" y="50" width="128" height="26" rx="4" fill="#F5F5F5" stroke="#00274D" stroke-width="1.5"/>
+            <rect x="86" y="84" width="128" height="26" rx="4" fill="#F5F5F5" stroke="#00274D" stroke-width="1.5"/>
+            <rect x="86" y="118" width="128" height="26" rx="4" fill="#F5F5F5" stroke="#00274D" stroke-width="1.5"/>
+            <rect x="86" y="152" width="128" height="26" rx="4" fill="#F5F5F5" stroke="#00274D" stroke-width="1.5"/>
+            <rect x="86" y="186" width="128" height="26" rx="4" fill="#C84B31"/>
+            <text x="150" y="204" text-anchor="middle" font-size="11" font-weight="700" fill="#FFFFFF">Agendar</text>
+            <text x="150" y="256" text-anchor="middle" font-size="13" font-weight="700" fill="#C84B31">1 coluna</text>
+            <text x="150" y="278" text-anchor="middle" font-size="12" fill="#555555">regra base, sem media query</text>
+
+            <!-- TABLET -->
+            <text x="510" y="22" text-anchor="middle" font-size="15" font-weight="800" fill="#00274D">Tablet, 768px</text>
+            <rect x="352" y="36" width="316" height="196" rx="10" fill="#FFFFFF" stroke="#00274D" stroke-width="2.5"/>
+            <rect x="368" y="50" width="138" height="26" rx="4" fill="#F5F5F5" stroke="#00274D" stroke-width="1.5"/>
+            <rect x="514" y="50" width="138" height="26" rx="4" fill="#F5F5F5" stroke="#00274D" stroke-width="1.5"/>
+            <rect x="368" y="84" width="138" height="26" rx="4" fill="#F5F5F5" stroke="#00274D" stroke-width="1.5"/>
+            <rect x="514" y="84" width="138" height="26" rx="4" fill="#F5F5F5" stroke="#00274D" stroke-width="1.5"/>
+            <rect x="368" y="118" width="138" height="26" rx="4" fill="#F5F5F5" stroke="#00274D" stroke-width="1.5"/>
+            <rect x="514" y="118" width="138" height="26" rx="4" fill="#F5F5F5" stroke="#00274D" stroke-width="1.5"/>
+            <rect x="368" y="152" width="284" height="26" rx="4" fill="#F5F5F5" stroke="#00274D" stroke-width="1.5"/>
+            <rect x="368" y="186" width="284" height="26" rx="4" fill="#C84B31"/>
+            <text x="510" y="204" text-anchor="middle" font-size="11" font-weight="700" fill="#FFFFFF">Agendar</text>
+            <text x="510" y="256" text-anchor="middle" font-size="13" font-weight="700" fill="#C84B31">2 colunas</text>
+            <text x="510" y="278" text-anchor="middle" font-size="12" fill="#555555">@media (min-width: 640px)</text>
+
+            <!-- DESKTOP -->
+            <text x="898" y="22" text-anchor="middle" font-size="15" font-weight="800" fill="#00274D">Desktop, 1200px</text>
+            <rect x="726" y="36" width="344" height="196" rx="10" fill="#FFFFFF" stroke="#00274D" stroke-width="2.5"/>
+            <rect x="742" y="50" width="100" height="26" rx="4" fill="#F5F5F5" stroke="#00274D" stroke-width="1.5"/>
+            <rect x="850" y="50" width="100" height="26" rx="4" fill="#F5F5F5" stroke="#00274D" stroke-width="1.5"/>
+            <rect x="958" y="50" width="96" height="26" rx="4" fill="#F5F5F5" stroke="#00274D" stroke-width="1.5"/>
+            <rect x="742" y="84" width="100" height="26" rx="4" fill="#F5F5F5" stroke="#00274D" stroke-width="1.5"/>
+            <rect x="850" y="84" width="100" height="26" rx="4" fill="#F5F5F5" stroke="#00274D" stroke-width="1.5"/>
+            <rect x="958" y="84" width="96" height="26" rx="4" fill="#F5F5F5" stroke="#00274D" stroke-width="1.5"/>
+            <rect x="742" y="118" width="312" height="26" rx="4" fill="#F5F5F5" stroke="#00274D" stroke-width="1.5"/>
+            <rect x="742" y="152" width="312" height="26" rx="4" fill="#F5F5F5" stroke="#00274D" stroke-width="1.5"/>
+            <rect x="742" y="186" width="312" height="26" rx="4" fill="#C84B31"/>
+            <text x="898" y="204" text-anchor="middle" font-size="11" font-weight="700" fill="#FFFFFF">Agendar</text>
+            <text x="898" y="256" text-anchor="middle" font-size="13" font-weight="700" fill="#C84B31">3 colunas</text>
+            <text x="898" y="278" text-anchor="middle" font-size="12" fill="#555555">@media (min-width: 1024px)</text>
+
+            <path d="M244,134 L336,134" stroke="#C84B31" stroke-width="3"/>
+            <path d="M336,134 L324,128 L324,140 Z" fill="#C84B31"/>
+            <path d="M684,134 L710,134" stroke="#C84B31" stroke-width="3"/>
+            <path d="M710,134 L698,128 L698,140 Z" fill="#C84B31"/>
+          </svg>
+        </div>
+
+        <div class="takeaway">
+          <span class="takeaway-label">Takeaway</span>
+          <p>Mobile first usa <code>min-width</code> e só acrescenta. A ordem importa: a media query precisa vir depois da regra base, senão a cascata desfaz o que ela acabou de declarar.</p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">05 Media queries e mobile first</div>
+          <div class="footer-page">9</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 10: EXERCÍCIO CURTO DO CICLO 1 ==================== -->
+      <section class="exercise-slide content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Exercício curto: a media query dos cards</h2>
+        </div>
+
+        <div class="exercise-container">
+          <h3>Cinco minutos, no seu próprio site.css</h3>
+          <ol class="exercise-steps">
+            <li>Os cards de especialidade estão em três colunas. Escreva a regra que os deixa em <strong>uma coluna abaixo de 640 pixels</strong>.</li>
+            <li>Faça isso na ordem mobile first: a regra base é a de uma coluna, e a media query <strong>acrescenta</strong> as três.</li>
+            <li>Confira no modo responsivo do DevTools, arrastando a largura até cruzar os 640 pixels.</li>
+          </ol>
+        </div>
+
+        <pre class="code-compact"><code class="language-css" data-trim>.especialidades {                    /* base: o celular */
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 20px;
+}
+
+@media (min-width: 640px) {          /* daqui para cima, três colunas */
+  .especialidades { grid-template-columns: repeat(3, 1fr); }
+}</code></pre>
+
+        <div class="slide-footer">
+          <div class="footer-bar">05 Exercício curto, media query</div>
+          <div class="footer-page">10</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 11: PSEUDO-CLASSES E TRANSIÇÕES ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Pseudo-classes, pseudo-elementos e transições <a href="#/ref-slide" class="ref-badge" title="Ver referências">[1]</a></h2>
+        </div>
+
+        <pre class="code-compact" style="margin-top:0;"><code class="language-css" data-trim>.card-especialidade { transition: transform 0.2s ease, box-shadow 0.2s ease; }
+.card-especialidade:hover { transform: translateY(-4px); box-shadow: 0 6px 16px rgba(0,0,0,.15); }
+
+input:focus, select:focus { outline: 3px solid #C84B31; }   /* onde estou digitando */
+.agenda tr:nth-child(even) { background: #F5F5F5; }         /* zebra na tabela */
+label.obrigatorio::after { content: " *"; color: #C84B31; } /* marca visual do required */</code></pre>
+
+        <div class="concept-cards" style="grid-template-columns: repeat(3, 1fr); margin-top:14px;">
+          <div class="concept-card">
+            <h4>Pseudo-classe: um estado</h4>
+            <p><code>:hover</code>, <code>:focus</code> e <code>:nth-child</code> selecionam o elemento em uma situação. <code>:focus</code> não é enfeite: é como quem navega por teclado sabe onde está.</p>
+          </div>
+          <div class="concept-card">
+            <h4>Pseudo-elemento: um pedaço</h4>
+            <p><code>::before</code> e <code>::after</code> criam conteúdo decorativo sem sujar o HTML. Nada essencial pode morar ali, porque não é texto real da página.</p>
+          </div>
+          <div class="concept-card">
+            <h4>Transição: o tempo</h4>
+            <p><code>transition</code> interpola a mudança em vez de saltar. Entre 0,15s e 0,3s a interface parece responsiva; acima disso, parece lenta.</p>
+          </div>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">05 Pseudo-classes e transições</div>
+          <div class="footer-page">11</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 12: ANATOMIA DO FORM ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>O formulário: <code>action</code>, <code>method</code> e o envio <a href="#/ref-slide" class="ref-badge" title="Ver referências">[3]</a></h2>
+        </div>
+
+        <p style="font-size:0.72em; margin-top:0;">O <code>form</code> é o primeiro ponto do semestre em que o navegador <strong>manda dados de volta</strong> para o servidor. O <code>action</code> diz para onde vão; o <code>method</code> diz como.</p>
+
+        <pre class="code-compact" style="margin-top:0;"><code class="language-html" data-trim>&lt;form action="/agendamento" method="post"&gt;
+  &lt;label for="nome"&gt;Nome completo&lt;/label&gt;
+  &lt;input type="text" id="nome" name="nome" required&gt;
+  &lt;button type="submit"&gt;Agendar consulta&lt;/button&gt;
+&lt;/form&gt;</code></pre>
+
+        <div class="side-by-side" style="margin-top:12px;">
+          <div class="side" style="padding:14px 18px;">
+            <h4 style="margin-bottom:6px;">method="get"</h4>
+            <p style="margin:0; font-size:0.68em;">Os dados viajam na própria URL, depois do <code>?</code>. Ficam no histórico e no favorito. Serve para <strong>buscar</strong>: filtrar a agenda por especialidade, por exemplo.</p>
+          </div>
+          <div class="side" style="padding:14px 18px;">
+            <h4 style="margin-bottom:6px;">method="post"</h4>
+            <p style="margin:0; font-size:0.68em;">Os dados viajam no corpo da requisição, fora da URL. Serve para <strong>alterar</strong> o estado do sistema: criar a consulta, cadastrar o paciente.</p>
+          </div>
+        </div>
+
+        <div class="takeaway">
+          <span class="takeaway-label">Takeaway</span>
+          <p>Só o que tem <code>name</code> é enviado. Um campo lindo, validado e sem <code>name</code> simplesmente não chega ao servidor.</p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">05 O form, action e method</div>
+          <div class="footer-page">12</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 13: OS TIPOS DE CAMPO ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Os campos que o HTML já oferece prontos <a href="#/ref-slide" class="ref-badge" title="Ver referências">[3]</a></h2>
+        </div>
+
+        <p style="font-size:0.72em; margin-top:0;">Escolher o tipo certo não é detalhe: é ganhar de graça o teclado adequado no celular, o seletor de calendário e a validação do navegador.</p>
+
+        <div class="concept-cards" style="grid-template-columns: repeat(5, 1fr); gap:12px; margin-top:10px;">
+          <div class="concept-card" style="padding:14px 16px;"><h4>text</h4><p>Texto livre de uma linha. O padrão quando nada mais serve.</p></div>
+          <div class="concept-card" style="padding:14px 16px;"><h4>email</h4><p>Exige o formato de e-mail e abre o teclado com arroba.</p></div>
+          <div class="concept-card" style="padding:14px 16px;"><h4>tel</h4><p>Abre o teclado numérico. O formato quem define é o <code>pattern</code>.</p></div>
+          <div class="concept-card" style="padding:14px 16px;"><h4>date</h4><p>Calendário nativo. Aceita <code>min</code> e <code>max</code>.</p></div>
+          <div class="concept-card" style="padding:14px 16px;"><h4>time</h4><p>Relógio nativo, para o horário da consulta.</p></div>
+          <div class="concept-card" style="padding:14px 16px;"><h4>number</h4><p>Quantidade, com <code>min</code>, <code>max</code> e <code>step</code>.</p></div>
+          <div class="concept-card" style="padding:14px 16px;"><h4>select</h4><p>Lista fechada de opções conhecidas, como a especialidade.</p></div>
+          <div class="concept-card" style="padding:14px 16px;"><h4>textarea</h4><p>Texto longo e livre, como as observações do paciente.</p></div>
+          <div class="concept-card" style="padding:14px 16px;"><h4>radio</h4><p>Uma escolha entre poucas, todas visíveis. Mesmo <code>name</code>.</p></div>
+          <div class="concept-card" style="padding:14px 16px;"><h4>checkbox</h4><p>Ligado ou desligado, como o aceite do termo.</p></div>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">05 Tipos de campo</div>
+          <div class="footer-page">13</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 14: EXERCÍCIO CURTO DO CICLO 2 ==================== -->
+      <section class="exercise-slide content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Exercício curto: o campo certo para cada dado</h2>
+        </div>
+
+        <p style="font-size:0.72em; margin-top:0;">Estes são seis dados reais da ficha de agendamento da Clínica Vida+. Escolha o campo de cada um e justifique em uma frase.</p>
+
+        <table style="margin-top:6px;">
+          <thead>
+            <tr><th style="width:280px;">Dado do agendamento</th><th style="width:250px;">Campo adequado</th><th>Por que este e não outro</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>CPF</td><td><code>text</code> com <code>pattern</code></td><td>Tem pontuação e zero à esquerda</td></tr>
+            <tr><td>Data de nascimento</td><td><code>date</code></td><td>Calendário nativo, com <code>max</code> em hoje</td></tr>
+            <tr><td>Telefone</td><td><code>tel</code></td><td>Teclado numérico, sem impor formato</td></tr>
+            <tr><td>E-mail</td><td><code>email</code></td><td>Formato validado e teclado com arroba</td></tr>
+            <tr><td>Especialidade</td><td><code>select</code></td><td>Lista fechada e conhecida da clínica</td></tr>
+            <tr><td>Observações</td><td><code>textarea</code></td><td>Texto longo, com quebras de linha</td></tr>
+          </tbody>
+        </table>
+
+        <div class="takeaway">
+          <span class="takeaway-label">Regra de bolso</span>
+          <p>Pergunte primeiro que <strong>forma</strong> o dado tem: valor de uma lista conhecida pede <code>select</code>; texto sem tamanho previsível pede <code>textarea</code>; o resto é o <code>input</code> do tipo mais específico que existir.</p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">05 Exercício curto, tipos de campo</div>
+          <div class="footer-page">14</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 15: LABEL, FIELDSET E ACESSIBILIDADE ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>O <code>label</code> ligado por <code>for</code> é acessibilidade <a href="#/ref-slide" class="ref-badge" title="Ver referências">[4]</a></h2>
+        </div>
+
+        <p style="font-size:0.72em; margin-top:0;">O <code>for</code> do <code>label</code> aponta para o <code>id</code> do campo. Sem essa ligação, o leitor de tela anuncia "caixa de edição" e o paciente cego não sabe o que digitar ali.</p>
+
+        <pre class="code-compact" style="margin-top:0;"><code class="language-html" data-trim>&lt;fieldset&gt;
+  &lt;legend&gt;Dados do paciente&lt;/legend&gt;
+
+  &lt;label for="cpf"&gt;CPF&lt;/label&gt;
+  &lt;input type="text" id="cpf" name="cpf" placeholder="000.000.000-00" required&gt;
+&lt;/fieldset&gt;</code></pre>
+
+        <div class="concept-cards" style="grid-template-columns: repeat(3, 1fr); margin-top:14px;">
+          <div class="concept-card">
+            <h4>Leitor de tela</h4>
+            <p>Com o <code>for</code>, o campo é anunciado pelo nome: "CPF, caixa de edição, obrigatório".</p>
+          </div>
+          <div class="concept-card">
+            <h4>Área de clique maior</h4>
+            <p>Clicar no texto do rótulo coloca o cursor no campo. Isso vale para todo mundo, no celular principalmente.</p>
+          </div>
+          <div class="concept-card">
+            <h4><code>fieldset</code> e <code>legend</code></h4>
+            <p>Agrupam campos que pertencem ao mesmo assunto e dão um título ao grupo: dados do paciente, dados da consulta.</p>
+          </div>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">05 Label, fieldset e acessibilidade</div>
+          <div class="footer-page">15</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 16: VALIDAÇÃO NATIVA ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Validação nativa: o navegador barra antes de enviar <a href="#/ref-slide" class="ref-badge" title="Ver referências">[3]</a></h2>
+        </div>
+
+        <p style="font-size:0.72em; margin:0;">São atributos no HTML, sem uma linha de JavaScript: o navegador bloqueia o envio, foca o campo e escreve a mensagem sozinho.</p>
+
+        <table style="margin:10px 0 0 0;">
+          <thead>
+            <tr><th style="width:180px;">Atributo</th><th style="width:490px;">No formulário da clínica</th><th>O que o navegador faz</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><code>required</code></td><td><code>&lt;input id="nome" required&gt;</code></td><td>Recusa o envio com o campo vazio</td></tr>
+            <tr><td><code>pattern</code></td><td><code>pattern="\d{3}\.\d{3}\.\d{3}-\d{2}"</code></td><td>Exige o CPF com pontos e traço</td></tr>
+            <tr><td><code>min</code> e <code>max</code></td><td><code>type="date" min="2026-09-01"</code></td><td>Recusa consulta em data passada</td></tr>
+            <tr><td><code>minlength</code></td><td><code>minlength="5"</code></td><td>Cobra um nome com 5 letras ou mais</td></tr>
+            <tr><td><code>maxlength</code></td><td><code>maxlength="300"</code></td><td>Limita o texto a 300 caracteres</td></tr>
+          </tbody>
+        </table>
+
+        <div class="callout" style="margin-top:10px;">
+          <p><strong>Isso não substitui a validação no servidor.</strong> Tudo o que está no HTML pode ser desligado no DevTools. Na Aula 09 a mesma regra volta em C#, e é lá que ela passa a valer.</p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">05 Validação nativa</div>
+          <div class="footer-page">16</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 17: QUIZ DE FIXAÇÃO ==================== -->
+      <section class="quiz-slide content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area"><div class="accent-bar"></div><h2>Quiz de fixação</h2></div>
+        <div class="quiz-container">
+          <div class="quiz-question">O que o atributo <code>required</code> em um <code>&lt;input&gt;</code> faz?</div>
+          <ul class="quiz-options">
+            <li data-correct="false"><span class="option-letter">A</span> Faz o campo ser enviado ao servidor mesmo vazio, para que a action receba a propriedade preenchida com nulo.</li>
+            <li data-correct="true"><span class="option-letter">B</span> Impede o envio do formulário enquanto o campo estiver vazio, pela validação nativa que o próprio navegador executa.</li>
+            <li data-correct="false"><span class="option-letter">C</span> Garante que o dado também será validado no servidor, dispensando qualquer verificação adicional na action.</li>
+            <li data-correct="false"><span class="option-letter">D</span><span class="option-text">Formata automaticamente o conteúdo digitado no campo, conforme o tipo declarado no atributo <code>type</code>.</span></li>
+          </ul>
+          <div class="quiz-feedback"
+               data-correct-msg="Isso. O required é validação do lado do cliente: o navegador bloqueia o envio, foca o campo vazio e exibe a mensagem sozinho. O servidor continua obrigado a validar de novo."
+               data-incorrect-msg="Não é isso. O required impede o envio enquanto o campo estiver vazio, e quem executa essa checagem é o navegador. Ele não formata nada e não dispensa a validação no servidor."></div>
+        </div>
+        <div class="slide-footer"><div class="footer-bar">05 Quiz de fixação</div><div class="footer-page">17</div></div>
+      </section>
+
+      <!-- ==================== SLIDE 18: LAB PASSO 1 ==================== -->
+      <section class="exercise-slide content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Laboratório, passo 1 de 4: a branch e o esqueleto</h2>
+        </div>
+
+        <p style="font-size:0.72em; margin-top:0;">A missão dos próximos 60 minutos é dar à Clínica Vida+ a página que hoje é um telefonema: o agendamento de consulta.</p>
+
+        <div class="exercise-container">
+          <h3>No terminal, dentro do seu fork</h3>
+          <ol class="exercise-steps">
+            <li>Crie a branch de hoje e confirme que você saiu da <code>main</code>.</li>
+            <li>Crie <code>agendamento.html</code> copiando o cabeçalho e o rodapé do <code>index.html</code>, para o site continuar sendo o mesmo site.</li>
+            <li>Acrescente o link <strong>Agendar consulta</strong> no menu de navegação das duas páginas.</li>
+          </ol>
+        </div>
+
+        <pre class="code-compact"><code class="language-bash" data-trim>git checkout main
+git pull
+git checkout -b feature/agendamento
+git branch                 # a branch atual aparece com um asterisco</code></pre>
+
+        <div class="slide-footer">
+          <div class="footer-bar">05 Laboratório, passo 1, branch</div>
+          <div class="footer-page">18</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 19: LAB PASSO 2 ==================== -->
+      <section class="exercise-slide content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Laboratório, passo 2 de 4: os dados do paciente</h2>
+        </div>
+
+        <p style="font-size:0.72em; margin-top:0;">Cinco campos, cada um com o seu <code>label</code>, o seu <code>id</code> e o seu <code>name</code>. Fazemos este bloco juntos.</p>
+
+        <pre class="code-compact" style="margin-top:0;"><code class="language-html" data-trim>&lt;form class="form-agendamento" action="/agendamento" method="post"&gt;
+  &lt;fieldset&gt;
+    &lt;legend&gt;Dados do paciente&lt;/legend&gt;
+    &lt;div class="form-grid"&gt;
+      &lt;div class="campo"&gt;
+        &lt;label for="nome"&gt;Nome completo&lt;/label&gt;
+        &lt;input type="text" id="nome" name="nome" minlength="5" required&gt;
+      &lt;/div&gt;
+      &lt;div class="campo"&gt;
+        &lt;label for="cpf"&gt;CPF&lt;/label&gt;
+        &lt;input type="text" id="cpf" name="cpf" required
+               placeholder="000.000.000-00" pattern="\d{3}\.\d{3}\.\d{3}-\d{2}"&gt;
+      &lt;/div&gt;
+      &lt;!-- nascimento (date), telefone (tel) e email (email) seguem o mesmo molde --&gt;
+    &lt;/div&gt;
+  &lt;/fieldset&gt;</code></pre>
+
+        <div class="slide-footer">
+          <div class="footer-bar">05 Laboratório, passo 2, paciente</div>
+          <div class="footer-page">19</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 20: LAB PASSO 3 ==================== -->
+      <section class="exercise-slide content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Laboratório, passo 3 de 4: os dados da consulta</h2>
+        </div>
+
+        <p style="font-size:0.72em; margin-top:0;">Agora sozinho. Especialidade e médico em <code>select</code>, data em <code>date</code>, horário em <code>time</code> e observações em <code>textarea</code>.</p>
+
+        <pre class="code-compact" style="margin-top:0;"><code class="language-html" data-trim>&lt;fieldset&gt;
+  &lt;legend&gt;Dados da consulta&lt;/legend&gt;
+  &lt;div class="form-grid"&gt;
+    &lt;div class="campo"&gt;
+      &lt;label for="especialidade"&gt;Especialidade&lt;/label&gt;
+      &lt;select id="especialidade" name="especialidade" required&gt;
+        &lt;option value=""&gt;Selecione&lt;/option&gt;
+        &lt;option value="cardiologia"&gt;Cardiologia&lt;/option&gt;
+        &lt;option value="pediatria"&gt;Pediatria&lt;/option&gt;
+      &lt;/select&gt;
+    &lt;/div&gt;
+    &lt;div class="campo campo-largo"&gt;
+      &lt;label for="observacoes"&gt;Observações&lt;/label&gt;
+      &lt;textarea id="observacoes" name="observacoes" rows="3" maxlength="300"&gt;&lt;/textarea&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/fieldset&gt;</code></pre>
+
+        <div class="slide-footer">
+          <div class="footer-bar">05 Laboratório, passo 3, consulta</div>
+          <div class="footer-page">20</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 21: LAB PASSO 4 ==================== -->
+      <section class="exercise-slide content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Laboratório, passo 4 de 4: Grid responsivo e envio</h2>
+        </div>
+
+        <div class="figure-split" style="grid-template-columns: 1.15fr 1fr; gap:22px; margin-top:2px; align-items:start;">
+          <div>
+            <pre class="code-compact" style="margin-top:0;"><code class="language-css" data-trim>.form-grid {                 /* base: o celular, uma coluna */
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 18px 24px;
+}
+.campo-largo { grid-column: 1 / -1; }
+
+@media (min-width: 640px) {
+  .form-grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (min-width: 1024px) {
+  .form-grid { grid-template-columns: repeat(3, 1fr); }
+}</code></pre>
+          </div>
+          <div>
+            <div class="exercise-container" style="margin-top:0; padding:18px 22px;">
+              <h3>Feche o entregável</h3>
+              <ol class="exercise-steps">
+                <li>Marque como <code>required</code> os campos sem os quais a recepção não consegue agendar.</li>
+                <li>Tente enviar o formulário vazio e leia a mensagem que o navegador exibe.</li>
+                <li>Teste em 360px, 768px e 1200px no DevTools.</li>
+                <li><code>git add</code>, <code>git commit</code> e <code>git push</code> na branch <code>feature/agendamento</code>.</li>
+              </ol>
+            </div>
+          </div>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">05 Laboratório, passo 4, Grid e envio</div>
+          <div class="footer-page">21</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 22: ENTREGÁVEL E PRÉVIA ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Entregável de hoje e prévia da Aula 06</h2>
+        </div>
+
+        <div class="side-by-side" style="margin-top:6px;">
+          <div class="side">
+            <h4>Entregável desta aula</h4>
+            <ul style="margin:0; padding-left:20px;">
+              <li><code>agendamento.html</code> com o formulário completo, paciente e consulta.</li>
+              <li>Layout em Grid, respondendo em <strong>três larguras</strong>.</li>
+              <li>Validação nativa funcionando nos campos obrigatórios.</li>
+              <li>Commitado e enviado na branch <code>feature/agendamento</code>.</li>
+            </ul>
+          </div>
+          <div class="side">
+            <h4>Prévia da Aula 06</h4>
+            <ul style="margin:0; padding-left:20px;">
+              <li>O formulário ganha comportamento: JavaScript no navegador.</li>
+              <li>Variáveis, funções, arrays e a manipulação do DOM.</li>
+              <li>A validação passa a responder antes mesmo do envio.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="takeaway" style="margin-top:18px;">
+          <span class="takeaway-label">As três ideias da semana</span>
+          <p>Grid resolve duas dimensões e Flexbox resolve uma; mobile first acrescenta em vez de desfazer; e o tipo de campo certo entrega validação, teclado e acessibilidade sem uma linha de código.</p>
+        </div>
+
+        <p style="font-size:0.64em; color:#555555; margin-top:16px;">Antes de sair: abra a sua página em 360px, 768px e 1200px, na frente do professor. É esse teste que fecha o checkpoint de hoje.</p>
+
+        <div class="slide-footer">
+          <div class="footer-bar">05 Fechamento</div>
+          <div class="footer-page">22</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 23: REFERÊNCIAS ==================== -->
+      <section id="ref-slide" class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Referências desta aula</h2>
+        </div>
+
+        <p style="font-size:0.72em; margin-top:0;">Os números entre colchetes ao lado dos títulos remetem a esta lista. Tudo aqui é material aberto e em português, para consulta durante a semana.</p>
+
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px 30px; margin-top:6px;">
+          <div class="concept-card">
+            <h4>[1] CSS Grid, pseudo-classes e transições</h4>
+            <p style="font-size:0.72em; color:#444444;">MDN WEB DOCS. <em>CSS Grid Layout</em>. Mozilla.<br>
+            <code style="font-size:0.9em;">developer.mozilla.org/pt-BR/docs/Web/CSS/CSS_grid_layout</code></p>
+          </div>
+          <div class="concept-card">
+            <h4>[2] Design responsivo e media queries</h4>
+            <p style="font-size:0.72em; color:#444444;">MDN WEB DOCS. <em>Design responsivo</em>, com a estratégia mobile first.<br>
+            <code style="font-size:0.9em;">developer.mozilla.org/pt-BR/docs/Learn/CSS/CSS_layout/Responsive_Design</code></p>
+          </div>
+          <div class="concept-card">
+            <h4>[3] Formulários HTML e validação nativa</h4>
+            <p style="font-size:0.72em; color:#444444;">MDN WEB DOCS. <em>Formulários web</em>, guia completo dos campos e da validação.<br>
+            <code style="font-size:0.9em;">developer.mozilla.org/pt-BR/docs/Learn/Forms</code></p>
+          </div>
+          <div class="concept-card">
+            <h4>[4] Acessibilidade em formulários</h4>
+            <p style="font-size:0.72em; color:#444444;">W3C WAI. <em>Forms Tutorial</em>, rótulos, agrupamento e mensagens de erro.<br>
+            <code style="font-size:0.9em;">w3.org/WAI/tutorials/forms/</code></p>
+          </div>
+        </div>
+
+        <div class="callout" style="margin-top:10px; padding:12px 20px;">
+          <p>O roteiro completo do laboratório de hoje está no kit da Aula 05, no portal da disciplina.</p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">05 Referências</div>
+          <div class="footer-page">23</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 24: ENCERRAMENTO ==================== -->
+      <section class="end-slide">
+        <img src="../assets/img/uninove-logo.png" alt="Uninove, Universidade Nove de Julho"
+             style="max-width:300px; background:#FFFFFF; padding:20px 28px; border-radius:8px;">
+        <div class="copyright">
+          Copyright &copy; 2026<br>
+          Prof. José Romualdo da Costa Filho<br><br>
+          Todos os direitos reservados. É expressamente proibida a reprodução, divulgação<br>
+          total ou parcial, deste material acadêmico sem autorização formal,<br>
+          por escrito, do Professor autor da ementa.
+        </div>
+      </section>
+
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/highlight/highlight.js"></script>
+  <script src="../assets/js/uninove-quiz.js"></script>
+  <script type="module">
+    import { TURMAS, resolverTurma, dataDaAula, formatarData } from '../assets/js/turmas.js';
+    const turma = resolverTurma({
+      hoje: new Date(),
+      salva: localStorage.getItem('uninove-turma'),
+    });
+    const alvo = document.querySelector('[data-data-da-aula]');
+    if (alvo) {
+      const n = Number(alvo.getAttribute('data-data-da-aula'));
+      alvo.textContent = turma
+        ? `${TURMAS[turma].rotulo}, ${formatarData(dataDaAula(turma, n))}`
+        : `Quarta ${formatarData(dataDaAula('quarta', n))} ou quinta ${formatarData(dataDaAula('quinta', n))}`;
+    }
+  </script>
+  <script>
+    Reveal.initialize({
+      width: 1280, height: 720, center: false, margin: 0,
+      hash: true, slideNumber: false,
+      // Os chevrons de navegação caem sobre a footer-bar e sobre o triângulo
+      // azul do canto inferior direito; a barra de progresso encosta no rodapé
+      // e parece um segundo rodapé. Nenhum dos dois é usado na projeção.
+      controls: false, progress: false,
+      // Um slide por página no ?print-pdf, para o PDF bater com o deck.
+      pdfMaxPagesPerSlide: 1,
+      plugins: [RevealHighlight],
+    });
+  </script>
+</body>
+</html>

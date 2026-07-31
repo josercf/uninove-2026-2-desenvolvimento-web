@@ -1,0 +1,1128 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Aula 04, Introdução ao CSS | Uninove</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/theme/white.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/highlight/monokai.css">
+  <link rel="stylesheet" href="../assets/css/uninove-theme.css">
+  <link rel="stylesheet" href="../assets/css/uninove-print.css">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+      <!-- ==================== SLIDE 1: CAPA ==================== -->
+      <section class="cover-slide">
+        <img src="../assets/img/uninove-logo.png" alt="Uninove, Universidade Nove de Julho" class="uninove-logo-full"
+             style="max-width:400px; background:#FFFFFF; padding:26px 36px; border-radius:10px;">
+        <div style="margin-top:36px; color:#FFFFFF; font-size:0.95em; font-weight:800; letter-spacing:4px; text-transform:uppercase;">Desenvolvimento Web</div>
+        <div style="margin-top:12px; color:#C84B31; font-size:0.6em; font-weight:700; letter-spacing:3px; text-transform:uppercase;">Graduação, 2026.2</div>
+      </section>
+
+      <!-- ==================== SLIDE 2: TÍTULO ==================== -->
+      <section class="title-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="title-card">
+          <div class="accent-bar"></div>
+          <h1>Desenvolvimento Web</h1>
+          <h2>Introdução ao CSS</h2>
+          <h3>Prof. José Romualdo<br><span data-data-da-aula="4"></span></h3>
+        </div>
+        <div class="lesson-bar">AULA 04 &nbsp;|&nbsp; Módulo 1, Fundamentos da Web e Front-End</div>
+      </section>
+
+      <!-- ==================== SLIDE 3: AGENDA ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Agenda do encontro de hoje</h2>
+        </div>
+
+        <p style="font-size:0.76em; margin-top:0;">São 150 minutos corridos, em quatro ciclos. Não há intervalo formal: a troca de ciclo é o respiro da aula.</p>
+
+        <table>
+          <thead>
+            <tr><th style="width:190px;">Horário</th><th style="width:200px;">Bloco</th><th>O que acontece</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>19h30 às 20h05</td><td>Ciclo 1</td><td>O que é CSS, seletores, cascata, cores, tipografia e variáveis</td></tr>
+            <tr><td>20h05 às 20h40</td><td>Ciclo 2</td><td>Box model, <code>display</code> e as primeiras linhas de Flexbox</td></tr>
+            <tr><td>20h40 às 20h50</td><td>Quiz de fixação</td><td>Uma pergunta sobre o conceito central da aula</td></tr>
+            <tr><td>20h50 às 21h25</td><td>Ciclo 3</td><td>Laboratório guiado: <code>site.css</code>, paleta da clínica e cabeçalho</td></tr>
+            <tr><td>21h25 às 21h50</td><td>Ciclo 4</td><td>Laboratório: cards, tabela e rodapé, que é o entregável</td></tr>
+            <tr><td>21h50 às 22h00</td><td>Fechamento</td><td>Comparação com a página da Aula 03 e prévia da Aula 05</td></tr>
+          </tbody>
+        </table>
+
+        <div class="slide-footer">
+          <div class="footer-bar">04 Agenda do encontro</div>
+          <div class="footer-page">3</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 4: RETOMADA DA AULA 03 ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>De onde partimos: o que a Aula 03 entregou</h2>
+        </div>
+
+        <p style="font-size:0.74em; margin-top:0;">Na semana passada você entregou o <code>index.html</code> semântico da Clínica Vida+, validado no W3C, na branch <code>feature/pagina-inicial</code>, com Pull Request aberto no seu fork. Hoje essa mesma página ganha identidade visual e <strong>nenhuma tag muda de significado</strong>.</p>
+
+        <div class="side-by-side" style="margin-top:6px;">
+          <div class="side">
+            <h4>Você já tem</h4>
+            <ul style="margin:0; padding-left:20px;">
+              <li><code>header</code> com o nome da clínica e <code>nav</code> com o menu.</li>
+              <li><code>main</code> com a apresentação, as especialidades em lista e o corpo clínico em tabela.</li>
+              <li><code>footer</code> com endereço e telefone, tudo validado no W3C.</li>
+            </ul>
+          </div>
+          <div class="side">
+            <h4>Hoje você acrescenta</h4>
+            <ul style="margin:0; padding-left:20px;">
+              <li><code>assets/css/site.css</code>, uma folha de estilos externa.</li>
+              <li>A paleta e a tipografia da clínica declaradas em variáveis.</li>
+              <li>Cabeçalho, menu, cards de especialidade, tabela e rodapé estilizados.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="takeaway">
+          <span class="takeaway-label">A divisão de papéis</span>
+          <p>O HTML cuida do <strong>significado</strong>: isto é um cabeçalho, isto é uma tabela de médicos. O CSS cuida da <strong>apresentação</strong>: esta cor, esta fonte, este espaçamento. Misturar os dois é o que torna um site caro de manter.</p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">04 Retomada da Aula 03</div>
+          <div class="footer-page">4</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 5: O QUE É CSS E AS TRÊS FORMAS ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>O que é CSS e as três formas de aplicá-lo <a href="#/ref-slide" class="ref-badge" title="Ver referências">[1]</a></h2>
+        </div>
+
+        <p style="font-size:0.74em; margin-top:0;"><strong>CSS</strong>, de <em>Cascading Style Sheets</em>, é a linguagem que descreve como o documento HTML deve ser apresentado. A mesma marcação da Clínica Vida+ pode ganhar dez aparências diferentes sem que uma tag seja tocada.</p>
+
+        <div class="concept-cards" style="grid-template-columns: repeat(3, 1fr); margin-top:10px;">
+          <div class="concept-card">
+            <h4>1. Inline, no atributo</h4>
+            <p>Um <code>style</code> dentro da própria tag. Vale só para aquele elemento, repete em cada tag e vence quase toda disputa de especificidade, o que esconde bugs.</p>
+          </div>
+          <div class="concept-card">
+            <h4>2. Interno, no <code>head</code></h4>
+            <p>Um bloco <code>style</code> dentro do documento. Serve para um teste rápido, mas não alcança as outras páginas do site.</p>
+          </div>
+          <div class="concept-card">
+            <h4>3. Externo, em arquivo</h4>
+            <p>Um arquivo <code>.css</code> ligado por <code>link</code>. Uma folha para o site inteiro, guardada em cache pelo navegador. É o que usamos sempre.</p>
+          </div>
+        </div>
+
+        <pre class="code-compact"><code class="language-html" data-trim>&lt;!-- dentro do &lt;head&gt; do index.html da Clínica Vida+ --&gt;
+&lt;link rel="stylesheet" href="assets/css/site.css"&gt;</code></pre>
+
+        <div class="takeaway">
+          <span class="takeaway-label">Takeaway</span>
+          <p>Sempre externo. Quando o azul da clínica mudar, você quer editar um arquivo, não 40 atributos <code>style</code> espalhados por seis páginas.</p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">04 O que é CSS</div>
+          <div class="footer-page">5</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 6: ANATOMIA DE UMA REGRA ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Anatomia de uma regra CSS <a href="#/ref-slide" class="ref-badge" title="Ver referências">[1]</a></h2>
+        </div>
+
+        <p style="font-size:0.74em; margin-top:0;">Toda folha de estilos é uma sequência de regras, e toda regra tem sempre as mesmas quatro partes.</p>
+
+        <div class="slide-figure" style="margin-top:0;">
+          <svg viewBox="0 0 1120 285" role="img" aria-label="Uma regra CSS decomposta em seletor, bloco de declarações, propriedade e valor">
+            <defs>
+              <marker id="tickCoral" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
+                <path d="M0,0 L8,4 L0,8 Z" fill="#C84B31"/>
+              </marker>
+            </defs>
+
+            <!-- rótulos de cima -->
+            <text x="534" y="34" text-anchor="middle" font-size="16" font-weight="800" fill="#C84B31">propriedade</text>
+            <text x="672" y="34" text-anchor="middle" font-size="16" font-weight="800" fill="#C84B31">valor</text>
+            <line x1="534" y1="44" x2="534" y2="96" stroke="#C84B31" stroke-width="2" marker-end="url(#tickCoral)"/>
+            <line x1="672" y1="44" x2="672" y2="96" stroke="#C84B31" stroke-width="2" marker-end="url(#tickCoral)"/>
+
+            <!-- a regra -->
+            <rect x="50" y="100" width="1020" height="56" rx="8" fill="#1E1E1E"/>
+            <text x="80" y="137" font-family="JetBrains Mono, Consolas, monospace" font-size="30" fill="#A6E22E">.card-especialidade</text>
+            <text x="440" y="137" font-family="JetBrains Mono, Consolas, monospace" font-size="30" fill="#F8F8F2">{</text>
+            <text x="480" y="137" font-family="JetBrains Mono, Consolas, monospace" font-size="30" fill="#66D9EF">color:</text>
+            <text x="600" y="137" font-family="JetBrains Mono, Consolas, monospace" font-size="30" fill="#E6DB74">#0B6E75;</text>
+            <text x="770" y="137" font-family="JetBrains Mono, Consolas, monospace" font-size="30" fill="#66D9EF">padding:</text>
+            <text x="930" y="137" font-family="JetBrains Mono, Consolas, monospace" font-size="30" fill="#E6DB74">20px;</text>
+            <text x="1040" y="137" font-family="JetBrains Mono, Consolas, monospace" font-size="30" fill="#F8F8F2">}</text>
+
+            <!-- chave do seletor -->
+            <path d="M80,170 L80,182 L422,182 L422,170" fill="none" stroke="#00274D" stroke-width="2.5"/>
+            <text x="251" y="206" text-anchor="middle" font-size="17" font-weight="800" fill="#00274D">seletor</text>
+            <text x="251" y="228" text-anchor="middle" font-size="14" fill="#777777">a quem a regra se aplica</text>
+
+            <!-- chave do bloco -->
+            <path d="M440,170 L440,182 L1060,182 L1060,170" fill="none" stroke="#00274D" stroke-width="2.5"/>
+            <text x="750" y="206" text-anchor="middle" font-size="17" font-weight="800" fill="#00274D">bloco de declarações</text>
+            <text x="750" y="228" text-anchor="middle" font-size="14" fill="#777777">uma ou mais, cada uma terminada em ponto e vírgula</text>
+
+            <text x="560" y="266" text-anchor="middle" font-size="15" fill="#555555">O navegador ignora espaços e quebras de linha. A indentação existe para quem vai ler o arquivo depois de você.</text>
+          </svg>
+        </div>
+
+        <div class="callout" style="margin-top:6px;">
+          <p>Comentário em CSS é <code>/* assim */</code>, e só assim. O <code>//</code> de outras linguagens não existe aqui: o navegador descarta a linha inteira em silêncio, e você fica caçando um estilo que nunca chegou a ser aplicado.</p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">04 Anatomia de uma regra</div>
+          <div class="footer-page">6</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 7: SELETORES ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Os cinco seletores que resolvem o dia a dia</h2>
+        </div>
+
+        <table style="font-size:0.7em; margin-top:0;">
+          <thead>
+            <tr><th style="width:190px;">Seletor</th><th style="width:250px;">Como se escreve</th><th>Casa com, na página da clínica</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Tipo</td><td><code>h2</code></td><td>Todos os <code>h2</code> da página, sem exceção.</td></tr>
+            <tr><td>Classe</td><td><code>.card-especialidade</code></td><td>Todo elemento com <code>class="card-especialidade"</code>. Repetível, e é o seletor do dia a dia.</td></tr>
+            <tr><td>Identificador</td><td><code>#agendamento</code></td><td>O único elemento com <code>id="agendamento"</code>. Um id não se repete na página.</td></tr>
+            <tr><td>Agrupamento</td><td><code>h2, h3</code></td><td>Os dois de uma vez, com a mesma declaração escrita uma única vez.</td></tr>
+            <tr><td>Descendência</td><td><code>nav a</code></td><td>Os links que estão dentro do <code>nav</code>, em qualquer nível de profundidade.</td></tr>
+          </tbody>
+        </table>
+
+        <pre class="code-compact"><code class="language-css" data-trim>h2, h3        { color: #0B6E75; }   /* agrupamento: uma regra, dois seletores */
+main section p { line-height: 1.6; }  /* descendência: p dentro de section dentro de main */</code></pre>
+
+        <div class="slide-footer">
+          <div class="footer-bar">04 Seletores</div>
+          <div class="footer-page">7</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 8: CASCATA, ESPECIFICIDADE E HERANÇA ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Cascata, especificidade e herança <a href="#/ref-slide" class="ref-badge" title="Ver referências">[2]</a></h2>
+        </div>
+
+        <p style="font-size:0.72em; margin-top:0;">Quando duas regras disputam o mesmo elemento, o navegador decide em três etapas, nesta ordem: <strong>1)</strong> origem e importância, <strong>2)</strong> especificidade e, só em caso de empate, <strong>3)</strong> ordem de escrita, em que a última vence.</p>
+
+        <table style="font-size:0.7em; margin-top:0;">
+          <thead>
+            <tr><th style="width:300px;">Nível de especificidade</th><th style="width:290px;">Exemplo</th><th style="width:150px;">Peso</th><th>Vence quem</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Estilo inline</td><td><code>style="color: red"</code></td><td>1&nbsp;-&nbsp;0&nbsp;-&nbsp;0&nbsp;-&nbsp;0</td><td rowspan="4" style="vertical-align:middle;">Compara-se da esquerda para a direita. Um único ponto numa coluna mais à esquerda derruba qualquer quantidade de pontos à direita.</td></tr>
+            <tr><td>Identificador</td><td><code>#agendamento</code></td><td>0&nbsp;-&nbsp;1&nbsp;-&nbsp;0&nbsp;-&nbsp;0</td></tr>
+            <tr><td>Classe, atributo ou pseudo-classe</td><td><code>.card-especialidade</code></td><td>0&nbsp;-&nbsp;0&nbsp;-&nbsp;1&nbsp;-&nbsp;0</td></tr>
+            <tr><td>Tipo ou pseudo-elemento</td><td><code>nav</code>, <code>a</code></td><td>0&nbsp;-&nbsp;0&nbsp;-&nbsp;0&nbsp;-&nbsp;1</td></tr>
+          </tbody>
+        </table>
+
+        <div class="callout" style="margin-top:10px;">
+          <p><strong>Herança:</strong> propriedades de texto, como <code>color</code>, <code>font-family</code> e <code>line-height</code>, passam do pai para os filhos. Propriedades de caixa, como <code>padding</code>, <code>border</code> e <code>margin</code>, não passam. Por isso a tipografia do site inteiro se declara uma vez, no <code>body</code>.</p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">04 Cascata e especificidade</div>
+          <div class="footer-page">8</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 9: EXERCÍCIO CURTO DO CICLO 1 ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Exercício, 5 minutos: qual cor prevalece?</h2>
+        </div>
+
+        <p style="font-size:0.72em; margin-top:0;">No menu da Clínica Vida+ existe este link:<br>
+        <code>&lt;nav class="menu"&gt;&lt;a class="menu-link" href="#agendamento"&gt;Agendar consulta&lt;/a&gt;&lt;/nav&gt;</code></p>
+
+        <p style="font-size:0.72em; margin:6px 0 0 0;">A folha de estilos tem as três regras abaixo, nesta ordem. De que cor sai o texto do link, e por quê?</p>
+
+        <pre class="code-compact"><code class="language-css" data-trim>a          { color: #1F2A30; }   /* 1 seletor de tipo             ->  0 - 0 - 0 - 1 */
+nav a      { color: #0B6E75; }   /* 2 seletores de tipo           ->  0 - 0 - 0 - 2 */
+.menu-link { color: #2E9E7E; }   /* 1 seletor de classe           ->  0 - 0 - 1 - 0 */</code></pre>
+
+        <div class="takeaway">
+          <span class="takeaway-label">Resposta</span>
+          <p>Verde <code>#2E9E7E</code>, da regra <code>.menu-link</code>. Uma classe pesa mais do que qualquer quantidade de seletores de tipo, então <code>0-0-1-0</code> derruba <code>0-0-0-2</code>. E não é por ser a última linha: a ordem só desempata quando a especificidade é idêntica.</p>
+        </div>
+
+        <div class="callout" style="margin-top:10px;">
+          <p>Acrescente <code>#agendamento a { color: #E4572E; }</code> e o laranja passa na frente das três, porque o identificador está numa coluna mais à esquerda. Já <code>!important</code> atropela tudo isso e por isso é o último recurso, não o primeiro.</p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">04 Exercício, qual cor prevalece</div>
+          <div class="footer-page">9</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 10: CORES, TIPOGRAFIA E UNIDADES ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Cores, tipografia e unidades</h2>
+        </div>
+
+        <div class="side-by-side" style="margin-top:0;">
+          <div class="side" style="padding:14px 18px;">
+            <h4 style="margin-bottom:6px;">Cores</h4>
+            <ul style="margin:0; padding-left:20px; font-size:0.68em;">
+              <li><code>#0B6E75</code>: hexadecimal, dois dígitos para vermelho, verde e azul.</li>
+              <li><code>rgb(11 110 117)</code>: os mesmos canais em decimal, de 0 a 255.</li>
+              <li><code>rgb(11 110 117 / 60%)</code>: o quarto valor é a opacidade.</li>
+            </ul>
+          </div>
+          <div class="side" style="padding:14px 18px;">
+            <h4 style="margin-bottom:6px;">Tipografia</h4>
+            <ul style="margin:0; padding-left:20px; font-size:0.68em;">
+              <li><code>font-family</code> aceita uma lista de alternativas, da preferida à genérica.</li>
+              <li><code>font-size</code> define o corpo; <code>font-weight</code> vai de 100 a 900.</li>
+              <li><code>line-height: 1.6</code>, sem unidade, é 1,6 vez o corpo do próprio elemento.</li>
+            </ul>
+          </div>
+        </div>
+
+        <table style="font-size:0.66em; margin-top:10px;">
+          <thead>
+            <tr><th style="width:110px;">Unidade</th><th style="width:530px;">O que ela mede</th><th>Exemplo</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><code>px</code></td><td>Pixel, valor absoluto e fixo.</td><td><code>border: 2px</code></td></tr>
+            <tr><td><code>rem</code></td><td>Múltiplo do corpo da raiz, o <code>html</code>, que é 16px por padrão.</td><td><code>1.5rem</code> = 24px</td></tr>
+            <tr><td><code>em</code></td><td>Múltiplo do corpo do próprio elemento, e acumula no aninhamento.</td><td><code>padding: 0.5em</code></td></tr>
+            <tr><td><code>%</code></td><td>Porcentagem da medida correspondente do elemento pai.</td><td><code>width: 100%</code></td></tr>
+          </tbody>
+        </table>
+
+        <div class="slide-footer">
+          <div class="footer-bar">04 Cores, tipografia e unidades</div>
+          <div class="footer-page">10</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 11: VARIÁVEIS CSS COM :root ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>A paleta da Clínica Vida+ em variáveis CSS</h2>
+        </div>
+
+        <p style="font-size:0.72em; margin-top:0;">Uma variável é declarada uma vez em <code>:root</code>, que é o próprio <code>html</code>, e lida com <code>var()</code> em qualquer regra da folha. É a diferença entre trocar a cor da clínica em um lugar ou em oitenta.</p>
+
+        <div class="slide-figure" style="margin-top:4px;">
+          <svg viewBox="0 0 1120 96" role="img" aria-label="As seis cores da paleta da Clínica Vida plus com os respectivos códigos hexadecimais">
+            <g font-size="15" font-weight="700" text-anchor="middle">
+              <rect x="20" y="6" width="170" height="46" rx="8" fill="#0B6E75"/>
+              <text x="105" y="36" fill="#FFFFFF">#0B6E75</text>
+              <text x="105" y="72" fill="#00274D">primária</text>
+
+              <rect x="205" y="6" width="170" height="46" rx="8" fill="#2E9E7E"/>
+              <text x="290" y="36" fill="#FFFFFF">#2E9E7E</text>
+              <text x="290" y="72" fill="#00274D">secundária</text>
+
+              <rect x="390" y="6" width="170" height="46" rx="8" fill="#E4572E"/>
+              <text x="475" y="36" fill="#FFFFFF">#E4572E</text>
+              <text x="475" y="72" fill="#00274D">destaque</text>
+
+              <rect x="575" y="6" width="170" height="46" rx="8" fill="#F4F7F6" stroke="#CCCCCC" stroke-width="1.5"/>
+              <text x="660" y="36" fill="#1F2A30">#F4F7F6</text>
+              <text x="660" y="72" fill="#00274D">fundo</text>
+
+              <rect x="760" y="6" width="170" height="46" rx="8" fill="#1F2A30"/>
+              <text x="845" y="36" fill="#FFFFFF">#1F2A30</text>
+              <text x="845" y="72" fill="#00274D">texto</text>
+
+              <rect x="945" y="6" width="155" height="46" rx="8" fill="#D6E2E0" stroke="#CCCCCC" stroke-width="1.5"/>
+              <text x="1022" y="36" fill="#1F2A30">#D6E2E0</text>
+              <text x="1022" y="72" fill="#00274D">borda</text>
+            </g>
+          </svg>
+        </div>
+
+        <pre class="code-compact"><code class="language-css" data-trim>:root {
+  --vida-primaria:   #0B6E75;   /* verde-azulado do logotipo   */
+  --vida-secundaria: #2E9E7E;   /* confirmação de agendamento  */
+  --vida-destaque:   #E4572E;   /* chamada para ação           */
+  --vida-fundo:      #F4F7F6;
+  --vida-texto:      #1F2A30;
+}
+
+header { background-color: var(--vida-primaria); color: #FFFFFF; }</code></pre>
+
+        <div class="slide-footer">
+          <div class="footer-bar">04 Variáveis CSS</div>
+          <div class="footer-page">11</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 12: BOX MODEL ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>O box model: todo elemento é uma caixa <a href="#/ref-slide" class="ref-badge" title="Ver referências">[3]</a></h2>
+        </div>
+
+        <div class="slide-figure" style="margin-top:0;">
+          <svg viewBox="0 0 1120 352" role="img" aria-label="As quatro camadas do box model: conteúdo, padding, borda e margem, com as medidas do exercício">
+            <defs>
+              <marker id="dimIni" markerWidth="9" markerHeight="9" refX="1" refY="4.5" orient="auto">
+                <path d="M9,0 L0,4.5 L9,9 Z" fill="#00274D"/>
+              </marker>
+              <marker id="dimFim" markerWidth="9" markerHeight="9" refX="8" refY="4.5" orient="auto">
+                <path d="M0,0 L9,4.5 L0,9 Z" fill="#00274D"/>
+              </marker>
+            </defs>
+
+            <!-- margem -->
+            <rect x="60" y="20" width="600" height="250" rx="6" fill="#FDF3E3" stroke="#E8A33D" stroke-width="2" stroke-dasharray="7,5"/>
+            <text x="72" y="40" font-size="15" font-weight="800" fill="#B9822A">margin</text>
+
+            <!-- borda -->
+            <rect x="122" y="62" width="476" height="166" fill="#FBE3DC" stroke="#C84B31" stroke-width="6"/>
+            <text x="134" y="83" font-size="15" font-weight="800" fill="#C84B31">border</text>
+
+            <!-- padding -->
+            <rect x="140" y="88" width="440" height="114" fill="#E4EFF3"/>
+            <text x="152" y="108" font-size="15" font-weight="800" fill="#2E6B80">padding</text>
+
+            <!-- conteúdo -->
+            <rect x="192" y="118" width="336" height="58" rx="4" fill="#00274D"/>
+            <text x="360" y="144" text-anchor="middle" font-size="16" font-weight="800" fill="#FFFFFF">conteúdo</text>
+            <text x="360" y="165" text-anchor="middle" font-size="14" fill="#BBD3E4">width: 300px</text>
+
+            <!-- cotas -->
+            <line x1="192" y1="252" x2="528" y2="252" stroke="#00274D" stroke-width="2" marker-start="url(#dimIni)" marker-end="url(#dimFim)"/>
+            <text x="360" y="246" text-anchor="middle" font-size="14" font-weight="700" fill="#00274D">300px</text>
+            <line x1="140" y1="290" x2="580" y2="290" stroke="#00274D" stroke-width="2" marker-start="url(#dimIni)" marker-end="url(#dimFim)"/>
+            <text x="360" y="284" text-anchor="middle" font-size="14" font-weight="700" fill="#00274D">300 + 20 + 20 = 340px</text>
+            <line x1="122" y1="326" x2="598" y2="326" stroke="#C84B31" stroke-width="2.5" marker-start="url(#dimIni)" marker-end="url(#dimFim)"/>
+            <text x="360" y="320" text-anchor="middle" font-size="15" font-weight="800" fill="#C84B31">340 + 2 + 2 = 344px ocupados na página</text>
+
+            <!-- painel lateral -->
+            <line x1="700" y1="20" x2="700" y2="330" stroke="#E0E0E0" stroke-width="2"/>
+            <g font-size="16">
+              <rect x="726" y="30" width="10" height="10" fill="#00274D"/>
+              <text x="752" y="40" font-weight="800" fill="#00274D">width: 300px</text>
+              <text x="752" y="64" font-size="14" fill="#666666">mede apenas a área de conteúdo</text>
+
+              <rect x="726" y="98" width="10" height="10" fill="#E4EFF3" stroke="#2E6B80"/>
+              <text x="752" y="108" font-weight="800" fill="#00274D">padding: 20px</text>
+              <text x="752" y="132" font-size="14" fill="#666666">respiro por dentro da borda, nos quatro lados</text>
+
+              <rect x="726" y="166" width="10" height="10" fill="#C84B31"/>
+              <text x="752" y="176" font-weight="800" fill="#00274D">border: 2px solid</text>
+              <text x="752" y="200" font-size="14" fill="#666666">a linha da caixa, que também ocupa largura</text>
+
+              <rect x="726" y="234" width="10" height="10" fill="#FDF3E3" stroke="#E8A33D"/>
+              <text x="752" y="244" font-weight="800" fill="#00274D">margin: 16px</text>
+              <text x="752" y="268" font-size="14" fill="#666666">espaço por fora, entre esta caixa e as vizinhas</text>
+
+              <text x="726" y="312" font-size="14" font-style="italic" fill="#C84B31">a margem empurra os vizinhos, não pinta nada</text>
+            </g>
+          </svg>
+        </div>
+
+        <div class="takeaway">
+          <span class="takeaway-label">Takeaway</span>
+          <p><code>width</code> não é a largura da caixa: é a largura do conteúdo. Somar padding e borda é responsabilidade sua, até você mudar essa conta com <code>box-sizing</code>.</p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">04 Box model</div>
+          <div class="footer-page">12</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 13: EXERCÍCIO CURTO, BORDER-BOX ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Exercício, 5 minutos: a mesma caixa com <code>border-box</code> <a href="#/ref-slide" class="ref-badge" title="Ver referências">[3]</a></h2>
+        </div>
+
+        <p style="font-size:0.72em; margin-top:0;">A caixa é a mesma dos dois lados: <code>width: 300px</code>, <code>padding: 20px</code> e <code>border: 2px</code>. Só muda quem manda no <code>width</code>.</p>
+
+        <div class="slide-figure" style="margin-top:0;">
+          <svg viewBox="0 0 1120 262" role="img" aria-label="Comparação entre content-box, que ocupa 344 pixels, e border-box, que ocupa 300 pixels">
+            <defs>
+              <marker id="d2Ini" markerWidth="9" markerHeight="9" refX="1" refY="4.5" orient="auto">
+                <path d="M9,0 L0,4.5 L9,9 Z" fill="#00274D"/>
+              </marker>
+              <marker id="d2Fim" markerWidth="9" markerHeight="9" refX="8" refY="4.5" orient="auto">
+                <path d="M0,0 L9,4.5 L0,9 Z" fill="#00274D"/>
+              </marker>
+            </defs>
+
+            <!-- ESQUERDA: content-box -->
+            <text x="270" y="26" text-anchor="middle" font-size="18" font-weight="800" fill="#00274D">box-sizing: content-box</text>
+            <text x="270" y="48" text-anchor="middle" font-size="14" fill="#777777">o padrão do navegador</text>
+            <rect x="60" y="66" width="420" height="112" fill="#FBE3DC" stroke="#C84B31" stroke-width="6"/>
+            <rect x="78" y="84" width="384" height="76" fill="#E4EFF3"/>
+            <rect x="112" y="100" width="316" height="44" rx="4" fill="#00274D"/>
+            <text x="270" y="128" text-anchor="middle" font-size="15" font-weight="700" fill="#FFFFFF">conteúdo: 300px</text>
+            <line x1="60" y1="202" x2="480" y2="202" stroke="#00274D" stroke-width="2" marker-start="url(#d2Ini)" marker-end="url(#d2Fim)"/>
+            <text x="270" y="196" text-anchor="middle" font-size="14" fill="#00274D">2 + 20 + 300 + 20 + 2</text>
+            <rect x="170" y="216" width="200" height="34" rx="17" fill="#C84B31"/>
+            <text x="270" y="239" text-anchor="middle" font-size="17" font-weight="800" fill="#FFFFFF">ocupa 344px</text>
+
+            <line x1="560" y1="30" x2="560" y2="250" stroke="#E0E0E0" stroke-width="2"/>
+
+            <!-- DIREITA: border-box -->
+            <text x="840" y="26" text-anchor="middle" font-size="18" font-weight="800" fill="#00274D">box-sizing: border-box</text>
+            <text x="840" y="48" text-anchor="middle" font-size="14" fill="#777777">o que quase todo projeto quer</text>
+            <rect x="678" y="66" width="324" height="112" fill="#FBE3DC" stroke="#C84B31" stroke-width="6"/>
+            <rect x="696" y="84" width="288" height="76" fill="#E4EFF3"/>
+            <rect x="730" y="100" width="220" height="44" rx="4" fill="#00274D"/>
+            <text x="840" y="128" text-anchor="middle" font-size="15" font-weight="700" fill="#FFFFFF">conteúdo: 256px</text>
+            <line x1="678" y1="202" x2="1002" y2="202" stroke="#00274D" stroke-width="2" marker-start="url(#d2Ini)" marker-end="url(#d2Fim)"/>
+            <text x="840" y="196" text-anchor="middle" font-size="14" fill="#00274D">300 = 2 + 20 + 256 + 20 + 2</text>
+            <rect x="740" y="216" width="200" height="34" rx="17" fill="#2E9E7E"/>
+            <text x="840" y="239" text-anchor="middle" font-size="17" font-weight="800" fill="#FFFFFF">ocupa 300px</text>
+          </svg>
+        </div>
+
+        <pre class="code-compact"><code class="language-css" data-trim>* { box-sizing: border-box; }   /* a primeira regra de qualquer folha de estilos deste semestre */</code></pre>
+
+        <div class="slide-footer">
+          <div class="footer-bar">04 Exercício, largura da caixa</div>
+          <div class="footer-page">13</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 14: DISPLAY E COLAPSO DE MARGENS ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Como as caixas se comportam: <code>display</code></h2>
+        </div>
+
+        <p style="font-size:0.72em; margin-top:0;">Antes de arrumar as caixas na tela, é preciso saber como cada uma se comporta sozinha. É o <code>display</code> que decide isso, e cada tag já vem com um valor padrão.</p>
+
+        <table style="font-size:0.7em; margin-top:0;">
+          <thead>
+            <tr><th style="width:190px;">Valor</th><th style="width:270px;">Tags que já usam</th><th style="width:230px;">Ocupa a linha inteira?</th><th>Aceita <code>width</code> e <code>height</code>?</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><code>block</code></td><td><code>div</code>, <code>p</code>, <code>section</code>, <code>h1</code></td><td>Sim, e empurra o próximo para baixo.</td><td>Sim, mais padding e margem nos quatro lados.</td></tr>
+            <tr><td><code>inline</code></td><td><code>a</code>, <code>span</code>, <code>strong</code></td><td>Não, fica na mesma linha do texto.</td><td>Não. Margem e padding verticais não empurram nada.</td></tr>
+            <tr><td><code>inline-block</code></td><td>nenhuma por padrão</td><td>Não, mas convive lado a lado.</td><td>Sim. É o meio-termo dos dois.</td></tr>
+          </tbody>
+        </table>
+
+        <div class="callout" style="margin-top:12px;">
+          <p><strong>Colapso de margens:</strong> quando a margem de baixo de um elemento encosta na margem de cima do seguinte, as duas <strong>não somam</strong>: vale a maior. Se a seção de apresentação tem <code>margin-bottom: 24px</code> e a de especialidades tem <code>margin-top: 32px</code>, o espaço entre elas é de 32px, não de 56px. O colapso é vertical, só acontece entre elementos <code>block</code>, e não acontece com <code>padding</code>.</p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">04 display e colapso de margens</div>
+          <div class="footer-page">14</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 15: FLEXBOX, OS DOIS EIXOS ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Flexbox: um contêiner e dois eixos <a href="#/ref-slide" class="ref-badge" title="Ver referências">[4]</a></h2>
+        </div>
+
+        <div class="slide-figure" style="margin-top:0;">
+          <svg viewBox="0 0 1120 330" role="img" aria-label="Um contêiner flex com três itens, o eixo principal na horizontal e o eixo cruzado na vertical">
+            <defs>
+              <marker id="eixoCoral" markerWidth="10" markerHeight="10" refX="9" refY="5" orient="auto">
+                <path d="M0,0 L10,5 L0,10 Z" fill="#C84B31"/>
+              </marker>
+              <marker id="eixoAzul" markerWidth="10" markerHeight="10" refX="9" refY="5" orient="auto">
+                <path d="M0,0 L10,5 L0,10 Z" fill="#00274D"/>
+              </marker>
+            </defs>
+
+            <text x="290" y="30" text-anchor="middle" font-size="17" font-weight="800" fill="#C84B31">ul.lista-especialidades { display: flex; }</text>
+
+            <!-- contêiner -->
+            <rect x="80" y="48" width="480" height="140" rx="10" fill="#F7F9FA" stroke="#00274D" stroke-width="2.5"/>
+            <text x="92" y="206" font-size="14" fill="#777777">o contêiner flex</text>
+
+            <!-- itens -->
+            <rect x="106" y="78" width="130" height="80" rx="6" fill="#00274D"/>
+            <text x="171" y="124" text-anchor="middle" font-size="14" fill="#FFFFFF" font-weight="600">Cardiologia</text>
+            <rect x="256" y="78" width="130" height="80" rx="6" fill="#00274D"/>
+            <text x="321" y="124" text-anchor="middle" font-size="14" fill="#FFFFFF" font-weight="600">Pediatria</text>
+            <rect x="406" y="78" width="130" height="80" rx="6" fill="#00274D"/>
+            <text x="471" y="124" text-anchor="middle" font-size="14" fill="#FFFFFF" font-weight="600">Dermatologia</text>
+
+            <!-- gap -->
+            <rect x="236" y="78" width="20" height="80" fill="#C84B31" opacity="0.25"/>
+            <rect x="386" y="78" width="20" height="80" fill="#C84B31" opacity="0.25"/>
+            <text x="246" y="70" text-anchor="middle" font-size="13" font-weight="700" fill="#C84B31">gap</text>
+            <text x="396" y="70" text-anchor="middle" font-size="13" font-weight="700" fill="#C84B31">gap</text>
+
+            <!-- eixo principal -->
+            <line x1="80" y1="242" x2="560" y2="242" stroke="#C84B31" stroke-width="3.5" marker-end="url(#eixoCoral)"/>
+            <text x="320" y="232" text-anchor="middle" font-size="15" font-weight="800" fill="#C84B31">eixo principal</text>
+            <text x="320" y="270" text-anchor="middle" font-size="14" fill="#666666">definido por flex-direction, que vale row por padrão</text>
+
+            <!-- eixo cruzado -->
+            <line x1="54" y1="48" x2="54" y2="188" stroke="#00274D" stroke-width="3.5" marker-end="url(#eixoAzul)"/>
+            <text x="30" y="118" text-anchor="middle" font-size="15" font-weight="800" fill="#00274D" transform="rotate(-90 30 118)">eixo cruzado</text>
+
+            <!-- painel lateral -->
+            <line x1="620" y1="20" x2="620" y2="310" stroke="#E0E0E0" stroke-width="2"/>
+            <g font-size="15">
+              <rect x="648" y="44" width="9" height="9" fill="#C84B31"/>
+              <text x="672" y="53" font-weight="800" fill="#00274D">display: flex</text>
+              <text x="672" y="76" font-size="14" fill="#666666">transforma o elemento em contêiner e os filhos</text>
+              <text x="672" y="96" font-size="14" fill="#666666">diretos em itens flexíveis, lado a lado.</text>
+
+              <rect x="648" y="128" width="9" height="9" fill="#C84B31"/>
+              <text x="672" y="137" font-weight="800" fill="#00274D">flex-direction: row | column</text>
+              <text x="672" y="160" font-size="14" fill="#666666">escolhe qual dos dois eixos é o principal. Com</text>
+              <text x="672" y="180" font-size="14" fill="#666666">column, os dois eixos trocam de papel.</text>
+
+              <rect x="648" y="212" width="9" height="9" fill="#C84B31"/>
+              <text x="672" y="221" font-weight="800" fill="#00274D">gap: 20px</text>
+              <text x="672" y="244" font-size="14" fill="#666666">o espaço entre os itens, sem margem e sem</text>
+              <text x="672" y="264" font-size="14" fill="#666666">sobra depois do último item da fileira.</text>
+
+              <rect x="648" y="284" width="9" height="9" fill="#C84B31"/>
+              <text x="672" y="293" font-weight="800" fill="#00274D">flex-wrap: wrap</text>
+              <text x="672" y="316" font-size="14" fill="#666666">deixa a fileira quebrar em várias linhas.</text>
+            </g>
+          </svg>
+        </div>
+
+        <div class="takeaway">
+          <span class="takeaway-label">Takeaway</span>
+          <p>Flexbox é alinhamento em <strong>uma dimensão</strong>. Você declara o comportamento no contêiner, uma vez, e ele vale para todos os itens, quantos forem.</p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">04 Flexbox, os dois eixos</div>
+          <div class="footer-page">15</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 16: JUSTIFY-CONTENT E ALIGN-ITEMS ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Alinhar nos dois eixos: <code>justify-content</code> e <code>align-items</code> <a href="#/ref-slide" class="ref-badge" title="Ver referências">[4]</a></h2>
+        </div>
+
+        <div class="slide-figure" style="margin-top:0;">
+          <svg viewBox="0 0 1120 322" role="img" aria-label="Valores de justify-content no eixo principal e de align-items no eixo cruzado">
+            <!-- COLUNA ESQUERDA: justify-content -->
+            <text x="40" y="22" font-size="17" font-weight="800" fill="#C84B31">justify-content</text>
+            <text x="212" y="22" font-size="14" fill="#666666">distribui os itens no eixo principal</text>
+
+            <text x="40" y="52" font-size="14" font-weight="700" fill="#00274D">flex-start (padrão)</text>
+            <rect x="40" y="60" width="500" height="52" rx="6" fill="#F7F9FA" stroke="#BBBBBB" stroke-width="1.5"/>
+            <rect x="52" y="72" width="80" height="28" rx="4" fill="#00274D"/>
+            <rect x="142" y="72" width="80" height="28" rx="4" fill="#00274D"/>
+            <rect x="232" y="72" width="80" height="28" rx="4" fill="#00274D"/>
+
+            <text x="40" y="146" font-size="14" font-weight="700" fill="#00274D">center</text>
+            <rect x="40" y="154" width="500" height="52" rx="6" fill="#F7F9FA" stroke="#BBBBBB" stroke-width="1.5"/>
+            <rect x="165" y="166" width="80" height="28" rx="4" fill="#00274D"/>
+            <rect x="255" y="166" width="80" height="28" rx="4" fill="#00274D"/>
+            <rect x="345" y="166" width="80" height="28" rx="4" fill="#00274D"/>
+
+            <text x="40" y="240" font-size="14" font-weight="700" fill="#00274D">space-between</text>
+            <rect x="40" y="248" width="500" height="52" rx="6" fill="#F7F9FA" stroke="#BBBBBB" stroke-width="1.5"/>
+            <rect x="52" y="260" width="80" height="28" rx="4" fill="#00274D"/>
+            <rect x="250" y="260" width="80" height="28" rx="4" fill="#00274D"/>
+            <rect x="448" y="260" width="80" height="28" rx="4" fill="#00274D"/>
+
+            <line x1="580" y1="10" x2="580" y2="312" stroke="#E0E0E0" stroke-width="2"/>
+
+            <!-- COLUNA DIREITA: align-items -->
+            <text x="620" y="22" font-size="17" font-weight="800" fill="#00274D">align-items</text>
+            <text x="758" y="22" font-size="14" fill="#666666">alinha os itens no eixo cruzado</text>
+
+            <text x="620" y="52" font-size="14" font-weight="700" fill="#00274D">flex-start</text>
+            <rect x="620" y="60" width="145" height="120" rx="6" fill="#F7F9FA" stroke="#BBBBBB" stroke-width="1.5"/>
+            <rect x="634" y="72" width="38" height="34" rx="4" fill="#00274D"/>
+            <rect x="680" y="72" width="38" height="56" rx="4" fill="#00274D"/>
+            <rect x="726" y="72" width="28" height="44" rx="4" fill="#00274D"/>
+
+            <text x="790" y="52" font-size="14" font-weight="700" fill="#00274D">center</text>
+            <rect x="790" y="60" width="145" height="120" rx="6" fill="#F7F9FA" stroke="#BBBBBB" stroke-width="1.5"/>
+            <rect x="804" y="103" width="38" height="34" rx="4" fill="#00274D"/>
+            <rect x="850" y="92" width="38" height="56" rx="4" fill="#00274D"/>
+            <rect x="896" y="98" width="28" height="44" rx="4" fill="#00274D"/>
+
+            <text x="960" y="52" font-size="14" font-weight="700" fill="#C84B31">stretch (padrão)</text>
+            <rect x="960" y="60" width="145" height="120" rx="6" fill="#F7F9FA" stroke="#BBBBBB" stroke-width="1.5"/>
+            <rect x="974" y="72" width="38" height="96" rx="4" fill="#C84B31"/>
+            <rect x="1020" y="72" width="38" height="96" rx="4" fill="#C84B31"/>
+            <rect x="1066" y="72" width="28" height="96" rx="4" fill="#C84B31"/>
+
+            <rect x="620" y="200" width="485" height="106" rx="8" fill="#FFF7F5" stroke="#C84B31" stroke-width="2"/>
+            <text x="640" y="226" font-size="15" font-weight="800" fill="#C84B31">Por que os cards ficam todos da mesma altura</text>
+            <text x="640" y="252" font-size="14" fill="#444444">O padrão do eixo cruzado é stretch: cada item estica até</text>
+            <text x="640" y="272" font-size="14" fill="#444444">a altura do mais alto da fileira. É o que faz os cards de</text>
+            <text x="640" y="292" font-size="14" fill="#444444">especialidade ficarem alinhados sem você medir nada.</text>
+          </svg>
+        </div>
+
+        <div class="takeaway">
+          <span class="takeaway-label">Takeaway</span>
+          <p><code>justify-content</code> trabalha no eixo principal e <code>align-items</code>, no cruzado. Trocar <code>flex-direction</code> para <code>column</code> troca também o papel dos dois, sem que você mude mais nada.</p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">04 Flexbox, justify-content e align-items</div>
+          <div class="footer-page">16</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 17: FLEXBOX NA PRÁTICA ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Na prática: a lista de especialidades vira uma fileira de cards</h2>
+        </div>
+
+        <p style="font-size:0.72em; margin-top:0;">O <code>ul</code> da Aula 03 continua sendo uma lista, porque é isso que ele é. O que muda é só a apresentação: acrescente a ele a classe <code>lista-especialidades</code> e escreva as duas regras abaixo.</p>
+
+        <pre class="code-compact"><code class="language-css" data-trim>.lista-especialidades {        /* o contêiner: decide o arranjo do conjunto */
+  display: flex;
+  flex-wrap: wrap;             /* deixa a fileira quebrar em tela estreita  */
+  gap: 20px;                   /* espaço entre os cards, sem margem        */
+  justify-content: center;     /* centraliza a fileira no eixo principal   */
+  list-style: none;   padding: 0;
+}
+.lista-especialidades li {     /* o item: decide a própria caixa           */
+  width: 260px;
+  padding: 20px;
+  background-color: #FFFFFF;
+  border-left: 4px solid var(--vida-secundaria);
+  border-radius: 8px;
+}</code></pre>
+
+        <div class="callout" style="margin-top:8px;">
+          <p>O <strong>contêiner</strong> cuida do arranjo do conjunto, o <strong>item</strong> cuida da própria caixa. Confundir os dois é a fonte da maioria dos "meu Flexbox não funciona".</p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">04 Flexbox na prática</div>
+          <div class="footer-page">17</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 18: QUIZ DE FIXAÇÃO ==================== -->
+      <section class="quiz-slide content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area"><div class="accent-bar"></div><h2>Quiz de fixação</h2></div>
+        <div class="quiz-container">
+          <div class="quiz-question">No box model padrão do CSS, sem <code>border-box</code>, o que a propriedade <code>width</code> define?</div>
+          <ul class="quiz-options">
+            <li data-correct="false"><span class="option-letter">A</span> A largura total do elemento, já somando a área de conteúdo, o padding e a borda declarada.</li>
+            <li data-correct="false"><span class="option-letter">B</span> A largura da margem externa, que é o espaço reservado entre o elemento e os seus vizinhos na página.</li>
+            <li data-correct="false"><span class="option-letter">C</span> A largura da janela do navegador, da qual o elemento passa a ocupar uma fração proporcional.</li>
+            <li data-correct="true"><span class="option-letter">D</span> Apenas a largura da área de conteúdo, sem contar o padding nem a borda, que são somados depois.</li>
+          </ul>
+          <div class="quiz-feedback"
+               data-correct-msg="Isso. No modelo padrão, width mede só o conteúdo: com width 300px, padding 20px e borda 2px, a caixa ocupa 344px na página."
+               data-incorrect-msg="Reveja o box model. No modelo padrão, width mede apenas o conteúdo, e padding e borda são somados por fora: 300 + 20 + 20 + 2 + 2 = 344px."></div>
+        </div>
+        <div class="slide-footer"><div class="footer-bar">04 Quiz de fixação</div><div class="footer-page">18</div></div>
+      </section>
+
+      <!-- ==================== SLIDE 19: LAB PASSO 1 ==================== -->
+      <section class="exercise-slide content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Laboratório, passo 1 de 5: a branch e a folha de estilos</h2>
+        </div>
+
+        <p style="font-size:0.72em; margin-top:0;">A missão dos próximos 60 minutos: dar identidade visual à página da Aula 03, sem mudar o significado de nenhuma tag.</p>
+
+        <div class="exercise-container">
+          <h3>No terminal e no editor</h3>
+          <ol class="exercise-steps">
+            <li>Confirme que o Pull Request da Aula 03 já entrou na <code>main</code> do seu fork.</li>
+            <li>Atualize a <code>main</code> local e abra a branch <code>feature/estilo-inicial</code>.</li>
+            <li>Crie <code>assets/css/site.css</code> e ligue-o ao <code>index.html</code>, dentro do <code>head</code>.</li>
+          </ol>
+        </div>
+
+        <pre class="code-compact"><code class="language-bash" data-trim>git switch main
+git pull
+git switch -c feature/estilo-inicial</code></pre>
+
+        <div class="callout" style="margin-top:6px;">
+          <p>Prove a ligação antes de escrever estilo de verdade: ponha <code>body { background-color: #F4F7F6; }</code> no <code>site.css</code>. Se o fundo não mudar, o <code>href</code> está errado.</p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">04 Laboratório, passo 1, branch e folha</div>
+          <div class="footer-page">19</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 20: LAB PASSO 2 ==================== -->
+      <section class="exercise-slide content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Laboratório, passo 2 de 5: paleta, reset e tipografia base</h2>
+        </div>
+
+        <p style="font-size:0.72em; margin-top:0;">A ordem importa: variáveis, reset e base do <code>body</code>, antes de qualquer estilo de componente.</p>
+
+        <pre class="code-compact"><code class="language-css" data-trim>:root {
+  --vida-primaria:   #0B6E75;
+  --vida-secundaria: #2E9E7E;
+  --vida-destaque:   #E4572E;
+  --vida-fundo:      #F4F7F6;
+  --vida-texto:      #1F2A30;
+  --vida-borda:      #D6E2E0;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: 'Segoe UI', Arial, sans-serif;
+  font-size: 1rem;   line-height: 1.6;
+  color: var(--vida-texto);
+  background-color: var(--vida-fundo);
+}</code></pre>
+
+        <div class="callout" style="margin-top:6px;">
+          <p>A <code>color</code> e a <code>font-family</code> do <code>body</code> descem por herança para a página inteira.</p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">04 Laboratório, passo 2, paleta e base</div>
+          <div class="footer-page">20</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 21: LAB PASSO 3 ==================== -->
+      <section class="exercise-slide content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Laboratório, passo 3 de 5: cabeçalho e menu</h2>
+        </div>
+
+        <p style="font-size:0.72em; margin-top:0;">Agora o <code>header</code> e o <code>nav</code> da Aula 03. O menu é a primeira aplicação real de Flexbox no seu projeto.</p>
+
+        <pre class="code-compact"><code class="language-css" data-trim>header {
+  background-color: var(--vida-primaria);
+  color: #FFFFFF;
+  padding: 24px 32px;
+}
+header h1 { margin: 0; font-size: 1.8rem; }
+nav ul {
+  display: flex;                 /* os itens do menu, lado a lado */
+  gap: 24px;
+  list-style: none;
+  margin: 12px 0 0 0;
+  padding: 0;
+}
+nav a { color: #FFFFFF; text-decoration: none; font-weight: 600; }</code></pre>
+
+        <div class="takeaway">
+          <span class="takeaway-label">Checkpoint</span>
+          <p>O professor passa de mesa em mesa: o cabeçalho precisa estar no verde-azulado da clínica e o menu, em uma única linha horizontal, sem os marcadores de lista.</p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">04 Laboratório, passo 3, cabeçalho e menu</div>
+          <div class="footer-page">21</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 22: LAB PASSO 4 ==================== -->
+      <section class="exercise-slide content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Laboratório, passo 4 de 5: as especialidades viram cards</h2>
+        </div>
+
+        <p style="font-size:0.72em; margin-top:0;">A partir daqui você trabalha sozinho, com o professor circulando pela sala. Acrescente <code>class="lista-especialidades"</code> ao <code>ul</code> das especialidades e escreva as regras do slide 17.</p>
+
+        <div class="exercise-container">
+          <h3>O que precisa acontecer na tela</h3>
+          <ol class="exercise-steps">
+            <li>As especialidades ficam lado a lado, em cards de largura igual, sem marcador de lista.</li>
+            <li>Existe um espaço regular entre os cards, criado por <code>gap</code> e não por margem.</li>
+            <li>Todos os cards terminam na mesma altura, mesmo com textos de tamanhos diferentes.</li>
+            <li>Ao estreitar a janela, a fileira quebra em uma segunda linha, por causa do <code>flex-wrap</code>.</li>
+          </ol>
+        </div>
+
+        <div class="callout" style="margin-top:12px;">
+          <p>Abra o inspetor do navegador, selecione um card e olhe o diagrama do box model no painel lateral. Ele mostra, em números, o conteúdo, o padding, a borda e a margem daquela caixa. É a figura do slide 12, calculada ao vivo pelo navegador.</p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">04 Laboratório, passo 4, cards com Flexbox</div>
+          <div class="footer-page">22</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 23: LAB PASSO 5 ==================== -->
+      <section class="exercise-slide content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Laboratório, passo 5 de 5: tabela, rodapé e entrega</h2>
+        </div>
+
+        <pre class="code-compact"><code class="language-css" data-trim>table { width: 100%; border-collapse: collapse; background-color: #FFFFFF; }
+
+th {
+  background-color: var(--vida-primaria);
+  color: #FFFFFF;
+  text-align: left;
+  padding: 12px 16px;
+}
+
+td { padding: 12px 16px; border-bottom: 1px solid var(--vida-borda); }
+
+footer {
+  background-color: var(--vida-texto);
+  color: #FFFFFF;
+  padding: 24px 32px;
+  margin-top: 40px;
+}</code></pre>
+
+        <pre class="code-compact"><code class="language-bash" data-trim>git add assets/css/site.css index.html
+git commit -m "feat: identidade visual da página inicial com CSS"
+git push -u origin feature/estilo-inicial</code></pre>
+
+        <div class="slide-footer">
+          <div class="footer-bar">04 Laboratório, passo 5, tabela, rodapé e entrega</div>
+          <div class="footer-page">23</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 24: FECHAMENTO ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Entregável de hoje e prévia da Aula 05</h2>
+        </div>
+
+        <p style="font-size:0.72em; margin-top:0;">Abra lado a lado, no projetor, a página que você entregou na Aula 03 e a de hoje. O HTML é praticamente o mesmo arquivo: tudo o que mudou coube em uma folha de estilos.</p>
+
+        <div class="side-by-side" style="margin-top:6px;">
+          <div class="side">
+            <h4>Entregável desta aula</h4>
+            <ul style="margin:0; padding-left:20px;">
+              <li><code>assets/css/site.css</code> ligado ao <code>index.html</code> por <code>link</code>.</li>
+              <li>Paleta e tipografia da clínica em variáveis, cabeçalho, menu, cards, tabela e rodapé estilizados.</li>
+              <li>Commitado e enviado na branch <code>feature/estilo-inicial</code>.</li>
+            </ul>
+          </div>
+          <div class="side">
+            <h4>Prévia da Aula 05</h4>
+            <ul style="margin:0; padding-left:20px;">
+              <li>CSS Grid e layout que se adapta à largura da tela, na abordagem mobile first.</li>
+              <li>O formulário de agendamento da clínica, com os tipos de campo certos e validação nativa.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="takeaway" style="margin-top:16px;">
+          <span class="takeaway-label">As três ideias da semana</span>
+          <p>Quando duas regras brigam, quem decide é a especificidade, não a ordem; <code>width</code> mede só o conteúdo, até <code>border-box</code> mudar a conta; e no Flexbox o contêiner arruma o conjunto enquanto o item cuida da própria caixa.</p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">04 Fechamento</div>
+          <div class="footer-page">24</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 25: REFERÊNCIAS ==================== -->
+      <section id="ref-slide" class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Referências desta aula</h2>
+        </div>
+
+        <p style="font-size:0.72em; margin-top:0;">Os números entre colchetes ao lado dos títulos remetem a esta lista.</p>
+
+        <div style="display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:14px 30px; margin-top:6px;">
+          <div class="concept-card" style="padding:16px 20px;">
+            <h4>[1] CSS: a linguagem e a sintaxe das regras</h4>
+            <p style="font-size:0.72em; color:#444444;">MDN WEB DOCS. <em>CSS: folhas de estilo em cascata</em>.<br>
+            <code style="font-size:0.9em; overflow-wrap:anywhere;">developer.mozilla.org/pt-BR/docs/Web/CSS</code></p>
+          </div>
+          <div class="concept-card" style="padding:16px 20px;">
+            <h4>[2] Cascata, especificidade e herança</h4>
+            <p style="font-size:0.72em; color:#444444;">MDN WEB DOCS. <em>Cascata e herança</em>.<br>
+            <code style="font-size:0.9em; overflow-wrap:anywhere;">developer.mozilla.org/pt-BR/docs/<wbr>Learn/CSS/<wbr>Building_blocks/<wbr>Cascade_and_inheritance</code></p>
+          </div>
+          <div class="concept-card" style="padding:16px 20px;">
+            <h4>[3] O box model</h4>
+            <p style="font-size:0.72em; color:#444444;">MDN WEB DOCS. <em>O modelo de caixa</em>, com o efeito de <code>box-sizing</code>.<br>
+            <code style="font-size:0.9em; overflow-wrap:anywhere;">developer.mozilla.org/pt-BR/docs/<wbr>Learn/CSS/<wbr>Building_blocks/<wbr>The_box_model</code></p>
+          </div>
+          <div class="concept-card" style="padding:16px 20px;">
+            <h4>[4] Flexbox</h4>
+            <p style="font-size:0.72em; color:#444444;">MDN WEB DOCS. <em>Layout flexível em caixa</em>.<br>
+            <code style="font-size:0.9em; overflow-wrap:anywhere;">developer.mozilla.org/pt-BR/docs/<wbr>Web/CSS/<wbr>CSS_flexible_box_layout</code></p>
+          </div>
+        </div>
+
+        <div class="callout" style="margin-top:12px;">
+          <p>O laboratório de hoje continua no seu fork de <code>github.com/josercf/uninove-2026-2-clinica-vida</code>, na branch <code>feature/estilo-inicial</code>.</p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">04 Referências</div>
+          <div class="footer-page">25</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 26: ENCERRAMENTO ==================== -->
+      <section class="end-slide">
+        <img src="../assets/img/uninove-logo.png" alt="Uninove, Universidade Nove de Julho"
+             style="max-width:300px; background:#FFFFFF; padding:20px 28px; border-radius:8px;">
+        <div class="copyright">
+          Copyright &copy; 2026<br>
+          Prof. José Romualdo da Costa Filho<br><br>
+          Todos os direitos reservados. É expressamente proibida a reprodução, divulgação<br>
+          total ou parcial, deste material acadêmico sem autorização formal,<br>
+          por escrito, do Professor autor da ementa.
+        </div>
+      </section>
+
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/highlight/highlight.js"></script>
+  <script src="../assets/js/uninove-quiz.js"></script>
+  <script type="module">
+    import { TURMAS, resolverTurma, dataDaAula, formatarData } from '../assets/js/turmas.js';
+    const turma = resolverTurma({
+      hoje: new Date(),
+      salva: localStorage.getItem('uninove-turma'),
+    });
+    const alvo = document.querySelector('[data-data-da-aula]');
+    if (alvo) {
+      const n = Number(alvo.getAttribute('data-data-da-aula'));
+      alvo.textContent = turma
+        ? `${TURMAS[turma].rotulo}, ${formatarData(dataDaAula(turma, n))}`
+        : `Quarta ${formatarData(dataDaAula('quarta', n))} ou quinta ${formatarData(dataDaAula('quinta', n))}`;
+    }
+  </script>
+  <script>
+    Reveal.initialize({
+      width: 1280, height: 720, center: false, margin: 0,
+      hash: true, slideNumber: false,
+      // Os chevrons de navegação caem sobre a footer-bar e sobre o triângulo
+      // azul do canto inferior direito; a barra de progresso encosta no rodapé
+      // e parece um segundo rodapé. Nenhum dos dois é usado na projeção.
+      controls: false, progress: false,
+      // Um slide por página no ?print-pdf, para o PDF bater com o deck.
+      pdfMaxPagesPerSlide: 1,
+      plugins: [RevealHighlight],
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,1051 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Aula 02, Estrutura da web e redes TCP/IP | Uninove</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/theme/white.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/highlight/monokai.css">
+  <link rel="stylesheet" href="../assets/css/uninove-theme.css">
+  <link rel="stylesheet" href="../assets/css/uninove-print.css">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+      <!-- ==================== SLIDE 1: CAPA ==================== -->
+      <section class="cover-slide">
+        <img src="../assets/img/uninove-logo.png" alt="Uninove, Universidade Nove de Julho" class="uninove-logo-full"
+             style="max-width:400px; background:#FFFFFF; padding:26px 36px; border-radius:10px;">
+        <div style="margin-top:36px; color:#FFFFFF; font-size:0.95em; font-weight:800; letter-spacing:4px; text-transform:uppercase;">Desenvolvimento Web</div>
+        <div style="margin-top:12px; color:#C84B31; font-size:0.6em; font-weight:700; letter-spacing:3px; text-transform:uppercase;">Graduação, 2026.2</div>
+      </section>
+
+      <!-- ==================== SLIDE 2: TÍTULO ==================== -->
+      <section class="title-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="title-card">
+          <div class="accent-bar"></div>
+          <h1>Desenvolvimento Web</h1>
+          <h2>Estrutura da web e redes TCP/IP</h2>
+          <h3>Prof. José Romualdo<br><span data-data-da-aula="2"></span></h3>
+        </div>
+        <div class="lesson-bar">AULA 02 &nbsp;|&nbsp; Módulo 1, Fundamentos da Web e Front-End</div>
+      </section>
+
+      <!-- ==================== SLIDE 3: AGENDA ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Agenda do encontro de hoje</h2>
+        </div>
+
+        <p style="font-size:0.76em; margin-top:0;">São 150 minutos corridos, em quatro ciclos. Hoje abrimos a caixa que ficou fechada na Aula 01: o que existe dentro da seta "requisição HTTP".</p>
+
+        <table>
+          <thead>
+            <tr><th style="width:190px;">Horário</th><th style="width:200px;">Bloco</th><th>O que acontece</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>19h30 às 20h05</td><td>Ciclo 1</td><td>O caminho de uma requisição e as camadas do modelo TCP/IP</td></tr>
+            <tr><td>20h05 às 20h40</td><td>Ciclo 2</td><td>DNS, anatomia da URL, HTTP, códigos de status e HTTPS</td></tr>
+            <tr><td>20h40 às 20h50</td><td>Quiz de fixação</td><td>Uma pergunta sobre o conceito central da aula</td></tr>
+            <tr><td>20h50 às 21h25</td><td>Ciclo 3</td><td>Laboratório guiado: <code>nslookup</code> e a aba Network do DevTools</td></tr>
+            <tr><td>21h25 às 21h50</td><td>Ciclo 4</td><td>Laboratório: <code>docs/arquitetura.md</code>, que é o entregável</td></tr>
+            <tr><td>21h50 às 22h00</td><td>Fechamento</td><td>Commit, push e prévia da Aula 03</td></tr>
+          </tbody>
+        </table>
+
+        <div class="slide-footer">
+          <div class="footer-bar">02 Agenda do encontro</div>
+          <div class="footer-page">3</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 4: RECAPITULAÇÃO DA AULA 01 ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>De onde viemos: o que ficou pronto na Aula 01</h2>
+        </div>
+
+        <div class="side-by-side" style="margin-top:6px;">
+          <div class="side">
+            <h4>O entregável da Aula 01</h4>
+            <ul style="margin:0; padding-left:20px;">
+              <li>O <strong>fork de <code>josercf/uninove-2026-2-clinica-vida</code></strong> sob a sua conta, clonado na sua máquina.</li>
+              <li>A identidade do Git configurada, com o mesmo e-mail do GitHub.</li>
+              <li>O commit <code>docs: identificação do aluno no README</code>, com o seu nome ao lado, já enviado por <code>push</code>.</li>
+            </ul>
+          </div>
+          <div class="side">
+            <h4>As ideias que continuam valendo</h4>
+            <ul style="margin:0; padding-left:20px;">
+              <li><strong>Cliente pede, servidor responde.</strong> Hoje detalhamos exatamente como esse pedido viaja.</li>
+              <li><strong>O commit é uma fotografia imutável encadeada</strong> na anterior. O documento de hoje entra no mesmo histórico, como mais uma fotografia.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="callout" style="margin-top:16px;">
+          <p><strong>Quem faltou ou não concluiu:</strong> faça o fork e o clone agora, nos primeiros minutos. O laboratório de hoje escreve dentro desse mesmo repositório, e sem ele não há onde commitar.</p>
+        </div>
+
+        <div class="takeaway">
+          <span class="takeaway-label">O passo de hoje</span>
+          <p>Na Aula 01 a requisição HTTP era uma seta desenhada entre duas caixas. Hoje ela vira endereço IP, porta, DNS, cabeçalho e código de status.</p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">02 Recapitulação da Aula 01</div>
+          <div class="footer-page">4</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 5: CAMINHO DA REQUISIÇÃO ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>O que acontece quando você digita um endereço <a href="#/ref-slide" class="ref-badge" title="Ver referências">[1]</a></h2>
+        </div>
+
+        <p style="font-size:0.7em; margin-top:0;">Entre a tecla Enter do paciente e a agenda aparecendo na tela existem sete passos. Cada um deles é um assunto desta aula.</p>
+
+        <div class="slide-figure" style="margin-top:0;">
+          <svg viewBox="0 0 1140 300" style="max-height:330px;" role="img" aria-label="Os sete passos entre digitar o endereço e a página aparecer na tela">
+            <defs>
+              <marker id="a2Azul" markerWidth="10" markerHeight="10" refX="9" refY="5" orient="auto">
+                <path d="M0,0 L10,5 L0,10 Z" fill="#00274D"/>
+              </marker>
+              <marker id="a2Coral" markerWidth="10" markerHeight="10" refX="9" refY="5" orient="auto">
+                <path d="M0,0 L10,5 L0,10 Z" fill="#C84B31"/>
+              </marker>
+            </defs>
+
+            <!-- LINHA 1: IDA -->
+            <rect x="12" y="30" width="248" height="82" rx="9" fill="#F5F5F5" stroke="#00274D" stroke-width="2.5"/>
+            <circle cx="38" cy="54" r="14" fill="#00274D"/>
+            <text x="38" y="59" text-anchor="middle" font-size="14" font-weight="800" fill="#FFFFFF">1</text>
+            <text x="62" y="59" font-size="15" font-weight="800" fill="#00274D">Você digita a URL</text>
+            <text x="28" y="84" font-size="12" fill="#555555">O navegador separa esquema,</text>
+            <text x="28" y="102" font-size="12" fill="#555555">host, porta e caminho.</text>
+
+            <line x1="266" y1="71" x2="294" y2="71" stroke="#00274D" stroke-width="3" marker-end="url(#a2Azul)"/>
+
+            <rect x="300" y="30" width="248" height="82" rx="9" fill="#F5F5F5" stroke="#00274D" stroke-width="2.5"/>
+            <circle cx="326" cy="54" r="14" fill="#00274D"/>
+            <text x="326" y="59" text-anchor="middle" font-size="14" font-weight="800" fill="#FFFFFF">2</text>
+            <text x="350" y="59" font-size="15" font-weight="800" fill="#00274D">Consulta ao DNS</text>
+            <text x="316" y="84" font-size="12" fill="#555555">O nome do domínio vira o</text>
+            <text x="316" y="102" font-size="12" fill="#555555">endereço IP do servidor.</text>
+
+            <line x1="554" y1="71" x2="582" y2="71" stroke="#00274D" stroke-width="3" marker-end="url(#a2Azul)"/>
+
+            <rect x="588" y="30" width="248" height="82" rx="9" fill="#F5F5F5" stroke="#00274D" stroke-width="2.5"/>
+            <circle cx="614" cy="54" r="14" fill="#00274D"/>
+            <text x="614" y="59" text-anchor="middle" font-size="14" font-weight="800" fill="#FFFFFF">3</text>
+            <text x="638" y="59" font-size="15" font-weight="800" fill="#00274D">Conexão TCP</text>
+            <text x="604" y="84" font-size="12" fill="#555555">Aperto de mão com aquele IP,</text>
+            <text x="604" y="102" font-size="12" fill="#555555">na porta 443.</text>
+
+            <line x1="842" y1="71" x2="870" y2="71" stroke="#00274D" stroke-width="3" marker-end="url(#a2Azul)"/>
+
+            <rect x="876" y="30" width="248" height="82" rx="9" fill="#F5F5F5" stroke="#00274D" stroke-width="2.5"/>
+            <circle cx="902" cy="54" r="14" fill="#00274D"/>
+            <text x="902" y="59" text-anchor="middle" font-size="14" font-weight="800" fill="#FFFFFF">4</text>
+            <text x="926" y="59" font-size="15" font-weight="800" fill="#00274D">Aperto de mão TLS</text>
+            <text x="892" y="84" font-size="12" fill="#555555">As chaves são trocadas e o</text>
+            <text x="892" y="102" font-size="12" fill="#555555">canal fica criptografado.</text>
+
+            <!-- DESCIDA -->
+            <line x1="1000" y1="118" x2="1000" y2="182" stroke="#C84B31" stroke-width="3" marker-end="url(#a2Coral)"/>
+
+            <!-- LINHA 2: VOLTA -->
+            <rect x="876" y="188" width="248" height="82" rx="9" fill="#FFF7F5" stroke="#C84B31" stroke-width="2.5"/>
+            <circle cx="902" cy="212" r="14" fill="#C84B31"/>
+            <text x="902" y="217" text-anchor="middle" font-size="14" font-weight="800" fill="#FFFFFF">5</text>
+            <text x="926" y="217" font-size="15" font-weight="800" fill="#C84B31">Requisição HTTP</text>
+            <text x="892" y="242" font-size="12" fill="#555555">GET /consultas/agendar,</text>
+            <text x="892" y="260" font-size="12" fill="#555555">com os cabeçalhos.</text>
+
+            <line x1="870" y1="229" x2="842" y2="229" stroke="#C84B31" stroke-width="3" marker-end="url(#a2Coral)"/>
+
+            <rect x="588" y="188" width="248" height="82" rx="9" fill="#FFF7F5" stroke="#C84B31" stroke-width="2.5"/>
+            <circle cx="614" cy="212" r="14" fill="#C84B31"/>
+            <text x="614" y="217" text-anchor="middle" font-size="14" font-weight="800" fill="#FFFFFF">6</text>
+            <text x="638" y="217" font-size="15" font-weight="800" fill="#C84B31">O servidor responde</text>
+            <text x="604" y="242" font-size="12" fill="#555555">Processa, consulta o banco e</text>
+            <text x="604" y="260" font-size="12" fill="#555555">devolve 200 OK com o HTML.</text>
+
+            <line x1="582" y1="229" x2="554" y2="229" stroke="#C84B31" stroke-width="3" marker-end="url(#a2Coral)"/>
+
+            <rect x="300" y="188" width="248" height="82" rx="9" fill="#FFF7F5" stroke="#C84B31" stroke-width="2.5"/>
+            <circle cx="326" cy="212" r="14" fill="#C84B31"/>
+            <text x="326" y="217" text-anchor="middle" font-size="14" font-weight="800" fill="#FFFFFF">7</text>
+            <text x="350" y="217" font-size="15" font-weight="800" fill="#C84B31">O navegador renderiza</text>
+            <text x="316" y="242" font-size="12" fill="#555555">E repete tudo para cada CSS,</text>
+            <text x="316" y="260" font-size="12" fill="#555555">script e imagem da página.</text>
+
+            <text x="150" y="220" text-anchor="middle" font-size="13" font-weight="700" fill="#00274D">Tudo isso em</text>
+            <text x="150" y="244" text-anchor="middle" font-size="13" font-weight="700" fill="#C84B31">poucas centenas</text>
+            <text x="150" y="266" text-anchor="middle" font-size="13" font-weight="700" fill="#C84B31">de milissegundos</text>
+          </svg>
+        </div>
+
+        <div class="callout" style="margin-top:10px;">
+          <p><strong>Cada passo é um slide de hoje:</strong> o 2 é o DNS, o 3 e o 4 são TCP e TLS, o 5 e o 6 são o HTTP.</p>
+        </div>
+
+        <div class="takeaway">
+          <span class="takeaway-label">Takeaway</span>
+          <p>Os quatro primeiros passos acontecem antes de existir um único byte de HTML. Quando o navegador finalmente pede a página, quase todo o trabalho de rede já foi feito.</p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">02 O caminho de uma requisição</div>
+          <div class="footer-page">5</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 6: CAMADAS TCP/IP ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>As quatro camadas do modelo TCP/IP <a href="#/ref-slide" class="ref-badge" title="Ver referências">[2]</a></h2>
+        </div>
+
+        <p style="font-size:0.7em; margin-top:0;">Cada camada resolve um problema e não precisa saber como a de baixo trabalha.</p>
+
+        <div class="slide-figure" style="margin-top:0;">
+          <svg viewBox="0 0 1140 320" style="max-height:340px;" role="img" aria-label="As quatro camadas do modelo TCP/IP com o que cada uma resolve e seus protocolos">
+            <defs>
+              <marker id="a2Baixo" markerWidth="9" markerHeight="9" refX="8" refY="4.5" orient="auto">
+                <path d="M0,0 L9,4.5 L0,9 Z" fill="#C84B31"/>
+              </marker>
+              <marker id="a2Cima" markerWidth="9" markerHeight="9" refX="8" refY="4.5" orient="auto">
+                <path d="M0,0 L9,4.5 L0,9 Z" fill="#00274D"/>
+              </marker>
+            </defs>
+
+            <!-- seta de envio -->
+            <line x1="26" y1="20" x2="26" y2="286" stroke="#C84B31" stroke-width="3" marker-end="url(#a2Baixo)"/>
+            <text transform="rotate(-90 14 155)" x="14" y="155" text-anchor="middle" font-size="12" font-weight="700" fill="#C84B31">envio: encapsula</text>
+
+            <!-- seta de recepção -->
+            <line x1="1114" y1="292" x2="1114" y2="26" stroke="#00274D" stroke-width="3" marker-end="url(#a2Cima)"/>
+            <text transform="rotate(-90 1128 155)" x="1128" y="155" text-anchor="middle" font-size="12" font-weight="700" fill="#00274D">chegada: desencapsula</text>
+
+            <!-- camada 4: aplicação -->
+            <rect x="52" y="14" width="1030" height="66" rx="8" fill="#F5F5F5" stroke="#00274D" stroke-width="2"/>
+            <rect x="52" y="14" width="7" height="66" rx="3" fill="#C84B31"/>
+            <text x="78" y="42" font-size="17" font-weight="800" fill="#00274D">Aplicação</text>
+            <text x="78" y="66" font-size="12.5" fill="#666666">O formato da conversa entre os programas: o que é um pedido e o que é uma resposta.</text>
+            <rect x="770" y="26" width="88" height="30" rx="5" fill="#00274D"/>
+            <text x="814" y="46" text-anchor="middle" font-size="13" font-weight="700" fill="#FFFFFF">HTTP</text>
+            <rect x="866" y="26" width="98" height="30" rx="5" fill="#00274D"/>
+            <text x="915" y="46" text-anchor="middle" font-size="13" font-weight="700" fill="#FFFFFF">HTTPS</text>
+            <rect x="972" y="26" width="88" height="30" rx="5" fill="#00274D"/>
+            <text x="1016" y="46" text-anchor="middle" font-size="13" font-weight="700" fill="#FFFFFF">DNS</text>
+
+            <!-- camada 3: transporte -->
+            <rect x="52" y="88" width="1030" height="66" rx="8" fill="#F5F5F5" stroke="#00274D" stroke-width="2"/>
+            <rect x="52" y="88" width="7" height="66" rx="3" fill="#C84B31"/>
+            <text x="78" y="116" font-size="17" font-weight="800" fill="#00274D">Transporte</text>
+            <text x="78" y="140" font-size="12.5" fill="#666666">Entrega os dados na porta certa, em ordem e sem perda, ou o mais rápido possível.</text>
+            <rect x="866" y="100" width="98" height="30" rx="5" fill="#00274D"/>
+            <text x="915" y="120" text-anchor="middle" font-size="13" font-weight="700" fill="#FFFFFF">TCP</text>
+            <rect x="972" y="100" width="88" height="30" rx="5" fill="#00274D"/>
+            <text x="1016" y="120" text-anchor="middle" font-size="13" font-weight="700" fill="#FFFFFF">UDP</text>
+
+            <!-- camada 2: internet -->
+            <rect x="52" y="162" width="1030" height="66" rx="8" fill="#F5F5F5" stroke="#00274D" stroke-width="2"/>
+            <rect x="52" y="162" width="7" height="66" rx="3" fill="#C84B31"/>
+            <text x="78" y="190" font-size="17" font-weight="800" fill="#00274D">Internet</text>
+            <text x="78" y="214" font-size="12.5" fill="#666666">Endereça cada máquina por um IP e escolhe a rota que atravessa as redes até ela.</text>
+            <rect x="866" y="174" width="98" height="30" rx="5" fill="#00274D"/>
+            <text x="915" y="194" text-anchor="middle" font-size="13" font-weight="700" fill="#FFFFFF">IP</text>
+            <rect x="972" y="174" width="88" height="30" rx="5" fill="#00274D"/>
+            <text x="1016" y="194" text-anchor="middle" font-size="13" font-weight="700" fill="#FFFFFF">ICMP</text>
+
+            <!-- camada 1: acesso à rede -->
+            <rect x="52" y="236" width="1030" height="66" rx="8" fill="#F5F5F5" stroke="#00274D" stroke-width="2"/>
+            <rect x="52" y="236" width="7" height="66" rx="3" fill="#C84B31"/>
+            <text x="78" y="264" font-size="17" font-weight="800" fill="#00274D">Acesso à rede</text>
+            <text x="78" y="288" font-size="12.5" fill="#666666">Põe o bit no meio físico: no cabo do laboratório, no wi-fi da clínica ou na fibra.</text>
+            <rect x="828" y="248" width="136" height="30" rx="5" fill="#00274D"/>
+            <text x="896" y="268" text-anchor="middle" font-size="13" font-weight="700" fill="#FFFFFF">Ethernet</text>
+            <rect x="972" y="248" width="88" height="30" rx="5" fill="#00274D"/>
+            <text x="1016" y="268" text-anchor="middle" font-size="13" font-weight="700" fill="#FFFFFF">Wi-Fi</text>
+          </svg>
+        </div>
+
+        <div class="callout" style="margin-top:10px;">
+          <p><strong>No agendamento:</strong> HTTP é aplicação; TCP cuida da porta; IP, do endereço; wi-fi, do sinal.</p>
+        </div>
+
+        <div class="takeaway">
+          <span class="takeaway-label">Takeaway</span>
+          <p>Trocar o wi-fi por cabo não muda uma linha do seu HTML: é para isso que servem as camadas.</p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">02 Camadas do modelo TCP/IP</div>
+          <div class="footer-page">6</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 7: IP, PORTA, TCP E UDP ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Endereço IP, porta e a escolha entre TCP e UDP <a href="#/ref-slide" class="ref-badge" title="Ver referências">[2]</a></h2>
+        </div>
+
+        <p style="font-size:0.7em; margin-top:0;">O IP identifica a <strong>máquina</strong>; a porta identifica o <strong>programa</strong> que atende dentro dela. É por isso que o mesmo servidor da Clínica Vida+ pode responder o site na porta 443 e o MySQL na 3306.</p>
+
+        <div class="concept-cards" style="grid-template-columns: repeat(3, 1fr); margin-top:10px;">
+          <div class="concept-card" style="padding:14px 18px;">
+            <h4>Endereço IP</h4>
+            <p style="font-size:0.68em;">O número da máquina na rede, como <code>203.0.113.42</code> em IPv4. É o endereço da rua; sem ele não há como entregar nada.</p>
+          </div>
+          <div class="concept-card" style="padding:14px 18px;">
+            <h4>Porta</h4>
+            <p style="font-size:0.68em;">O apartamento dentro do prédio. <code>80</code> para HTTP, <code>443</code> para HTTPS, <code>3306</code> para MySQL, <code>5001</code> para o ASP.NET local.</p>
+          </div>
+          <div class="concept-card" style="padding:14px 18px;">
+            <h4>Socket</h4>
+            <p style="font-size:0.68em;">IP mais porta, dos dois lados. É esse par que identifica de forma única cada conversa aberta no seu computador.</p>
+          </div>
+        </div>
+
+        <div class="side-by-side" style="margin-top:14px;">
+          <div class="side" style="padding:14px 18px;">
+            <h4 style="margin-bottom:6px;">TCP, o que a web usa</h4>
+            <p style="margin:0; font-size:0.68em;">Abre conexão com aperto de mão, numera cada pedaço, confirma o recebimento e reenvia o que se perdeu. Custa alguns milissegundos a mais e entrega a página <strong>inteira e na ordem certa</strong>.</p>
+          </div>
+          <div class="side" style="padding:14px 18px;">
+            <h4 style="margin-bottom:6px;">UDP, quando velocidade vale mais</h4>
+            <p style="margin:0; font-size:0.68em;">Dispara sem conexão e sem confirmação. Serve para voz, vídeo ao vivo e para a própria consulta de DNS. Um quadro perdido na chamada passa; <strong>meio HTML não passa</strong>.</p>
+          </div>
+        </div>
+
+        <div class="takeaway">
+          <span class="takeaway-label">Takeaway</span>
+          <p>A web escolheu TCP porque HTML, CSS e JavaScript não toleram byte faltando. Confiabilidade vale mais que latência quando o resultado precisa chegar completo.</p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">02 IP, porta, TCP e UDP</div>
+          <div class="footer-page">7</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 8: DEMONSTRAÇÃO E EXERCÍCIO DO CICLO 1 ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Demonstração ao vivo e exercício do Ciclo 1</h2>
+        </div>
+
+        <p style="font-size:0.7em; margin-top:0;">Três comandos mostram, no terminal, o que os dois slides anteriores descreveram em desenho. Acompanhe na sua máquina.</p>
+
+        <pre class="code-compact"><code class="language-bash" data-trim>ipconfig            # Windows: o IP da sua máquina, a máscara e o gateway
+ifconfig            # Linux e macOS: o mesmo, com outro nome
+
+ping uni9.br        # a máquina responde? em quantos milissegundos?
+
+tracert uni9.br     # Windows: cada roteador entre você e o destino
+traceroute uni9.br  # Linux e macOS: o mesmo caminho, salto a salto</code></pre>
+
+        <div class="callout" style="margin:10px 0;">
+          <p><strong>O que observar:</strong> o <code>ping</code> devolve o IP por trás do nome, prova de que o DNS já respondeu. O <code>traceroute</code> mostra que a sua requisição atravessa uma dezena de roteadores, cada um deles uma decisão da camada de internet.</p>
+        </div>
+
+        <div class="takeaway">
+          <span class="takeaway-label">Exercício, 8 minutos</span>
+          <p>No papel, desenhe as caixas do caminho da requisição do navegador do paciente até o servidor da Clínica Vida+ e de volta. Nomeie cada seta. Guarde o desenho: ele vira o diagrama do laboratório de hoje.</p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">02 Demonstração e exercício do Ciclo 1</div>
+          <div class="footer-page">8</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 9: DNS ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>DNS: o nome vira endereço IP <a href="#/ref-slide" class="ref-badge" title="Ver referências">[1]</a></h2>
+        </div>
+
+        <p style="font-size:0.7em; margin-top:0;">Nenhum roteador da internet entende <code>clinicavidamais.com.br</code>. Ele só sabe encaminhar pacotes para endereços IP. O DNS é a agenda telefônica distribuída que faz essa tradução, antes de qualquer requisição HTTP existir.</p>
+
+        <div class="slide-figure" style="margin-top:0;">
+          <svg viewBox="0 0 1080 300" style="max-height:315px;" role="img" aria-label="Resolução de nome pelo DNS, do navegador ao servidor autoritativo">
+            <defs>
+              <marker id="a2DnsA" markerWidth="10" markerHeight="10" refX="9" refY="5" orient="auto">
+                <path d="M0,0 L10,5 L0,10 Z" fill="#00274D"/>
+              </marker>
+              <marker id="a2DnsC" markerWidth="10" markerHeight="10" refX="9" refY="5" orient="auto">
+                <path d="M0,0 L10,5 L0,10 Z" fill="#C84B31"/>
+              </marker>
+            </defs>
+
+            <!-- navegador -->
+            <rect x="10" y="105" width="190" height="96" rx="9" fill="#F5F5F5" stroke="#00274D" stroke-width="2.5"/>
+            <text x="105" y="136" text-anchor="middle" font-size="15" font-weight="800" fill="#00274D">Navegador</text>
+            <text x="105" y="160" text-anchor="middle" font-size="12" fill="#555555">do paciente</text>
+            <text x="105" y="184" text-anchor="middle" font-size="11.5" fill="#C84B31" font-weight="700">quer clinicavidamais.com.br</text>
+
+            <!-- ida e volta -->
+            <line x1="204" y1="130" x2="324" y2="130" stroke="#00274D" stroke-width="3" marker-end="url(#a2DnsA)"/>
+            <text x="264" y="120" text-anchor="middle" font-size="12" font-weight="700" fill="#00274D">1. nome</text>
+            <line x1="324" y1="178" x2="204" y2="178" stroke="#C84B31" stroke-width="3" marker-end="url(#a2DnsC)"/>
+            <text x="264" y="200" text-anchor="middle" font-size="12" font-weight="700" fill="#C84B31">5. IP</text>
+
+            <!-- resolvedor -->
+            <rect x="330" y="105" width="230" height="96" rx="9" fill="#F5F5F5" stroke="#00274D" stroke-width="2.5"/>
+            <text x="445" y="136" text-anchor="middle" font-size="15" font-weight="800" fill="#00274D">Resolvedor recursivo</text>
+            <text x="445" y="160" text-anchor="middle" font-size="12" fill="#555555">o DNS do provedor, ou 8.8.8.8</text>
+            <text x="445" y="184" text-anchor="middle" font-size="11.5" fill="#C84B31" font-weight="700">guarda a resposta em cache</text>
+
+            <!-- setas para a hierarquia -->
+            <line x1="564" y1="120" x2="674" y2="55" stroke="#00274D" stroke-width="2.5" marker-end="url(#a2DnsA)"/>
+            <text x="612" y="79" text-anchor="middle" font-size="12" font-weight="700" fill="#00274D">2</text>
+            <line x1="564" y1="152" x2="674" y2="152" stroke="#00274D" stroke-width="2.5" marker-end="url(#a2DnsA)"/>
+            <text x="616" y="143" text-anchor="middle" font-size="12" font-weight="700" fill="#00274D">3</text>
+            <line x1="564" y1="186" x2="674" y2="248" stroke="#00274D" stroke-width="2.5" marker-end="url(#a2DnsA)"/>
+            <text x="612" y="234" text-anchor="middle" font-size="12" font-weight="700" fill="#00274D">4</text>
+
+            <!-- hierarquia -->
+            <rect x="680" y="15" width="392" height="72" rx="8" fill="#00274D"/>
+            <text x="700" y="45" font-size="15" font-weight="800" fill="#FFFFFF">Servidores raiz</text>
+            <text x="700" y="70" font-size="12" fill="#BBD0E0">Quem cuida do domínio <tspan font-weight="700" fill="#FFFFFF">.br</tspan>?</text>
+
+            <rect x="680" y="118" width="392" height="72" rx="8" fill="#00274D"/>
+            <text x="700" y="148" font-size="15" font-weight="800" fill="#FFFFFF">Servidores de .br e .com.br</text>
+            <text x="700" y="173" font-size="12" fill="#BBD0E0">Quem cuida de <tspan font-weight="700" fill="#FFFFFF">clinicavidamais.com.br</tspan>?</text>
+
+            <rect x="680" y="221" width="392" height="72" rx="8" fill="#C84B31"/>
+            <text x="700" y="251" font-size="15" font-weight="800" fill="#FFFFFF">Servidor autoritativo</text>
+            <text x="700" y="276" font-size="12" fill="#FFE3DC">clinicavidamais.com.br &#8594; <tspan font-weight="700" fill="#FFFFFF">203.0.113.42</tspan></text>
+          </svg>
+        </div>
+
+        <div class="callout" style="margin-top:10px;">
+          <p><strong>Cache:</strong> guardada a resposta pelo prazo do TTL, os passos 2, 3 e 4 são pulados.</p>
+        </div>
+
+        <div class="takeaway">
+          <span class="takeaway-label">Takeaway</span>
+          <p>O DNS acontece antes de qualquer HTTP. Se ele falha, o navegador nem chega a abrir conexão.</p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">02 DNS e resolução de nomes</div>
+          <div class="footer-page">9</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 10: ANATOMIA DA URL ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Anatomia de uma URL <a href="#/ref-slide" class="ref-badge" title="Ver referências">[3]</a></h2>
+        </div>
+
+        <p style="font-size:0.7em; margin-top:0;">A URL não é um texto solto: é um endereço com seis partes, e cada uma delas é lida por um componente diferente do caminho que acabamos de percorrer.</p>
+
+        <div class="slide-figure" style="margin-top:0;">
+          <svg viewBox="0 0 1160 290" style="max-height:300px;" role="img" aria-label="Uma URL de agendamento decomposta em esquema, host, porta, caminho, query string e fragmento">
+            <!-- faixas coloridas por trás de cada segmento -->
+            <rect x="38" y="26" width="100" height="46" rx="5" fill="#00274D" opacity="0.12"/>
+            <rect x="136" y="26" width="266" height="46" rx="5" fill="#C84B31" opacity="0.18"/>
+            <rect x="400" y="26" width="50" height="46" rx="5" fill="#00274D" opacity="0.12"/>
+            <rect x="448" y="26" width="218" height="46" rx="5" fill="#C84B31" opacity="0.18"/>
+            <rect x="664" y="26" width="314" height="46" rx="5" fill="#00274D" opacity="0.12"/>
+            <rect x="976" y="26" width="146" height="46" rx="5" fill="#C84B31" opacity="0.18"/>
+
+            <!-- a URL, segmento a segmento, com largura forçada -->
+            <text x="40" y="58" font-family="'JetBrains Mono', monospace" font-size="21" fill="#00274D" font-weight="700" textLength="60" lengthAdjust="spacingAndGlyphs">https</text>
+            <text x="100" y="58" font-family="'JetBrains Mono', monospace" font-size="21" fill="#999999" textLength="36" lengthAdjust="spacingAndGlyphs">://</text>
+            <text x="136" y="58" font-family="'JetBrains Mono', monospace" font-size="21" fill="#C84B31" font-weight="700" textLength="264" lengthAdjust="spacingAndGlyphs">clinicavidamais.com.br</text>
+            <text x="400" y="58" font-family="'JetBrains Mono', monospace" font-size="21" fill="#00274D" font-weight="700" textLength="48" lengthAdjust="spacingAndGlyphs">:443</text>
+            <text x="448" y="58" font-family="'JetBrains Mono', monospace" font-size="21" fill="#C84B31" font-weight="700" textLength="216" lengthAdjust="spacingAndGlyphs">/consultas/agendar</text>
+            <text x="664" y="58" font-family="'JetBrains Mono', monospace" font-size="21" fill="#00274D" font-weight="700" textLength="312" lengthAdjust="spacingAndGlyphs">?medico=12&amp;data=2026-08-20</text>
+            <text x="976" y="58" font-family="'JetBrains Mono', monospace" font-size="21" fill="#C84B31" font-weight="700" textLength="144" lengthAdjust="spacingAndGlyphs">#confirmacao</text>
+
+            <!-- conectores -->
+            <line x1="88" y1="76" x2="88" y2="108" stroke="#999999" stroke-width="1.8"/>
+            <line x1="424" y1="76" x2="424" y2="108" stroke="#999999" stroke-width="1.8"/>
+            <line x1="820" y1="76" x2="820" y2="108" stroke="#999999" stroke-width="1.8"/>
+            <line x1="268" y1="76" x2="268" y2="196" stroke="#999999" stroke-width="1.8"/>
+            <line x1="556" y1="76" x2="556" y2="196" stroke="#999999" stroke-width="1.8"/>
+            <line x1="1048" y1="76" x2="1048" y2="196" stroke="#999999" stroke-width="1.8"/>
+
+            <!-- rótulos, linha de cima -->
+            <rect x="3" y="108" width="170" height="60" rx="7" fill="#F5F5F5" stroke="#00274D" stroke-width="1.8"/>
+            <text x="88" y="132" text-anchor="middle" font-size="15" font-weight="800" fill="#00274D">esquema</text>
+            <text x="88" y="153" text-anchor="middle" font-size="11.5" fill="#666666">o protocolo da conversa</text>
+
+            <rect x="339" y="108" width="170" height="60" rx="7" fill="#F5F5F5" stroke="#00274D" stroke-width="1.8"/>
+            <text x="424" y="132" text-anchor="middle" font-size="15" font-weight="800" fill="#00274D">porta</text>
+            <text x="424" y="153" text-anchor="middle" font-size="11.5" fill="#666666">443 é o padrão do HTTPS</text>
+
+            <rect x="725" y="108" width="190" height="60" rx="7" fill="#F5F5F5" stroke="#00274D" stroke-width="1.8"/>
+            <text x="820" y="132" text-anchor="middle" font-size="15" font-weight="800" fill="#00274D">query string</text>
+            <text x="820" y="153" text-anchor="middle" font-size="11.5" fill="#666666">parâmetros do pedido</text>
+
+            <!-- rótulos, linha de baixo -->
+            <rect x="158" y="196" width="220" height="60" rx="7" fill="#FFF7F5" stroke="#C84B31" stroke-width="1.8"/>
+            <text x="268" y="220" text-anchor="middle" font-size="15" font-weight="800" fill="#C84B31">host</text>
+            <text x="268" y="241" text-anchor="middle" font-size="11.5" fill="#666666">o DNS traduz isto em IP</text>
+
+            <rect x="456" y="196" width="200" height="60" rx="7" fill="#FFF7F5" stroke="#C84B31" stroke-width="1.8"/>
+            <text x="556" y="220" text-anchor="middle" font-size="15" font-weight="800" fill="#C84B31">caminho</text>
+            <text x="556" y="241" text-anchor="middle" font-size="11.5" fill="#666666">o recurso dentro do servidor</text>
+
+            <rect x="948" y="196" width="200" height="60" rx="7" fill="#FFF7F5" stroke="#C84B31" stroke-width="1.8"/>
+            <text x="1048" y="220" text-anchor="middle" font-size="15" font-weight="800" fill="#C84B31">fragmento</text>
+            <text x="1048" y="241" text-anchor="middle" font-size="11.5" fill="#666666">âncora, não vai ao servidor</text>
+          </svg>
+        </div>
+
+        <div class="callout" style="margin-top:10px;">
+          <p><strong>Quem lê o quê:</strong> o host vai ao DNS; a porta, ao servidor; o caminho, ao HTTP.</p>
+        </div>
+
+        <div class="takeaway">
+          <span class="takeaway-label">Takeaway</span>
+          <p>O fragmento nunca sai do navegador: o que o servidor precisa saber vai no caminho ou na query.</p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">02 Anatomia de uma URL</div>
+          <div class="footer-page">10</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 11: REQUISIÇÃO E RESPOSTA HTTP ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Uma requisição e uma resposta HTTP, linha a linha <a href="#/ref-slide" class="ref-badge" title="Ver referências">[3]</a></h2>
+        </div>
+
+        <p style="font-size:0.7em; margin-top:0;">HTTP é texto. Toda a conversa entre o navegador do paciente e o servidor da clínica cabe em duas mensagens que você consegue ler.</p>
+
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:22px; margin-top:4px;">
+          <div>
+            <h4 style="font-size:0.68em; color:#C84B31; margin:0 0 4px 0; font-weight:700;">O navegador pede</h4>
+            <pre class="code-compact" style="margin:0;"><code class="language-http" data-trim>GET /consultas/agendar?medico=12 HTTP/1.1
+Host: clinicavidamais.com.br
+User-Agent: Mozilla/5.0 (Windows NT 10.0)
+Accept: text/html
+Cookie: sessao=8f3a91c2</code></pre>
+          </div>
+          <div>
+            <h4 style="font-size:0.68em; color:#C84B31; margin:0 0 4px 0; font-weight:700;">O servidor responde</h4>
+            <pre class="code-compact" style="margin:0;"><code class="language-http" data-trim>HTTP/1.1 200 OK
+Content-Type: text/html; charset=utf-8
+Content-Length: 5124
+Date: Wed, 12 Aug 2026 22:41:03 GMT
+
+&lt;!DOCTYPE html&gt; ... a agenda do dia</code></pre>
+          </div>
+        </div>
+
+        <div class="side-by-side" style="margin-top:14px;">
+          <div class="side" style="padding:12px 16px;">
+            <h4 style="margin-bottom:5px;">GET, para buscar</h4>
+            <p style="margin:0; font-size:0.66em;">Os dados vão na query string, à vista na URL, no histórico e nos logs. Serve para consultar a agenda, nunca para enviar o CPF do paciente.</p>
+          </div>
+          <div class="side" style="padding:12px 16px;">
+            <h4 style="margin-bottom:5px;">POST, para enviar</h4>
+            <p style="margin:0; font-size:0.66em;">Os dados vão no corpo da mensagem, fora da URL. É o método do formulário de agendamento que vamos construir na Aula 05.</p>
+          </div>
+        </div>
+
+        <div class="takeaway">
+          <span class="takeaway-label">Takeaway</span>
+          <p>A linha em branco separa os cabeçalhos do corpo. Tudo antes dela é sobre a mensagem; tudo depois é a mensagem.</p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">02 Requisição e resposta HTTP</div>
+          <div class="footer-page">11</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 12: CÓDIGOS DE STATUS ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Códigos de status, por família <a href="#/ref-slide" class="ref-badge" title="Ver referências">[3]</a></h2>
+        </div>
+
+        <p style="font-size:0.72em; margin-top:0;">O primeiro dígito já diz de quem é o problema. Decore as cinco famílias e você lê qualquer código sem consultar tabela.</p>
+
+        <table>
+          <thead>
+            <tr><th style="width:110px;">Família</th><th style="width:290px;">O que significa</th><th>Exemplo na Clínica Vida+</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><code>1xx</code></td><td>Informativo, siga em frente</td><td><code>101</code>: troca de protocolo, raro no dia a dia</td></tr>
+            <tr><td><code>2xx</code></td><td>Deu certo</td><td><code>200 OK</code>: a agenda do dia foi devolvida</td></tr>
+            <tr><td><code>3xx</code></td><td>Mudou de lugar</td><td><code>301</code>: <code>/agenda</code> agora é <code>/consultas</code></td></tr>
+            <tr><td><code>4xx</code></td><td>O erro está no pedido</td><td><code>404</code>: o médico 999 não existe. <code>401</code>: sem login</td></tr>
+            <tr><td><code>5xx</code></td><td>O erro está no servidor</td><td><code>500</code>: falhou ao gravar a consulta no banco</td></tr>
+          </tbody>
+        </table>
+
+        <div class="takeaway">
+          <span class="takeaway-label">Takeaway</span>
+          <p>4xx é culpa de quem pediu, 5xx é culpa de quem respondeu. Essa única distinção resolve metade das discussões entre front-end e back-end.</p>
+        </div>
+
+        <div class="callout" style="margin-top:12px;">
+          <p>No laboratório de hoje você vê esses códigos ao vivo, um por linha da aba Network do DevTools.</p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">02 Códigos de status HTTP</div>
+          <div class="footer-page">12</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 13: HTTPS E TLS ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>O que o HTTPS acrescenta ao HTTP <a href="#/ref-slide" class="ref-badge" title="Ver referências">[4]</a></h2>
+        </div>
+
+        <p style="font-size:0.7em; margin-top:0;">HTTPS é o mesmo HTTP dentro de um túnel TLS. O formulário de agendamento carrega CPF, telefone e data de nascimento: dado pessoal sensível, que jamais pode trafegar em texto puro.</p>
+
+        <div class="slide-figure" style="margin-top:0;">
+          <svg viewBox="0 0 1120 250" style="max-height:265px;" role="img" aria-label="Comparação entre HTTP em texto puro e HTTPS com túnel TLS no wi-fi público">
+            <defs>
+              <marker id="a2Tls1" markerWidth="9" markerHeight="9" refX="8" refY="4.5" orient="auto">
+                <path d="M0,0 L9,4.5 L0,9 Z" fill="#c0392b"/>
+              </marker>
+              <marker id="a2Tls2" markerWidth="9" markerHeight="9" refX="8" refY="4.5" orient="auto">
+                <path d="M0,0 L9,4.5 L0,9 Z" fill="#1e8449"/>
+              </marker>
+            </defs>
+
+            <!-- LINHA HTTP -->
+            <rect x="8" y="16" width="1104" height="96" rx="9" fill="#fdedec" stroke="#e74c3c" stroke-width="2"/>
+            <text x="34" y="46" font-size="16" font-weight="800" fill="#c0392b">HTTP, porta 80</text>
+            <text x="34" y="70" font-size="12" fill="#c0392b">texto puro no cabo</text>
+            <text x="34" y="94" font-size="12" fill="#c0392b">e no wi-fi da sala</text>
+
+            <line x1="230" y1="64" x2="470" y2="64" stroke="#c0392b" stroke-width="2.5" marker-end="url(#a2Tls1)"/>
+            <text x="350" y="52" text-anchor="middle" font-family="'JetBrains Mono', monospace" font-size="13" fill="#c0392b" font-weight="700">cpf=123.456.789-00</text>
+            <text x="350" y="88" text-anchor="middle" font-size="12" fill="#c0392b">qualquer um na mesma rede lê</text>
+
+            <circle cx="540" cy="64" r="30" fill="#e74c3c"/>
+            <text x="540" y="60" text-anchor="middle" font-size="12" font-weight="800" fill="#FFFFFF">quem</text>
+            <text x="540" y="76" text-anchor="middle" font-size="12" font-weight="800" fill="#FFFFFF">escuta</text>
+
+            <line x1="610" y1="64" x2="850" y2="64" stroke="#c0392b" stroke-width="2.5" marker-end="url(#a2Tls1)"/>
+            <text x="730" y="52" text-anchor="middle" font-family="'JetBrains Mono', monospace" font-size="13" fill="#c0392b" font-weight="700">cpf=123.456.789-00</text>
+
+            <rect x="900" y="30" width="186" height="68" rx="8" fill="#00274D"/>
+            <text x="993" y="60" text-anchor="middle" font-size="14" font-weight="800" fill="#FFFFFF">Servidor da</text>
+            <text x="993" y="82" text-anchor="middle" font-size="14" font-weight="800" fill="#FFFFFF">Clínica Vida+</text>
+
+            <!-- LINHA HTTPS -->
+            <rect x="8" y="132" width="1104" height="96" rx="9" fill="#eafaf1" stroke="#27ae60" stroke-width="2"/>
+            <text x="34" y="162" font-size="16" font-weight="800" fill="#1e8449">HTTPS, porta 443</text>
+            <text x="34" y="186" font-size="12" fill="#1e8449">o mesmo HTTP, dentro</text>
+            <text x="34" y="210" font-size="12" fill="#1e8449">de um túnel TLS</text>
+
+            <line x1="230" y1="180" x2="470" y2="180" stroke="#1e8449" stroke-width="2.5" marker-end="url(#a2Tls2)"/>
+            <text x="350" y="168" text-anchor="middle" font-family="'JetBrains Mono', monospace" font-size="13" fill="#1e8449" font-weight="700">a7f3d9e10b4c88...</text>
+            <text x="350" y="204" text-anchor="middle" font-size="12" fill="#1e8449">ilegível para quem está no meio</text>
+
+            <circle cx="540" cy="180" r="30" fill="#95a5a6"/>
+            <text x="540" y="176" text-anchor="middle" font-size="12" font-weight="800" fill="#FFFFFF">quem</text>
+            <text x="540" y="192" text-anchor="middle" font-size="12" font-weight="800" fill="#FFFFFF">escuta</text>
+
+            <line x1="610" y1="180" x2="850" y2="180" stroke="#1e8449" stroke-width="2.5" marker-end="url(#a2Tls2)"/>
+            <text x="730" y="168" text-anchor="middle" font-family="'JetBrains Mono', monospace" font-size="13" fill="#1e8449" font-weight="700">a7f3d9e10b4c88...</text>
+            <text x="730" y="204" text-anchor="middle" font-size="12" fill="#1e8449">o certificado prova quem é o servidor</text>
+
+            <rect x="900" y="146" width="186" height="68" rx="8" fill="#00274D"/>
+            <text x="993" y="176" text-anchor="middle" font-size="14" font-weight="800" fill="#FFFFFF">Servidor da</text>
+            <text x="993" y="198" text-anchor="middle" font-size="14" font-weight="800" fill="#FFFFFF">Clínica Vida+</text>
+          </svg>
+        </div>
+
+        <div class="takeaway">
+          <span class="takeaway-label">Takeaway</span>
+          <p>O TLS entrega três coisas: sigilo do conteúdo, integridade contra alteração no caminho e a prova, pelo certificado, de que o servidor é mesmo quem diz ser.</p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">02 HTTPS e TLS</div>
+          <div class="footer-page">13</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 14: DEMONSTRAÇÃO E EXERCÍCIO DO CICLO 2 ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Demonstração ao vivo e exercício do Ciclo 2</h2>
+        </div>
+
+        <p style="font-size:0.7em; margin-top:0;">Primeiro o DNS no terminal, depois o HTTP no navegador. As duas evidências reaparecem no laboratório de hoje.</p>
+
+        <pre class="code-compact" style="margin:8px 0;"><code class="language-bash" data-trim>nslookup uni9.br            # o nome, o servidor DNS consultado e o endereço devolvido
+nslookup uni9.br 8.8.8.8    # a mesma pergunta, feita a outro servidor DNS
+nslookup github.com         # compare: um domínio grande devolve vários endereços</code></pre>
+
+        <div class="callout" style="margin:10px 0;">
+          <p><strong>No navegador:</strong> abra o DevTools com <code>F12</code>, vá até a aba <strong>Network</strong> e recarregue a página. Cada linha é uma requisição: método, recurso, código de status, tamanho e tempo. Clique em uma delas para ver os cabeçalhos que acabamos de ler no slide.</p>
+        </div>
+
+        <div class="takeaway">
+          <span class="takeaway-label">Exercício, 8 minutos</span>
+          <p>Nesta URL, aponte as seis partes: <code>https://clinicavidamais.com.br:443/consultas/agendar?medico=999&amp;data=2026-08-20#confirmacao</code>. Depois responda: se o médico 999 não existir no sistema, qual código de status o servidor deve devolver, e por quê?</p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">02 Demonstração e exercício do Ciclo 2</div>
+          <div class="footer-page">14</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 15: QUIZ DE FIXAÇÃO ==================== -->
+      <section class="quiz-slide content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area"><div class="accent-bar"></div><h2>Quiz de fixação</h2></div>
+        <div class="quiz-container">
+          <div class="quiz-question">Qual é o papel do DNS em uma requisição web?</div>
+          <ul class="quiz-options">
+            <li data-correct="false"><span class="option-letter">A</span> Criptografar o tráfego entre o navegador e o servidor, para que ninguém no caminho consiga ler o conteúdo.</li>
+            <li data-correct="false"><span class="option-letter">B</span> Comprimir o HTML antes de enviá-lo ao navegador, para reduzir o tempo de carregamento da página.</li>
+            <li data-correct="true"><span class="option-letter">C</span> Traduzir o nome do domínio no endereço IP do servidor, para que a conexão possa ser estabelecida.</li>
+            <li data-correct="false"><span class="option-letter">D</span> Guardar os cookies do usuário entre uma visita e outra, para que o servidor reconheça quem está acessando.</li>
+          </ul>
+          <div class="quiz-feedback"
+               data-correct-msg="Isso. O DNS resolve o nome em IP antes de qualquer conexão existir. Criptografar é papel do TLS, e guardar estado entre visitas é papel do cookie."
+               data-incorrect-msg="Não é isso. Criptografar é do TLS, comprimir é do próprio HTTP e guardar estado é do cookie. O DNS só traduz nome em endereço IP, antes da conexão."></div>
+        </div>
+        <div class="slide-footer"><div class="footer-bar">02 Quiz de fixação</div><div class="footer-page">15</div></div>
+      </section>
+
+      <!-- ==================== SLIDE 16: LAB PASSO 1 ==================== -->
+      <section class="exercise-slide content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Laboratório, passo 1 de 4: investigar o DNS</h2>
+        </div>
+
+        <p style="font-size:0.72em; margin-top:0;">A missão dos próximos 60 minutos é documentar a arquitetura pela qual o site da Clínica Vida+ vai passar a operar. Começamos coletando evidência real.</p>
+
+        <div class="exercise-container">
+          <h3>No terminal, dentro da pasta do seu fork</h3>
+          <ol class="exercise-steps">
+            <li>Escolha um domínio para investigar: <code>uni9.br</code>, <code>github.com</code> ou outro que você use.</li>
+            <li>Rode <code>nslookup SEU-DOMINIO</code> e leia a saída: o servidor DNS consultado, o nome e o endereço devolvido.</li>
+            <li>Copie a saída inteira. Ela vai virar um bloco de código no documento do passo 3.</li>
+            <li>Rode <code>ping SEU-DOMINIO</code> e confira que o IP que aparece é o mesmo que o <code>nslookup</code> devolveu.</li>
+          </ol>
+        </div>
+
+        <div class="callout" style="margin-top:12px;">
+          <p>Se o <code>nslookup</code> não existir na sua máquina, use <code>dig SEU-DOMINIO</code> no Linux ou no macOS. Em rede corporativa o servidor consultado pode ser interno: registre o que aparecer, é evidência igual.</p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">02 Laboratório, passo 1, nslookup</div>
+          <div class="footer-page">16</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 17: LAB PASSO 2 ==================== -->
+      <section class="exercise-slide content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Laboratório, passo 2 de 4: a aba Network do DevTools <a href="#/ref-slide" class="ref-badge" title="Ver referências">[3]</a></h2>
+        </div>
+
+        <p style="font-size:0.72em; margin-top:0;">Agora a evidência do HTTP. Abra no navegador o mesmo site que você investigou no passo anterior.</p>
+
+        <div class="exercise-container">
+          <h3>No navegador</h3>
+          <ol class="exercise-steps">
+            <li>Pressione <code>F12</code> e abra a aba <strong>Network</strong>. Recarregue a página com o DevTools aberto.</li>
+            <li>Registre <strong>pelo menos quatro requisições</strong>, anotando de cada uma o método, o recurso pedido e o código de status.</li>
+            <li>Procure ao menos um recurso que não seja HTML: um <code>.css</code>, um <code>.js</code> ou uma imagem.</li>
+            <li>Clique em uma requisição e leia os cabeçalhos: <code>Host</code>, <code>User-Agent</code> e <code>Content-Type</code>.</li>
+            <li>Peça um endereço que não existe, como <code>/pagina-que-nao-existe</code>, e confirme o <code>404</code> na lista.</li>
+          </ol>
+        </div>
+
+        <div class="takeaway">
+          <span class="takeaway-label">Checkpoint</span>
+          <p>O professor passa de mesa em mesa conferindo a saída do <code>nslookup</code> e a lista com as quatro requisições anotadas.</p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">02 Laboratório, passo 2, DevTools</div>
+          <div class="footer-page">17</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 18: LAB PASSO 3 ==================== -->
+      <section class="exercise-slide content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Laboratório, passo 3 de 4: escrever <code>docs/arquitetura.md</code></h2>
+        </div>
+
+        <p style="font-size:0.72em; margin-top:0;">Sozinho, no seu fork, crie a pasta <code>docs</code> e o arquivo <code>arquitetura.md</code>. O diagrama pode ser em texto ou em Mermaid, que o GitHub renderiza sozinho.</p>
+
+        <pre class="code-compact" style="margin:8px 0;"><code class="language-markdown" data-trim>## O caminho de uma requisição
+
+```mermaid
+sequenceDiagram
+    participant N as Navegador do paciente
+    participant D as Servidor DNS
+    participant S as Servidor da Clínica Vida+
+    N-&gt;&gt;D: clinicavidamais.com.br?
+    D--&gt;&gt;N: 203.0.113.42
+    N-&gt;&gt;S: conexão TCP e TLS na porta 443
+    N-&gt;&gt;S: GET /consultas/agendar
+    S--&gt;&gt;N: 200 OK, HTML da agenda
+```</code></pre>
+
+        <div class="callout" style="margin-top:8px;">
+          <p>Depois do diagrama, acrescente as seções <strong>Evidência do DNS</strong>, com a saída do <code>nslookup</code>, e <strong>Evidência do HTTP</strong>, com a tabela das quatro requisições que você anotou.</p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">02 Laboratório, passo 3, arquitetura.md</div>
+          <div class="footer-page">18</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 19: LAB PASSO 4 ==================== -->
+      <section class="exercise-slide content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Laboratório, passo 4 de 4: o parágrafo do HTTPS, commit e push</h2>
+        </div>
+
+        <p style="font-size:0.72em; margin-top:0;">Feche o documento com um parágrafo seu, de três a cinco linhas, explicando por que o formulário de agendamento da Clínica Vida+ vai precisar de HTTPS. Cite ao menos um dado sensível que o formulário carrega.</p>
+
+        <pre class="code-compact" style="margin:8px 0;"><code class="language-bash" data-trim>git status                       # docs/arquitetura.md aparece como não rastreado
+git add docs/arquitetura.md
+git commit -m "docs: arquitetura da requisicao e evidencias de DNS e HTTP"
+git push</code></pre>
+
+        <div class="callout" style="margin:8px 0;">
+          <p>Atualize a página do seu fork no GitHub e abra <code>docs/arquitetura.md</code>. O bloco Mermaid precisa aparecer <strong>desenhado</strong>, não como código. Se aparecer como texto, confira se a cerca de código diz <code>mermaid</code>.</p>
+        </div>
+
+        <div class="takeaway">
+          <span class="takeaway-label">Entregável</span>
+          <p><code>docs/arquitetura.md</code> commitado e enviado ao seu fork, com o diagrama, as duas evidências e o parágrafo do HTTPS.</p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">02 Laboratório, passo 4, commit e push</div>
+          <div class="footer-page">19</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 20: ENTREGÁVEL E PRÉVIA ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Entregável de hoje e prévia da Aula 03</h2>
+        </div>
+
+        <div class="side-by-side" style="margin-top:6px;">
+          <div class="side">
+            <h4>Entregável desta aula</h4>
+            <ul style="margin:0; padding-left:20px;">
+              <li><code>docs/arquitetura.md</code> no seu fork, commitado e enviado por <code>push</code>.</li>
+              <li>Diagrama do caminho da requisição, em texto ou Mermaid.</li>
+              <li>Saída do <code>nslookup</code> e as <strong>quatro requisições</strong> do DevTools.</li>
+              <li>Um parágrafo justificando o HTTPS no formulário.</li>
+            </ul>
+          </div>
+          <div class="side">
+            <h4>Prévia da Aula 03</h4>
+            <ul style="margin:0; padding-left:20px;">
+              <li>Começa a construção real do site: <strong>HTML semântico</strong> da Clínica Vida+.</li>
+              <li>O Git volta com <strong>branch por funcionalidade</strong> e Pull Request.</li>
+              <li>O <code>200 OK</code> de hoje passa a devolver uma página escrita por você.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="takeaway" style="margin-top:18px;">
+          <span class="takeaway-label">As três ideias da semana</span>
+          <p>O DNS traduz nome em IP antes de qualquer conexão; o modelo TCP/IP separa o problema em quatro camadas independentes; e o HTTPS é o mesmo HTTP dentro de um túnel TLS, sem o qual dado de paciente não trafega.</p>
+        </div>
+
+        <p style="font-size:0.64em; color:#555555; margin-top:16px;">Para aprofundar durante a semana: as quatro referências desta aula estão no próximo slide, com o endereço de cada uma.</p>
+
+        <div class="slide-footer">
+          <div class="footer-bar">02 Fechamento</div>
+          <div class="footer-page">20</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 21: REFERÊNCIAS ==================== -->
+      <section id="ref-slide" class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Referências desta aula</h2>
+        </div>
+
+        <p style="font-size:0.72em; margin-top:0;">Os números entre colchetes ao lado dos títulos remetem a esta lista.</p>
+
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px 30px; margin-top:6px;">
+          <div class="concept-card">
+            <h4>[1] Como a web e o DNS funcionam</h4>
+            <p style="font-size:0.72em; color:#444444;">MDN WEB DOCS. <em>Aprender desenvolvimento web</em>. Mozilla.<br>
+            <code style="font-size:0.9em;">developer.mozilla.org/pt-BR/docs/Learn_web_development</code></p>
+          </div>
+          <div class="concept-card">
+            <h4>[2] Redes, TCP/IP, IP e portas</h4>
+            <p style="font-size:0.72em; color:#444444;">MDN WEB DOCS. <em>Glossário: TCP, UDP e IPv4</em>. Mozilla.<br>
+            <code style="font-size:0.9em;">developer.mozilla.org/pt-BR/docs/Glossary/TCP</code></p>
+          </div>
+          <div class="concept-card">
+            <h4>[3] HTTP: URL, métodos, cabeçalhos e status</h4>
+            <p style="font-size:0.72em; color:#444444;">MDN WEB DOCS. <em>HTTP, visão geral e referência</em>.<br>
+            <code style="font-size:0.9em;">developer.mozilla.org/pt-BR/docs/Web/HTTP</code></p>
+          </div>
+          <div class="concept-card">
+            <h4>[4] HTTPS, TLS e certificados</h4>
+            <p style="font-size:0.72em; color:#444444;">MDN WEB DOCS. <em>Transport Layer Security</em>, no glossário e no guia de segurança.<br>
+            <code style="font-size:0.9em;">developer.mozilla.org/pt-BR/docs/Glossary/TLS</code></p>
+          </div>
+        </div>
+
+        <div class="callout" style="margin-top:16px;">
+          <p>O laboratório escreve dentro do fork criado na Aula 01. O roteiro completo está no kit da Aula 02, no portal.</p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">02 Referências</div>
+          <div class="footer-page">21</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 22: ENCERRAMENTO ==================== -->
+      <section class="end-slide">
+        <img src="../assets/img/uninove-logo.png" alt="Uninove, Universidade Nove de Julho"
+             style="max-width:300px; background:#FFFFFF; padding:20px 28px; border-radius:8px;">
+        <div class="copyright">
+          Copyright &copy; 2026<br>
+          Prof. José Romualdo da Costa Filho<br><br>
+          Todos os direitos reservados. É expressamente proibida a reprodução, divulgação<br>
+          total ou parcial, deste material acadêmico sem autorização formal,<br>
+          por escrito, do Professor autor da ementa.
+        </div>
+      </section>
+
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/highlight/highlight.js"></script>
+  <script src="../assets/js/uninove-quiz.js"></script>
+  <script type="module">
+    import { TURMAS, resolverTurma, dataDaAula, formatarData } from '../assets/js/turmas.js';
+    const turma = resolverTurma({
+      hoje: new Date(),
+      salva: localStorage.getItem('uninove-turma'),
+    });
+    const alvo = document.querySelector('[data-data-da-aula]');
+    if (alvo) {
+      const n = Number(alvo.getAttribute('data-data-da-aula'));
+      alvo.textContent = turma
+        ? `${TURMAS[turma].rotulo}, ${formatarData(dataDaAula(turma, n))}`
+        : `Quarta ${formatarData(dataDaAula('quarta', n))} ou quinta ${formatarData(dataDaAula('quinta', n))}`;
+    }
+  </script>
+  <script>
+    Reveal.initialize({
+      width: 1280, height: 720, center: false, margin: 0,
+      hash: true, slideNumber: false,
+      // Os chevrons de navegação caem sobre a footer-bar e sobre o triângulo
+      // azul do canto inferior direito; a barra de progresso encosta no rodapé
+      // e parece um segundo rodapé. Nenhum dos dois é usado na projeção.
+      controls: false, progress: false,
+      // Um slide por página no ?print-pdf, para o PDF bater com o deck.
+      pdfMaxPagesPerSlide: 1,
+      plugins: [RevealHighlight],
+    });
+  </script>
+</body>
+</html>
