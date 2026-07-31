@@ -825,13 +825,13 @@ respectiva View, contendo o texto institucional da clínica.
 ### Quiz de fixação, 20h40 às 20h50
 
 **Enunciado:** Com a rota padrão `{controller=Home}/{action=Index}/{id?}`, qual
-método atende a URL `/Especialidades/Detalhes/3`?
+método atende a URL `/Especialidades/Details/3`?
 
 - (a) `HomeController.Index`, porque a rota cai no padrão sempre que o primeiro
   segmento não corresponde a um Controller.
-- (b) `DetalhesController.Especialidades`, recebendo `id` igual a 3 no terceiro
+- (b) `DetailsController.Especialidades`, recebendo `id` igual a 3 no terceiro
   segmento da rota.
-- (c) `EspecialidadesController.Detalhes`, recebendo `id` igual a 3 no terceiro
+- (c) `EspecialidadesController.Details`, recebendo `id` igual a 3 no terceiro
   segmento da rota.
 - (d) Nenhum, porque o roteamento convencional não aceita três segmentos sem uma
   rota específica declarada.
@@ -849,12 +849,12 @@ pastas.
 
 ### Ciclo 4, 21h25 às 21h50: laboratório, parte 2, e entregável
 
-Sozinho, acrescentar a action `Detalhes`, que recebe o identificador e exibe os
+Sozinho, acrescentar a action `Details`, que recebe o identificador e exibe os
 dados de uma especialidade, com a View correspondente em `Views/Especialidades`;
 incluir os links no menu de navegação; e migrar o texto institucional para a
 action `Sobre` do `HomeController`.
 
-**Entregável:** `EspecialidadesController` com `Index` e `Detalhes`, Views
+**Entregável:** `EspecialidadesController` com `Index` e `Details`, Views
 correspondentes e navegação funcionando, commitado e enviado.
 
 ### Fechamento, 21h50 às 22h00
@@ -933,7 +933,7 @@ a lista de especialidades e de médicos da clínica, junto com o professor.
 ### Ciclo 4, 21h25 às 21h50: laboratório, parte 2, e entregável
 
 Sozinho, criar `MedicosController` com `Index`, aceitando um filtro opcional por
-especialidade, e `Detalhes`; montar as Views tipadas com
+especialidade, e `Details`; montar as Views tipadas com
 `@model IEnumerable<Medico>`; e exibir a contagem de médicos por especialidade na
 tela de especialidades.
 
