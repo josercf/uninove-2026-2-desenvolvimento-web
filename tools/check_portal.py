@@ -11,9 +11,12 @@ Cinco checagens, na ordem em que o aluno realmente encontra o portal:
    sexta-feira (nem quarta, nem quinta): o modal aparece, porque
    resolverTurma() nao tem como decidir sozinho.
 4. Existem exatamente 20 cards, um por aula.
-5. Todo href de botao habilitado ("Slides" ou "Lab") aponta para um caminho
-   que existe de fato no disco. Botao desabilitado (classe "disabled") e
-   ignorado, porque a aula ainda nao foi produzida.
+5. Todo href de botao habilitado ("Slides" ou "Lab") responde HTTP 200 numa
+   requisicao real. Botao desabilitado (classe "disabled") e ignorado,
+   porque a aula ainda nao foi produzida. O servidor deste validador nao
+   faz listagem de diretorio, de proposito: e assim que o GitHub Pages se
+   comporta, e listagem de diretorio mascarava link quebrado (diretorio sem
+   index.html "funcionava" aqui e dava 404 la).
 
 Sai com codigo 1 e imprime o que falhou se qualquer checagem nao passar.
 
@@ -33,7 +36,6 @@ import urllib.parse
 from playwright.sync_api import sync_playwright
 
 RAIZ = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-PORTAL_DIR = os.path.join(RAIZ, "aulas-1sem")
 PORTAL_URL_REL = "aulas-1sem/index.html"
 CHAVE_TURMA = "uninove-turma"
 
@@ -50,8 +52,21 @@ def porta_livre():
     return p
 
 
+class SemListagemHandler(http.server.SimpleHTTPRequestHandler):
+    """SimpleHTTPRequestHandler comum serve a listagem de arquivos quando o
+    caminho e um diretorio sem index.html dentro. O GitHub Pages nao faz
+    isso: devolve 404. Sem essa diferenca, um botao "Lab" apontando para um
+    diretorio que so tem README.md pareceria funcionar aqui e quebraria em
+    producao (foi exatamente o defeito que a checagem 5 antiga, baseada em
+    existencia em disco, deixou passar)."""
+
+    def list_directory(self, path):
+        self.send_error(404, "File not found")
+        return None
+
+
 def servir(porta):
-    handler = lambda *a, **k: http.server.SimpleHTTPRequestHandler(  # noqa: E731
+    handler = lambda *a, **k: SemListagemHandler(  # noqa: E731
         *a, directory=RAIZ, **k
     )
     socketserver.TCPServer.allow_reuse_address = True
@@ -186,17 +201,12 @@ def checar_links_dos_botoes_habilitados(navegador, porta, erros):
                     "checagem 5: botao habilitado '%s' nao tem href" % botao["texto"]
                 )
                 continue
-            caminho = urllib.parse.urlsplit(href).path
-            destino = os.path.normpath(os.path.join(PORTAL_DIR, caminho))
-            if not destino.startswith(os.path.normpath(PORTAL_DIR)):
+            url = urllib.parse.urljoin(page.url, href)
+            resposta = contexto.request.get(url)
+            if resposta.status != 200:
                 erros.append(
-                    "checagem 5: href '%s' escapa de aulas-1sem/" % href
-                )
-                continue
-            if not os.path.exists(destino):
-                erros.append(
-                    "checagem 5: href '%s' (botao '%s') nao existe em disco (%s)"
-                    % (href, botao["texto"], destino)
+                    "checagem 5: GET %s (botao '%s') devolveu %d, esperado 200"
+                    % (url, botao["texto"], resposta.status)
                 )
     finally:
         contexto.close()

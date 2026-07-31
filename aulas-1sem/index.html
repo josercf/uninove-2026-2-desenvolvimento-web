@@ -11,6 +11,11 @@
       --uninove-azul: #00274D;
       --uninove-azul-painel: #063461;
       --uninove-coral: #C84B31;
+      /* Tinta do coral usada em texto pequeno sobre o painel do card. O
+         coral puro (#C84B31) sobre #063461 rende 2,70:1, abaixo do minimo
+         AA de 4,5:1 para texto pequeno. Esta variante clareada rende
+         4,82:1, medido pela formula de luminancia relativa do WCAG. */
+      --uninove-coral-legivel: #DC8C7B;
       --uninove-texto: #F5F5F5;
       --uninove-texto-fraco: #B7C3D1;
       --uninove-borda: rgba(255, 255, 255, 0.14);
@@ -159,7 +164,7 @@
       font-size: 0.75rem;
       font-weight: 800;
       letter-spacing: 0.5px;
-      color: var(--uninove-coral);
+      color: var(--uninove-coral-legivel);
       text-transform: uppercase;
     }
 
@@ -212,7 +217,9 @@
       font-weight: 700;
       letter-spacing: 0.4px;
       text-transform: uppercase;
-      color: rgba(255, 255, 255, 0.55);
+      /* 0,55 de opacidade rendia 4,41:1 sobre o fundo do selo, abaixo do
+         minimo AA de 4,5:1. Em 0,62 rende 5,14:1. */
+      color: rgba(255, 255, 255, 0.62);
       background: rgba(255, 255, 255, 0.06);
       border: 1px solid var(--uninove-borda);
       border-radius: 20px;
@@ -643,13 +650,29 @@
   </div>
 
   <script type="module">
-    import { resolverTurma, dataDaAula, formatarData } from './assets/js/turmas.js';
+    import { TURMAS, resolverTurma, dataDaAula, formatarData } from './assets/js/turmas.js';
 
     const CHAVE_TURMA = 'uninove-turma';
 
     const seletor = document.getElementById('seletor-turma');
     const modal = document.getElementById('modal-turma');
     const cardsDeAula = [...document.querySelectorAll('[data-aula]')];
+
+    // Os rotulos "Quarta-feira" / "Quinta-feira" moram em TURMAS, nao aqui:
+    // o texto do seletor e dos botoes do modal e sempre reescrito a partir
+    // do modulo, para nao virar uma segunda fonte da verdade.
+    function rotuloMinusculo(turma) {
+      const rotulo = TURMAS[turma].rotulo;
+      return rotulo.charAt(0).toLowerCase() + rotulo.slice(1);
+    }
+
+    for (const opcao of seletor.options) {
+      opcao.textContent = TURMAS[opcao.value].rotulo;
+    }
+
+    for (const botao of modal.querySelectorAll('[data-turma]')) {
+      botao.textContent = `Turma de ${rotuloMinusculo(botao.dataset.turma)}`;
+    }
 
     function renderizarDatas(turma) {
       for (const card of cardsDeAula) {
