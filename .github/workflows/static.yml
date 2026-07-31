@@ -25,10 +25,36 @@ jobs:
         uses: actions/checkout@v4
       - name: Setup Pages
         uses: actions/configure-pages@v5
+      - name: Montar diretório de publicação (_site)
+        run: |
+          mkdir -p _site
+          rsync -a \
+            --exclude='.git' \
+            --exclude='.github' \
+            --exclude='.claude' \
+            --exclude='tools' \
+            --exclude='tests' \
+            --exclude='docs/referencia' \
+            --exclude='node_modules' \
+            --exclude='.superpowers' \
+            --exclude='docs/superpowers' \
+            --exclude='CLAUDE.md' \
+            --exclude='docs/ANDAMENTO.md' \
+            --exclude='_site' \
+            ./ _site/
+      - name: Falhar se sobrar symlink em _site
+        run: |
+          symlinks="$(find _site -type l)"
+          if [ -n "$symlinks" ]; then
+            echo "Symlinks encontrados dentro de _site (o artefato do Pages nao pode contê-los):"
+            echo "$symlinks"
+            exit 1
+          fi
+          echo "Nenhum symlink em _site."
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: '.'
+          path: '_site'
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v5

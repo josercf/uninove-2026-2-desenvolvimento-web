@@ -114,8 +114,18 @@ Ver ADR-003 para o raciocínio completo por trás dessa decisão.
 - `new Date('2026-08-05')` é interpretado como UTC e vira 04/08 no fuso de São
   Paulo. Datas em `turmas.js` são sempre montadas componente a componente
   (ano, mês, dia), nunca pelo construtor de string ISO.
-- O workflow publica o repositório inteiro. Qualquer arquivo commitado fica
-  público, incluindo o que estiver fora de `aulas-1sem/`.
+- O workflow **não** publica o repositório inteiro. `.github/workflows/static.yml`
+  monta um diretório `_site` com `rsync`, excluindo `.git`, `.github`,
+  `.claude`, `tools`, `tests`, `docs/referencia`, `node_modules`,
+  `.superpowers`, `docs/superpowers`, `CLAUDE.md` e `docs/ANDAMENTO.md`; só o
+  que sobra vai para o `upload-pages-artifact`. Isso existe porque
+  `actions/upload-pages-artifact@v3` empacota com `tar --dereference`, que
+  segue todo symlink até um arquivo real; os seis symlinks com o acervo da
+  FIAP (ADR-003) apontam para fora do runner, ficam quebrados, e o `tar`
+  abortava com exit 1 antes dessa mudança. Qualquer symlink novo criado fora
+  de `tools/`, `.claude/` ou `docs/referencia/` volta a quebrar o deploy; o
+  próprio workflow tem um passo que roda `find _site -type l` e falha o build
+  se sobrar symlink, para pegar isso em CI. Ver ADR-006.
 - O comando de push correto depende do repositório, porque cada um usa um host
   SSH diferente. Neste repositório (Uninove), o remote usa o alias de host
   `github.com-josercf`, que só existe dentro do `~/.ssh/config`; um `git push`

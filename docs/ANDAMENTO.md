@@ -1,16 +1,11 @@
 # Andamento
 
-**Última atualização:** 30/07/2026
+**Última atualização:** 31/07/2026
 
 ## Ordem de leitura ao abrir uma sessão
 
 1. `CLAUDE.md`, na raiz do repositório.
 2. O agente construtor da Uninove, `.claude/agents/construtor-aulas-uninove.md`.
-   Este arquivo ainda não existe: é entregue pela Task 7 do plano de fundação,
-   descrita em `docs/superpowers/plans/2026-07-30-fundacao-do-acervo.md`. Até lá,
-   ler o symlink `.claude/agents/construtor-aulas.md`, que aponta para o agente
-   construtor da FIAP, sabendo que a versão da Uninove ainda vai sobrescrever
-   parte dele.
 3. Este arquivo, `docs/ANDAMENTO.md`.
 
 ## Onde está cada coisa
@@ -18,8 +13,8 @@
 | O quê | Onde |
 |---|---|
 | Acervo (este repositório) | `/Users/joseromualdocostafilho/Projects/Uninove/2026/uninove-2026-2-desenvolvimento-web`, GitHub `josercf/uninove-2026-2-desenvolvimento-web`, branch `main` |
-| Portal publicado | <https://josercf.github.io/uninove-2026-2-desenvolvimento-web/>. O workflow do Pages está publicando com sucesso e `index.html` redireciona para `aulas-1sem/index.html`, mas esse arquivo ainda não existe: o portal em si é entregue pela Task 10. Até lá, o redirecionamento aponta para uma página que retorna 404 |
-| Repositório-esqueleto do case | `josercf/uninove-2026-2-clinica-vida`. Ainda não criado; é entregue pela Task 9 |
+| Portal publicado | <https://josercf.github.io/uninove-2026-2-desenvolvimento-web/aulas-1sem/index.html>, com a raiz `https://josercf.github.io/uninove-2026-2-desenvolvimento-web/` redirecionando para lá. Publicado com sucesso, com os 20 cards e o seletor de turma |
+| Repositório-esqueleto do case | [`josercf/uninove-2026-2-clinica-vida`](https://github.com/josercf/uninove-2026-2-clinica-vida) |
 | Acervo da FIAP | `/Users/joseromualdocostafilho/Projects/FIAP/FIAP-2026-2-3SI`, GitHub `josercf/FIAP-2026-2-3SI`. Symlinks deste repositório apontam para lá; ver a seção de compartilhamento do `CLAUDE.md` e o ADR-003 |
 
 ## Concluído
@@ -47,25 +42,90 @@
 - `.claude/settings.local.json` criado localmente, com as permissões de uso
   frequente. Não é versionado, por um gitignore global do usuário.
 
-**Task 3, ADRs e documentação de entrada (esta task):**
+**Task 3, ADRs e documentação de entrada:**
 
-- Quatro ADRs em `docs/adrs/`: migração dos decks para Reveal.js (ADR-001),
+- Seis ADRs em `docs/adrs/`: migração dos decks para Reveal.js (ADR-001),
   resolução de turma no cliente (ADR-002), compartilhamento com o acervo da
-  FIAP (ADR-003) e case Clínica Vida+ com encontro de 150 minutos (ADR-004).
+  FIAP (ADR-003), case Clínica Vida+ com encontro de 150 minutos (ADR-004),
+  legibilidade do código projetado e integridade das decorações do tema
+  (ADR-005) e artefato de publicação sem as ferramentas (ADR-006, Task 11).
 - `CLAUDE.md` como ponto de entrada de qualquer sessão futura.
-- Este arquivo.
+
+**Task 4, módulo de turmas:**
+
+- `aulas-1sem/assets/js/turmas.js`, resolução de turma (quarta ou quinta) no
+  cliente, com precedência de valor salvo sobre dia da semana e cálculo de
+  data por aula sem deslocamento de fuso.
+- `tests/turmas.test.mjs`, 14 testes cobrindo golden path, edge cases e
+  regressão de fuso horário. `npm test` roda com `node --test`.
+
+**Task 5, tema visual:**
+
+- `aulas-1sem/assets/css/uninove-theme.css` e `uninove-print.css`, paleta azul
+  e coral, classes de slide e blocos reutilizáveis descritos no `CLAUDE.md`.
+- Logo com canal alfa e ligaduras de código desligadas, conforme ADR-005.
+
+**Task 6, planos:**
+
+- `PLANO_DE_ENSINO.md` e `PLANEJAMENTO_AULA_A_AULA.md`, na raiz.
+
+**Task 7, metodologia e agente:**
+
+- `aulas-1sem/SKILL.md` e `.claude/agents/construtor-aulas-uninove.md`,
+  override local do agente construtor da FIAP para o case Clínica Vida+.
+
+**Task 8, Aula 01 como padrão-ouro:**
+
+- `aulas-1sem/aulas/aula01.html`, deck completo, validado por
+  `tools/check_slides.py` e `tools/check_canto_coral.py`.
+
+**Task 9, laboratório da Aula 01 e repositório-esqueleto:**
+
+- `aulas-1sem/labs/aula01-lab/`, com `index.html` e `README.md`.
+- Repositório-esqueleto do case,
+  [`josercf/uninove-2026-2-clinica-vida`](https://github.com/josercf/uninove-2026-2-clinica-vida).
+
+**Task 10, portal:**
+
+- `aulas-1sem/index.html`, portal com os 20 cards e seletor de turma.
+
+**Task 11, publicação e fechamento (esta task):**
+
+- `.github/workflows/static.yml` passou a montar `_site` com `rsync`,
+  publicando só o material didático (`aulas-1sem/`, planos, ADRs, `README.md`
+  e `index.html` da raiz) e excluindo ferramentas, testes, agentes de IA e
+  documentação de processo interno. Um passo de `find _site -type l` falha o
+  build se sobrar symlink no artefato. Ver ADR-006 para o raciocínio completo:
+  a causa raiz do bloqueio anterior era `actions/upload-pages-artifact@v3`
+  empacotando com `tar --dereference`, que seguia os seis symlinks
+  compartilhados com a FIAP até um alvo inexistente no runner e abortava.
+- Publicação confirmada com sucesso, com as sete URLs de aceite (portal, deck
+  da Aula 01, lab, tema, `turmas.js`, logo) respondendo 200, e
+  `tools/check_portal.py` e `.claude/settings.json` respondendo 404 no site
+  publicado, confirmando que as ferramentas não foram ao ar.
 
 ## Próximos passos
 
-Ainda faltam as Tasks 4 a 11 do plano de fundação
-(`docs/superpowers/plans/2026-07-30-fundacao-do-acervo.md`), nesta ordem:
-módulo `turmas.js` com testes (4), tema visual da Uninove (5), plano de ensino
-e planejamento aula a aula (6), `SKILL.md` e o agente
-`construtor-aulas-uninove.md` (7), deck da Aula 01 como padrão-ouro (8),
-laboratório da Aula 01 e o repositório-esqueleto `uninove-2026-2-clinica-vida`
-(9), portal com os 20 cards (10) e publicação final (11).
+A fundação do acervo está concluída (Tasks 1 a 11). O próximo passo é escrever
+o plano das Aulas 02 a 20, usando a Aula 01 como padrão-ouro (deck, lab e
+portal já validados) e o agente `construtor-aulas-uninove.md` para produção.
+A recomendação é produzir os 19 decks restantes em quatro lotes por módulo do
+`PLANO_DE_ENSINO.md`, com revisão entre um lote e o seguinte, em vez de
+produzir tudo de uma vez: cada lote incorpora o que for aprendido na revisão
+do lote anterior, e um defeito sistêmico (como os do ADR-005) é pego cedo, sem
+se multiplicar pelas 20 aulas.
 
-Só depois da Aula 01 aprovada, com o padrão visual e pedagógico travado, é que
-se escreve o plano das Aulas 02 a 20. Produzir os 19 decks restantes contra um
-padrão ainda não validado seria retrabalho garantido; por isso esse plano fica
-deliberadamente fora do plano de fundação, para ser escrito depois.
+## Pendências conhecidas
+
+- **Cada laboratório precisa do próprio `index.html`**, porque o GitHub Pages
+  não faz listagem de diretório. O padrão está em
+  `aulas-1sem/labs/aula01-lab/index.html`; laboratórios futuros devem seguir o
+  mesmo formato.
+- **`tools/check_slides.py` não detecta sobreposição envolvendo
+  `.decor-coral`**, porque o elemento tem caixa zerada e quem desenha o
+  triângulo é o `::after` (ver ADR-005). Para esse caso específico existe
+  `tools/check_canto_coral.py`, que precisa rodar em conjunto com o
+  `check_slides.py`, não no lugar dele.
+- **15/10/2026 cai numa quinta-feira e é o Dia do Professor.** Se a
+  coordenação suspender a aula nessa data, a turma de quinta perde a Aula 11;
+  o plano B já registrado no `PLANO_DE_ENSINO.md` é fundir as Aulas 18 e 19.
