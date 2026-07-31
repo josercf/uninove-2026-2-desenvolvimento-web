@@ -75,7 +75,12 @@ Passar nos quatro não é o mesmo que o slide estar bom. Eles não veem:
 - texto que cabe mas fica pequeno demais para projetar;
 - figura espremida, coluna desbalanceada, ou qualquer coisa feia sem ser
   geometricamente inválida;
-- o slide com os `fragment` revelados: o script mede o estado inicial.
+- o slide com os `fragment` revelados: o script mede o estado inicial;
+- **alternativa de quiz partida pelo flex.** A `li` do quiz é `display: flex`
+  com `gap: 12px`, então um `<code>` no meio da alternativa vira item de flex
+  próprio e ganha 12px de buraco de cada lado, onde deveria haver um espaço.
+  Confira se toda alternativa com elemento inline tem o texto envolvido em
+  `<span class="option-text">`. Ver ADR-007.
 
 **Por isso, tire screenshot e olhe** sempre que o slide tiver `position:
 absolute`, `fragment`, SVG novo ou tiver acabado de ganhar um bloco.

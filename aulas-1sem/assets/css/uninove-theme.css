@@ -395,6 +395,19 @@
   transition: all 0.25s ease;
 }
 
+/* O texto da alternativa precisa ser UM item de flex, não vários. A `li` acima
+   é `display: flex` com `gap: 12px`: cada trecho de texto solto e cada elemento
+   inline viram itens separados, então uma alternativa que cite `<code>` ganha
+   12px de buraco de cada lado do trecho, no lugar onde deveria haver um espaço
+   normal, e a frase se parte na projeção. Alternativa longa piora: item de flex
+   não quebra linha sem `flex-wrap`. Nenhum dos quatro validadores vê isso,
+   porque nada estoura nem se sobrepõe. Envolver o texto em `.option-text`
+   devolve tudo a um único item. Ver ADR-007. */
+.quiz-slide .quiz-options .option-text {
+  flex: 1;
+  min-width: 0;
+}
+
 .quiz-slide .quiz-options li:hover {
   border-color: var(--uninove-coral);
   border-left-color: var(--uninove-coral);
@@ -586,10 +599,22 @@
   margin: 15px 0;
 }
 
+/* O `reveal.css` traz `pre code { max-height: 400px; overflow: auto }`. Num
+   deck que rola isso é um recurso; aqui é um defeito silencioso, porque a
+   `section` tem altura fixa e ninguém rola nada em sala: o código
+   simplesmente chega cortado ao projetor e ao PDF. E `check_slides.py` não
+   vê, porque quem estoura é o `code`, não a caixa do `pre`, que continua
+   dentro dos 720px. Medido: um bloco de 433px aparecia com 410px, com as
+   últimas linhas fora da tela.
+
+   Zerando o limite, o bloco cresce até a altura real e, quando não couber,
+   estoura a `section` e o validador acusa. Trocamos uma falha silenciosa por
+   uma falha ruidosa, que é o que se quer de um validador. Ver ADR-007. */
 .reveal pre code {
   font-family: 'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
   line-height: 1.5;
   color: #d4d4d4;
+  max-height: none;
 }
 
 /* A JetBrains Mono funde `--` em um traço longo único por ligadura. Num

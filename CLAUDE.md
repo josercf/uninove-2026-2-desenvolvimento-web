@@ -148,6 +148,16 @@ Ver ADR-003 para o raciocínio completo por trás dessa decisão.
 - Slide que estoura 720px não é detectável por `scrollHeight`, porque a
   `section` tem altura fixa. Usar sempre `tools/check_slides.py` para validar
   layout, nunca inspeção visual isolada.
+- **Dois defeitos de tema passam nos quatro validadores e só aparecem na tela**
+  (ADR-007), ambos já corrigidos no `uninove-theme.css`. O primeiro era o
+  `pre code { max-height: 400px }` que o `reveal.css` traz da CDN: cortava
+  código na projeção sem estourar a caixa do `<pre>`, e hoje o tema zera esse
+  limite, de modo que bloco alto passa a estourar a `section` e o validador
+  acusa. O segundo continua exigindo disciplina do autor: a `li` do quiz é
+  `display: flex` com `gap: 12px`, então **alternativa que contenha `<code>` ou
+  outro elemento inline precisa ter o texto envolvido em
+  `<span class="option-text">`**, senão a frase se parte com 12px de buraco em
+  volta do trecho. Nenhum validador cobre isso ainda.
 - `tools/check_slides.py` e `.claude/settings.json` são symlinks para o acervo
   da FIAP. Editá-los altera o acervo da FIAP também.
 - `new Date('2026-08-05')` é interpretado como UTC e vira 04/08 no fuso de São

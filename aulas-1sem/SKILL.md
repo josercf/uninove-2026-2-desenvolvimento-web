@@ -120,6 +120,27 @@ do semestre:
 7. **API REST e deploy:** serviços web no estilo REST e publicação da
    aplicação em ambiente acessível pela internet.
 
+### A paleta da Clínica Vida+
+
+O case tem identidade visual própria, **distinta do azul e coral da Uninove**.
+As cores da Uninove vestem o deck do professor; estas vestem o site que o aluno
+constrói. Foram fixadas na Aula 04, quando o CSS entra, e valem daí em diante,
+inclusive na customização do Bootstrap da Aula 18 e no projeto final:
+
+```css
+:root {
+  --vida-primaria:   #0B6E75;   /* verde-azulado escuro, cabeçalho e destaques */
+  --vida-secundaria: #2E9E7E;   /* verde médio, bordas e apoios               */
+  --vida-destaque:   #E4572E;   /* laranja avermelhado, ações e alertas       */
+  --vida-fundo:      #F4F7F6;   /* fundo das páginas                          */
+  --vida-texto:      #1F2A30;   /* corpo de texto                             */
+  --vida-borda:      #D6E2E0;   /* separadores e contornos suaves             */
+}
+```
+
+Não reinvente cores por aula: o aluno carrega o mesmo `site.css` de agosto a
+dezembro, e paleta trocada no meio do semestre quebra o que ele já escreveu.
+
 ---
 
 ## 4. Anatomia do deck Reveal.js
@@ -420,6 +441,19 @@ Regras de markup:
   `data-correct="false">` por alternativa, cada um com
   `<span class="option-letter">` para a letra.
 - Exatamente uma alternativa leva `data-correct="true"`.
+- **Alternativa com qualquer elemento inline, como `<code>` ou `<strong>`,
+  precisa ter o texto envolvido em `<span class="option-text">`.** A `li` é
+  `display: flex` com `gap: 12px`, então cada trecho de texto solto e cada
+  elemento inline viram itens de flex separados: a alternativa ganha 12px de
+  buraco de cada lado do `<code>`, no lugar onde deveria haver um espaço
+  normal, e a frase se parte na projeção. Alternativa de texto puro dispensa o
+  `span` e continua valendo como nas Aulas 01, 02 e 04. **Nenhum dos quatro
+  validadores pega isso**, porque nada estoura nem se sobrepõe; foi encontrado
+  três vezes, por três autores diferentes, olhando a tela. Ver ADR-007.
+
+  ```html
+  <li data-correct="false"><span class="option-letter">D</span><span class="option-text">Formata o conteúdo conforme o <code>type</code> declarado.</span></li>
+  ```
 - `<div class="quiz-feedback">` carrega os atributos `data-correct-msg` e
   `data-incorrect-msg`, com o texto completo exibido em cada caso. O script
   lê esses atributos: não é preciso registrar a resposta certa em nenhum outro

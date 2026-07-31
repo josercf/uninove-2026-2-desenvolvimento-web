@@ -241,6 +241,13 @@ logo grande da capa e do encerramento), `uninove-logo-header`, `top-bar`,
 `decor-coral`. Cores da marca: `--uninove-azul: #00274D` e
 `--uninove-coral: #C84B31` (prefixo `uninove-`, nunca `fiap-`).
 
+**Alternativa de quiz com elemento inline exige `<span class="option-text">`
+em volta do texto.** A `li` do quiz é `display: flex` com `gap: 12px`: um
+`<code>` solto no meio da alternativa vira item de flex próprio e ganha 12px de
+buraco de cada lado, no lugar onde deveria haver um espaço. A frase se parte na
+projeção e **nenhum dos quatro validadores acusa**. Alternativa de texto puro
+dispensa o `span`. Ver ADR-007 e a seção 5 do `SKILL.md`.
+
 `quiz-slide` e `exercise-slide` não têm `.top-bar`, `.uninove-logo-header` nem
 `.slide-footer` próprios no CSS; escreva sempre `class="quiz-slide
 content-slide"` e `class="exercise-slide content-slide"` para herdar essas
@@ -458,6 +465,7 @@ validador ou abrir o navegador, diga isso explicitamente no relatório.
 - [ ] Um slide por passo do laboratório
 - [ ] Slide de referências com `id="ref-slide"`, entre o fechamento e o encerramento
 - [ ] Citações `[N]` amarradas ao slide de referências, sem overflow
+- [ ] Alternativa de quiz com `<code>` ou outro elemento inline envolvida em `<span class="option-text">` (ADR-007)
 - [ ] Rodapés renumerados, `footer-bar` sem hífen
 - [ ] Kit em `labs/aulaXX-lab/` com `README.md` e critérios de aceitação em tabela
 - [ ] **`labs/aulaXX-lab/index.html` criado**, senão o botão "Lab" dá 404 no GitHub Pages
