@@ -141,6 +141,44 @@ inclusive na customização do Bootstrap da Aula 18 e no projeto final:
 Não reinvente cores por aula: o aluno carrega o mesmo `site.css` de agosto a
 dezembro, e paleta trocada no meio do semestre quebra o que ele já escreveu.
 
+### O contrato técnico da aplicação, Aulas 07 a 20
+
+A partir da Aula 07 todas as aulas constroem **a mesma aplicação ASP.NET Core
+MVC**. Estes nomes são fixos e valem até a Aula 20. Quem escrever uma aula nova
+herda daqui, não inventa:
+
+| O quê | Valor |
+|---|---|
+| SDK | .NET 10 LTS, `TargetFramework` `net10.0` |
+| Projeto e namespace raiz | `ClinicaVida.Web` |
+| `DbContext` | `ClinicaContext`, em `Data/ClinicaContext.cs` |
+| Banco | `clinicavida`, no MySQL |
+| Connection string | chave `"DefaultConnection"` em `appsettings.json` |
+| Provedor EF Core | `Pomelo.EntityFrameworkCore.MySql` |
+| Repositório em memória (Aulas 09 e 10) | `Models/ClinicaEmMemoria.cs` |
+| Migration inicial | `InicialClinicaVida` |
+
+Models, em `Models/`, com estas propriedades exatas:
+
+- `Especialidade`: Id, Nome, Descricao
+- `Medico`: Id, Nome, Crm, EspecialidadeId, Especialidade
+- `Paciente`: Id, Nome, Cpf, DataNascimento, Telefone, Email
+- `Consulta`: Id, PacienteId, MedicoId, Data, Horario, Observacoes
+
+Convenções que valem para o código de todas as aulas:
+
+- **Nomes de action em inglês**, seguindo o scaffold do ASP.NET Core: `Index`,
+  `Details`, `Create`, `Edit`, `Delete`, mais `DeleteConfirmed` para o POST de
+  exclusão. Isso é deliberado, apesar de a disciplina ser toda em pt-BR: é o que
+  o aluno encontra na documentação e em qualquer tutorial quando trava sozinho.
+  Textos, comentários e mensagens continuam em português.
+- `Consulta.Data` é `DateTime` e `Consulta.Horario` é `TimeSpan`.
+- `Cpf` é `string`, mascarado como `000.000.000-00`, conforme a Aula 05.
+- **Nunca fixe porta de `localhost` como se fosse universal.** `dotnet new mvc`
+  sorteia as portas em `Properties/launchSettings.json`, e a de cada aluno é
+  diferente. Escreva "a porta que o seu terminal imprimiu" e use `7145` só como
+  exemplo.
+
 ---
 
 ## 4. Anatomia do deck Reveal.js

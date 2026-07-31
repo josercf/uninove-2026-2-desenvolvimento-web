@@ -1,6 +1,6 @@
 # Andamento
 
-**Última atualização:** 31/07/2026 (Task 12, lote do Módulo 1)
+**Última atualização:** 31/07/2026 (Task 13, lote do Módulo 2)
 
 ## Ordem de leitura ao abrir uma sessão
 
@@ -189,22 +189,67 @@ validadores e só aparecem na tela.
 Os seis decks, incluindo a Aula 01, foram revalidados depois das mudanças de
 tema. `npm test` continua com 14 testes passando.
 
+**Task 13, lote do Módulo 2, Aulas 07 a 12 (31/07/2026):**
+
+- Seis decks e seis kits produzidos em paralelo: `aula07.html` (30 slides,
+  ambiente .NET), `aula08.html` (27, MVC e roteamento), `aula09.html` (31, C# e
+  LINQ), `aula10.html` (27, Models e validação), `aula11.html` (30, EF Core e
+  MySQL) e `aula12.html` (26, CRUD completo). Cards 07 a 12 habilitados na
+  edição única de sempre.
+- **Doze aulas no ar.** O case sai da página estática e chega à aplicação que
+  persiste em MySQL.
+- **O contrato técnico foi fixado antes de despachar**, e não depois. Foi a
+  lição direta do Módulo 1, e funcionou: os agentes se reconciliaram sozinhos
+  em vários pontos (a Aula 09 corrigiu os ids das especialidades para bater com
+  a 08; a 10 e a 09 convergiram no caminho de `ClinicaEmMemoria`). O contrato
+  está registrado na seção 3 do `SKILL.md` e vale até a Aula 20.
+- Decisões do professor neste lote: **.NET 10 LTS** e **Pomelo** como provedor.
+
+**Reconciliação do Módulo 2:**
+
+- **Nomes de action uniformizados em inglês.** O `PLANEJAMENTO_AULA_A_AULA.md`,
+  que é a fonte da verdade, misturava `Detalhes` (Aulas 08 e 09) e `Details`
+  (Aula 12) para a mesma operação. Não era erro de agente: os dois seguiram
+  fielmente o que leram. Por decisão do professor, o planejamento, os decks e
+  os kits das Aulas 08 e 09 passaram a `Details`, incluindo a alternativa
+  correta do quiz da Aula 08. Atenção ao repetir isso: a substituição em massa
+  quebrou uma prosa em português (`ViewData["Title"] = "Detalhes da
+  especialidade"`), que foi restaurada. `Detalhes` maiúsculo era action; em
+  minúsculo, prosa.
+- **Tipo de horário.** A Aula 09 usava `TimeOnly` num exemplo de sobrecarga
+  enquanto as Aulas 10 e 11 fixaram `TimeSpan` para `Consulta.Horario`. Se o
+  aluno passasse o `Horario` do Model para aquele método, não compilaria.
+  Alinhado em `TimeSpan`.
+- **Porta de `localhost`.** Três aulas citavam três portas diferentes (5001,
+  5145, 7145), e nenhuma é confiável, porque `dotnet new mvc` sorteia as portas
+  em `launchSettings.json`. A Aula 08 passou a mandar o aluno usar a porta que o
+  próprio terminal imprimiu. Virou regra no `SKILL.md`.
+- **Rótulo errado na Aula 07.** O construtor "corrigiu" a pasta `Models/` de
+  "Aulas 09 e 10" para "Aula 10", mas a Aula 09 cria `Especialidade` e `Medico`
+  em `Models`. Corrigido para "Aulas 09 a 11".
+- **Corte horizontal de código.** A correção do ADR-007 zerou o `max-height`,
+  que é vertical; o `overflow-x` continua cortando linha longa em silêncio.
+  Medi `scrollWidth` contra `clientWidth` em todo `pre code` dos **doze** decks:
+  um único caso, de 2px, na connection string da Aula 11, resolvido encurtando
+  a senha de exemplo. **Esta medição não é feita por nenhum validador** e vale
+  repetir a cada lote.
+
 ## Próximos passos
 
-Produzir o **Módulo 2, Aulas 07 a 12** (ambiente .NET, MVC, C#, formulários e
-Models, EF Core e MySQL, CRUD), no mesmo formato de lote. Duas lições do lote
-anterior valem para o próximo:
+Produzir o **Módulo 3, Aulas 13 a 17** (cookies e sessões, AJAX, autenticação,
+API REST, relacionamentos e EF Core avançado), no mesmo formato de lote, e
+depois o **Módulo 4, Aulas 18 a 20** (Bootstrap, deploy e projeto final).
 
-1. **Reconciliar contratos entre aulas é etapa do lote, não detalhe.** Quando
-   as aulas são produzidas em paralelo, cada agente supõe o que a vizinha
-   entrega. Nomes de classe, `id`, seletores e convenções de dado precisam ser
-   conferidos ao fim, com a correção feita na aula dependente. No Módulo 2 o
-   contrato é maior: nome de projeto, namespace, nome de Controller, nome de
-   propriedade de Model e connection string atravessam seis aulas.
-2. **Manter o portal fora dos agentes.** Habilitar os cards em uma edição
-   única, depois que todos os decks estiverem em disco.
+O que os dois lotes já ensinaram, e que o próximo deve repetir:
 
-Depois, Módulo 3 (Aulas 13 a 17) e Módulo 4 (Aulas 18 a 20).
+1. **Fixar o contrato técnico antes de despachar**, não reconciliar depois. O
+   contrato do Módulo 2 está na seção 3 do `SKILL.md` e já cobre o Módulo 3.
+   Falta decidir, antes de despachar: nome do esquema de autenticação e das
+   roles da Aula 15, e o prefixo de rota da API da Aula 16.
+2. **Manter o portal fora dos agentes**, habilitando os cards numa edição única.
+3. **Reconciliar contratos ao fim do lote** é etapa, não detalhe.
+4. **Medir o corte horizontal de código** em todos os decks, porque nenhum
+   validador cobre isso.
 
 ## Pendências conhecidas
 
