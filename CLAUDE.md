@@ -23,12 +23,24 @@ python3 -m http.server 8000
 # Testes de lógica (resolução de turma)
 npm test
 
-# Validação de layout dos decks (estouro de 1280x720)
+# Validação de layout dos decks (estouro de 1280x720 e sobreposição)
 python3 tools/check_slides.py
+
+# Validação estrutural dos decks (data da aula, decor-coral, quiz, âncoras,
+# sequência de rodapés e caminhos relativos). Estático, não usa Playwright.
+python3 tools/check_decks.py
+
+# Validação pixel a pixel do triângulo coral, o ponto cego do check_slides.py
+python3 tools/check_canto_coral.py
 
 # Validação do portal e dos links dos cards
 python3 tools/check_portal.py
 ```
+
+Os quatro validadores conferem coisas diferentes e nenhum substitui o outro.
+Os três de deck reportam o slide em **base 0**: o primeiro slide do deck é o
+slide 0, a mesma base de `Reveal.slide(i)`. `check_slides.py` é symlink para o
+acervo da FIAP e não deve ser editado aqui; os outros são locais.
 
 ## As três camadas de conteúdo
 
@@ -66,23 +78,38 @@ Ordem canônica de slides, em quatro ciclos de 35, 35, 35 e 25 minutos:
 
 ```
 capa
-título
-agenda com horários
+título com a data resolvida por turma
+agenda com os horários dos quatro ciclos
 ciclo 1                                                 19h30 às 20h05
 ciclo 2                                                 20h05 às 20h40
 quiz de fixação                                         20h40 às 20h50
 ciclo 3 de laboratório                                  20h50 às 21h25
 ciclo 4 de laboratório e entregável                     21h25 às 21h50
 fechamento                                              21h50 às 22h00
+referências da aula, com id="ref-slide"
 encerramento com copyright
 ```
+
+O slide de referências é canônico, entre o fechamento e o encerramento, como
+exige a convenção editorial de referências consolidadas: é o alvo das citações
+`[N]` dos títulos, e por isso leva `id="ref-slide"`.
 
 Classes de slide: `cover-slide`, `title-slide`, `content-slide`,
 `section-slide`, `quiz-slide`, `exercise-slide`, `end-slide`.
 
 Blocos reutilizáveis: `concept-cards` com `concept-card`, `side-by-side`,
 `slide-title-area` com `accent-bar`, `top-bar`, `slide-footer` com `footer-bar`
-e `footer-page`, e `uninove-logo-header`.
+e `footer-page`, `uninove-logo-header`, `uninove-logo-full`, `title-card` e
+`lesson-bar` (do `title-slide`), `exercise-container` com `exercise-steps`,
+`code-compact`, `timeline` com `is-past`, `takeaway`, `callout`,
+`flow-diagram`, `ref-badge` e `decor-coral`. A lista completa, com o markup de
+cada um, está em `aulas-1sem/SKILL.md`.
+
+**A data da aula não é escrita à mão.** O slide de título traz
+`<span data-data-da-aula="N"></span>`, onde `N` é o número da aula, e o módulo
+do fim do deck resolve a turma e escreve a data. É o único ponto do deck que
+muda de uma aula para a outra; um deck copiado sem trocar esse número projeta a
+data errada em sala. `tools/check_decks.py` confere isso.
 
 ## Compartilhamento com o acervo da FIAP
 
@@ -96,11 +123,23 @@ um deles mostra o caminho exato). Editar qualquer um deles edita o acervo da
 FIAP também, porque não são cópias.
 
 O que é específico da Uninove sobrescreve o que é genérico por arquivo local, não
-por edição do symlink: `.claude/agents/construtor-aulas-uninove.md` é o override
-do agente construtor da FIAP, trocando o case LogiTech pela Clínica Vida+, a
-paleta rosa pela azul e coral, o encontro de 3,5 horas com intervalo pelo de 150
-minutos sem intervalo, e a stack poliglota pela stack ASP.NET Core MVC, C#, EF
-Core, MySQL e Bootstrap.
+por edição do symlink. São **dois** overrides, um para cada agente da FIAP:
+
+- `.claude/agents/construtor-aulas-uninove.md` sobrescreve
+  `construtor-aulas.md`, trocando o case LogiTech pela Clínica Vida+, a paleta
+  rosa pela azul e coral, o encontro de 3,5 horas com intervalo pelo de 150
+  minutos sem intervalo, e a stack poliglota pela stack ASP.NET Core MVC, C#,
+  EF Core, MySQL e Bootstrap.
+- `.claude/agents/revisor-slides-uninove.md` sobrescreve `revisor-slides.md`,
+  corrigindo quatro regras que colidem com este acervo: aqui os **pesos de
+  avaliação são obrigatórios** nos slides (o revisor da FIAP os proíbe), o case
+  é a Clínica Vida+ e não a LogiTech, o kit de lab é um `README.md` dentro
+  deste acervo e não um repositório `mwe-2026-2-labNN` à parte, e a disciplina
+  é Desenvolvimento Web e não Microservice and Web Engineering. Ele também
+  documenta os quatro validadores, contra o único do revisor da FIAP.
+
+**Ao revisar ou construir uma aula deste acervo, use os agentes com sufixo
+`-uninove`, não os symlinks da FIAP.**
 
 Ver ADR-003 para o raciocínio completo por trás dessa decisão.
 
@@ -117,7 +156,8 @@ Ver ADR-003 para o raciocínio completo por trás dessa decisão.
 - O workflow **não** publica o repositório inteiro. `.github/workflows/static.yml`
   monta um diretório `_site` com `rsync`, excluindo `.git`, `.github`,
   `.claude`, `tools`, `tests`, `docs/referencia`, `node_modules`,
-  `.superpowers`, `docs/superpowers`, `CLAUDE.md` e `docs/ANDAMENTO.md`; só o
+  `.superpowers`, `docs/superpowers`, `.canto-coral-tmp`, `shots`, `CLAUDE.md`
+  e `docs/ANDAMENTO.md`; só o
   que sobra vai para o `upload-pages-artifact`. Isso existe porque
   `actions/upload-pages-artifact@v3` empacota com `tar --dereference`, que
   segue todo symlink até um arquivo real; os seis symlinks com o acervo da

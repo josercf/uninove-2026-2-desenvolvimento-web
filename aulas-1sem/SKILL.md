@@ -129,24 +129,30 @@ Cada aula tem uma apresentação HTML autocontida em
 
 ### 4.1 Esqueleto do arquivo
 
+O trecho abaixo é extraído do padrão-ouro, `aulas-1sem/aulas/aula01.html`. Copie
+daqui, ou do próprio deck da Aula 01, e não reescreva de memória: cada linha do
+`<head>` e do `Reveal.initialize` está aqui por um motivo registrado.
+
 ```html
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
-  <title>Aula XX: Título da aula | Desenvolvimento Web Uninove</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Aula XX, Título da aula | Uninove</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/theme/white.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/highlight/monokai.css">
   <link rel="stylesheet" href="../assets/css/uninove-theme.css">
   <link rel="stylesheet" href="../assets/css/uninove-print.css">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
 </head>
 <body>
   <div class="reveal">
     <div class="slides">
       <!-- Capa -->
       <section class="cover-slide">...</section>
-      <!-- Título da aula -->
+      <!-- Título da aula, com a data resolvida por turma -->
       <section class="title-slide">...</section>
       <!-- Agenda com os horários dos quatro ciclos -->
       <section class="content-slide">...</section>
@@ -156,36 +162,108 @@ Cada aula tem uma apresentação HTML autocontida em
       <section class="content-slide">...</section>
       <!-- Quiz de fixação -->
       <section class="quiz-slide content-slide">...</section>
-      <!-- Ciclo 3: laboratório guiado -->
-      <section class="content-slide">...</section>
+      <!-- Ciclo 3: laboratório guiado, um slide por passo -->
+      <section class="exercise-slide content-slide">...</section>
       <!-- Ciclo 4: laboratório final e entregável -->
+      <section class="exercise-slide content-slide">...</section>
+      <!-- Fechamento: entregável, commit, push e prévia da próxima aula -->
       <section class="content-slide">...</section>
-      <!-- Fechamento: commit, push e prévia da próxima aula -->
-      <section class="content-slide">...</section>
+      <!-- Referências da aula, alvo das citações [N] -->
+      <section id="ref-slide" class="content-slide">...</section>
       <!-- Encerramento com copyright -->
       <section class="end-slide">...</section>
     </div>
   </div>
+
   <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/highlight/highlight.js"></script>
   <script src="../assets/js/uninove-quiz.js"></script>
+  <script type="module">
+    import { TURMAS, resolverTurma, dataDaAula, formatarData } from '../assets/js/turmas.js';
+    const turma = resolverTurma({
+      hoje: new Date(),
+      salva: localStorage.getItem('uninove-turma'),
+    });
+    const alvo = document.querySelector('[data-data-da-aula]');
+    if (alvo) {
+      const n = Number(alvo.getAttribute('data-data-da-aula'));
+      alvo.textContent = turma
+        ? `${TURMAS[turma].rotulo}, ${formatarData(dataDaAula(turma, n))}`
+        : `Quarta ${formatarData(dataDaAula('quarta', n))} ou quinta ${formatarData(dataDaAula('quinta', n))}`;
+    }
+  </script>
   <script>
     Reveal.initialize({
-      width: 1280,
-      height: 720,
-      center: false,
-      margin: 0,
-      plugins: [ RevealHighlight ]
+      width: 1280, height: 720, center: false, margin: 0,
+      hash: true, slideNumber: false,
+      // Os chevrons de navegação caem sobre a footer-bar e sobre o triângulo
+      // azul do canto inferior direito; a barra de progresso encosta no rodapé
+      // e parece um segundo rodapé. Nenhum dos dois é usado na projeção.
+      controls: false, progress: false,
+      // Um slide por página no ?print-pdf, para o PDF bater com o deck.
+      pdfMaxPagesPerSlide: 1,
+      plugins: [RevealHighlight],
     });
   </script>
 </body>
 </html>
 ```
 
+Pontos do esqueleto que não são opcionais:
+
+- **O `<link>` do Google Fonts.** O tema usa Montserrat no texto e JetBrains
+  Mono no código, mas **não importa nenhuma das duas**: quem importa é o deck.
+  Sem essa linha, o deck cai na fonte padrão do sistema e não é o mesmo
+  material.
+- **O formato do `<title>`:** `Aula XX, Título da aula | Uninove`, com vírgula
+  depois do número e sem o nome da disciplina. É o formato do padrão-ouro.
+- **As cinco folhas de estilo, nesta ordem:** Reveal, tema `white`, `monokai`
+  do plugin de destaque, `uninove-theme.css` e `uninove-print.css`. O tema da
+  Uninove precisa vir depois do `white.css` para sobrescrevê-lo.
+- **`hash: true`** dá URL própria a cada slide, o que permite linkar um slide
+  específico e faz `href="#/ref-slide"` funcionar.
+- **`controls: false, progress: false`** e **`slideNumber: false`** existem pelo
+  motivo registrado no comentário: os controles do Reveal caem em cima do
+  rodapé do tema.
+- **`pdfMaxPagesPerSlide: 1`** garante que a exportação com `?print-pdf` gere
+  uma página por slide.
+
 O tema fixa cada `section` em **1280x720, com altura travada**. O conteúdo não
 rola: o que não couber quebra o slide visualmente, sem lançar nenhum erro no
 console. Consequência prática: um conceito por slide. Quando o conteúdo não
 couber, divida em dois slides, não encolha a fonte.
+
+### 4.1.1 A data da aula: o único ponto do deck que muda por aula
+
+O slide de título **não traz data escrita**. Ele traz um `<span>` vazio com o
+atributo `data-data-da-aula`, e o módulo do fim do arquivo resolve a turma
+(quarta ou quinta) e escreve a data correspondente. É assim no padrão-ouro:
+
+```html
+<h3>Prof. José Romualdo<br><span data-data-da-aula="1"></span></h3>
+```
+
+**O número do atributo é o número da aula.** `data-data-da-aula="1"` na Aula 01,
+`"5"` na Aula 05, `"20"` na Aula 20. O módulo passa esse número para
+`dataDaAula(turma, n)` em `assets/js/turmas.js`, que devolve a data daquele
+encontro na turma resolvida. Quando não dá para resolver a turma, o deck mostra
+as duas datas, quarta e quinta.
+
+> **Este é o defeito mais caro que a produção em lote pode cometer.** Um deck
+> copiado da Aula 01 sem trocar o número do atributo projeta **05/08/2026 na
+> Aula 05**, na frente da turma, e passa em `check_slides.py`,
+> `check_canto_coral.py` e `check_portal.py` sem uma única reclamação: nenhum
+> dos três olha o conteúdo do arquivo. Quem pega isso é
+> `tools/check_decks.py`, que compara o valor do atributo com o número no nome
+> do arquivo. Trocar esse número é o **primeiro** passo depois de copiar o
+> esqueleto, não o último.
+
+Regras do atributo:
+
+- Existe **exatamente um** `data-data-da-aula` por deck, no slide de título.
+- O valor é o número da aula, sem zero à esquerda (`5`, não `05`).
+- Nenhuma data é escrita à mão em nenhum lugar do deck. Data escrita à mão vira
+  data errada para uma das duas turmas.
 
 ### 4.2 Ordem canônica dos slides
 
@@ -194,20 +272,28 @@ sala:
 
 ```
 capa
-título
-agenda com horários
+título com a data resolvida por turma
+agenda com os horários dos quatro ciclos
 ciclo 1                                                 19h30 às 20h05
 ciclo 2                                                 20h05 às 20h40
 quiz de fixação                                         20h40 às 20h50
 ciclo 3 de laboratório                                  20h50 às 21h25
 ciclo 4 de laboratório e entregável                     21h25 às 21h50
 fechamento                                              21h50 às 22h00
+referências da aula, com id="ref-slide"
 encerramento com copyright
 ```
 
-A Aula 01 tem, a mais, os slides de abertura de semestre (apresentação do
-professor, metodologia, grade de horários, avaliação e apresentação do case
-Clínica Vida+). As demais aulas não repetem isso.
+O **slide de referências é canônico**, não opcional: é o alvo das citações
+`[N]` que aparecem nos títulos dos slides de conteúdo, e por isso leva
+`id="ref-slide"`. Ele vem entre o fechamento e o encerramento, como no
+padrão-ouro.
+
+A **agenda com horários também é canônica de todas as aulas**: todo deck abre
+mostrando os quatro ciclos do encontro. O que a Aula 01 tem a mais são os
+slides de abertura de semestre (apresentação do professor, metodologia,
+avaliação com os pesos e apresentação do case Clínica Vida+). As demais aulas
+não repetem esses.
 
 ### 4.3 Classes do tema Uninove
 
@@ -224,11 +310,32 @@ sempre escrever `class="quiz-slide content-slide"` (e o mesmo vale para
 `exercise-slide content-slide`).
 
 **Blocos reutilizáveis:** `slide-title-area` com `accent-bar`, `top-bar`,
-`uninove-logo-header`, `slide-footer` com `footer-bar` e `footer-page`,
-`concept-cards` com `concept-card`, `side-by-side` com `side`, `figure-split`,
-`slide-figure`, `timeline` com `tl-item`, `tl-dot`, `tl-year`, `tl-tool` e
-`tl-desc`, `takeaway` com `takeaway-label`, `callout`, `flow-diagram` com
-`flow-item` e `flow-arrow`, `ref-badge`, `decor-coral`.
+`uninove-logo-header`, `uninove-logo-full` (a logo grande da capa e do
+encerramento), `title-card` e `lesson-bar` (exclusivos do `title-slide`),
+`slide-footer` com `footer-bar` e `footer-page`, `concept-cards` com
+`concept-card`, `side-by-side` com `side`, `figure-split`, `slide-figure`,
+`timeline` com `tl-item`, `tl-dot`, `tl-year`, `tl-tool`, `tl-desc` e o
+modificador `is-past` no `tl-item` já percorrido, `takeaway` com
+`takeaway-label`, `callout`, `flow-diagram` com `flow-item` e `flow-arrow`,
+`exercise-container` com `exercise-steps` (a lista numerada dos passos de
+laboratório), `code-compact` (modificador de `<pre>` para bloco de código curto
+que precisa ocupar menos altura), `ref-badge` e `decor-coral`.
+
+O `title-slide` tem markup próprio, que não é o do `content-slide`:
+
+```html
+<section class="title-slide">
+  <div class="top-bar"></div>
+  <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+  <div class="title-card">
+    <div class="accent-bar"></div>
+    <h1>Desenvolvimento Web</h1>
+    <h2>Título da aula</h2>
+    <h3>Prof. José Romualdo<br><span data-data-da-aula="XX"></span></h3>
+  </div>
+  <div class="lesson-bar">AULA XX &nbsp;|&nbsp; Módulo N, Nome do módulo</div>
+</section>
+```
 
 Cores da marca: `--uninove-azul: #00274D` e `--uninove-coral: #C84B31`,
 definidas em `:root` no próprio tema.
@@ -255,11 +362,18 @@ definidas em `:root` no próprio tema.
   </div>
 
   <div class="slide-footer">
-    <div class="footer-bar">XX - Tema curto</div>
-    <div class="footer-page">0</div>
+    <div class="footer-bar">XX Tema curto</div>
+    <div class="footer-page">3</div>
   </div>
 </section>
 ```
+
+O `footer-bar` é **o número da aula com dois dígitos, um espaço e o tema curto
+do slide**, sem hífen e sem travessão: `01 Agenda do encontro`,
+`01 Laboratório, passo 2, clone`. O `footer-page` é a posição do slide no deck,
+contada a partir de 1, com a capa como 1: por isso o primeiro slide que tem
+rodapé, a agenda, já começa em 3. A sequência precisa ser crescente, sem pular
+nem repetir, e `tools/check_decks.py` confere isso.
 
 `.decor-coral` é o triângulo coral do canto superior direito. É um `<div>`
 real com caixa zerada no próprio elemento: quem desenha o triângulo é o
@@ -324,9 +438,14 @@ contendo o roteiro e o gabarito daquela etapa do case, com:
    - Pré-requisitos e comandos de execução passo a passo.
    - O entregável esperado, especificado com quantidade e critério, nunca de
      forma vaga.
-   - Critérios de aceitação em tabela.
+   - **Critérios de aceitação em tabela**, com uma linha por critério e a
+     evidência que o professor confere na correção. A tabela é obrigatória: o
+     checkpoint vale nota, e uma lista em prosa deixa margem para o aluno e o
+     professor lerem coisas diferentes. O kit da Aula 01 é o modelo.
    - Instrução do commit e push esperados no fork do aluno.
-2. **Código de referência** que resolve o passo da aula, servindo de gabarito
+2. **`index.html`**, uma página de redirecionamento para o `README.md` exibido
+   pelo GitHub. Ver a seção 7.
+3. **Código de referência** que resolve o passo da aula, servindo de gabarito
    para o professor durante a correção.
 
 Diferente de um acervo com um repositório de laboratório por aula, aqui existe
@@ -339,3 +458,104 @@ ou forka.
 Os slides do laboratório, dentro do deck, seguem um slide por passo: o aluno
 acompanha a tela enquanto executa, sem precisar dividir atenção entre o slide
 e um roteiro à parte.
+
+---
+
+## 7. O ciclo do artefato: deck, kit, `index.html` do lab e portal
+
+Uma aula só está pronta quando os **quatro** artefatos existem. Deck e kit sem
+os dois últimos passos dão 404 no portal publicado, e o aluno não chega ao
+material.
+
+### 7.1 `aulas-1sem/labs/aulaXX-lab/index.html`, obrigatório
+
+O GitHub Pages **não faz listagem de diretório**: um diretório sem
+`index.html` devolve 404. O botão "Lab" do portal aponta para
+`labs/aulaXX-lab/`, então sem esse arquivo o botão quebra em produção, mesmo
+com o `README.md` no lugar. O template é o da Aula 01, e só **dois tokens**
+mudam, o número da aula nos caminhos e o número no título:
+
+```html
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="refresh" content="0; url=https://github.com/josercf/uninove-2026-2-desenvolvimento-web/blob/main/aulas-1sem/labs/aulaXX-lab/README.md">
+  <title>Laboratório da Aula XX, Desenvolvimento Web, Uninove</title>
+  <script>window.location.href = "https://github.com/josercf/uninove-2026-2-desenvolvimento-web/blob/main/aulas-1sem/labs/aulaXX-lab/README.md";</script>
+</head>
+<body style="font-family: sans-serif; text-align: center; padding-top: 50px; background-color: #00274D; color: #fff;">
+  <h2>Redirecionando para o roteiro do laboratório da Aula XX</h2>
+  <p>O roteiro completo vive no <code>README.md</code> deste diretório, exibido pelo GitHub. Caso o redirecionamento não ocorra, <a href="https://github.com/josercf/uninove-2026-2-desenvolvimento-web/blob/main/aulas-1sem/labs/aulaXX-lab/README.md" style="color: #C84B31;">clique aqui</a>.</p>
+</body>
+</html>
+```
+
+`tools/check_portal.py` pega a ausência desse arquivo, porque o servidor dele
+recusa listagem de diretório de propósito, exatamente como o GitHub Pages.
+
+### 7.2 Habilitar o card da aula em `aulas-1sem/index.html`
+
+O portal já tem os 20 cards escritos. O card de uma aula ainda não produzida
+está desabilitado. Ao terminar a aula XX, **edite o card correspondente**:
+
+Antes, aula ainda em produção:
+
+```html
+<article class="card" data-aula="2">
+  ...
+  <div class="card-acoes">
+    <a class="btn disabled" aria-disabled="true">Slides</a>
+    <a class="btn disabled" aria-disabled="true">Lab</a>
+  </div>
+  <span class="badge-producao">Em produção</span>
+</article>
+```
+
+Depois, aula publicada:
+
+```html
+<article class="card" data-aula="2">
+  ...
+  <div class="card-acoes">
+    <a class="btn" href="aulas/aula02.html">Slides</a>
+    <a class="btn" href="labs/aula02-lab/">Lab</a>
+  </div>
+</article>
+```
+
+Ou seja: tirar `disabled` da classe dos dois botões, tirar o `aria-disabled`,
+tirar o `<span class="badge-producao">` e pôr os dois `href`. Sem isso, a aula
+fica pronta em disco e invisível para a turma.
+
+---
+
+## 8. Validação: os quatro validadores
+
+Nenhuma aula é considerada pronta sem os quatro passando. Eles conferem coisas
+diferentes e nenhum substitui o outro.
+
+```bash
+python3 tools/check_slides.py aulas-1sem/aulas/aulaXX.html   # estouro de 1280x720 e sobreposição
+python3 tools/check_decks.py aulas-1sem/aulas/aulaXX.html    # estrutura do HTML, estático
+python3 tools/check_canto_coral.py aulas-1sem/aulas/aulaXX.html  # triângulo coral, pixel a pixel
+python3 tools/check_portal.py                                # portal, cards e links dos botões
+npm test                                                     # lógica de resolução de turma
+```
+
+- **`check_slides.py`** mede geometria no navegador. Não olha o conteúdo do
+  arquivo e não enxerga o `.decor-coral`, que tem caixa zerada.
+- **`check_decks.py`** é estático e cobre justamente o que a produção em lote
+  quebra: `data-data-da-aula` com o número da aula errado, `decor-coral`
+  faltando, `quiz-slide` sem `content-slide`, quiz com zero ou duas respostas
+  certas, âncora `#/...` sem `id` correspondente, `footer-page` fora de
+  sequência e caminho relativo que não existe no disco.
+- **`check_canto_coral.py`** confere pixel a pixel se o triângulo coral chegou
+  inteiro à tela. É o único que pega elemento opaco cobrindo a decoração.
+  Ele só confere slides que **têm** o `.decor-coral`; quem cobra a presença do
+  elemento é o `check_decks.py`.
+- **`check_portal.py`** abre o portal, confere os 20 cards, a resolução de
+  turma e faz um GET real em cada botão habilitado.
+
+Os três validadores de deck reportam o slide em **base 0**: o primeiro slide do
+deck é o slide 0, a mesma base de `Reveal.slide(i)`.

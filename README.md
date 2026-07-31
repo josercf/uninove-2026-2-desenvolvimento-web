@@ -44,8 +44,14 @@ python3 -m http.server 8000
 ```bash
 npm test                                    # lógica de turmas
 python3 tools/check_slides.py               # layout de todos os decks
+python3 tools/check_decks.py                # estrutura dos decks, estático
+python3 tools/check_canto_coral.py          # triângulo coral, pixel a pixel
 python3 tools/check_portal.py               # portal e links
 ```
+
+Os quatro validadores de material conferem coisas diferentes e nenhum
+substitui o outro: geometria, estrutura do HTML, decoração renderizada e
+portal. Os três de deck reportam o slide em base 0.
 
 ## Professor
 
