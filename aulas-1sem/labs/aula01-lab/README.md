@@ -126,6 +126,17 @@ aparecer no histórico, com o seu nome ao lado.
 - Pelo menos **um commit de sua autoria**, visível no histórico e assinado
   com o nome e o e-mail configurados no Passo 3.
 
+### Critérios de aceitação
+
+| # | Critério | Como o professor confere |
+|---|---|---|
+| 1 | O fork existe sob a sua conta | A página do repositório mostra `forked from josercf/uninove-2026-2-clinica-vida` |
+| 2 | O repositório foi clonado e o Git funciona na sua máquina | `git log --oneline` roda dentro da pasta clonada e lista o histórico |
+| 3 | A identidade do Git está configurada | `git config user.name` e `git config user.email` devolvem os seus dados, e o e-mail é o mesmo cadastrado no GitHub |
+| 4 | O `README.md` tem a seção de identificação | O arquivo no fork traz nome completo, RA e turma, nos quatro itens do Passo 4 |
+| 5 | Existe pelo menos um commit de sua autoria | O histórico no GitHub mostra o commit com o seu nome ao lado, não com o nome do professor |
+| 6 | O trabalho foi enviado | O commit aparece no GitHub, e não apenas no `git log` da sua máquina |
+
 ---
 
 ## Se algo der errado

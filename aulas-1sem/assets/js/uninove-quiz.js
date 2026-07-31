@@ -295,10 +295,13 @@
   }
 
   /**
-   * Timer regressivo para quizzes e intervalo.
+   * Timer regressivo para o quiz de fixação.
    *
-   *   startTimer('quiz1Timer', 60)   // 60 segundos
-   *   startTimer('breakTimer', 1800) // 30 minutos
+   *   startTimer('quizTimer', 60)   // 60 segundos para responder
+   *   startTimer('quizTimer', 300)  // 5 minutos, quiz com discussão
+   *
+   * A disciplina não tem intervalo, então não existe timer de pausa: o único
+   * uso previsto é cronometrar o tempo de resposta do quiz aplicado às 20h40.
    *
    * A duração é sempre em SEGUNDOS. Chamadas repetidas no mesmo elemento são
    * ignoradas enquanto o timer estiver correndo, para que apertar o play duas

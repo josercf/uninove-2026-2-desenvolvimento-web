@@ -301,31 +301,6 @@
   font-weight: 700;
 }
 
-/* --- Slide de Intervalo --- */
-.reveal .slides section.break-slide {
-  background: var(--uninove-azul);
-  display: flex !important;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  color: var(--uninove-branco);
-  overflow: hidden;
-}
-
-.break-slide h2 {
-  font-size: 2.5em;
-  font-weight: 800;
-  color: var(--uninove-branco);
-  margin-bottom: 10px;
-}
-
-.break-slide p {
-  font-size: 1em;
-  color: var(--uninove-coral);
-  font-weight: 600;
-}
-
 /* --- Slide de Quiz --- */
 .reveal .slides section.quiz-slide {
   background: var(--uninove-branco);

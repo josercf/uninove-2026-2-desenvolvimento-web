@@ -120,25 +120,6 @@
   color-adjust: exact;
 }
 
-/* --- Slide de Intervalo --- */
-.print-pdf .reveal .slides section.break-slide {
-  background: #1a1a1a !important;
-  display: flex !important;
-  align-items: center;
-  justify-content: center;
-  -webkit-print-color-adjust: exact;
-  print-color-adjust: exact;
-  color-adjust: exact;
-}
-
-.print-pdf .break-slide h2 {
-  color: #ffffff !important;
-}
-
-.print-pdf .break-slide p {
-  color: var(--uninove-coral) !important;
-}
-
 /* --- Slide de Encerramento --- */
 .print-pdf .reveal .slides section.end-slide {
   background: #000000 !important;

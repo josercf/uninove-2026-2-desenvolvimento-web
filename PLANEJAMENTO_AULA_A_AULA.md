@@ -197,15 +197,15 @@ rápida em plenária, ancorando na imutabilidade e no encadeamento por hash.
 
 **Enunciado:** O que um commit representa no Git?
 
-- (a) Apenas as linhas alteradas desde a última vez.
-- (b) Uma fotografia completa e imutável do projeto, ligada ao commit anterior.
-- (c) Um backup do arquivo que está aberto no editor.
-- (d) Uma cópia do repositório remoto na sua máquina.
+- (a) Apenas as linhas alteradas no arquivo desde o commit anterior do projeto.
+- (b) Um backup do arquivo que está aberto no editor no momento da gravação.
+- (c) Uma fotografia completa e imutável do projeto, ligada ao commit anterior.
+- (d) Uma cópia do repositório remoto guardada na sua própria máquina local.
 
-**Resposta correta: (b).**
+**Resposta correta: (c).**
 
 **Comentário das alternativas:** (a) descreve o diff, que é calculado entre dois
-commits e não é o que fica guardado; (c) confunde commit com salvamento de
+commits e não é o que fica guardado; (b) confunde commit com salvamento de
 arquivo, sendo que o commit abrange o projeto inteiro; (d) descreve o clone, não
 o commit.
 
