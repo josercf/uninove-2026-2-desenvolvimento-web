@@ -80,14 +80,16 @@ commits aparecem no repositório mas não contam no seu perfil.
 ## Passo 4: editar o README (15 min)
 
 Acrescente ao `README.md` do seu fork o bloco de identificação, preenchendo
-nome completo, RA e turma:
+nome completo, RA, turma e uma linha sobre o que você espera aprender na
+disciplina:
 
 ```markdown
 ## Identificação
 
-- **Nome completo:**
-- **RA:**
-- **Turma:** (quarta ou quinta)
+- Nome completo:
+- RA:
+- Turma: (quarta ou quinta)
+- O que espero aprender:
 ```
 
 ```bash
