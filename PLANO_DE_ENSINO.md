@@ -14,15 +14,15 @@
 | Horário | 19h30 às 22h00 |
 | Encontros | 20 encontros de 150 minutos cada |
 | Carga horária total | 60 horas-aula |
+| Entrega de atividades | Google Classroom, quando as turmas forem configuradas pela instituição |
+| Repositório do acervo | <https://github.com/josercf/uninove-2026-2-desenvolvimento-web> |
+| Repositório-esqueleto do case | <https://github.com/josercf/uninove-2026-2-clinica-vida> |
 
 A carga horária de **60 horas-aula** vem da conta institucional: a hora-aula da
 Uninove tem 50 minutos, cada encontro de 150 minutos corridos equivale a 3
 horas-aula, e 3 horas-aula vezes 20 encontros dão 60 horas-aula. O domínio
 `uni9.pro.br` do contato acima é o endereço institucional do professor e foi
 confirmado por ele em 31/07/2026; não deve ser trocado por nenhuma variação.
-| Entrega de atividades | Google Classroom, quando as turmas forem configuradas pela instituição |
-| Repositório do acervo | <https://github.com/josercf/uninove-2026-2-desenvolvimento-web> |
-| Repositório-esqueleto do case | <https://github.com/josercf/uninove-2026-2-clinica-vida> |
 
 As duas turmas cobrem exatamente o mesmo conteúdo, na mesma ordem, com os mesmos
 entregáveis. O que muda entre elas é apenas o calendário, registrado no
