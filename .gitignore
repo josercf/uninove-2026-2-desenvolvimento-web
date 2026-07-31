@@ -18,3 +18,4 @@ __pycache__/
 
 # Saída de validação
 shots/
+.canto-coral-tmp/

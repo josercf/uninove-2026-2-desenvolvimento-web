@@ -29,6 +29,13 @@ precisa ter a cor do coral da marca aplicada com a opacidade do tema
     proposito sobre o topo do slide inteiro;
   - uma folga de 2px na hipotenusa, por causa do antialiasing da borda.
 
+NUMERACAO DOS SLIDES
+--------------------
+Os slides sao reportados em BASE 0, o mesmo indice usado por `Reveal.slide(i)` e
+pelo `tools/check_slides.py`. O primeiro slide do deck e o slide 0. Manter a
+mesma base nos dois validadores evita que um relatorio aponte para o slide
+errado quando os dois rodam sobre o mesmo deck.
+
 Uso:
     python3 tools/check_canto_coral.py                        # todos os decks
     python3 tools/check_canto_coral.py aulas-1sem/aulas/aula01.html
@@ -116,13 +123,13 @@ def checar(page, url, nome, tmp_dir):
             }"""
         )
         if [round(v) for v in dados["rect"]] != [0, 0, LARGURA, ALTURA]:
-            print("  slide %-2d  ainda em transicao, medida descartada" % (i + 1))
+            print("  slide %-2d  ainda em transicao, medida descartada" % i)
             problemas += 1
             continue
         if not dados["decor"]:
             continue
 
-        destino = os.path.join(tmp_dir, "_canto_%02d.png" % (i + 1))
+        destino = os.path.join(tmp_dir, "_canto_%02d.png" % i)
         page.screenshot(path=destino)
         ruins = pixels_corrompidos(destino)
         os.remove(destino)
@@ -131,7 +138,7 @@ def checar(page, url, nome, tmp_dir):
             problemas += 1
             print(
                 "  slide %-2d  %d pixels do triangulo coral cobertos, ex.: %s"
-                % (i + 1, len(ruins), ruins[:3])
+                % (i, len(ruins), ruins[:3])
             )
 
     print("\n%s  (%d slides, %d com decor-coral)" % (nome, total, conferidos))

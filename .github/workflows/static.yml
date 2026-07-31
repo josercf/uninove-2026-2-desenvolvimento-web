@@ -38,6 +38,8 @@ jobs:
             --exclude='node_modules' \
             --exclude='.superpowers' \
             --exclude='docs/superpowers' \
+            --exclude='.canto-coral-tmp' \
+            --exclude='shots' \
             --exclude='CLAUDE.md' \
             --exclude='docs/ANDAMENTO.md' \
             --exclude='_site' \
