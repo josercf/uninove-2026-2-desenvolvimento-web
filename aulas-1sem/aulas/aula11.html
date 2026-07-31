@@ -1,0 +1,1265 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Aula 11, Entity Framework Core e MySQL | Uninove</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/theme/white.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/highlight/monokai.css">
+  <link rel="stylesheet" href="../assets/css/uninove-theme.css">
+  <link rel="stylesheet" href="../assets/css/uninove-print.css">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+      <!-- ==================== SLIDE 1: CAPA ==================== -->
+      <section class="cover-slide">
+        <img src="../assets/img/uninove-logo.png" alt="Uninove, Universidade Nove de Julho" class="uninove-logo-full"
+             style="max-width:400px; background:#FFFFFF; padding:26px 36px; border-radius:10px;">
+        <div style="margin-top:36px; color:#FFFFFF; font-size:0.95em; font-weight:800; letter-spacing:4px; text-transform:uppercase;">Desenvolvimento Web</div>
+        <div style="margin-top:12px; color:#C84B31; font-size:0.6em; font-weight:700; letter-spacing:3px; text-transform:uppercase;">Graduação, 2026.2</div>
+      </section>
+
+      <!-- ==================== SLIDE 2: TÍTULO ==================== -->
+      <section class="title-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="title-card">
+          <div class="accent-bar"></div>
+          <h1>Desenvolvimento Web</h1>
+          <h2>Entity Framework Core e MySQL</h2>
+          <h3>Prof. José Romualdo<br><span data-data-da-aula="11"></span></h3>
+        </div>
+        <div class="lesson-bar">AULA 11 &nbsp;|&nbsp; Módulo 2, Backend com C# e ASP.NET Core MVC</div>
+      </section>
+
+      <!-- ==================== SLIDE 3: AGENDA ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Agenda do encontro de hoje</h2>
+        </div>
+
+        <p style="font-size:0.76em; margin-top:0;">São 150 minutos corridos, em quatro ciclos. Hoje a Clínica Vida+ ganha um banco de dados de verdade.</p>
+
+        <table>
+          <thead>
+            <tr><th style="width:190px;">Horário</th><th style="width:200px;">Bloco</th><th>O que acontece</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>19h30 às 20h05</td><td>Ciclo 1</td><td>Banco relacional, ORM, EF Core, MySQL e a connection string</td></tr>
+            <tr><td>20h05 às 20h40</td><td>Ciclo 2</td><td>DbContext, DbSet, convenções de mapeamento e migrations</td></tr>
+            <tr><td>20h40 às 20h50</td><td>Quiz de fixação</td><td>Uma pergunta sobre o conceito central da aula</td></tr>
+            <tr><td>20h50 às 21h25</td><td>Ciclo 3</td><td>Laboratório guiado: pacotes, Models, ClinicaContext e conexão</td></tr>
+            <tr><td>21h25 às 21h50</td><td>Ciclo 4</td><td>Laboratório: a migration inicial aplicada, que é o entregável</td></tr>
+            <tr><td>21h50 às 22h00</td><td>Fechamento</td><td>Conferência do banco na sua máquina e prévia da Aula 12</td></tr>
+          </tbody>
+        </table>
+
+        <div class="slide-footer">
+          <div class="footer-bar">11 Agenda do encontro</div>
+          <div class="footer-page">3</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 4: RECAPITULAÇÃO DA AULA 10 ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>De onde viemos: o entregável da Aula 10</h2>
+        </div>
+
+        <p style="font-size:0.72em; margin-top:0;">Você entregou o <strong>formulário de agendamento validando no servidor</strong>, com mensagens por campo e tela de confirmação. Ele funciona, e é aí que aparece o buraco.</p>
+
+        <div class="side-by-side" style="margin-top:8px;">
+          <div class="side">
+            <h4>O que já está de pé</h4>
+            <ul style="margin:0; padding-left:20px; font-size:0.9em;">
+              <li>O Model <code>Consulta</code> com Data Annotations.</li>
+              <li><code>Agendar</code> em GET e em POST, com <code>ModelState</code>.</li>
+              <li>Mensagens por campo e tela de confirmação.</li>
+            </ul>
+          </div>
+          <div class="side">
+            <h4>O que ainda não existe</h4>
+            <ul style="margin:0; padding-left:20px; font-size:0.9em;">
+              <li>Os agendamentos vivem em uma lista em memória.</li>
+              <li>Memória é do processo: some quando ele morre.</li>
+              <li>Ninguém abre a agenda de ontem, nem de outra máquina.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="flow-diagram" style="margin:14px 0 0 0; font-size:0.82em; gap:8px;">
+          <div class="flow-item">dotnet run</div>
+          <div class="flow-arrow">&rarr;</div>
+          <div class="flow-item">12 consultas agendadas</div>
+          <div class="flow-arrow">&rarr;</div>
+          <div class="flow-item">Ctrl + C</div>
+          <div class="flow-arrow">&rarr;</div>
+          <div class="flow-item" style="background:#C84B31;">0 consultas</div>
+        </div>
+
+        <div class="takeaway">
+          <span class="takeaway-label">Takeaway</span>
+          <p>O dado só existe enquanto a aplicação está no ar. Hoje resolvemos isso: persistência.</p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">11 Recapitulação da Aula 10</div>
+          <div class="footer-page">4</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 5: REVISÃO DE BANCO RELACIONAL ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Banco relacional em cinco palavras <a href="#/ref-slide" class="ref-badge" title="Ver referências">[4]</a></h2>
+        </div>
+
+        <p style="font-size:0.7em; margin-top:0;">Revisão rápida, com as tabelas da própria clínica. Tudo o que o EF Core faz hoje termina neste desenho.</p>
+
+        <div class="slide-figure" style="margin-top:0;">
+          <svg viewBox="0 0 1140 300" style="max-height:330px;" role="img" aria-label="A tabela Pacientes e a tabela Consultas, com destaque para coluna, linha, chave primária e chave estrangeira">
+            <defs>
+              <marker id="a11setaRel" markerWidth="10" markerHeight="10" refX="9" refY="5" orient="auto">
+                <path d="M0,0 L10,5 L0,10 Z" fill="#C84B31"/>
+              </marker>
+            </defs>
+
+            <!-- tabela Pacientes -->
+            <text x="40" y="26" font-size="15" font-weight="800" fill="#00274D">tabela Pacientes</text>
+            <rect x="40" y="38" width="430" height="34" rx="4" fill="#00274D"/>
+            <text x="60" y="60" font-size="14" font-weight="700" fill="#FFFFFF">Id</text>
+            <text x="150" y="60" font-size="14" font-weight="700" fill="#FFFFFF">Nome</text>
+            <text x="345" y="60" font-size="14" font-weight="700" fill="#FFFFFF">Cpf</text>
+
+            <rect x="40" y="72" width="430" height="32" fill="#F5F5F5" stroke="#D8D8D8"/>
+            <rect x="40" y="104" width="430" height="32" fill="#FFF7F5" stroke="#C84B31" stroke-width="1.6"/>
+            <rect x="40" y="136" width="430" height="32" fill="#F5F5F5" stroke="#D8D8D8"/>
+            <g font-size="13.5" fill="#333333">
+              <text x="60" y="93">1</text><text x="150" y="93">Ana Beatriz Souza</text><text x="345" y="93">123.456.789-00</text>
+              <text x="60" y="125">2</text><text x="150" y="125">Carlos Menezes</text><text x="345" y="125">987.654.321-00</text>
+              <text x="60" y="157">3</text><text x="150" y="157">Marina Duarte</text><text x="345" y="157">456.123.789-00</text>
+            </g>
+            <rect x="40" y="38" width="86" height="130" fill="#00274D" opacity="0.14"/>
+            <rect x="126" y="38" width="190" height="130" fill="#777777" opacity="0.16"/>
+
+            <!-- realces das colunas -->
+            <!-- tabela Consultas -->
+            <text x="620" y="26" font-size="15" font-weight="800" fill="#00274D">tabela Consultas</text>
+            <rect x="620" y="38" width="500" height="34" rx="4" fill="#00274D"/>
+            <text x="638" y="60" font-size="14" font-weight="700" fill="#FFFFFF">Id</text>
+            <text x="700" y="60" font-size="14" font-weight="700" fill="#FFFFFF">PacienteId</text>
+            <text x="850" y="60" font-size="14" font-weight="700" fill="#FFFFFF">MedicoId</text>
+            <text x="980" y="60" font-size="14" font-weight="700" fill="#FFFFFF">Data</text>
+
+            <rect x="620" y="72" width="500" height="32" fill="#F5F5F5" stroke="#D8D8D8"/>
+            <rect x="620" y="104" width="500" height="32" fill="#F5F5F5" stroke="#D8D8D8"/>
+            <rect x="620" y="136" width="500" height="32" fill="#F5F5F5" stroke="#D8D8D8"/>
+            <g font-size="13.5" fill="#333333">
+              <text x="638" y="93">1</text><text x="700" y="93">2</text><text x="850" y="93">7</text><text x="980" y="93">2026-10-20</text>
+              <text x="638" y="125">2</text><text x="700" y="125">1</text><text x="850" y="125">3</text><text x="980" y="125">2026-10-21</text>
+              <text x="638" y="157">3</text><text x="700" y="157">2</text><text x="850" y="157">7</text><text x="980" y="157">2026-10-22</text>
+            </g>
+            <rect x="690" y="38" width="150" height="130" fill="#C84B31" opacity="0.14"/>
+
+            <!-- chave estrangeira: da coluna PacienteId de volta ao Id de Pacientes -->
+            <path d="M765,168 L765,206 L83,206 L83,174" fill="none" stroke="#C84B31" stroke-width="2.2" marker-end="url(#a11setaRel)"/>
+
+            <!-- legenda -->
+            <rect x="40" y="234" width="26" height="26" rx="4" fill="#00274D" opacity="0.20" stroke="#00274D" stroke-width="1.4"/>
+            <text x="76" y="246" font-size="13" font-weight="800" fill="#00274D">chave primária</text>
+            <text x="76" y="263" font-size="11.5" fill="#666666">a coluna Id identifica cada linha</text>
+
+            <rect x="330" y="234" width="26" height="26" rx="4" fill="#777777" opacity="0.22" stroke="#777777" stroke-width="1.4"/>
+            <text x="366" y="246" font-size="13" font-weight="800" fill="#00274D">coluna</text>
+            <text x="366" y="263" font-size="11.5" fill="#666666">um dado, sempre do mesmo tipo</text>
+
+            <rect x="620" y="234" width="26" height="26" rx="4" fill="#FFF7F5" stroke="#C84B31" stroke-width="1.6"/>
+            <text x="656" y="246" font-size="13" font-weight="800" fill="#C84B31">linha</text>
+            <text x="656" y="263" font-size="11.5" fill="#666666">um paciente inteiro, o registro</text>
+
+            <path d="M900,247 L936,247" stroke="#C84B31" stroke-width="2.2" marker-end="url(#a11setaRel)"/>
+            <text x="946" y="246" font-size="13" font-weight="800" fill="#C84B31">chave estrangeira</text>
+            <text x="946" y="263" font-size="11.5" fill="#666666">aponta para a chave primária</text>
+          </svg>
+        </div>
+
+        <div class="takeaway">
+          <span class="takeaway-label">Takeaway</span>
+          <p>Toda a aula de hoje é fazer as suas classes C# virarem exatamente estas tabelas, sem você escrever SQL.</p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">11 Banco relacional em revisão</div>
+          <div class="footer-page">5</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 6: O QUE É UM ORM ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>O que um ORM resolve <a href="#/ref-slide" class="ref-badge" title="Ver referências">[1]</a></h2>
+        </div>
+
+        <p style="font-size:0.7em; margin-top:0;">Seu código pensa em <strong>objetos</strong>; o MySQL guarda <strong>tabelas</strong>. O ORM faz a tradução nas duas direções.</p>
+
+        <div class="side-by-side" style="margin-top:6px;">
+          <div class="side">
+            <h4 style="color:#C84B31;">Sem ORM, na mão</h4>
+            <pre class="code-compact" style="margin:6px 0 0 0;"><code class="language-csharp" data-trim>var sql = "SELECT Id, Nome FROM Pacientes"
+        + " WHERE Id = @id";
+using var cmd = new MySqlCommand(sql, conn);
+cmd.Parameters.AddWithValue("@id", id);
+using var leitor = cmd.ExecuteReader();
+leitor.Read();
+var p = new Paciente {
+    Id   = leitor.GetInt32(0),
+    Nome = leitor.GetString(1)
+};</code></pre>
+          </div>
+          <div class="side">
+            <h4 style="color:#00274D;">Com o EF Core</h4>
+            <pre class="code-compact" style="margin:6px 0 0 0;"><code class="language-csharp" data-trim>var p = await _context.Pacientes.FindAsync(id);</code></pre>
+            <ul style="margin:10px 0 0 0; padding-left:20px; font-size:0.86em;">
+              <li>O SQL é gerado pelo EF Core, já parametrizado.</li>
+              <li>O compilador confere nome e tipo de cada campo.</li>
+              <li>Trocar de banco não reescreve a aplicação.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="takeaway">
+          <span class="takeaway-label">Takeaway</span>
+          <p>O ORM não substitui o banco nem o SQL: ele escreve o SQL por você, a partir das suas classes.</p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">11 O que um ORM resolve</div>
+          <div class="footer-page">6</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 7: MAPEAMENTO OBJETO-RELACIONAL ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>O mapeamento, propriedade por propriedade <a href="#/ref-slide" class="ref-badge" title="Ver referências">[1]</a></h2>
+        </div>
+
+        <p style="font-size:0.68em; margin-top:0;">A classe da esquerda é sua. A tabela da direita o EF Core gera. Cada propriedade pública vira uma coluna, com o tipo correspondente no MySQL.</p>
+
+        <div class="slide-figure" style="margin-top:0;">
+          <svg viewBox="0 0 1140 300" style="max-height:320px;" role="img" aria-label="A classe Paciente em C sustenido à esquerda e a tabela Pacientes do MySQL à direita, com cada propriedade ligada à sua coluna">
+            <defs>
+              <marker id="a11setaMap" markerWidth="9" markerHeight="9" refX="8" refY="4.5" orient="auto">
+                <path d="M0,0 L9,4.5 L0,9 Z" fill="#C84B31"/>
+              </marker>
+            </defs>
+
+            <!-- classe C# -->
+            <rect x="6" y="8" width="464" height="284" rx="10" fill="#12121A"/>
+            <text x="24" y="34" font-size="13" font-weight="700" fill="#C84B31">Models/Paciente.cs</text>
+            <g font-size="14" font-family="'JetBrains Mono', monospace" fill="#D4D4D4" style="font-variant-ligatures:none;">
+              <text x="24" y="62">public class Paciente</text>
+              <text x="24" y="84">{</text>
+              <text x="40" y="112">public int Id { get; set; }</text>
+              <text x="40" y="144">public string Nome { get; set; }</text>
+              <text x="40" y="176">public string Cpf { get; set; }</text>
+              <text x="40" y="208">public DateTime DataNascimento { get; set; }</text>
+              <text x="40" y="240">public string Telefone { get; set; }</text>
+              <text x="40" y="268">public string? Email { get; set; }</text>
+              <text x="24" y="288">}</text>
+            </g>
+
+            <!-- conectores -->
+            <g stroke="#C84B31" stroke-width="1.6" stroke-dasharray="5 4">
+              <line x1="474" y1="107" x2="662" y2="107" marker-end="url(#a11setaMap)"/>
+              <line x1="474" y1="139" x2="662" y2="139" marker-end="url(#a11setaMap)"/>
+              <line x1="474" y1="171" x2="662" y2="171" marker-end="url(#a11setaMap)"/>
+              <line x1="474" y1="203" x2="662" y2="203" marker-end="url(#a11setaMap)"/>
+              <line x1="474" y1="235" x2="662" y2="235" marker-end="url(#a11setaMap)"/>
+              <line x1="474" y1="263" x2="662" y2="263" marker-end="url(#a11setaMap)"/>
+            </g>
+            <text x="570" y="62" text-anchor="middle" font-size="13" font-weight="800" fill="#C84B31">o EF Core mapeia</text>
+            <text x="570" y="80" text-anchor="middle" font-size="11" fill="#666666">sem você escrever DDL</text>
+
+            <!-- tabela MySQL -->
+            <rect x="670" y="8" width="464" height="284" rx="10" fill="#FFFFFF" stroke="#00274D" stroke-width="2"/>
+            <rect x="670" y="8" width="464" height="36" rx="10" fill="#00274D"/>
+            <rect x="670" y="34" width="464" height="10" fill="#00274D"/>
+            <text x="690" y="33" font-size="14" font-weight="800" fill="#FFFFFF">TABELA Pacientes</text>
+            <g font-size="13" font-family="'JetBrains Mono', monospace" style="font-variant-ligatures:none;">
+              <text x="690" y="70" font-size="11.5" font-weight="700" fill="#888888" font-family="Montserrat, sans-serif">COLUNA</text>
+              <text x="900" y="70" font-size="11.5" font-weight="700" fill="#888888" font-family="Montserrat, sans-serif">TIPO NO MYSQL</text>
+
+              <text x="690" y="112" fill="#C84B31" font-weight="700">Id</text><text x="900" y="112" fill="#333333">int, PK, auto</text>
+              <text x="690" y="144" fill="#00274D">Nome</text><text x="900" y="144" fill="#333333">varchar(120)</text>
+              <text x="690" y="176" fill="#00274D">Cpf</text><text x="900" y="176" fill="#333333">varchar(14)</text>
+              <text x="690" y="208" fill="#00274D">DataNascimento</text><text x="900" y="208" fill="#333333">datetime(6)</text>
+              <text x="690" y="240" fill="#00274D">Telefone</text><text x="900" y="240" fill="#333333">varchar(20)</text>
+              <text x="690" y="268" fill="#00274D">Email</text><text x="900" y="268" fill="#333333">varchar(120)</text>
+            </g>
+            <line x1="670" y1="80" x2="1134" y2="80" stroke="#DDDDDD" stroke-width="1.4"/>
+            <text x="1060" y="112" font-size="11" fill="#888888" font-family="Montserrat, sans-serif">NOT NULL</text>
+            <text x="1060" y="268" font-size="11" fill="#888888" font-family="Montserrat, sans-serif">NULL</text>
+          </svg>
+        </div>
+
+        <div class="takeaway">
+          <span class="takeaway-label">Takeaway</span>
+          <p>Você não escreve <code>CREATE TABLE</code> em lugar nenhum: quem escreve é a migration, lendo esta classe.</p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">11 Mapeamento objeto-relacional</div>
+          <div class="footer-page">7</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 8: EF CORE E CODE FIRST ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>EF Core e a abordagem Code First <a href="#/ref-slide" class="ref-badge" title="Ver referências">[1]</a></h2>
+        </div>
+
+        <p style="font-size:0.7em; margin-top:0;">O EF Core é o ORM oficial da plataforma .NET. Há dois sentidos possíveis para o mapeamento, e nesta disciplina usamos o primeiro.</p>
+
+        <div class="side-by-side" style="margin-top:8px;">
+          <div class="side" style="border-color:#C84B31;">
+            <h4 style="color:#C84B31;">Code First, o nosso caminho</h4>
+            <p style="font-size:0.86em; margin:6px 0 0 0;">A classe C# é a fonte da verdade. O banco é gerado e evoluído a partir dela, por migrations versionadas no Git.</p>
+            <div class="flow-diagram" style="margin:12px 0 0 0; font-size:0.78em; gap:6px;">
+              <div class="flow-item">classe</div>
+              <div class="flow-arrow">&rarr;</div>
+              <div class="flow-item">migration</div>
+              <div class="flow-arrow">&rarr;</div>
+              <div class="flow-item">tabela</div>
+            </div>
+          </div>
+          <div class="side">
+            <h4>Database First</h4>
+            <p style="font-size:0.86em; margin:6px 0 0 0;">O banco já existe, normalmente legado, e as classes são geradas a partir dele por engenharia reversa.</p>
+            <div class="flow-diagram" style="margin:12px 0 0 0; font-size:0.78em; gap:6px;">
+              <div class="flow-item">tabela</div>
+              <div class="flow-arrow">&rarr;</div>
+              <div class="flow-item">scaffold</div>
+              <div class="flow-arrow">&rarr;</div>
+              <div class="flow-item">classe</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="callout" style="margin-top:16px;">
+          <p><strong>Por que Code First aqui:</strong> a Clínica Vida+ nasceu como classe, não como banco. Os Models da Aula 10 já existem, e as migrations deixam o histórico do esquema versionado junto com o código, no mesmo commit.</p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">11 EF Core e Code First</div>
+          <div class="footer-page">8</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 9: MYSQL NA SUA MÁQUINA ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>O MySQL na sua máquina <a href="#/ref-slide" class="ref-badge" title="Ver referências">[4]</a></h2>
+        </div>
+
+        <p style="font-size:0.7em; margin-top:0;">Antes de qualquer linha de C#: o servidor precisa estar no ar e aceitar o seu usuário. Três verificações, nesta ordem.</p>
+
+        <div class="concept-cards" style="margin-top:4px;">
+          <div class="concept-card">
+            <h4>1. O servidor está instalado</h4>
+            <p style="font-size:0.76em;">MySQL Community Server 8.0 ou superior, mais o MySQL Workbench para inspecionar as tabelas depois.</p>
+          </div>
+          <div class="concept-card">
+            <h4>2. O serviço está rodando</h4>
+            <p style="font-size:0.76em;">Serviço <code>MySQL80</code> no Windows, <code>brew services list</code> no macOS. Porta padrão: <code>3306</code>.</p>
+          </div>
+          <div class="concept-card">
+            <h4>3. O usuário existe</h4>
+            <p style="font-size:0.76em;">Um usuário de aplicação, com permissão apenas no banco da clínica. Nunca a aplicação como <code>root</code>.</p>
+          </div>
+        </div>
+
+        <pre class="code-compact" style="margin-top:14px;"><code class="language-sql" data-trim>CREATE USER 'clinicaapp'@'localhost' IDENTIFIED BY 'Senha123';
+GRANT ALL PRIVILEGES ON clinicavida.* TO 'clinicaapp'@'localhost';
+FLUSH PRIVILEGES;</code></pre>
+
+        <div class="callout" style="margin-top:12px;">
+          <p>Repare: o banco <code>clinicavida</code> <strong>ainda não existe</strong>, e o <code>GRANT</code> funciona mesmo assim. Quem vai criar o banco é a migration, no Ciclo 4.</p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">11 MySQL na sua máquina</div>
+          <div class="footer-page">9</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 10: PACOTES E REGISTRO DO CONTEXTO ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Os pacotes e o registro do contexto <a href="#/ref-slide" class="ref-badge" title="Ver referências">[3]</a></h2>
+        </div>
+
+        <p style="font-size:0.7em; margin-top:0;">O EF Core sozinho não fala MySQL: quem fala é o <strong>provedor</strong>. Nesta disciplina, o provedor é o <code>Pomelo.EntityFrameworkCore.MySql</code>.</p>
+
+        <pre class="code-compact"><code class="language-bash" data-trim>dotnet tool install --global dotnet-ef        # a ferramenta de linha de comando
+dotnet add package Pomelo.EntityFrameworkCore.MySql
+dotnet add package Microsoft.EntityFrameworkCore.Design</code></pre>
+
+        <p style="font-size:0.68em; margin:10px 0 0 0;">Em <code>Program.cs</code>, antes de <code>builder.Build()</code>, o contexto entra no contêiner de injeção de dependência:</p>
+
+        <pre class="code-compact"><code class="language-csharp" data-trim>var conexao = builder.Configuration.GetConnectionString("DefaultConnection");
+
+builder.Services.AddDbContext&lt;ClinicaContext&gt;(opcoes =&gt;
+    opcoes.UseMySql(conexao, ServerVersion.AutoDetect(conexao)));</code></pre>
+
+        <div class="takeaway">
+          <span class="takeaway-label">Takeaway</span>
+          <p>Registrado assim, o <code>ClinicaContext</code> passa a ser injetado em qualquer Controller pelo construtor. É disso que a Aula 12 vive.</p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">11 Pacotes e registro do contexto</div>
+          <div class="footer-page">10</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 11: A CONNECTION STRING ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Anatomia da connection string <a href="#/ref-slide" class="ref-badge" title="Ver referências">[3]</a></h2>
+        </div>
+
+        <p style="font-size:0.68em; margin-top:0;">Como a URL da Aula 02, ela não é um texto solto: é um endereço com cinco partes, cada uma lida por um pedaço diferente da conexão.</p>
+
+        <div class="slide-figure" style="margin-top:0;">
+          <svg viewBox="0 0 1160 250" style="max-height:260px;" role="img" aria-label="A connection string do banco clinicavida decomposta em servidor, porta, banco, usuário e senha">
+            <rect x="30" y="20" width="200" height="44" rx="5" fill="#00274D" opacity="0.12"/>
+            <rect x="228" y="20" width="120" height="44" rx="5" fill="#C84B31" opacity="0.18"/>
+            <rect x="346" y="20" width="248" height="44" rx="5" fill="#00274D" opacity="0.12"/>
+            <rect x="592" y="20" width="230" height="44" rx="5" fill="#C84B31" opacity="0.18"/>
+            <rect x="820" y="20" width="290" height="44" rx="5" fill="#00274D" opacity="0.12"/>
+
+            <text x="32" y="50" font-family="'JetBrains Mono', monospace" font-size="19" fill="#00274D" font-weight="700" textLength="196" lengthAdjust="spacingAndGlyphs">Server=localhost;</text>
+            <text x="230" y="50" font-family="'JetBrains Mono', monospace" font-size="19" fill="#C84B31" font-weight="700" textLength="116" lengthAdjust="spacingAndGlyphs">Port=3306;</text>
+            <text x="348" y="50" font-family="'JetBrains Mono', monospace" font-size="19" fill="#00274D" font-weight="700" textLength="244" lengthAdjust="spacingAndGlyphs">Database=clinicavida;</text>
+            <text x="594" y="50" font-family="'JetBrains Mono', monospace" font-size="19" fill="#C84B31" font-weight="700" textLength="226" lengthAdjust="spacingAndGlyphs">User=clinicaapp;</text>
+            <text x="822" y="50" font-family="'JetBrains Mono', monospace" font-size="19" fill="#00274D" font-weight="700" textLength="286" lengthAdjust="spacingAndGlyphs">Password=Senha123;</text>
+
+            <line x1="130" y1="68" x2="130" y2="96" stroke="#999999" stroke-width="1.6"/>
+            <line x1="470" y1="68" x2="470" y2="96" stroke="#999999" stroke-width="1.6"/>
+            <line x1="965" y1="68" x2="965" y2="96" stroke="#999999" stroke-width="1.6"/>
+            <line x1="288" y1="68" x2="288" y2="170" stroke="#999999" stroke-width="1.6"/>
+            <line x1="707" y1="68" x2="707" y2="170" stroke="#999999" stroke-width="1.6"/>
+
+            <rect x="42" y="96" width="176" height="56" rx="7" fill="#F5F5F5" stroke="#00274D" stroke-width="1.6"/>
+            <text x="130" y="118" text-anchor="middle" font-size="14" font-weight="800" fill="#00274D">servidor</text>
+            <text x="130" y="138" text-anchor="middle" font-size="11" fill="#666666">a máquina do banco</text>
+
+            <rect x="382" y="96" width="176" height="56" rx="7" fill="#F5F5F5" stroke="#00274D" stroke-width="1.6"/>
+            <text x="470" y="118" text-anchor="middle" font-size="14" font-weight="800" fill="#00274D">banco</text>
+            <text x="470" y="138" text-anchor="middle" font-size="11" fill="#666666">o schema clinicavida</text>
+
+            <rect x="872" y="96" width="186" height="56" rx="7" fill="#F5F5F5" stroke="#C84B31" stroke-width="2"/>
+            <text x="965" y="118" text-anchor="middle" font-size="14" font-weight="800" fill="#C84B31">senha</text>
+            <text x="965" y="138" text-anchor="middle" font-size="11" fill="#666666">jamais no repositório</text>
+
+            <rect x="200" y="170" width="176" height="56" rx="7" fill="#FFF7F5" stroke="#C84B31" stroke-width="1.6"/>
+            <text x="288" y="192" text-anchor="middle" font-size="14" font-weight="800" fill="#C84B31">porta</text>
+            <text x="288" y="212" text-anchor="middle" font-size="11" fill="#666666">3306 é o padrão do MySQL</text>
+
+            <rect x="619" y="170" width="176" height="56" rx="7" fill="#FFF7F5" stroke="#C84B31" stroke-width="1.6"/>
+            <text x="707" y="192" text-anchor="middle" font-size="14" font-weight="800" fill="#C84B31">usuário</text>
+            <text x="707" y="212" text-anchor="middle" font-size="11" fill="#666666">o usuário que você criou no MySQL</text>
+          </svg>
+        </div>
+
+        <div class="callout" style="margin-top:6px; border-left-color:#C84B31;">
+          <p><strong>Senha de produção nunca vai para o repositório.</strong> Em sala, uma senha local no <code>appsettings.Development.json</code> resolve. Em produção, a senha vem de variável de ambiente ou de um cofre de segredos, e o arquivo com a senha entra no <code>.gitignore</code>. <a href="#/ref-slide" class="ref-badge" title="Ver referências">[5]</a></p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">11 Anatomia da connection string</div>
+          <div class="footer-page">11</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 12: EXERCÍCIO CURTO, CICLO 1 ==================== -->
+      <section class="exercise-slide content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Exercício do Ciclo 1: leia a connection string</h2>
+        </div>
+
+        <pre class="code-compact"><code class="language-json" data-trim>"ConnectionStrings": {
+  "DefaultConnection":
+    "Server=db.clinicavidamais.com.br;Port=3307;Database=clinicavida_hml;User=recepcao_app;Password=***"
+}</code></pre>
+
+        <div class="exercise-container" style="margin-top:12px;">
+          <h3>No caderno ou no chat da turma, 6 minutos</h3>
+          <ol class="exercise-steps">
+            <li>Aponte o <strong>servidor</strong>, a <strong>porta</strong>, o <strong>banco</strong> e o <strong>usuário</strong> desta conexão.</li>
+            <li>Esta conexão aponta para a sua máquina? Justifique em uma frase.</li>
+            <li>A porta é a padrão do MySQL? Se não for, o que isso significa na prática?</li>
+            <li>O que nesta linha <strong>não pode</strong> ser commitado no repositório da clínica?</li>
+          </ol>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">11 Exercício do Ciclo 1</div>
+          <div class="footer-page">12</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 13: DBCONTEXT E DBSET ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>O DbContext e os DbSet da clínica <a href="#/ref-slide" class="ref-badge" title="Ver referências">[1]</a></h2>
+        </div>
+
+        <p style="font-size:0.68em; margin-top:0;">O <code>DbContext</code> é a sessão com o banco: ele conhece o modelo, guarda o que mudou e traduz tudo para SQL. Cada <code>DbSet&lt;T&gt;</code> é uma tabela.</p>
+
+        <pre class="code-compact"><code class="language-csharp" data-trim>using Microsoft.EntityFrameworkCore;
+using ClinicaVida.Web.Models;
+
+namespace ClinicaVida.Web.Data;
+
+public class ClinicaContext : DbContext
+{
+    public ClinicaContext(DbContextOptions&lt;ClinicaContext&gt; options) : base(options) { }
+
+    public DbSet&lt;Paciente&gt; Pacientes =&gt; Set&lt;Paciente&gt;();
+    public DbSet&lt;Medico&gt; Medicos =&gt; Set&lt;Medico&gt;();
+    public DbSet&lt;Especialidade&gt; Especialidades =&gt; Set&lt;Especialidade&gt;();
+    public DbSet&lt;Consulta&gt; Consultas =&gt; Set&lt;Consulta&gt;();
+}</code></pre>
+
+        <div class="takeaway">
+          <span class="takeaway-label">Takeaway</span>
+          <p>O nome da propriedade <code>DbSet</code> vira o nome da tabela: <code>Pacientes</code>, e não <code>Paciente</code>. Quatro <code>DbSet</code>, quatro tabelas.</p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">11 DbContext e DbSet</div>
+          <div class="footer-page">13</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 14: CONVENÇÕES DE MAPEAMENTO ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Convenções: o que o EF Core decide sozinho <a href="#/ref-slide" class="ref-badge" title="Ver referências">[1]</a></h2>
+        </div>
+
+        <p style="font-size:0.68em; margin-top:0;">Você não configurou nada e mesmo assim há chave primária, tipo e nulidade em cada coluna.</p>
+
+        <table style="font-size:0.86em;">
+          <thead>
+            <tr><th style="width:420px;">O que você escreveu em C#</th><th style="width:300px;">O que vai para o MySQL</th><th>Por quê</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><code>DbSet&lt;Paciente&gt; Pacientes</code></td><td>tabela <code>Pacientes</code></td><td>o DbSet nomeia a tabela</td></tr>
+            <tr><td><code>public int Id</code></td><td><code>int, PK, auto</code></td><td>Id é chave primária por convenção</td></tr>
+            <tr><td><code>[StringLength(14)] Cpf</code></td><td><code>varchar(14) NOT NULL</code></td><td>a anotação vira o tamanho</td></tr>
+            <tr><td><code>public string? Email</code></td><td><code>longtext NULL</code></td><td>a interrogação vira opcional</td></tr>
+            <tr><td><code>public int EspecialidadeId</code></td><td><code>int NOT NULL</code> + FK</td><td>EntidadeId vira chave estrangeira</td></tr>
+          </tbody>
+        </table>
+
+        <div class="takeaway">
+          <span class="takeaway-label">Takeaway</span>
+          <p><code>[StringLength]</code> não é enfeite de validação: é o que evita uma tabela inteira de <code>longtext</code>.</p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">11 Convenções de mapeamento</div>
+          <div class="footer-page">14</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 15: O QUE É UMA MIGRATION ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Migration: o commit do seu banco de dados <a href="#/ref-slide" class="ref-badge" title="Ver referências">[2]</a></h2>
+        </div>
+
+        <p style="font-size:0.68em; margin-top:0;">Uma migration é um arquivo C# versionado no Git, com dois métodos: <code>Up</code> aplica a mudança, <code>Down</code> desfaz. Ele descreve o esquema, não os dados do dia a dia.</p>
+
+        <pre class="code-compact"><code class="language-csharp" data-trim>// Migrations/20261014193000_InicialClinicaVida.cs
+protected override void Up(MigrationBuilder migrationBuilder)
+{
+    migrationBuilder.CreateTable(
+        name: "Pacientes",
+        columns: table =&gt; new
+        {
+            Id = table.Column&lt;int&gt;(nullable: false)
+                .Annotation("MySql:ValueGenerationStrategy", IdentityColumn),
+            Nome = table.Column&lt;string&gt;(maxLength: 120, nullable: false)
+        },
+        constraints: table =&gt; table.PrimaryKey("PK_Pacientes", x =&gt; x.Id));
+}
+
+protected override void Down(MigrationBuilder mb)
+    =&gt; mb.DropTable(name: "Pacientes");</code></pre>
+
+        <div class="takeaway">
+          <span class="takeaway-label">Takeaway</span>
+          <p>Migration commitada é banco reproduzível: um colega clona, roda um comando e tem o mesmo esquema.</p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">11 O que é uma migration</div>
+          <div class="footer-page">15</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 16: O FLUXO DA MIGRATION ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>O fluxo da migration, da classe à tabela <a href="#/ref-slide" class="ref-badge" title="Ver referências">[2]</a></h2>
+        </div>
+
+        <p style="font-size:0.68em; margin-top:0;">Dois comandos, cinco etapas. Confundir os dois comandos é o erro mais comum do laboratório de hoje: um <strong>escreve o arquivo</strong>, o outro <strong>mexe no banco</strong>.</p>
+
+        <div class="slide-figure" style="margin-top:0;">
+          <svg viewBox="0 0 1150 270" style="max-height:290px;" role="img" aria-label="Fluxo em cinco etapas, da classe alterada até a tabela alterada no MySQL, passando por dotnet ef migrations add e dotnet ef database update">
+            <defs>
+              <marker id="a11setaFlu" markerWidth="10" markerHeight="10" refX="9" refY="5" orient="auto">
+                <path d="M0,0 L10,5 L0,10 Z" fill="#C84B31"/>
+              </marker>
+            </defs>
+
+            <g stroke="#C84B31" stroke-width="2.4" marker-end="url(#a11setaFlu)">
+              <line x1="204" y1="120" x2="234" y2="120"/>
+              <line x1="434" y1="120" x2="464" y2="120"/>
+              <line x1="664" y1="120" x2="694" y2="120"/>
+              <line x1="894" y1="120" x2="924" y2="120"/>
+            </g>
+
+            <!-- 1 -->
+            <rect x="6" y="56" width="196" height="128" rx="9" fill="#FFFFFF" stroke="#00274D" stroke-width="2"/>
+            <circle cx="30" cy="80" r="14" fill="#00274D"/>
+            <text x="30" y="85" text-anchor="middle" font-size="14" font-weight="800" fill="#FFFFFF">1</text>
+            <text x="54" y="85" font-size="14" font-weight="800" fill="#00274D">Você altera</text>
+            <text x="24" y="118" font-size="13" fill="#333333">a classe C# em</text>
+            <text x="24" y="138" font-size="13" font-family="'JetBrains Mono', monospace" fill="#C84B31">Models/</text>
+            <text x="24" y="164" font-size="11.5" fill="#777777">o modelo é quem manda</text>
+
+            <!-- 2 -->
+            <rect x="236" y="56" width="196" height="128" rx="9" fill="#12121A"/>
+            <circle cx="260" cy="80" r="14" fill="#C84B31"/>
+            <text x="260" y="85" text-anchor="middle" font-size="14" font-weight="800" fill="#FFFFFF">2</text>
+            <text x="284" y="85" font-size="13" font-weight="800" fill="#FFFFFF">no terminal</text>
+            <text x="252" y="118" font-size="11.5" font-family="'JetBrains Mono', monospace" fill="#D4D4D4">dotnet ef migrations</text>
+            <text x="252" y="136" font-size="11.5" font-family="'JetBrains Mono', monospace" fill="#D4D4D4">add InicialClinicaVida</text>
+            <text x="252" y="164" font-size="11.5" fill="#AAAAAA">compara modelo e histórico</text>
+
+            <!-- 3 -->
+            <rect x="466" y="56" width="196" height="128" rx="9" fill="#FFFFFF" stroke="#00274D" stroke-width="2"/>
+            <circle cx="490" cy="80" r="14" fill="#00274D"/>
+            <text x="490" y="85" text-anchor="middle" font-size="14" font-weight="800" fill="#FFFFFF">3</text>
+            <text x="514" y="85" font-size="14" font-weight="800" fill="#00274D">Arquivo gerado</text>
+            <text x="484" y="118" font-size="12.5" font-family="'JetBrains Mono', monospace" fill="#C84B31">Migrations/</text>
+            <text x="484" y="138" font-size="13" fill="#333333">com Up() e Down()</text>
+            <text x="484" y="164" font-size="11.5" fill="#777777">o banco ainda não mudou</text>
+
+            <!-- 4 -->
+            <rect x="696" y="56" width="196" height="128" rx="9" fill="#12121A"/>
+            <circle cx="720" cy="80" r="14" fill="#C84B31"/>
+            <text x="720" y="85" text-anchor="middle" font-size="14" font-weight="800" fill="#FFFFFF">4</text>
+            <text x="744" y="85" font-size="13" font-weight="800" fill="#FFFFFF">no terminal</text>
+            <text x="712" y="118" font-size="11.5" font-family="'JetBrains Mono', monospace" fill="#D4D4D4">dotnet ef database</text>
+            <text x="712" y="136" font-size="11.5" font-family="'JetBrains Mono', monospace" fill="#D4D4D4">update</text>
+            <text x="712" y="164" font-size="11.5" fill="#AAAAAA">executa o SQL no servidor</text>
+
+            <!-- 5 -->
+            <rect x="926" y="56" width="218" height="128" rx="9" fill="#FFFFFF" stroke="#C84B31" stroke-width="2.4"/>
+            <circle cx="950" cy="80" r="14" fill="#C84B31"/>
+            <text x="950" y="85" text-anchor="middle" font-size="14" font-weight="800" fill="#FFFFFF">5</text>
+            <text x="974" y="85" font-size="14" font-weight="800" fill="#C84B31">Tabela no MySQL</text>
+            <text x="944" y="118" font-size="13" fill="#333333">criada ou alterada,</text>
+            <text x="944" y="138" font-size="13" fill="#333333">com os dados intactos</text>
+            <text x="944" y="164" font-size="11.5" fill="#777777">mais 1 linha no histórico</text>
+
+            <rect x="330" y="206" width="490" height="42" rx="8" fill="#F5F5F5" stroke="#00274D" stroke-width="1.6"/>
+            <text x="575" y="223" text-anchor="middle" font-size="12.5" font-weight="800" fill="#00274D">O histórico fica no próprio banco</text>
+            <text x="575" y="240" text-anchor="middle" font-size="12" fill="#666666" font-family="'JetBrains Mono', monospace">tabela __EFMigrationsHistory</text>
+            <line x1="1035" y1="184" x2="1035" y2="227" stroke="#999999" stroke-width="1.6"/>
+            <line x1="1035" y1="227" x2="822" y2="227" stroke="#999999" stroke-width="1.6"/>
+          </svg>
+        </div>
+
+        <div class="takeaway">
+          <span class="takeaway-label">Takeaway</span>
+          <p><code>migrations add</code> escreve o arquivo; <code>database update</code> mexe no banco. Nunca o contrário.</p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">11 O fluxo da migration</div>
+          <div class="footer-page">16</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 17: REVERTER E REMOVER ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Errou a migration? Reverter e remover <a href="#/ref-slide" class="ref-badge" title="Ver referências">[2]</a></h2>
+        </div>
+
+        <p style="font-size:0.7em; margin-top:0;">Ninguém acerta o esquema de primeira. Saber qual comando usar é o que separa o conserto tranquilo do banco quebrado.</p>
+
+        <table style="font-size:0.9em;">
+          <thead>
+            <tr><th style="width:400px;">Comando</th><th>Quando usar</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><code>dotnet ef migrations list</code></td><td>Ver quais migrations existem e quais já foram aplicadas</td></tr>
+            <tr><td><code>dotnet ef migrations remove</code></td><td>Apagar a última migration <strong>ainda não aplicada</strong> ao banco</td></tr>
+            <tr><td><code>dotnet ef database update Nome</code></td><td>Voltar o banco ao estado daquela migration; com <code>0</code>, desfaz todas</td></tr>
+            <tr><td><code>dotnet ef migrations script</code></td><td>Gerar o SQL, sem executar, para revisão antes de produção</td></tr>
+          </tbody>
+        </table>
+
+        <div class="takeaway">
+          <span class="takeaway-label">Takeaway</span>
+          <p>Nunca edite à mão uma migration já aplicada, nem apague o arquivo pelo explorador: reverta com <code>database update</code> e só então use <code>migrations remove</code>.</p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">11 Reverter e remover migration</div>
+          <div class="footer-page">17</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 18: CARGA INICIAL COM HASDATA ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Carga inicial de dados com HasData <a href="#/ref-slide" class="ref-badge" title="Ver referências">[2]</a></h2>
+        </div>
+
+        <p style="font-size:0.68em; margin-top:0;">Um banco vazio não demonstra nada. As especialidades da Clínica Vida+ não mudam todo dia: elas fazem parte do esquema e entram pela própria migration.</p>
+
+        <pre class="code-compact"><code class="language-csharp" data-trim>protected override void OnModelCreating(ModelBuilder modelBuilder)
+{
+    modelBuilder.Entity&lt;Especialidade&gt;().HasData(
+        new Especialidade { Id = 1, Nome = "Clínica Geral", Descricao = "Rotina e encaminhamentos" },
+        new Especialidade { Id = 2, Nome = "Cardiologia",   Descricao = "Coração e circulação" },
+        new Especialidade { Id = 3, Nome = "Pediatria",     Descricao = "Crianças e adolescentes" },
+        new Especialidade { Id = 4, Nome = "Dermatologia",  Descricao = "Pele, cabelos e unhas" }
+    );
+}</code></pre>
+
+        <div class="takeaway">
+          <span class="takeaway-label">Takeaway</span>
+          <p>Em <code>HasData</code> a chave primária é <strong>obrigatória e escrita à mão</strong>: o EF Core precisa do <code>Id</code> para saber se aquela linha já existe. Alterou a lista? Uma nova migration cuida da diferença.</p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">11 Carga inicial com HasData</div>
+          <div class="footer-page">18</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 19: EXERCÍCIO CURTO, CICLO 2 ==================== -->
+      <section class="exercise-slide content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Exercício do Ciclo 2: preveja as colunas</h2>
+        </div>
+
+        <pre class="code-compact"><code class="language-csharp" data-trim>public class Paciente
+{
+    public int Id { get; set; }
+    [Required, StringLength(120)] public string Nome { get; set; } = string.Empty;
+    [Required, StringLength(14)]  public string Cpf { get; set; } = string.Empty;
+    public DateTime DataNascimento { get; set; }
+    [StringLength(20)] public string? Telefone { get; set; }
+}</code></pre>
+
+        <div class="exercise-container" style="margin-top:10px;">
+          <h3>Antes de rodar a migration, 7 minutos</h3>
+          <ol class="exercise-steps">
+            <li>Escreva as <strong>cinco colunas</strong> que a tabela <code>Pacientes</code> vai ter, com nome, tipo e nulidade.</li>
+            <li>Qual delas é a chave primária, e por que você não precisou dizer isso em lugar nenhum?</li>
+            <li>Rode a migration e confira no Workbench: acertou quantas das cinco?</li>
+          </ol>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">11 Exercício do Ciclo 2</div>
+          <div class="footer-page">19</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 20: QUIZ DE FIXAÇÃO ==================== -->
+      <section class="quiz-slide content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area"><div class="accent-bar"></div><h2>Quiz de fixação</h2></div>
+        <div class="quiz-container">
+          <div class="quiz-question">O que o comando <code>dotnet ef database update</code> faz?</div>
+          <ul class="quiz-options">
+            <li data-correct="false"><span class="option-letter">A</span><span class="option-text">Gera as classes de entidade a partir de um banco já existente, invertendo o sentido do mapeamento.</span></li>
+            <li data-correct="false"><span class="option-letter">B</span><span class="option-text">Apaga o banco de dados e o recria vazio, descartando as tabelas e os dados que existiam antes.</span></li>
+            <li data-correct="true"><span class="option-letter">C</span><span class="option-text">Aplica ao banco as migrations pendentes, criando ou alterando as tabelas conforme o modelo atual.</span></li>
+            <li data-correct="false"><span class="option-letter">D</span><span class="option-text">Atualiza os pacotes NuGet do projeto para a versão mais recente, inclusive os do próprio EF Core.</span></li>
+          </ul>
+          <div class="quiz-feedback"
+               data-correct-msg="Isso. O update lê a tabela __EFMigrationsHistory, descobre o que ainda não foi aplicado e executa o Up() de cada migration pendente, preservando os dados que já estão lá."
+               data-incorrect-msg="Não é isso. Gerar classes a partir do banco é scaffold, apagar e recriar é database drop seguido de update, e atualizar pacotes é assunto do NuGet. O update apenas aplica ao banco as migrations pendentes."></div>
+        </div>
+        <div class="slide-footer"><div class="footer-bar">11 Quiz de fixação</div><div class="footer-page">20</div></div>
+      </section>
+
+      <!-- ==================== SLIDE 21: LAB PASSO 1 ==================== -->
+      <section class="exercise-slide content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Laboratório, passo 1 de 6: branch e pacotes</h2>
+        </div>
+
+        <p style="font-size:0.7em; margin-top:0;">Missão dos próximos 60 minutos: dar à Clínica Vida+ um banco de dados de verdade, com as quatro tabelas do case.</p>
+
+        <div class="exercise-container">
+          <h3>No seu fork, a partir da main atualizada</h3>
+          <ol class="exercise-steps">
+            <li>Crie a branch <code>feature/ef-core-mysql</code>.</li>
+            <li>Instale a ferramenta <code>dotnet-ef</code>, se ainda não tiver.</li>
+            <li>Instale o provedor <code>Pomelo.EntityFrameworkCore.MySql</code> e o pacote <code>Design</code>.</li>
+            <li>Rode <code>dotnet build</code>: precisa compilar antes de você seguir.</li>
+          </ol>
+        </div>
+
+        <pre class="code-compact"><code class="language-bash" data-trim>git checkout main &amp;&amp; git pull
+git checkout -b feature/ef-core-mysql
+dotnet tool install --global dotnet-ef
+dotnet add package Pomelo.EntityFrameworkCore.MySql
+dotnet add package Microsoft.EntityFrameworkCore.Design</code></pre>
+
+        <div class="slide-footer">
+          <div class="footer-bar">11 Laboratório, passo 1, branch e pacotes</div>
+          <div class="footer-page">21</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 22: LAB PASSO 2 ==================== -->
+      <section class="exercise-slide content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Laboratório, passo 2 de 6: as quatro classes</h2>
+        </div>
+
+        <p style="font-size:0.68em; margin-top:0;">Em <code>Models/</code>, uma classe por arquivo. <code>Consulta</code> você já tem da Aula 10: acrescente a ela o <code>PacienteId</code> e o <code>MedicoId</code>.</p>
+
+        <pre class="code-compact"><code class="language-csharp" data-trim>public class Especialidade   // Id, Nome, Descricao
+public class Medico          // Id, Nome, Crm, EspecialidadeId, Especialidade
+public class Paciente        // Id, Nome, Cpf, DataNascimento, Telefone, Email
+public class Consulta        // Id, PacienteId, MedicoId, Data, Horario, Observacoes</code></pre>
+
+        <div class="exercise-container" style="margin-top:12px;">
+          <h3>Regras do case, valem para as quatro</h3>
+          <ol class="exercise-steps">
+            <li>Namespace <code>ClinicaVida.Web.Models</code> em todos os arquivos.</li>
+            <li><code>Cpf</code> é <code>string</code>, com <code>[StringLength(14)]</code>: a máscara é <code>000.000.000-00</code>.</li>
+            <li>Reaproveite as Data Annotations da Aula 10, elas viram tipo de coluna.</li>
+            <li><code>Medico</code> tem <code>EspecialidadeId</code> e a propriedade de navegação <code>Especialidade</code>.</li>
+          </ol>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">11 Laboratório, passo 2, as quatro classes</div>
+          <div class="footer-page">22</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 23: LAB PASSO 3 ==================== -->
+      <section class="exercise-slide content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Laboratório, passo 3 de 6: o ClinicaContext</h2>
+        </div>
+
+        <div class="exercise-container">
+          <h3>Crie a pasta Data e o arquivo ClinicaContext.cs</h3>
+          <ol class="exercise-steps">
+            <li>Namespace <code>ClinicaVida.Web.Data</code>, classe herdando de <code>DbContext</code>.</li>
+            <li>Construtor recebendo <code>DbContextOptions&lt;ClinicaContext&gt;</code>.</li>
+            <li>Os quatro <code>DbSet</code>: <code>Pacientes</code>, <code>Medicos</code>, <code>Especialidades</code> e <code>Consultas</code>.</li>
+          </ol>
+        </div>
+
+        <pre class="code-compact" style="margin-top:12px;"><code class="language-csharp" data-trim>namespace ClinicaVida.Web.Data;
+
+public class ClinicaContext : DbContext
+{
+    public ClinicaContext(DbContextOptions&lt;ClinicaContext&gt; options) : base(options) { }
+
+    public DbSet&lt;Paciente&gt; Pacientes =&gt; Set&lt;Paciente&gt;();
+    // Medicos, Especialidades e Consultas seguem o mesmo padrão
+}</code></pre>
+
+        <div class="slide-footer">
+          <div class="footer-bar">11 Laboratório, passo 3, o ClinicaContext</div>
+          <div class="footer-page">23</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 24: LAB PASSO 4 ==================== -->
+      <section class="exercise-slide content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Laboratório, passo 4 de 6: conexão e registro</h2>
+        </div>
+
+        <p style="font-size:0.68em; margin-top:0;">Fim do Ciclo 3. Aqui é onde aparecem os erros de conexão: chame o professor assim que a mensagem surgir, não no fim da aula.</p>
+
+        <pre class="code-compact"><code class="language-json" data-trim>// appsettings.json
+"ConnectionStrings": {
+  "DefaultConnection": "Server=localhost;Port=3306;Database=clinicavida;User=clinicaapp;Password=Senha123;"
+}</code></pre>
+
+        <pre class="code-compact" style="margin-top:10px;"><code class="language-csharp" data-trim>// Program.cs, antes de builder.Build()
+var conexao = builder.Configuration.GetConnectionString("DefaultConnection");
+builder.Services.AddDbContext&lt;ClinicaContext&gt;(opcoes =&gt;
+    opcoes.UseMySql(conexao, ServerVersion.AutoDetect(conexao)));</code></pre>
+
+        <div class="callout" style="margin-top:12px;">
+          <p>Rode <code>dotnet build</code> de novo. Se o <code>ServerVersion.AutoDetect</code> falhar, o problema é o MySQL, não o seu código: serviço parado, porta diferente de 3306 ou senha errada.</p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">11 Laboratório, passo 4, conexão e registro</div>
+          <div class="footer-page">24</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 25: LAB PASSO 5 ==================== -->
+      <section class="exercise-slide content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Laboratório, passo 5 de 6: a migration inicial</h2>
+        </div>
+
+        <p style="font-size:0.7em; margin-top:0;">Ciclo 4, sozinho. O nome da migration é fixo no case: <code>InicialClinicaVida</code>.</p>
+
+        <pre class="code-compact"><code class="language-bash" data-trim>dotnet ef migrations add InicialClinicaVida
+dotnet ef database update</code></pre>
+
+        <div class="exercise-container" style="margin-top:12px;">
+          <h3>Confira, nesta ordem</h3>
+          <ol class="exercise-steps">
+            <li>A pasta <code>Migrations/</code> apareceu, com o arquivo e o <code>ClinicaContextModelSnapshot.cs</code>.</li>
+            <li>Abra o arquivo e localize o <code>CreateTable</code> de cada uma das quatro tabelas.</li>
+            <li>No Workbench, o schema <code>clinicavida</code> existe com <strong>5</strong> tabelas: as quatro do case mais <code>__EFMigrationsHistory</code>.</li>
+            <li>Abra <code>Pacientes</code> e compare coluna a coluna com a sua classe.</li>
+          </ol>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">11 Laboratório, passo 5, a migration inicial</div>
+          <div class="footer-page">25</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 26: LAB PASSO 6 ==================== -->
+      <section class="exercise-slide content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Laboratório, passo 6 de 6: semear as especialidades</h2>
+        </div>
+
+        <p style="font-size:0.68em; margin-top:0;">As quatro especialidades da clínica entram pelo <code>OnModelCreating</code>, com <code>HasData</code>, e chegam ao banco por uma <strong>segunda</strong> migration.</p>
+
+        <pre class="code-compact"><code class="language-bash" data-trim>dotnet ef migrations add EspecialidadesIniciais
+dotnet ef database update</code></pre>
+
+        <div class="exercise-container" style="margin-top:12px;">
+          <h3>Critério de pronto</h3>
+          <ol class="exercise-steps">
+            <li><code>SELECT * FROM Especialidades;</code> devolve <strong>4</strong> linhas no Workbench.</li>
+            <li><code>__EFMigrationsHistory</code> tem <strong>2</strong> linhas, uma por migration aplicada.</li>
+            <li>A aplicação sobe com <code>dotnet run</code> sem erro de conexão.</li>
+          </ol>
+        </div>
+
+        <div class="callout" style="margin-top:12px;">
+          <p>Nada nas telas mudou ainda, e está certo: hoje construímos o alicerce. Quem passa a ler e escrever nesse banco é a Aula 12.</p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">11 Laboratório, passo 6, semear especialidades</div>
+          <div class="footer-page">26</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 27: ENTREGÁVEL, COMMIT E PUSH ==================== -->
+      <section class="exercise-slide content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>O entregável de hoje, commitado e enviado</h2>
+        </div>
+
+        <div class="side-by-side" style="margin-top:4px;">
+          <div class="side">
+            <h4>O que precisa estar no fork</h4>
+            <ul style="margin:0; padding-left:20px; font-size:0.86em;">
+              <li><strong>4</strong> classes em <code>Models/</code>.</li>
+              <li><strong>1</strong> <code>Data/ClinicaContext.cs</code> com os quatro <code>DbSet</code>.</li>
+              <li><strong>1</strong> connection string <code>DefaultConnection</code>.</li>
+              <li><strong>2</strong> migrations na pasta <code>Migrations/</code>.</li>
+            </ul>
+          </div>
+          <div class="side">
+            <h4>O que precisa estar no MySQL</h4>
+            <ul style="margin:0; padding-left:20px; font-size:0.86em;">
+              <li>O schema <code>clinicavida</code> criado.</li>
+              <li><strong>5</strong> tabelas, contando o histórico.</li>
+              <li><strong>4</strong> especialidades semeadas.</li>
+              <li><code>dotnet run</code> subindo sem erro.</li>
+            </ul>
+          </div>
+        </div>
+
+        <pre class="code-compact" style="margin-top:14px;"><code class="language-bash" data-trim>git add Models/ Data/ Migrations/ appsettings.json Program.cs ClinicaVida.Web.csproj
+git commit -m "feat: contexto do EF Core e migration inicial no MySQL"
+git push -u origin feature/ef-core-mysql</code></pre>
+
+        <div class="callout" style="margin-top:12px; border-left-color:#C84B31;">
+          <p>A pasta <code>Migrations/</code> <strong>vai</strong> para o repositório: é ela que permite ao professor recriar o seu banco na correção. Já a senha de produção, nunca.</p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">11 Entregável, commit e push</div>
+          <div class="footer-page">27</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 28: FECHAMENTO ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>O que fica desta aula, e o que vem na Aula 12</h2>
+        </div>
+
+        <div class="concept-cards" style="margin-top:6px;">
+          <div class="concept-card">
+            <h4>ORM e EF Core</h4>
+            <p style="font-size:0.76em;">Classe de um lado, tabela do outro. O EF Core escreve o SQL a partir do seu modelo, e o provedor Pomelo fala MySQL.</p>
+          </div>
+          <div class="concept-card">
+            <h4>DbContext e DbSet</h4>
+            <p style="font-size:0.76em;">O <code>ClinicaContext</code> é a sessão com o banco. Quatro <code>DbSet</code>, quatro tabelas, registradas na injeção de dependência.</p>
+          </div>
+          <div class="concept-card">
+            <h4>Migrations</h4>
+            <p style="font-size:0.76em;">O esquema virou código versionado. <code>add</code> escreve o arquivo, <code>update</code> mexe no banco, <code>__EFMigrationsHistory</code> guarda o que já foi.</p>
+          </div>
+        </div>
+
+        <div class="flow-diagram" style="margin:20px 0 0 0; font-size:0.82em; gap:8px;">
+          <div class="flow-item" style="opacity:0.65;">Aula 10: formulário validando</div>
+          <div class="flow-arrow">&rarr;</div>
+          <div class="flow-item" style="background:#C84B31;">Aula 11: banco no ar</div>
+          <div class="flow-arrow">&rarr;</div>
+          <div class="flow-item">Aula 12: CRUD completo</div>
+        </div>
+
+        <div class="callout" style="margin-top:18px;">
+          <p><strong>Prévia da Aula 12:</strong> o <code>ClinicaContext</code> entra no Controller pelo construtor, a listagem de médicos passa a vir do banco e o agendamento é gravado com <code>SaveChangesAsync</code>. A partir dali, o dado sobrevive ao <code>Ctrl + C</code>.</p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">11 Fechamento</div>
+          <div class="footer-page">28</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 29: REFERÊNCIAS ==================== -->
+      <section id="ref-slide" class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Referências desta aula</h2>
+        </div>
+
+        <p style="font-size:0.72em; margin-top:0;">Os números entre colchetes ao lado dos títulos remetem a esta lista. Tudo aqui é documentação oficial e gratuita.</p>
+
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px 30px; margin-top:6px;">
+          <div class="concept-card">
+            <h4>[1] Entity Framework Core</h4>
+            <p style="font-size:0.72em; color:#444444;">MICROSOFT. <em>Documentação do Entity Framework Core</em>. Microsoft Learn.<br>
+            <code style="font-size:0.9em;">learn.microsoft.com/pt-br/ef/core/</code></p>
+          </div>
+          <div class="concept-card">
+            <h4>[2] Migrations e evolução do esquema</h4>
+            <p style="font-size:0.72em; color:#444444;">MICROSOFT. <em>Migrações do EF Core</em>. Microsoft Learn.<br>
+            <code style="font-size:0.9em;">learn.microsoft.com/pt-br/ef/core/managing-schemas/migrations/</code></p>
+          </div>
+          <div class="concept-card">
+            <h4>[3] Provedor de MySQL para o EF Core</h4>
+            <p style="font-size:0.72em; color:#444444;">POMELO FOUNDATION. <em>Pomelo.EntityFrameworkCore.MySql</em>, documentação do provedor.<br>
+            <code style="font-size:0.82em;">github.com/PomeloFoundation/Pomelo.EntityFrameworkCore.MySql</code></p>
+          </div>
+          <div class="concept-card">
+            <h4>[4] MySQL, manual de referência</h4>
+            <p style="font-size:0.72em; color:#444444;">ORACLE. <em>MySQL 8.0 Reference Manual</em>.<br>
+            <code style="font-size:0.9em;">dev.mysql.com/doc/refman/8.0/en/</code></p>
+          </div>
+        </div>
+
+        <div class="callout" style="margin-top:8px;">
+          <p><strong>[5]</strong> MICROSOFT. <em>Armazenamento seguro de segredos do aplicativo</em>. Microsoft Learn. <code style="font-size:0.9em;">learn.microsoft.com/pt-br/aspnet/core/security/app-secrets</code></p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">11 Referências</div>
+          <div class="footer-page">29</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 30: ENCERRAMENTO ==================== -->
+      <section class="end-slide">
+        <img src="../assets/img/uninove-logo.png" alt="Uninove, Universidade Nove de Julho"
+             style="max-width:300px; background:#FFFFFF; padding:20px 28px; border-radius:8px;">
+        <div class="copyright">
+          Copyright &copy; 2026<br>
+          Prof. José Romualdo da Costa Filho<br><br>
+          Todos os direitos reservados. É expressamente proibida a reprodução, divulgação<br>
+          total ou parcial, deste material acadêmico sem autorização formal,<br>
+          por escrito, do Professor autor da ementa.
+        </div>
+      </section>
+
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/highlight/highlight.js"></script>
+  <script src="../assets/js/uninove-quiz.js"></script>
+  <script type="module">
+    import { TURMAS, resolverTurma, dataDaAula, formatarData } from '../assets/js/turmas.js';
+    const turma = resolverTurma({
+      hoje: new Date(),
+      salva: localStorage.getItem('uninove-turma'),
+    });
+    const alvo = document.querySelector('[data-data-da-aula]');
+    if (alvo) {
+      const n = Number(alvo.getAttribute('data-data-da-aula'));
+      alvo.textContent = turma
+        ? `${TURMAS[turma].rotulo}, ${formatarData(dataDaAula(turma, n))}`
+        : `Quarta ${formatarData(dataDaAula('quarta', n))} ou quinta ${formatarData(dataDaAula('quinta', n))}`;
+    }
+  </script>
+  <script>
+    Reveal.initialize({
+      width: 1280, height: 720, center: false, margin: 0,
+      hash: true, slideNumber: false,
+      // Os chevrons de navegação caem sobre a footer-bar e sobre o triângulo
+      // azul do canto inferior direito; a barra de progresso encosta no rodapé
+      // e parece um segundo rodapé. Nenhum dos dois é usado na projeção.
+      controls: false, progress: false,
+      // Um slide por página no ?print-pdf, para o PDF bater com o deck.
+      pdfMaxPagesPerSlide: 1,
+      plugins: [RevealHighlight],
+    });
+  </script>
+</body>
+</html>

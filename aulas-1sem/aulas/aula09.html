@@ -1,0 +1,1087 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Aula 09, Estruturas de controle e coleções em C# | Uninove</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/theme/white.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/highlight/monokai.css">
+  <link rel="stylesheet" href="../assets/css/uninove-theme.css">
+  <link rel="stylesheet" href="../assets/css/uninove-print.css">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+      <!-- ==================== SLIDE 1: CAPA ==================== -->
+      <section class="cover-slide">
+        <img src="../assets/img/uninove-logo.png" alt="Uninove, Universidade Nove de Julho" class="uninove-logo-full"
+             style="max-width:400px; background:#FFFFFF; padding:26px 36px; border-radius:10px;">
+        <div style="margin-top:36px; color:#FFFFFF; font-size:0.95em; font-weight:800; letter-spacing:4px; text-transform:uppercase;">Desenvolvimento Web</div>
+        <div style="margin-top:12px; color:#C84B31; font-size:0.6em; font-weight:700; letter-spacing:3px; text-transform:uppercase;">Graduação, 2026.2</div>
+      </section>
+
+      <!-- ==================== SLIDE 2: TÍTULO ==================== -->
+      <section class="title-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="title-card">
+          <div class="accent-bar"></div>
+          <h1>Desenvolvimento Web</h1>
+          <h2>Estruturas de controle e coleções em C#</h2>
+          <h3>Prof. José Romualdo<br><span data-data-da-aula="9"></span></h3>
+        </div>
+        <div class="lesson-bar">AULA 09 &nbsp;|&nbsp; Módulo 2, Backend com C# e ASP.NET Core MVC</div>
+      </section>
+
+      <!-- ==================== SLIDE 3: AGENDA ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Agenda do encontro de hoje</h2>
+        </div>
+
+        <p style="font-size:0.76em; margin-top:0;">São 150 minutos corridos, em quatro ciclos. Hoje o corpo clínico da Clínica Vida+ deixa de ser texto escrito à mão e passa a ser dado, filtrado no Controller.</p>
+
+        <table>
+          <thead>
+            <tr><th style="width:190px;">Horário</th><th style="width:200px;">Bloco</th><th>O que acontece</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>19h30 às 20h05</td><td>Ciclo 1</td><td>Decisão, repetição, métodos e classes em C#</td></tr>
+            <tr><td>20h05 às 20h40</td><td>Ciclo 2</td><td>Coleções, LINQ e a View tipada com <code>@model</code></td></tr>
+            <tr><td>20h40 às 20h50</td><td>Quiz de fixação</td><td>O que a expressão <code>Where</code> devolve, afinal</td></tr>
+            <tr><td>20h50 às 21h25</td><td>Ciclo 3</td><td>Laboratório guiado: os Models e o corpo clínico em memória</td></tr>
+            <tr><td>21h25 às 21h50</td><td>Ciclo 4</td><td>Laboratório: <code>MedicosController</code>, filtro e Views tipadas</td></tr>
+            <tr><td>21h50 às 22h00</td><td>Fechamento</td><td>Commit, push e prévia da Aula 10</td></tr>
+          </tbody>
+        </table>
+
+        <div class="slide-footer">
+          <div class="footer-bar">09 Agenda do encontro</div>
+          <div class="footer-page">3</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 4: RECAPITULAÇÃO DA AULA 08 ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>De onde viemos: a primeira tela da clínica, na Aula 08</h2>
+        </div>
+
+        <p style="font-size:0.72em; margin-top:0;">Você entregou o <code>EspecialidadesController</code> com as actions <code>Index</code> e <code>Details</code>, as Views correspondentes em <code>Views/Especialidades</code> e a navegação funcionando. A requisição já percorre rota, Controller, action e View.</p>
+
+        <div class="side-by-side" style="margin-top:6px;">
+          <div class="side">
+            <h4>O que já está de pé</h4>
+            <ul style="margin:0; padding-left:20px;">
+              <li>A rota <code>{controller}/{action}/{id?}</code> encontra a sua action.</li>
+              <li>A action devolve uma View, com <code>ViewData</code> ou <code>ViewBag</code>.</li>
+              <li>A View Razor mistura C# e HTML e chega ao navegador.</li>
+            </ul>
+          </div>
+          <div class="side">
+            <h4>O problema que sobrou</h4>
+            <ul style="margin:0; padding-left:20px;">
+              <li>As especialidades estão <strong>escritas à mão dentro da View</strong>, uma a uma, em <code>&lt;li&gt;</code>.</li>
+              <li>Dado escrito à mão não pode ser filtrado, contado nem reordenado.</li>
+              <li>Acrescentar um médico hoje significa editar HTML.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="callout" style="margin-top:16px;">
+          <p><strong>O que muda hoje:</strong> o dado sai da View e vira <strong>objeto em uma coleção</strong>, dentro do Model. O Controller decide o que entra na lista, e a View apenas percorre o que recebeu. Para isso, precisamos primeiro da linguagem: decisão, repetição, método, classe e coleção.</p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">09 Recapitulação da Aula 08</div>
+          <div class="footer-page">4</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 5: CONDICIONAIS ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Decisão: <code>if</code>, <code>else if</code> e <code>else</code> <a href="#/ref-slide" class="ref-badge" title="Ver referências">[1]</a></h2>
+        </div>
+
+        <p style="font-size:0.72em; margin-top:0;">A sintaxe é a mesma do JavaScript da Aula 06, com uma diferença que o compilador cobra: a condição precisa ser <code>bool</code>. Em C# não existe "valor que parece verdadeiro".</p>
+
+        <pre class="code-compact"><code class="language-csharp" data-trim>int hora = 14;                          // hora escolhida para a consulta
+string turno;
+
+if (hora &lt; 7 || hora &gt;= 19)
+{
+    turno = "Fora do expediente";       // a Vida+ atende das 07h às 19h
+}
+else if (hora &lt; 12)
+{
+    turno = "Manhã";
+}
+else
+{
+    turno = "Tarde";
+}</code></pre>
+
+        <div class="takeaway">
+          <span class="takeaway-label">Takeaway</span>
+          <p>Quando a decisão só escolhe entre dois valores, o operador ternário resolve em uma linha: <code>string saudacao = hora &lt; 12 ? "Bom dia" : "Boa tarde";</code></p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">09 Decisão, if e else</div>
+          <div class="footer-page">5</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 6: SWITCH ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Muitos caminhos: <code>switch</code> e a expressão <code>switch</code> <a href="#/ref-slide" class="ref-badge" title="Ver referências">[1]</a></h2>
+        </div>
+
+        <p style="font-size:0.72em; margin-top:0;">Quando a decisão compara <strong>o mesmo valor</strong> com várias alternativas, uma escada de <code>else if</code> fica ilegível. A duração da consulta na Clínica Vida+ depende da especialidade.</p>
+
+        <pre class="code-compact"><code class="language-csharp" data-trim>switch (especialidade.Nome)               // switch clássico: escolhe um caminho
+{
+    case "Cardiologia": duracao = 40; break;
+    case "Pediatria":   duracao = 30; break;
+    default:            duracao = 20; break;
+}
+
+int duracao = especialidade.Nome switch   // a mesma decisão, devolvendo o valor
+{
+    "Cardiologia" =&gt; 40,
+    "Pediatria"   =&gt; 30,
+    _             =&gt; 20,
+};</code></pre>
+
+        <div class="callout" style="margin-top:6px;">
+          <p>No <code>switch</code> clássico, o <code>break</code> não é enfeite: sem ele o compilador recusa o código. Na expressão <code>switch</code>, o <code>_</code> é o caso padrão, e o compilador avisa se você deixar alguma possibilidade sem resposta.</p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">09 Switch e expressão switch</div>
+          <div class="footer-page">6</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 7: LAÇOS ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Repetição: <code>for</code>, <code>foreach</code>, <code>while</code> <a href="#/ref-slide" class="ref-badge" title="Ver referências">[1]</a></h2>
+        </div>
+
+        <p style="font-size:0.72em; margin-top:0;">O <code>for</code> quando você precisa do índice; o <code>foreach</code> quando só quer visitar cada item. A agenda do dia é um caso clássico dos dois.</p>
+
+        <pre class="code-compact"><code class="language-csharp" data-trim>string[] horarios = { "08:00", "09:00", "10:00", "11:00" };
+
+for (int i = 0; i &lt; horarios.Length; i++)     // sei quantas voltas vou dar
+{
+    Console.WriteLine($"{i + 1}o horário: {horarios[i]}");
+}
+
+foreach (string h in horarios)                // visito todos, sem índice
+{
+    if (h == "10:00") continue;               // pula este e segue o laço
+    if (h == "11:00") break;                  // encerra o laço aqui
+    Console.WriteLine(h);
+}</code></pre>
+
+        <div class="callout" style="margin-top:6px;">
+          <p>Faltam dois: <code>while</code> testa antes e pode não executar nenhuma vez; <code>do ... while</code> executa ao menos uma vez e testa depois.</p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">09 Repetição, for e foreach</div>
+          <div class="footer-page">7</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 8: MÉTODOS ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Métodos: dar nome a uma regra da clínica <a href="#/ref-slide" class="ref-badge" title="Ver referências">[1]</a></h2>
+        </div>
+
+        <p style="font-size:0.72em; margin-top:0;">O que na Aula 06 era uma função solta, aqui é um <strong>método</strong>, sempre dentro de uma classe, com o tipo de retorno declarado antes do nome.</p>
+
+        <pre class="code-compact"><code class="language-csharp" data-trim>// modificador, tipo de retorno, nome e lista de parâmetros
+public static string PeriodoDoDia(int hora)
+{
+    if (hora &lt; 7 || hora &gt;= 19) return "Fora do expediente";
+    return hora &lt; 12 ? "Manhã" : "Tarde";
+}
+
+// sobrecarga: mesmo nome, lista de parâmetros diferente
+public static string PeriodoDoDia(TimeSpan horario)
+{
+    return PeriodoDoDia(horario.Hours);
+}
+
+Console.WriteLine(PeriodoDoDia(14));            // Tarde</code></pre>
+
+        <div class="takeaway">
+          <span class="takeaway-label">Takeaway</span>
+          <p>A <strong>assinatura</strong> é o nome mais a lista de parâmetros. É por ela que o compilador escolhe a sobrecarga certa, ainda na compilação, e não em tempo de execução.</p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">09 Métodos e sobrecarga</div>
+          <div class="footer-page">8</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 9: CLASSES E PROPRIEDADES ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Classes e propriedades automáticas <a href="#/ref-slide" class="ref-badge" title="Ver referências">[1]</a></h2>
+        </div>
+
+        <p style="font-size:0.72em; margin-top:0;">A classe é a <strong>forma</strong>; o objeto é cada exemplar criado a partir dela. Os Models da Clínica Vida+ moram em <code>Models/</code>, no namespace <code>ClinicaVida.Web.Models</code>.</p>
+
+        <pre class="code-compact"><code class="language-csharp" data-trim>namespace ClinicaVida.Web.Models;
+
+public class Especialidade
+{
+    public int Id { get; set; }                          // propriedade automática
+    public string Nome { get; set; } = string.Empty;
+    public string Descricao { get; set; } = string.Empty;
+}
+
+// instanciação com inicializador de objeto
+var cardio = new Especialidade { Id = 1, Nome = "Cardiologia" };
+Console.WriteLine(cardio.Nome);                          // Cardiologia</code></pre>
+
+        <div class="callout" style="margin-top:6px;">
+          <p><code>{ get; set; }</code> declara uma propriedade que lê e escreve, com o campo por trás gerado pelo compilador. O <code>= string.Empty</code> existe para o texto nascer vazio em vez de <code>null</code>, e é o que cala o aviso de referência nula do compilador.</p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">09 Classes e propriedades</div>
+          <div class="footer-page">9</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 10: O MODEL MEDICO ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>O Model <code>Medico</code> e a ligação com a especialidade</h2>
+        </div>
+
+        <p style="font-size:0.72em; margin-top:0;">Um médico pertence a uma especialidade. Essa ligação aparece <strong>duas vezes</strong> na classe, e as duas têm papéis diferentes.</p>
+
+        <pre><code class="language-csharp" data-trim>namespace ClinicaVida.Web.Models;
+
+public class Medico
+{
+    public int Id { get; set; }
+    public string Nome { get; set; } = string.Empty;
+    public string Crm { get; set; } = string.Empty;
+
+    public int EspecialidadeId { get; set; }             // a chave: só um número
+    public Especialidade? Especialidade { get; set; }    // o objeto inteiro
+}</code></pre>
+
+        <div class="takeaway">
+          <span class="takeaway-label">Takeaway</span>
+          <p><code>EspecialidadeId</code> é o que você <strong>filtra e compara</strong>; <code>Especialidade</code> é o que você <strong>exibe</strong>. O <code>?</code> avisa que o objeto pode estar ausente. Na Aula 11 esse par vira chave estrangeira e relacionamento no banco.</p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">09 O Model Medico</div>
+          <div class="footer-page">10</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 11: REPOSITÓRIO EM MEMÓRIA ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>O corpo clínico em memória, por enquanto</h2>
+        </div>
+
+        <p style="font-size:0.72em; margin-top:0;">Antes do banco de dados, os dados vivem em uma classe estática, em <code>Models/ClinicaEmMemoria.cs</code>, no mesmo namespace dos Models. Um só lugar guarda a lista, e todo Controller lê dela.</p>
+
+        <pre class="code-compact"><code class="language-csharp" data-trim>public static class ClinicaEmMemoria
+{
+    public static List&lt;Especialidade&gt; Especialidades { get; } = new()
+    {
+        new Especialidade { Id = 1, Nome = "Cardiologia" },
+        new Especialidade { Id = 2, Nome = "Pediatria"   },
+    };
+
+    public static List&lt;Medico&gt; Medicos { get; } = new()
+    {
+        new Medico { Id = 1, Nome = "Dra. Marta Lisboa", Crm = "55307", EspecialidadeId = 1 },
+        new Medico { Id = 2, Nome = "Dr. Caio Nunes",    Crm = "41880", EspecialidadeId = 2 },
+    };
+}</code></pre>
+
+        <div class="callout" style="margin-top:6px;">
+          <p><strong>Provisório por escolha.</strong> Na Aula 11 esta classe dá lugar ao <code>ClinicaContext</code>, em <code>Data/</code>, e as listas passam a vir do MySQL.</p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">09 O corpo clínico em memória</div>
+          <div class="footer-page">11</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 12: EXERCÍCIO DO CICLO 1 ==================== -->
+      <section class="exercise-slide content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Exercício do Ciclo 1: o período da consulta</h2>
+        </div>
+
+        <div class="exercise-container">
+          <h3>No seu projeto, 8 minutos</h3>
+          <ol class="exercise-steps">
+            <li>Escreva o método <code>PeriodoDoDia(int hora)</code>, que devolve <code>"Manhã"</code>, <code>"Tarde"</code> ou <code>"Fora do expediente"</code>.</li>
+            <li>A Clínica Vida+ atende das <strong>07h às 19h</strong>; antes das 12h é manhã.</li>
+            <li>Teste com <code>6</code>, <code>9</code>, <code>14</code> e <code>20</code>, e confira as quatro respostas.</li>
+            <li>Se sobrar tempo, reescreva o corpo do método usando a expressão <code>switch</code>.</li>
+          </ol>
+        </div>
+
+        <pre class="code-compact"><code class="language-csharp" data-trim>public static string PeriodoDoDia(int hora)
+{
+    // a sua decisão aqui
+}
+Console.WriteLine(PeriodoDoDia(20));      // esperado: Fora do expediente</code></pre>
+
+        <div class="slide-footer">
+          <div class="footer-bar">09 Exercício do Ciclo 1</div>
+          <div class="footer-page">12</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 13: ARRAY E LIST ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Array e <code>List&lt;T&gt;</code>: a coleção que cresce <a href="#/ref-slide" class="ref-badge" title="Ver referências">[2]</a></h2>
+        </div>
+
+        <p style="font-size:0.72em; margin-top:0;">O array tem tamanho fixo, escolhido na criação. A <code>List&lt;T&gt;</code> cresce e encolhe, e é o que você vai usar em 99% dos casos. O <code>T</code> é o tipo que ela guarda, verificado pelo compilador.</p>
+
+        <pre><code class="language-csharp" data-trim>string[] fixos = new string[3];        // tamanho definido na criação
+fixos[0] = "08:00";
+
+List&lt;string&gt; horarios = new();         // cresce e encolhe em execução
+horarios.Add("08:00");
+horarios.Add("09:00");
+horarios.Add("10:00");
+horarios.Remove("08:00");
+
+Console.WriteLine(horarios.Count);     // 2
+Console.WriteLine(horarios[0]);        // 09:00, indexação por posição</code></pre>
+
+        <div class="slide-footer">
+          <div class="footer-bar">09 Array e List</div>
+          <div class="footer-page">13</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 14: DICTIONARY ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2><code>Dictionary&lt;TKey, TValue&gt;</code>: busca por chave <a href="#/ref-slide" class="ref-badge" title="Ver referências">[2]</a></h2>
+        </div>
+
+        <p style="font-size:0.72em; margin-top:0;">Quando o acesso é por um nome, e não por uma posição, o dicionário é a estrutura certa. Cada chave é única e leva direto ao valor, sem percorrer a coleção inteira.</p>
+
+        <pre class="code-compact"><code class="language-csharp" data-trim>var duracaoPorEspecialidade = new Dictionary&lt;string, int&gt;
+{
+    ["Cardiologia"]  = 40,
+    ["Pediatria"]    = 30,
+    ["Dermatologia"] = 25,
+};
+
+int minutos = duracaoPorEspecialidade["Pediatria"];        // 30
+
+if (duracaoPorEspecialidade.TryGetValue("Neurologia", out int m))
+{
+    Console.WriteLine(m);        // não entra: essa chave não existe
+}</code></pre>
+
+        <div class="takeaway">
+          <span class="takeaway-label">Cuidado</span>
+          <p>Acessar uma chave inexistente com colchetes lança exceção e derruba a requisição. <code>TryGetValue</code> devolve <code>false</code> e segue a vida: prefira-o sempre que a chave puder não existir.</p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">09 Dictionary</div>
+          <div class="footer-page">14</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 15: LINQ COMO FUNIL ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>LINQ é um funil sobre a coleção <a href="#/ref-slide" class="ref-badge" title="Ver referências">[3]</a></h2>
+        </div>
+
+        <p style="font-size:0.7em; margin-top:0;">Cada operador recebe uma sequência e devolve outra. Você encaixa um no outro e a coleção vai sendo estreitada e transformada até virar exatamente o que a tela precisa.</p>
+
+        <div class="slide-figure" style="margin-top:0;">
+          <svg viewBox="0 0 1160 462" style="width:100%; max-height:462px;" role="img" aria-label="Funil LINQ sobre a lista de médicos: Where reduz de seis para dois, OrderBy ordena e Select projeta os nomes">
+            <defs>
+              <marker id="setaFunil" markerUnits="userSpaceOnUse" markerWidth="16" markerHeight="14" refX="8" refY="14" orient="auto">
+                <path d="M0,0 L16,0 L8,14 Z" fill="#C84B31"/>
+              </marker>
+            </defs>
+
+            <!-- ETAPA 1 -->
+            <rect x="20" y="0" width="1120" height="76" rx="8" fill="#F5F5F5" stroke="#00274D" stroke-width="2.5"/>
+            <text x="44" y="32" font-size="18" font-weight="800" fill="#00274D">ClinicaEmMemoria.Medicos</text>
+            <text x="1116" y="32" text-anchor="end" font-size="16" font-weight="700" fill="#C84B31">List&lt;Medico&gt;, 6 itens</text>
+            <text x="44" y="60" font-size="15" fill="#555555">Marta Lisboa (1), Caio Nunes (2), Helena Prado (1), Ivo Reis (4), Sofia Brandão (2), Otávio Lemos (3)</text>
+
+            <line x1="580" y1="78" x2="580" y2="126" stroke="#C84B31" stroke-width="3" marker-end="url(#setaFunil)"/>
+            <rect x="270" y="86" width="620" height="32" rx="16" fill="#00274D"/>
+            <text x="580" y="108" text-anchor="middle" font-size="15" font-weight="700" fill="#FFFFFF">.Where(m =&gt; m.EspecialidadeId == 1)   filtra, mantém os cardiologistas</text>
+
+            <!-- ETAPA 2 -->
+            <rect x="110" y="128" width="940" height="76" rx="8" fill="#F5F5F5" stroke="#00274D" stroke-width="2.5"/>
+            <text x="134" y="160" font-size="18" font-weight="800" fill="#00274D">só os da especialidade 1</text>
+            <text x="1026" y="160" text-anchor="end" font-size="16" font-weight="700" fill="#C84B31">IEnumerable&lt;Medico&gt;, 2 itens</text>
+            <text x="134" y="188" font-size="15" fill="#555555">Dra. Marta Lisboa, Dra. Helena Prado   (na ordem em que estavam na lista)</text>
+
+            <line x1="580" y1="206" x2="580" y2="254" stroke="#C84B31" stroke-width="3" marker-end="url(#setaFunil)"/>
+            <rect x="310" y="214" width="540" height="32" rx="16" fill="#00274D"/>
+            <text x="580" y="236" text-anchor="middle" font-size="15" font-weight="700" fill="#FFFFFF">.OrderBy(m =&gt; m.Nome)   ordena, não descarta ninguém</text>
+
+            <!-- ETAPA 3 -->
+            <rect x="200" y="256" width="760" height="76" rx="8" fill="#F5F5F5" stroke="#00274D" stroke-width="2.5"/>
+            <text x="224" y="288" font-size="18" font-weight="800" fill="#00274D">em ordem alfabética</text>
+            <text x="936" y="288" text-anchor="end" font-size="16" font-weight="700" fill="#C84B31">IEnumerable&lt;Medico&gt;, 2 itens</text>
+            <text x="224" y="316" font-size="15" fill="#555555">Dra. Helena Prado, Dra. Marta Lisboa</text>
+
+            <line x1="580" y1="334" x2="580" y2="382" stroke="#C84B31" stroke-width="3" marker-end="url(#setaFunil)"/>
+            <rect x="350" y="342" width="460" height="32" rx="16" fill="#00274D"/>
+            <text x="580" y="364" text-anchor="middle" font-size="15" font-weight="700" fill="#FFFFFF">.Select(m =&gt; m.Nome)   projeta, troca o tipo</text>
+
+            <!-- ETAPA 4 -->
+            <rect x="290" y="384" width="580" height="76" rx="8" fill="#FDF0EC" stroke="#C84B31" stroke-width="2.5"/>
+            <text x="314" y="416" font-size="18" font-weight="800" fill="#C84B31">só os nomes</text>
+            <text x="846" y="416" text-anchor="end" font-size="16" font-weight="700" fill="#C84B31">IEnumerable&lt;string&gt;</text>
+            <text x="314" y="444" font-size="15" fill="#555555">"Dra. Helena Prado", "Dra. Marta Lisboa"</text>
+          </svg>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">09 LINQ como um funil</div>
+          <div class="footer-page">15</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 16: OPERADORES LINQ ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Os seis operadores que resolvem o dia a dia <a href="#/ref-slide" class="ref-badge" title="Ver referências">[3]</a></h2>
+        </div>
+
+        <p style="font-size:0.72em; margin-top:0;">O <code>m =&gt; ...</code> é uma <strong>expressão lambda</strong>: um método sem nome, escrito no lugar onde é usado. Leia como "para cada médico <code>m</code>, avalie isto".</p>
+
+        <pre><code class="language-csharp" data-trim>List&lt;Medico&gt; medicos = ClinicaEmMemoria.Medicos;      // 6 médicos
+
+medicos.Where(m =&gt; m.EspecialidadeId == 1);      // vários: 2 cardiologistas
+medicos.OrderBy(m =&gt; m.Nome);                    // os 6, em ordem alfabética
+medicos.Select(m =&gt; m.Nome);                     // 6 strings, não 6 médicos
+medicos.FirstOrDefault(m =&gt; m.Crm == "41880");   // 1 médico ou null
+medicos.Any(m =&gt; m.EspecialidadeId == 4);        // true ou false
+medicos.Count(m =&gt; m.EspecialidadeId == 2);      // 2</code></pre>
+
+        <div class="takeaway">
+          <span class="takeaway-label">Takeaway</span>
+          <p>Nenhum deles altera a lista original: cada um devolve uma <strong>nova sequência</strong>. E a consulta só é executada quando alguém percorre o resultado, num <code>foreach</code> ou num <code>ToList()</code>.</p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">09 Operadores LINQ</div>
+          <div class="footer-page">16</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 17: JAVASCRIPT X LINQ ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Você já fez isso: os métodos de array da Aula 06</h2>
+        </div>
+
+        <p style="font-size:0.72em; margin-top:0;">Há três semanas você filtrou médicos no navegador. A ideia é a mesma; muda o nome, a inicial maiúscula e o fato de o compilador conferir os tipos antes de rodar.</p>
+
+        <table style="margin-top:10px;">
+          <thead>
+            <tr><th style="width:290px;">O que a recepção pede</th><th style="width:340px;">JavaScript, Aula 06</th><th>C# com LINQ, hoje</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Vários que atendem a um critério</td><td><code>medicos.filter(m =&gt; ...)</code></td><td><code>medicos.Where(m =&gt; ...)</code></td></tr>
+            <tr><td>Transformar cada item em outra coisa</td><td><code>medicos.map(m =&gt; m.nome)</code></td><td><code>medicos.Select(m =&gt; m.Nome)</code></td></tr>
+            <tr><td>Achar um só, pelo identificador</td><td><code>medicos.find(m =&gt; ...)</code></td><td><code>medicos.FirstOrDefault(m =&gt; ...)</code></td></tr>
+            <tr><td>Saber quantos são</td><td><code>medicos.length</code></td><td><code>medicos.Count()</code></td></tr>
+          </tbody>
+        </table>
+
+        <div class="callout" style="margin-top:14px;">
+          <p><strong>Três diferenças que importam:</strong> em C# os métodos começam com maiúscula; a lista é de <code>Medico</code>, e escrever <code>m.nome</code> não compila; e <code>find</code> devolve <code>undefined</code> quando não acha, enquanto <code>FirstOrDefault</code> devolve <code>null</code>, que você precisa testar antes de usar.</p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">09 De filter e map para Where e Select</div>
+          <div class="footer-page">17</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 18: O CONTROLLER ENTREGA A COLEÇÃO ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>O Controller decide, e entrega a coleção pronta <a href="#/ref-slide" class="ref-badge" title="Ver referências">[4]</a></h2>
+        </div>
+
+        <p style="font-size:0.72em; margin-top:0;">O parâmetro <code>especialidadeId</code> chega da query string, como na Aula 08. Sendo <code>int?</code>, ele aceita ausência: sem filtro, a lista vai inteira.</p>
+
+        <pre><code class="language-csharp" data-trim>public IActionResult Index(int? especialidadeId)
+{
+    var medicos = ClinicaEmMemoria.Medicos.AsEnumerable();
+
+    if (especialidadeId is not null)
+    {
+        medicos = medicos.Where(m =&gt; m.EspecialidadeId == especialidadeId);
+    }
+
+    return View(medicos.OrderBy(m =&gt; m.Nome).ToList());   // a coleção vai à View
+}</code></pre>
+
+        <div class="takeaway">
+          <span class="takeaway-label">Takeaway</span>
+          <p><code>/Medicos</code> devolve todos; <code>/Medicos?especialidadeId=1</code> devolve só os cardiologistas. A View é a mesma nos dois casos: quem decide o conteúdo é o Controller.</p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">09 O Controller entrega a coleção</div>
+          <div class="footer-page">18</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 19: VIEW TIPADA ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>A View tipada: <code>@model</code> e o <code>foreach</code> Razor <a href="#/ref-slide" class="ref-badge" title="Ver referências">[4]</a></h2>
+        </div>
+
+        <p style="font-size:0.72em; margin-top:0;">A primeira linha do arquivo declara <strong>o que a View espera receber</strong>. A partir dela, <code>Model</code> é aquela coleção, com autocompletar e erro de compilação se você errar o nome de uma propriedade.</p>
+
+        <pre><code class="language-html" data-trim>@model IEnumerable&lt;Medico&gt;
+
+&lt;h2&gt;Corpo clínico&lt;/h2&gt;
+
+&lt;ul&gt;
+@foreach (var medico in Model)
+{
+    &lt;li&gt;@medico.Nome, CRM @medico.Crm&lt;/li&gt;
+}
+&lt;/ul&gt;</code></pre>
+
+        <div class="takeaway">
+          <span class="takeaway-label">Takeaway</span>
+          <p>Com <code>ViewBag</code>, errar o nome só quebra em execução, na cara do usuário. Com <code>@model</code>, quebra na compilação, na sua cara. O <code>_ViewImports.cshtml</code> gerado pelo template já traz <code>@using ClinicaVida.Web.Models</code>, por isso o nome curto <code>Medico</code> basta.</p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">09 A View tipada</div>
+          <div class="footer-page">19</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 20: EXERCÍCIO DO CICLO 2 ==================== -->
+      <section class="exercise-slide content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Exercício do Ciclo 2: a consulta LINQ da agenda</h2>
+        </div>
+
+        <div class="exercise-container">
+          <h3>No seu projeto, 8 minutos</h3>
+          <ol class="exercise-steps">
+            <li>Escreva <code>MedicosDaEspecialidade(int especialidadeId)</code>, que devolve os médicos daquela especialidade <strong>ordenados por nome</strong>.</li>
+            <li>Use <code>Where</code> e <code>OrderBy</code> encadeados, e feche com <code>ToList()</code>.</li>
+            <li>Teste com <code>1</code>: precisa voltar os cardiologistas em ordem alfabética.</li>
+            <li>Teste com <code>99</code>: precisa voltar uma lista <strong>vazia</strong>, e não um erro.</li>
+          </ol>
+        </div>
+
+        <pre class="code-compact"><code class="language-csharp" data-trim>public static List&lt;Medico&gt; MedicosDaEspecialidade(int especialidadeId)
+{
+    return ClinicaEmMemoria.Medicos /* a sua consulta aqui */;
+}
+Console.WriteLine(MedicosDaEspecialidade(99).Count);   // esperado: 0</code></pre>
+
+        <div class="slide-footer">
+          <div class="footer-bar">09 Exercício do Ciclo 2</div>
+          <div class="footer-page">20</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 21: QUIZ DE FIXAÇÃO ==================== -->
+      <section class="quiz-slide content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area"><div class="accent-bar"></div><h2>Quiz de fixação</h2></div>
+        <div class="quiz-container">
+          <div class="quiz-question">O que a expressão <code>medicos.Where(m =&gt; m.EspecialidadeId == 2)</code> devolve?</div>
+          <ul class="quiz-options">
+            <li data-correct="false"><span class="option-letter">A</span><span class="option-text">O primeiro médico cuja especialidade é a de identificador 2, ou nulo quando não houver nenhum.</span></li>
+            <li data-correct="true"><span class="option-letter">B</span><span class="option-text">Uma sequência com todos os médicos cuja <code>EspecialidadeId</code> é igual a 2, na ordem em que estão na lista.</span></li>
+            <li data-correct="false"><span class="option-letter">C</span><span class="option-text">A quantidade de médicos da especialidade 2, como um número inteiro pronto para ser exibido na View.</span></li>
+            <li data-correct="false"><span class="option-letter">D</span><span class="option-text">Um valor booleano indicando se existe pelo menos um médico cadastrado na especialidade de identificador 2.</span></li>
+          </ul>
+          <div class="quiz-feedback"
+               data-correct-msg="Isso. Where filtra e devolve uma sequência, que pode ter zero, um ou vários itens, preservando a ordem original."
+               data-incorrect-msg="Não é isso. Quem devolve um só é o FirstOrDefault; a quantidade vem do Count; o booleano vem do Any. O Where devolve uma sequência."></div>
+        </div>
+        <div class="slide-footer"><div class="footer-bar">09 Quiz de fixação</div><div class="footer-page">21</div></div>
+      </section>
+
+      <!-- ==================== SLIDE 22: LAB PASSO 1 ==================== -->
+      <section class="exercise-slide content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Laboratório, passo 1 de 6: a branch e os dois Models</h2>
+        </div>
+
+        <p style="font-size:0.72em; margin-top:0;">A missão dos próximos 60 minutos: dar vida ao corpo clínico da Clínica Vida+, ainda em memória, e exibi-lo filtrado por especialidade.</p>
+
+        <pre class="code-compact"><code class="language-bash" data-trim>git checkout main &amp;&amp; git pull
+git checkout -b feature/medicos-em-memoria</code></pre>
+
+        <div class="exercise-container">
+          <h3>Em <code>ClinicaVida.Web/Models</code></h3>
+          <ol class="exercise-steps">
+            <li>Crie <code>Especialidade.cs</code>, com <code>Id</code>, <code>Nome</code> e <code>Descricao</code>.</li>
+            <li>Crie <code>Medico.cs</code>, com <code>Id</code>, <code>Nome</code>, <code>Crm</code>, <code>EspecialidadeId</code> e <code>Especialidade</code>.</li>
+            <li>Os dois no namespace <code>ClinicaVida.Web.Models</code>. Rode <code>dotnet build</code> antes de seguir.</li>
+          </ol>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">09 Laboratório, passo 1, branch e Models</div>
+          <div class="footer-page">22</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 23: LAB PASSO 2 ==================== -->
+      <section class="exercise-slide content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Laboratório, passo 2 de 6: o corpo clínico em memória</h2>
+        </div>
+
+        <p style="font-size:0.72em; margin-top:0;">Em <code>Models/ClinicaEmMemoria.cs</code>, a fonte única de dados da aplicação: <strong>quatro especialidades</strong> e <strong>seis médicos</strong>, no mínimo.</p>
+
+        <pre class="code-compact"><code class="language-csharp" data-trim>namespace ClinicaVida.Web.Models;
+
+public static class ClinicaEmMemoria
+{
+    public static List&lt;Especialidade&gt; Especialidades { get; } = new()
+    {
+        new Especialidade { Id = 1, Nome = "Cardiologia", Descricao = "Coração e vasos" },
+        // Pediatria (2), Dermatologia (3) e Ortopedia (4)
+    };
+
+    public static List&lt;Medico&gt; Medicos { get; } = new()
+    {
+        new Medico { Id = 1, Nome = "Dra. Marta Lisboa", Crm = "55307", EspecialidadeId = 1 },
+        // mais cinco médicos, com pelo menos dois em cada uma de duas especialidades
+    };
+}</code></pre>
+
+        <div class="slide-footer">
+          <div class="footer-bar">09 Laboratório, passo 2, dados em memória</div>
+          <div class="footer-page">23</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 24: LAB PASSO 3 ==================== -->
+      <section class="exercise-slide content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Laboratório, passo 3 de 6: <code>MedicosController</code> e o filtro</h2>
+        </div>
+
+        <p style="font-size:0.72em; margin-top:0;">Em <code>Controllers/MedicosController.cs</code>. O <code>ViewBag</code> leva a lista de especialidades para montar o campo de filtro; o Model leva os médicos.</p>
+
+        <pre class="code-compact"><code class="language-csharp" data-trim>public class MedicosController : Controller
+{
+    public IActionResult Index(int? especialidadeId)
+    {
+        var medicos = ClinicaEmMemoria.Medicos.AsEnumerable();
+
+        if (especialidadeId is not null)
+        {
+            medicos = medicos.Where(m =&gt; m.EspecialidadeId == especialidadeId);
+        }
+
+        ViewBag.Especialidades = ClinicaEmMemoria.Especialidades;
+        return View(medicos.OrderBy(m =&gt; m.Nome).ToList());
+    }
+}</code></pre>
+
+        <div class="slide-footer">
+          <div class="footer-bar">09 Laboratório, passo 3, MedicosController</div>
+          <div class="footer-page">24</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 25: LAB PASSO 4 ==================== -->
+      <section class="exercise-slide content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Laboratório, passo 4 de 6: a View tipada da listagem</h2>
+        </div>
+
+        <p style="font-size:0.72em; margin-top:0;">Em <code>Views/Medicos/Index.cshtml</code>. O formulário usa <code>method="get"</code>: o filtro vira query string e o endereço fica compartilhável.</p>
+
+        <pre class="code-compact"><code class="language-html" data-trim>@model IEnumerable&lt;Medico&gt;
+
+&lt;form method="get"&gt;
+  &lt;select name="especialidadeId"&gt;
+    &lt;option value=""&gt;Todas as especialidades&lt;/option&gt;
+    @foreach (var e in (List&lt;Especialidade&gt;)ViewBag.Especialidades)
+    {
+        &lt;option value="@e.Id"&gt;@e.Nome&lt;/option&gt;
+    }
+  &lt;/select&gt;
+  &lt;button type="submit"&gt;Filtrar&lt;/button&gt;
+&lt;/form&gt;
+&lt;ul&gt;
+@foreach (var medico in Model)
+{
+    &lt;li&gt;&lt;a href="/Medicos/Details/@medico.Id"&gt;@medico.Nome&lt;/a&gt;, CRM @medico.Crm&lt;/li&gt;
+}
+&lt;/ul&gt;</code></pre>
+
+        <div class="slide-footer">
+          <div class="footer-bar">09 Laboratório, passo 4, View tipada</div>
+          <div class="footer-page">25</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 26: LAB PASSO 5 ==================== -->
+      <section class="exercise-slide content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Laboratório, passo 5 de 6: a action <code>Details</code></h2>
+        </div>
+
+        <p style="font-size:0.72em; margin-top:0;">Ciclo 4, sozinho. Um médico só, encontrado pelo <code>id</code> da rota, com a especialidade preenchida para exibir o nome dela em vez do número.</p>
+
+        <pre class="code-compact"><code class="language-csharp" data-trim>public IActionResult Details(int id)
+{
+    var medico = ClinicaEmMemoria.Medicos.FirstOrDefault(m =&gt; m.Id == id);
+    if (medico is null) return NotFound();
+
+    medico.Especialidade = ClinicaEmMemoria.Especialidades
+        .FirstOrDefault(e =&gt; e.Id == medico.EspecialidadeId);
+
+    return View(medico);      // Views/Medicos/Details.cshtml, @model Medico
+}</code></pre>
+
+        <div class="callout" style="margin-top:6px;">
+          <p>Teste <code>/Medicos/Details/999</code>: precisa devolver 404, e não uma tela de erro. É o <code>FirstOrDefault</code> devolvendo <code>null</code> e o seu código tratando o caso.</p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">09 Laboratório, passo 5, action Details</div>
+          <div class="footer-page">26</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 27: LAB PASSO 6 ==================== -->
+      <section class="exercise-slide content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Laboratório, passo 6 de 6: quantos médicos por especialidade</h2>
+        </div>
+
+        <p style="font-size:0.72em; margin-top:0;">De volta ao <code>EspecialidadesController</code> da Aula 08. Um <code>Dictionary</code> guarda a contagem, e a tela de especialidades finalmente diz algo que a View não sabia calcular sozinha.</p>
+
+        <pre class="code-compact"><code class="language-csharp" data-trim>var contagem = new Dictionary&lt;int, int&gt;();
+
+foreach (var e in ClinicaEmMemoria.Especialidades)
+{
+    contagem[e.Id] = ClinicaEmMemoria.Medicos.Count(m =&gt; m.EspecialidadeId == e.Id);
+}
+
+ViewBag.MedicosPorEspecialidade = contagem;
+return View(ClinicaEmMemoria.Especialidades);   // @model IEnumerable&lt;Especialidade&gt;</code></pre>
+
+        <div class="callout" style="margin-top:6px;">
+          <p>Na View, cada especialidade vira um link para <code>/Medicos?especialidadeId=@e.Id</code>, com a contagem ao lado. Duas telas da clínica, ligadas pelo mesmo dado.</p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">09 Laboratório, passo 6, contagem por especialidade</div>
+          <div class="footer-page">27</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 28: ENTREGÁVEL, COMMIT E PUSH ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Entregável de hoje, commit e push</h2>
+        </div>
+
+        <div class="side-by-side" style="margin-top:6px;">
+          <div class="side">
+            <h4>O que precisa estar de pé</h4>
+            <ul style="margin:0; padding-left:20px;">
+              <li><code>Models/Especialidade.cs</code> e <code>Models/Medico.cs</code>.</li>
+              <li><code>Models/ClinicaEmMemoria.cs</code>, com 4 especialidades e 6 médicos.</li>
+              <li><code>MedicosController</code> com <code>Index</code> filtrado e <code>Details</code>, e as duas Views tipadas.</li>
+              <li>A contagem de médicos por especialidade na tela de especialidades.</li>
+            </ul>
+          </div>
+          <div class="side">
+            <h4>Como conferir na sua tela</h4>
+            <ul style="margin:0; padding-left:20px;">
+              <li><code>/Medicos</code> lista os 6, em ordem alfabética.</li>
+              <li><code>/Medicos?especialidadeId=1</code> lista só os daquela especialidade.</li>
+              <li><code>/Medicos/Details/999</code> devolve 404.</li>
+            </ul>
+          </div>
+        </div>
+
+        <pre class="code-compact" style="margin-top:8px;"><code class="language-bash" data-trim>git add .
+git commit -m "feat: corpo clinico em memoria com filtro por especialidade"
+git push -u origin feature/medicos-em-memoria</code></pre>
+
+        <div class="slide-footer">
+          <div class="footer-bar">09 Entregável, commit e push</div>
+          <div class="footer-page">28</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 29: FECHAMENTO E PRÉVIA ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>O que mudou hoje e prévia da Aula 10</h2>
+        </div>
+
+        <div class="flow-diagram" style="margin:10px 0 0 0; font-size:0.82em; gap:8px;">
+          <div class="flow-item">Dado escrito<br>na View</div>
+          <div class="flow-arrow">&rarr;</div>
+          <div class="flow-item">Objeto em<br>uma classe</div>
+          <div class="flow-arrow">&rarr;</div>
+          <div class="flow-item">Coleção<br>filtrada com LINQ</div>
+          <div class="flow-arrow">&rarr;</div>
+          <div class="flow-item">View tipada<br>com @model</div>
+        </div>
+
+        <div class="takeaway" style="margin-top:20px;">
+          <span class="takeaway-label">As três ideias da semana</span>
+          <p>Classe é forma e objeto é exemplar; <code>List&lt;T&gt;</code> e <code>Dictionary</code> guardam esses objetos de dois jeitos diferentes; e LINQ é um funil que estreita e transforma a coleção antes de ela chegar à tela.</p>
+        </div>
+
+        <div class="callout" style="margin-top:18px;">
+          <p><strong>Prévia da Aula 10:</strong> até aqui os dados só saem da aplicação para a tela. Na próxima aula o caminho inverte: o formulário de agendamento passa a ser <strong>processado pelo servidor</strong>, com as actions GET e POST do mesmo formulário, model binding, Tag Helpers e validação por Data Annotations. A regra que você escreveu em JavaScript na Aula 06 volta, agora no lugar onde ela não pode ser burlada.</p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">09 Fechamento e prévia da Aula 10</div>
+          <div class="footer-page">29</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 30: REFERÊNCIAS ==================== -->
+      <section id="ref-slide" class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Referências desta aula</h2>
+        </div>
+
+        <p style="font-size:0.72em; margin-top:0;">Os números entre colchetes ao lado dos títulos remetem a esta lista. Todas em português, abertas, e são a documentação oficial da plataforma.</p>
+
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px 30px; margin-top:6px;">
+          <div class="concept-card">
+            <h4>[1] Decisão, repetição, métodos e classes</h4>
+            <p style="font-size:0.72em; color:#444444;">MICROSOFT. <em>Guia da linguagem C#</em>. Microsoft Learn.<br>
+            <code style="font-size:0.9em;">learn.microsoft.com/pt-br/dotnet/csharp/</code></p>
+          </div>
+          <div class="concept-card">
+            <h4>[2] Coleções: List, Dictionary e array</h4>
+            <p style="font-size:0.72em; color:#444444;">MICROSOFT. <em>Coleções e estruturas de dados</em>. Microsoft Learn.<br>
+            <code style="font-size:0.9em;">learn.microsoft.com/pt-br/dotnet/standard/collections/</code></p>
+          </div>
+          <div class="concept-card">
+            <h4>[3] LINQ: Where, OrderBy, Select e lambdas</h4>
+            <p style="font-size:0.72em; color:#444444;">MICROSOFT. <em>Consulta integrada à linguagem, LINQ</em>. Microsoft Learn.<br>
+            <code style="font-size:0.9em;">learn.microsoft.com/pt-br/dotnet/csharp/linq/</code></p>
+          </div>
+          <div class="concept-card">
+            <h4>[4] Views tipadas e a diretiva @model</h4>
+            <p style="font-size:0.72em; color:#444444;">MICROSOFT. <em>Views no ASP.NET Core MVC</em>. Microsoft Learn.<br>
+            <code style="font-size:0.9em;">learn.microsoft.com/pt-br/aspnet/core/mvc/views/overview</code></p>
+          </div>
+        </div>
+
+        <div class="callout" style="margin-top:8px;">
+          <p>O roteiro completo do laboratório de hoje está no portal da disciplina, em <code>labs/aula09-lab/</code>.</p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">09 Referências</div>
+          <div class="footer-page">30</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 31: ENCERRAMENTO ==================== -->
+      <section class="end-slide">
+        <img src="../assets/img/uninove-logo.png" alt="Uninove, Universidade Nove de Julho"
+             style="max-width:300px; background:#FFFFFF; padding:20px 28px; border-radius:8px;">
+        <div class="copyright">
+          Copyright &copy; 2026<br>
+          Prof. José Romualdo da Costa Filho<br><br>
+          Todos os direitos reservados. É expressamente proibida a reprodução, divulgação<br>
+          total ou parcial, deste material acadêmico sem autorização formal,<br>
+          por escrito, do Professor autor da ementa.
+        </div>
+      </section>
+
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/highlight/highlight.js"></script>
+  <script src="../assets/js/uninove-quiz.js"></script>
+  <script type="module">
+    import { TURMAS, resolverTurma, dataDaAula, formatarData } from '../assets/js/turmas.js';
+    const turma = resolverTurma({
+      hoje: new Date(),
+      salva: localStorage.getItem('uninove-turma'),
+    });
+    const alvo = document.querySelector('[data-data-da-aula]');
+    if (alvo) {
+      const n = Number(alvo.getAttribute('data-data-da-aula'));
+      alvo.textContent = turma
+        ? `${TURMAS[turma].rotulo}, ${formatarData(dataDaAula(turma, n))}`
+        : `Quarta ${formatarData(dataDaAula('quarta', n))} ou quinta ${formatarData(dataDaAula('quinta', n))}`;
+    }
+  </script>
+  <script>
+    Reveal.initialize({
+      width: 1280, height: 720, center: false, margin: 0,
+      hash: true, slideNumber: false,
+      // Os chevrons de navegação caem sobre a footer-bar e sobre o triângulo
+      // azul do canto inferior direito; a barra de progresso encosta no rodapé
+      // e parece um segundo rodapé. Nenhum dos dois é usado na projeção.
+      controls: false, progress: false,
+      // Um slide por página no ?print-pdf, para o PDF bater com o deck.
+      pdfMaxPagesPerSlide: 1,
+      plugins: [RevealHighlight],
+    });
+  </script>
+</body>
+</html>

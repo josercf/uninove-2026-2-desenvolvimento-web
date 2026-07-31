@@ -1,0 +1,1044 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Aula 12, CRUD completo com EF Core | Uninove</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/theme/white.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/highlight/monokai.css">
+  <link rel="stylesheet" href="../assets/css/uninove-theme.css">
+  <link rel="stylesheet" href="../assets/css/uninove-print.css">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+      <!-- ==================== SLIDE 1: CAPA ==================== -->
+      <section class="cover-slide">
+        <img src="../assets/img/uninove-logo.png" alt="Uninove, Universidade Nove de Julho" class="uninove-logo-full"
+             style="max-width:400px; background:#FFFFFF; padding:26px 36px; border-radius:10px;">
+        <div style="margin-top:36px; color:#FFFFFF; font-size:0.95em; font-weight:800; letter-spacing:4px; text-transform:uppercase;">Desenvolvimento Web</div>
+        <div style="margin-top:12px; color:#C84B31; font-size:0.6em; font-weight:700; letter-spacing:3px; text-transform:uppercase;">Graduação, 2026.2</div>
+      </section>
+
+      <!-- ==================== SLIDE 2: TÍTULO ==================== -->
+      <section class="title-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="title-card">
+          <div class="accent-bar"></div>
+          <h1>Desenvolvimento Web</h1>
+          <h2>CRUD completo com EF Core</h2>
+          <h3>Prof. José Romualdo<br><span data-data-da-aula="12"></span></h3>
+        </div>
+        <div class="lesson-bar">AULA 12 &nbsp;|&nbsp; Módulo 2, Backend com C# e ASP.NET Core MVC</div>
+      </section>
+
+      <!-- ==================== SLIDE 3: AGENDA ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Agenda do encontro de hoje</h2>
+        </div>
+
+        <p style="font-size:0.76em; margin-top:0;">São 150 minutos corridos, em quatro ciclos. Hoje o banco <code>clinicavida</code> deixa de ser um esquema vazio e passa a ser alimentado pelas telas da aplicação.</p>
+
+        <table>
+          <thead>
+            <tr><th style="width:190px;">Horário</th><th style="width:200px;">Bloco</th><th>O que acontece</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>19h30 às 20h05</td><td>Ciclo 1</td><td>O contexto injetado no Controller, consultas com LINQ e <code>async</code></td></tr>
+            <tr><td>20h05 às 20h40</td><td>Ciclo 2</td><td>Gravar, alterar, excluir e o padrão Post-Redirect-Get</td></tr>
+            <tr><td>20h40 às 20h50</td><td>Quiz de fixação</td><td>Uma pergunta sobre o conceito central da aula</td></tr>
+            <tr><td>20h50 às 21h25</td><td>Ciclo 3</td><td>Laboratório guiado: <code>PacientesController</code>, Index, Details e Create</td></tr>
+            <tr><td>21h25 às 21h50</td><td>Ciclo 4</td><td>Laboratório: Edit, Delete, <code>TempData</code> e o entregável</td></tr>
+            <tr><td>21h50 às 22h00</td><td>Fechamento</td><td>Fim do Módulo 2 e prévia da Aula 13</td></tr>
+          </tbody>
+        </table>
+
+        <div class="slide-footer">
+          <div class="footer-bar">12 Agenda do encontro</div>
+          <div class="footer-page">3</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 4: RECAPITULAÇÃO DA AULA 11 ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>De onde viemos: o banco da Aula 11</h2>
+        </div>
+
+        <p style="font-size:0.72em; margin-top:0;">Você entregou o <code>ClinicaContext</code> configurado, a migration <code>InicialClinicaVida</code> aplicada e o banco <code>clinicavida</code> no MySQL, com as quatro tabelas e as especialidades semeadas por <code>HasData</code>.</p>
+
+        <div class="side-by-side" style="margin-top:6px;">
+          <div class="side">
+            <h4>O que já existe na sua máquina</h4>
+            <ul style="margin:0; padding-left:20px;">
+              <li><code>Data/ClinicaContext.cs</code>, com os quatro <code>DbSet</code>.</li>
+              <li>A connection string em <code>DefaultConnection</code>.</li>
+              <li>O provedor <code>Pomelo.EntityFrameworkCore.MySql</code> registrado.</li>
+              <li>As quatro tabelas e as especialidades semeadas.</li>
+            </ul>
+          </div>
+          <div class="side">
+            <h4>O que ainda não existe</h4>
+            <ul style="margin:0; padding-left:20px;">
+              <li>Nenhuma tela <strong>lê</strong> uma única linha desse banco.</li>
+              <li>Nenhuma tela <strong>escreve</strong> uma única linha nele.</li>
+              <li>Os dados do site ainda vêm de listas em memória.</li>
+              <li>Reiniciar a aplicação apaga tudo o que foi digitado.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="callout" style="margin-top:16px;">
+          <p><strong>A ponte que falta:</strong> o banco está de um lado e o Controller do outro. Hoje construímos a ponte, e ela tem um nome: <strong>injeção de dependência</strong>.</p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">12 Recapitulação da Aula 11</div>
+          <div class="footer-page">4</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 5: INJEÇÃO DE DEPENDÊNCIA ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Como o <code>ClinicaContext</code> chega ao Controller <a href="#/ref-slide" class="ref-badge" title="Ver referências">[1]</a></h2>
+        </div>
+
+        <p style="font-size:0.72em; margin-top:0;">Você nunca escreve <code>new ClinicaContext()</code> dentro de uma action. Quem cria, entrega e descarta o contexto é o <strong>contêiner de serviços</strong> do ASP.NET Core.</p>
+
+        <div class="slide-figure" style="margin-top:4px;">
+          <svg viewBox="0 0 1140 300" role="img" aria-label="Program.cs registra o ClinicaContext no contêiner de serviços; a cada requisição o contêiner cria o contexto e o entrega ao construtor do PacientesController">
+            <defs>
+              <marker id="a12setaDi" markerWidth="9" markerHeight="9" refX="8" refY="4.5" orient="auto">
+                <path d="M0,0 L9,4.5 L0,9 Z" fill="#C84B31"/>
+              </marker>
+            </defs>
+
+            <rect x="6" y="42" width="250" height="130" rx="10" fill="#00274D"/>
+            <text x="131" y="70" text-anchor="middle" font-size="14" font-weight="700" fill="#FFFFFF">1. Na subida da aplicação</text>
+            <text x="131" y="94" text-anchor="middle" font-size="12" fill="#C8D6E5">Program.cs</text>
+            <g font-family="'JetBrains Mono', monospace" font-size="11" fill="#9FE2C0" style="font-variant-ligatures:none;">
+              <text x="22" y="122">builder.Services</text>
+              <text x="34" y="140">.AddDbContext&lt;ClinicaContext&gt;(</text>
+              <text x="46" y="158">o =&gt; o.UseMySql(...));</text>
+            </g>
+
+            <line x1="262" y1="107" x2="300" y2="107" stroke="#C84B31" stroke-width="3" marker-end="url(#a12setaDi)"/>
+
+            <rect x="308" y="42" width="270" height="130" rx="10" fill="#F5F5F5" stroke="#00274D" stroke-width="2"/>
+            <text x="443" y="70" text-anchor="middle" font-size="14" font-weight="700" fill="#00274D">2. Contêiner de serviços</text>
+            <text x="443" y="98" text-anchor="middle" font-size="12" fill="#444444">Guarda a receita: quem pedir um</text>
+            <text x="443" y="118" text-anchor="middle" font-size="12" fill="#444444">ClinicaContext recebe um pronto,</text>
+            <text x="443" y="138" text-anchor="middle" font-size="12" fill="#444444">já conectado ao MySQL.</text>
+            <text x="443" y="160" text-anchor="middle" font-size="12" font-weight="700" fill="#C84B31">Um por requisição</text>
+
+            <line x1="584" y1="107" x2="622" y2="107" stroke="#C84B31" stroke-width="3" marker-end="url(#a12setaDi)"/>
+            <text x="603" y="90" text-anchor="middle" font-size="11" font-weight="700" fill="#C84B31">entrega</text>
+
+            <rect x="630" y="42" width="504" height="130" rx="10" fill="#1E1E1E"/>
+            <text x="882" y="68" text-anchor="middle" font-size="14" font-weight="700" fill="#C84B31">3. PacientesController</text>
+            <g font-family="'JetBrains Mono', monospace" font-size="12" fill="#d4d4d4" style="font-variant-ligatures:none;">
+              <text x="648" y="96">private readonly ClinicaContext _context;</text>
+              <text x="648" y="120">public PacientesController(ClinicaContext context)</text>
+              <text x="648" y="140">{</text>
+              <text x="660" y="158">_context = context;   // já chega pronto</text>
+            </g>
+
+            <rect x="6" y="196" width="1128" height="46" rx="8" fill="#FDECE8" stroke="#C84B31" stroke-width="1.5"/>
+            <text x="570" y="216" text-anchor="middle" font-size="13" font-weight="700" fill="#00274D">A requisição GET /Pacientes chega, o contêiner monta o Controller e passa o contexto pelo construtor.</text>
+            <text x="570" y="234" text-anchor="middle" font-size="12" fill="#7A2A18">Quando a resposta é enviada, o mesmo contêiner fecha a conexão. Você não abre nem fecha nada.</text>
+
+            <text x="570" y="268" text-anchor="middle" font-size="13" font-weight="700" fill="#00274D">Isso é injeção de dependência: a classe declara o que precisa, e não sai procurando.</text>
+          </svg>
+        </div>
+
+        <div class="takeaway">
+          <span class="takeaway-label">Takeaway</span>
+          <p>Se o construtor pedir um tipo que ninguém registrou em <code>Program.cs</code>, o contêiner não sabe construir o Controller e a requisição falha com <code>InvalidOperationException</code>. Registro e construtor andam sempre juntos.</p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">12 Injeção de dependência</div>
+          <div class="footer-page">5</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 6: ASYNC E AWAIT ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Por que toda operação de banco é assíncrona <a href="#/ref-slide" class="ref-badge" title="Ver referências">[4]</a></h2>
+        </div>
+
+        <p style="font-size:0.72em; margin-top:0;">Consultar o MySQL é esperar por outro processo. A pergunta não é quanto tempo demora, é <strong>o que a thread do servidor faz enquanto espera</strong>.</p>
+
+        <div class="slide-figure" style="margin-top:2px;">
+          <svg viewBox="0 0 1140 280" role="img" aria-label="Comparação entre a action síncrona, com a thread parada esperando o MySQL, e a action assíncrona, que devolve a thread ao pool durante a espera">
+            <text x="8" y="26" font-size="13" font-weight="700" fill="#666666">tempo &rarr;</text>
+
+            <text x="8" y="62" font-size="14" font-weight="700" fill="#C84B31">Síncrono</text>
+            <text x="8" y="82" font-family="'JetBrains Mono', monospace" font-size="12" fill="#444444" style="font-variant-ligatures:none;">ToList()</text>
+            <rect x="200" y="44" width="130" height="46" rx="6" fill="#00274D"/>
+            <text x="265" y="72" text-anchor="middle" font-size="12" fill="#FFFFFF" font-weight="600">a action roda</text>
+            <rect x="334" y="44" width="530" height="46" rx="6" fill="#FDECE8" stroke="#C84B31" stroke-width="2" stroke-dasharray="7 5"/>
+            <text x="599" y="66" text-anchor="middle" font-size="13" font-weight="700" fill="#C84B31">a thread fica parada, esperando o MySQL responder</text>
+            <text x="599" y="83" text-anchor="middle" font-size="12" fill="#7A2A18">e não atende mais ninguém nesse intervalo</text>
+            <rect x="868" y="44" width="150" height="46" rx="6" fill="#00274D"/>
+            <text x="943" y="72" text-anchor="middle" font-size="12" fill="#FFFFFF" font-weight="600">monta a View</text>
+
+            <text x="8" y="152" font-size="14" font-weight="700" fill="#0B6E75">Assíncrono</text>
+            <text x="8" y="172" font-family="'JetBrains Mono', monospace" font-size="12" fill="#444444" style="font-variant-ligatures:none;">await ToListAsync()</text>
+            <rect x="200" y="134" width="130" height="46" rx="6" fill="#00274D"/>
+            <text x="265" y="162" text-anchor="middle" font-size="12" fill="#FFFFFF" font-weight="600">a action roda</text>
+            <rect x="334" y="134" width="530" height="46" rx="6" fill="#EAF5F1" stroke="#2E9E7E" stroke-width="2" stroke-dasharray="7 5"/>
+            <text x="599" y="156" text-anchor="middle" font-size="13" font-weight="700" fill="#0B6E75">a thread é devolvida ao pool no instante do await</text>
+            <text x="599" y="173" text-anchor="middle" font-size="12" fill="#1F5A50">o banco trabalha sozinho; ninguém do servidor fica olhando</text>
+            <rect x="868" y="134" width="150" height="46" rx="6" fill="#00274D"/>
+            <text x="943" y="156" text-anchor="middle" font-size="12" fill="#FFFFFF" font-weight="600">retoma e</text>
+            <text x="943" y="172" text-anchor="middle" font-size="12" fill="#FFFFFF" font-weight="600">monta a View</text>
+
+            <rect x="380" y="192" width="440" height="34" rx="6" fill="#2E9E7E"/>
+            <text x="600" y="214" text-anchor="middle" font-size="12" font-weight="700" fill="#FFFFFF">a mesma thread atende outra recepcionista</text>
+
+            <text x="570" y="256" text-anchor="middle" font-size="13" font-weight="700" fill="#00274D">Assíncrono não deixa a consulta mais rápida. Deixa o servidor capaz de atender mais gente ao mesmo tempo.</text>
+          </svg>
+        </div>
+
+        <div class="takeaway">
+          <span class="takeaway-label">Takeaway</span>
+          <p>Toda ida ao banco usa o método terminado em <code>Async</code>, e sempre com <code>await</code>. Sem o <code>await</code>, o que volta é uma <code>Task</code>, não a lista, e a View recebe um objeto que não sabe desenhar.</p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">12 async e await</div>
+          <div class="footer-page">6</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 7: CONSULTAS COM LINQ ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Consultar: você escreve C#, o EF Core escreve SQL <a href="#/ref-slide" class="ref-badge" title="Ver referências">[2]</a></h2>
+        </div>
+
+        <p style="font-size:0.72em; margin-top:0;">O <code>DbSet</code> aceita LINQ. O EF Core traduz a expressão para SQL e só vai ao banco quando você pede o resultado, no <code>ToListAsync</code> ou no <code>FirstOrDefaultAsync</code>.</p>
+
+        <pre class="code-compact"><code class="language-csharp" data-trim>// Lista inteira, em ordem alfabética
+var pacientes = await _context.Pacientes.OrderBy(p =&gt; p.Nome).ToListAsync();
+
+// Um registro pela chave primária: o mais direto, e olha o cache antes de ir ao banco
+var paciente = await _context.Pacientes.FindAsync(id);
+
+// Um registro por qualquer condição; devolve null se não achar nada
+var porCpf = await _context.Pacientes.FirstOrDefaultAsync(p =&gt; p.Cpf == cpf);
+
+// Filtro traduzido para a cláusula WHERE, executado no MySQL, não em memória
+var busca = await _context.Pacientes.Where(p =&gt; p.Nome.Contains(termo)).ToListAsync();</code></pre>
+
+        <div class="callout" style="margin-top:12px;">
+          <p><strong>O SQL gerado aparece no terminal</strong> em que a aplicação está rodando: <code>SELECT p.Id, p.Cpf, p.Nome ... FROM Pacientes AS p ORDER BY p.Nome</code>. Leia esse log: é ele que denuncia consulta pesada.</p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">12 Consultas com LINQ</div>
+          <div class="footer-page">7</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 8: NOTFOUND ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>O identificador que não existe</h2>
+        </div>
+
+        <p style="font-size:0.72em; margin-top:0;">A URL é editável pelo usuário. Alguém vai digitar <code>/Pacientes/Details/9999</code>, e esse paciente não existe. O EF Core devolve <code>null</code>, sem erro, e a decisão é sua.</p>
+
+        <div class="side-by-side" style="margin-top:6px;">
+          <div class="side">
+            <h4>Sem tratamento</h4>
+            <ul style="margin:0; padding-left:20px;">
+              <li>A View recebe <code>null</code> e quebra ao ler <code>Model.Nome</code>.</li>
+              <li>O usuário vê uma página de erro, com pilha de exceção.</li>
+            </ul>
+          </div>
+          <div class="side">
+            <h4>Com <code>NotFound()</code></h4>
+            <ul style="margin:0; padding-left:20px;">
+              <li>A resposta é um <strong>404</strong>, que é a verdade sobre o recurso.</li>
+              <li>Duas linhas resolvem, em toda action que recebe um <code>id</code>.</li>
+            </ul>
+          </div>
+        </div>
+
+        <pre class="code-compact" style="margin-top:12px;"><code class="language-csharp" data-trim>public async Task&lt;IActionResult&gt; Details(int? id)
+{
+    if (id == null) return NotFound();                       // rota sem id
+    var paciente = await _context.Pacientes.FirstOrDefaultAsync(p =&gt; p.Id == id);
+    if (paciente == null) return NotFound();                 // id que não existe
+    return View(paciente);
+}</code></pre>
+
+        <div class="slide-footer">
+          <div class="footer-bar">12 NotFound e o id inexistente</div>
+          <div class="footer-page">8</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 9: EXERCÍCIO CURTO, CICLO 1 ==================== -->
+      <section class="exercise-slide content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Exercício do Ciclo 1: a listagem de pacientes</h2>
+        </div>
+
+        <div class="exercise-container">
+          <h3>No seu ClinicaVida.Web, 8 minutos</h3>
+          <ol class="exercise-steps">
+            <li>Crie <code>Controllers/PacientesController.cs</code> recebendo o <code>ClinicaContext</code> pelo construtor.</li>
+            <li>Escreva a action <code>Index</code> como <code>async Task&lt;IActionResult&gt;</code>, listando do banco em ordem alfabética.</li>
+            <li>Rode a aplicação e olhe o <strong>terminal</strong>: o <code>SELECT</code> gerado precisa aparecer no log.</li>
+            <li>A lista virá vazia, e está certo: ninguém cadastrou paciente nenhum ainda.</li>
+          </ol>
+        </div>
+
+        <pre class="code-compact"><code class="language-csharp" data-trim>public async Task&lt;IActionResult&gt; Index()
+{
+    var pacientes = /* a sua consulta aqui */;
+    return View(pacientes);
+}</code></pre>
+
+        <div class="slide-footer">
+          <div class="footer-bar">12 Exercício do Ciclo 1</div>
+          <div class="footer-page">9</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 10: ESCRITA E RASTREAMENTO ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Gravar: <code>Add</code>, <code>Update</code>, <code>Remove</code> e o <code>SaveChangesAsync</code> <a href="#/ref-slide" class="ref-badge" title="Ver referências">[3]</a></h2>
+        </div>
+
+        <p style="font-size:0.72em; margin-top:0;">Os três primeiros métodos <strong>não</strong> tocam no banco: eles anotam a intenção no rastreador de mudanças. Quem abre a transação e emite o SQL é o <code>SaveChangesAsync</code>, uma vez só.</p>
+
+        <div class="flow-diagram" style="margin:14px 0 0 0; font-size:0.9em; gap:8px;">
+          <div class="flow-item">_context.Add(paciente)</div>
+          <div class="flow-arrow">&rarr;</div>
+          <div class="flow-item">estado: Added</div>
+          <div class="flow-arrow">&rarr;</div>
+          <div class="flow-item">await SaveChangesAsync()</div>
+          <div class="flow-arrow">&rarr;</div>
+          <div class="flow-item">INSERT no MySQL</div>
+        </div>
+
+        <table style="margin-top:14px;">
+          <thead>
+            <tr><th style="width:280px;">O que você escreve</th><th style="width:190px;">Estado registrado</th><th>SQL emitido no SaveChangesAsync</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><code>_context.Add(paciente)</code></td><td>Added</td><td><code>INSERT INTO Pacientes ...</code>, e o <code>Id</code> volta preenchido</td></tr>
+            <tr><td><code>_context.Update(paciente)</code></td><td>Modified</td><td><code>UPDATE Pacientes SET ... WHERE Id = @id</code></td></tr>
+            <tr><td><code>_context.Pacientes.Remove(p)</code></td><td>Deleted</td><td><code>DELETE FROM Pacientes WHERE Id = @id</code></td></tr>
+          </tbody>
+        </table>
+
+        <div class="takeaway">
+          <span class="takeaway-label">Takeaway</span>
+          <p>Esqueceu o <code>await _context.SaveChangesAsync()</code>? A aplicação não acusa erro nenhum, a tela redireciona normalmente e o registro simplesmente não existe no banco. É o defeito mais comum desta aula.</p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">12 Escrita e rastreamento de mudanças</div>
+          <div class="footer-page">10</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 11: AS CINCO OPERAÇÕES DO CRUD ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>O CRUD inteiro em uma tela</h2>
+        </div>
+
+        <p style="font-size:0.7em; margin-top:0;">Cinco operações, oito actions: <code>Create</code>, <code>Edit</code> e <code>Delete</code> aparecem duas vezes, uma em GET, que mostra a tela, e outra em POST, que grava.</p>
+
+        <table style="margin-top:8px; font-size:0.6em;">
+          <thead>
+            <tr><th style="width:250px;">O que a recepção quer fazer</th><th style="width:175px;">Action</th><th style="width:75px;">Verbo</th><th style="width:245px;">Resposta</th><th>No banco</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Ver a lista de pacientes</td><td><code>Index</code></td><td>GET</td><td><code>Index.cshtml</code></td><td><code>SELECT</code> ordenado por nome</td></tr>
+            <tr><td>Abrir a ficha de um paciente</td><td><code>Details</code></td><td>GET</td><td><code>Details.cshtml</code></td><td><code>SELECT</code> por <code>Id</code></td></tr>
+            <tr><td>Abrir o formulário em branco</td><td><code>Create</code></td><td>GET</td><td><code>Create.cshtml</code></td><td>nada</td></tr>
+            <tr><td>Gravar o paciente novo</td><td><code>Create</code></td><td>POST</td><td>redireciona para <code>Index</code></td><td><code>INSERT</code></td></tr>
+            <tr><td>Abrir o formulário preenchido</td><td><code>Edit</code></td><td>GET</td><td><code>Edit.cshtml</code></td><td><code>SELECT</code> por <code>Id</code></td></tr>
+            <tr><td>Gravar a alteração</td><td><code>Edit</code></td><td>POST</td><td>redireciona para <code>Index</code></td><td><code>UPDATE</code></td></tr>
+            <tr><td>Pedir a confirmação</td><td><code>Delete</code></td><td>GET</td><td><code>Delete.cshtml</code></td><td><code>SELECT</code> por <code>Id</code></td></tr>
+            <tr><td>Confirmar a exclusão</td><td><code>DeleteConfirmed</code></td><td>POST</td><td>redireciona para <code>Index</code></td><td><code>DELETE</code></td></tr>
+          </tbody>
+        </table>
+
+        <div class="slide-footer">
+          <div class="footer-bar">12 As cinco operações do CRUD</div>
+          <div class="footer-page">11</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 12: POST-REDIRECT-GET ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Post-Redirect-Get: por que redirecionar depois de gravar <a href="#/ref-slide" class="ref-badge" title="Ver referências">[1]</a></h2>
+        </div>
+
+        <p style="font-size:0.7em; margin-top:0;">O navegador guarda a <strong>última requisição feita</strong>. Se ela for o POST, apertar F5 reenvia o formulário inteiro, e o EF Core grava de novo, sem reclamar de nada.</p>
+
+        <div class="slide-figure" style="margin-top:0;">
+          <svg viewBox="0 0 1140 300" role="img" aria-label="Sem redirecionamento, atualizar a página reenvia o POST e grava o paciente duas vezes; com Post-Redirect-Get, a última requisição é um GET e atualizar apenas relê a lista">
+            <defs>
+              <marker id="a12setaPrg" markerWidth="9" markerHeight="9" refX="8" refY="4.5" orient="auto">
+                <path d="M0,0 L9,4.5 L0,9 Z" fill="#00274D"/>
+              </marker>
+              <marker id="a12setaRuim" markerWidth="9" markerHeight="9" refX="8" refY="4.5" orient="auto">
+                <path d="M0,0 L9,4.5 L0,9 Z" fill="#C84B31"/>
+              </marker>
+              <marker id="a12setaBoa" markerWidth="9" markerHeight="9" refX="8" refY="4.5" orient="auto">
+                <path d="M0,0 L9,4.5 L0,9 Z" fill="#2E9E7E"/>
+              </marker>
+              <path id="a12voltaPost" d="M640,92 L640,128 L344,128 L344,94"/>
+              <path id="a12voltaGet" d="M660,248 L660,282 L572,282 L572,250"/>
+            </defs>
+
+            <text x="6" y="22" font-size="14" font-weight="700" fill="#C84B31">Sem redirecionamento: a última requisição continua sendo o POST</text>
+
+            <rect x="6" y="42" width="120" height="50" rx="8" fill="#00274D"/>
+            <text x="66" y="72" text-anchor="middle" font-size="13" fill="#FFFFFF" font-weight="600">Navegador</text>
+            <line x1="130" y1="67" x2="252" y2="67" stroke="#00274D" stroke-width="2.5" marker-end="url(#a12setaPrg)"/>
+            <text x="191" y="58" text-anchor="middle" font-size="12" font-weight="700" fill="#00274D">POST</text>
+
+            <rect x="258" y="42" width="172" height="50" rx="8" fill="#00274D"/>
+            <text x="344" y="64" text-anchor="middle" font-size="13" fill="#FFFFFF" font-weight="600">Servidor grava</text>
+            <text x="344" y="82" text-anchor="middle" font-size="11" fill="#9FE2C0" font-family="'JetBrains Mono', monospace" style="font-variant-ligatures:none;">SaveChangesAsync</text>
+
+            <line x1="434" y1="67" x2="546" y2="67" stroke="#00274D" stroke-width="2.5" marker-end="url(#a12setaPrg)"/>
+            <text x="490" y="58" text-anchor="middle" font-size="12" font-weight="700" fill="#00274D">200 + View</text>
+
+            <rect x="552" y="42" width="184" height="50" rx="8" fill="#555555"/>
+            <text x="644" y="64" text-anchor="middle" font-size="13" fill="#FFFFFF" font-weight="600">Tela de sucesso</text>
+            <text x="644" y="82" text-anchor="middle" font-size="11" fill="#DDDDDD">a URL ainda é a do POST</text>
+
+            <use href="#a12voltaPost" fill="none" stroke="#C84B31" stroke-width="2.5" stroke-dasharray="7 5" marker-end="url(#a12setaRuim)"/>
+            <text x="492" y="145" text-anchor="middle" font-size="12" font-weight="700" fill="#C84B31">F5 reenvia o mesmo POST</text>
+            <circle r="6" fill="#C84B31">
+              <animate attributeName="cx" dur="3s" repeatCount="indefinite" values="640;640;344;344" keyTimes="0;0.18;0.82;1"/>
+              <animate attributeName="cy" dur="3s" repeatCount="indefinite" values="92;128;128;96" keyTimes="0;0.18;0.82;1"/>
+              <animate attributeName="opacity" dur="3s" repeatCount="indefinite" values="0;1;1;0" keyTimes="0;0.1;0.9;1"/>
+            </circle>
+
+            <rect x="762" y="42" width="372" height="86" rx="8" fill="#FDECE8" stroke="#C84B31" stroke-width="1.5"/>
+            <text x="948" y="70" text-anchor="middle" font-size="14" font-weight="700" fill="#C84B31">Dois pacientes idênticos</text>
+            <text x="948" y="92" text-anchor="middle" font-size="12" fill="#7A2A18">Um clique do usuário, dois INSERT no banco.</text>
+            <text x="948" y="112" text-anchor="middle" font-size="12" fill="#7A2A18">A recepção nem percebe que duplicou.</text>
+
+            <text x="6" y="178" font-size="14" font-weight="700" fill="#0B6E75">Com Post-Redirect-Get: a última requisição vira um GET, que é seguro repetir</text>
+
+            <rect x="6" y="198" width="120" height="50" rx="8" fill="#00274D"/>
+            <text x="66" y="228" text-anchor="middle" font-size="13" fill="#FFFFFF" font-weight="600">Navegador</text>
+            <line x1="130" y1="223" x2="252" y2="223" stroke="#00274D" stroke-width="2.5" marker-end="url(#a12setaPrg)"/>
+            <text x="191" y="214" text-anchor="middle" font-size="12" font-weight="700" fill="#00274D">POST</text>
+
+            <rect x="258" y="198" width="172" height="50" rx="8" fill="#00274D"/>
+            <text x="344" y="220" text-anchor="middle" font-size="13" fill="#FFFFFF" font-weight="600">Servidor grava</text>
+            <text x="344" y="238" text-anchor="middle" font-size="11" fill="#9FE2C0" font-family="'JetBrains Mono', monospace" style="font-variant-ligatures:none;">SaveChangesAsync</text>
+
+            <line x1="434" y1="223" x2="562" y2="223" stroke="#2E9E7E" stroke-width="2.5" marker-end="url(#a12setaBoa)"/>
+            <text x="498" y="214" text-anchor="middle" font-size="12" font-weight="700" fill="#0B6E75">302 Redirect</text>
+
+            <rect x="568" y="198" width="184" height="50" rx="8" fill="#00274D"/>
+            <text x="660" y="220" text-anchor="middle" font-size="13" fill="#FFFFFF" font-weight="600">Navegador refaz</text>
+            <text x="660" y="238" text-anchor="middle" font-size="11" fill="#9FE2C0" font-family="'JetBrains Mono', monospace" style="font-variant-ligatures:none;">GET /Pacientes</text>
+
+            <use href="#a12voltaGet" fill="none" stroke="#2E9E7E" stroke-width="2.5" stroke-dasharray="7 5" marker-end="url(#a12setaBoa)"/>
+            <text x="616" y="298" text-anchor="middle" font-size="12" font-weight="700" fill="#0B6E75">F5 repete só o GET</text>
+
+            <rect x="762" y="198" width="372" height="86" rx="8" fill="#EAF5F1" stroke="#2E9E7E" stroke-width="1.5"/>
+            <text x="948" y="226" text-anchor="middle" font-size="14" font-weight="700" fill="#0B6E75">Um paciente, e só um</text>
+            <text x="948" y="248" text-anchor="middle" font-size="12" fill="#1F5A50">Atualizar a página relê a lista e nada mais.</text>
+            <text x="948" y="268" text-anchor="middle" font-size="12" fill="#1F5A50">Nenhum INSERT extra chega ao MySQL.</text>
+          </svg>
+        </div>
+
+        <div class="takeaway">
+          <span class="takeaway-label">Takeaway</span>
+          <p>Toda action de POST que grava termina em <code>RedirectToAction</code>, nunca em <code>View</code>. A única exceção é a validação que falhou: aí nada foi gravado, e devolver a View é o certo.</p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">12 Post-Redirect-Get</div>
+          <div class="footer-page">12</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 13: TEMPDATA ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>A mensagem que sobrevive ao redirecionamento: <code>TempData</code></h2>
+        </div>
+
+        <p style="font-size:0.72em; margin-top:0;">O redirecionamento resolve a duplicidade e cria um problema novo: a action que gravou não é a que desenha a tela. <code>ViewBag</code> morre no caminho; <code>TempData</code> atravessa <strong>uma</strong> requisição.</p>
+
+        <pre class="code-compact"><code class="language-csharp" data-trim>// No PacientesController, logo depois de gravar
+await _context.SaveChangesAsync();
+TempData["Sucesso"] = $"Paciente {paciente.Nome} cadastrado com sucesso.";
+return RedirectToAction(nameof(Index));</code></pre>
+
+        <pre class="code-compact"><code class="language-html" data-trim>@* Em Views/Pacientes/Index.cshtml, no topo da tabela *@
+@if (TempData["Sucesso"] != null)
+{
+    &lt;p class="alerta-sucesso"&gt;@TempData["Sucesso"]&lt;/p&gt;
+}</code></pre>
+
+        <div class="takeaway">
+          <span class="takeaway-label">Takeaway</span>
+          <p><code>TempData</code> é lido uma vez e some. Se a mensagem aparecer de novo depois de um F5, ela foi gravada de novo, e isso é sinal de que o Post-Redirect-Get não está no lugar.</p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">12 TempData e a mensagem de sucesso</div>
+          <div class="footer-page">13</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 14: EXCLUSÃO EM DUAS ETAPAS ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Excluir em duas etapas: o GET pergunta, o POST apaga</h2>
+        </div>
+
+        <p style="font-size:0.72em; margin-top:0;">Exclusão por link é armadilha: um clique errado apaga um cadastro. GET nunca destrói dado.</p>
+
+        <pre class="code-compact"><code class="language-csharp" data-trim>// Etapa 1, GET: mostra a ficha e pergunta se é isso mesmo
+public async Task&lt;IActionResult&gt; Delete(int? id)
+{
+    if (id == null) return NotFound();
+    var paciente = await _context.Pacientes.FirstOrDefaultAsync(p =&gt; p.Id == id);
+    if (paciente == null) return NotFound();
+    return View(paciente);
+}
+
+// Etapa 2, POST: o formulário da tela de confirmação chega aqui
+[HttpPost, ActionName("Delete")]
+[ValidateAntiForgeryToken]
+public async Task&lt;IActionResult&gt; DeleteConfirmed(int id)
+{
+    var paciente = await _context.Pacientes.FindAsync(id);
+    if (paciente != null) _context.Pacientes.Remove(paciente);
+    await _context.SaveChangesAsync();
+    TempData["Sucesso"] = "Paciente excluído.";
+    return RedirectToAction(nameof(Index));
+}</code></pre>
+
+        <div class="slide-footer">
+          <div class="footer-bar">12 Exclusão em duas etapas</div>
+          <div class="footer-page">14</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 15: EXERCÍCIO CURTO, CICLO 2 ==================== -->
+      <section class="exercise-slide content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Exercício do Ciclo 2: a tela de confirmação</h2>
+        </div>
+
+        <div class="exercise-container">
+          <h3>Em Views/Pacientes/Delete.cshtml, 8 minutos</h3>
+          <ol class="exercise-steps">
+            <li>Mostre o nome e o CPF do paciente que está prestes a ser excluído.</li>
+            <li>Envolva o botão de confirmação em um <code>&lt;form&gt;</code> com <code>method="post"</code>, e não em um link.</li>
+            <li>Acrescente o <code>asp-antiforgery</code> pela tag helper e um link <strong>Cancelar</strong> de volta para o <code>Index</code>.</li>
+            <li>Confira no navegador: passar o mouse no botão não pode mostrar uma URL de exclusão.</li>
+          </ol>
+        </div>
+
+        <pre class="code-compact"><code class="language-html" data-trim>&lt;form asp-action="Delete" method="post"&gt;
+    &lt;input type="hidden" asp-for="Id" /&gt;
+    &lt;button type="submit"&gt;Confirmar exclusão&lt;/button&gt;
+    &lt;a asp-action="Index"&gt;Cancelar&lt;/a&gt;
+&lt;/form&gt;</code></pre>
+
+        <div class="slide-footer">
+          <div class="footer-bar">12 Exercício do Ciclo 2</div>
+          <div class="footer-page">15</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 16: QUIZ DE FIXAÇÃO ==================== -->
+      <section class="quiz-slide content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area"><div class="accent-bar"></div><h2>Quiz de fixação</h2></div>
+        <div class="quiz-container">
+          <div class="quiz-question">Por que redirecionar após um POST bem-sucedido, em vez de devolver a View diretamente?</div>
+          <ul class="quiz-options">
+            <li data-correct="false"><span class="option-letter">A</span> Porque o redirecionamento consome menos memória no servidor do que renderizar a View mais uma vez.</li>
+            <li data-correct="false"><span class="option-letter">B</span><span class="option-text">Porque o Entity Framework Core exige um redirecionamento logo depois da chamada de <code>SaveChangesAsync</code>.</span></li>
+            <li data-correct="false"><span class="option-letter">C</span><span class="option-text">Porque uma action anotada com <code>[HttpPost]</code> não pode retornar uma View, apenas um redirecionamento.</span></li>
+            <li data-correct="true"><span class="option-letter">D</span> Para evitar o reenvio duplicado do formulário quando o usuário atualiza a página, no padrão Post-Redirect-Get.</li>
+          </ul>
+          <div class="quiz-feedback"
+               data-correct-msg="Isso. O navegador repete a última requisição quando o usuário aperta F5. Se ela for o POST, o formulário é reenviado e o paciente é gravado de novo. Redirecionando, a última requisição vira um GET, que pode ser repetido à vontade."
+               data-incorrect-msg="Não é isso. Redirecionar não é exigência do EF Core, não economiza memória, e uma action de POST pode sim devolver uma View, o que fazemos justamente quando a validação falha. O motivo é o reenvio duplicado do formulário no F5."></div>
+        </div>
+        <div class="slide-footer"><div class="footer-bar">12 Quiz de fixação</div><div class="footer-page">16</div></div>
+      </section>
+
+      <!-- ==================== SLIDE 17: LAB PASSO 1 ==================== -->
+      <section class="exercise-slide content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Laboratório, passo 1 de 6: a branch e o Controller</h2>
+        </div>
+
+        <p style="font-size:0.72em; margin-top:0;">Missão dos próximos 60 minutos: dar à recepção da Clínica Vida+ o cadastro completo de pacientes.</p>
+
+        <div class="exercise-container">
+          <h3>No seu fork, a partir da main atualizada</h3>
+          <ol class="exercise-steps">
+            <li>Crie a branch <code>feature/crud-pacientes</code>.</li>
+            <li>Crie <code>Controllers/PacientesController.cs</code>, herdando de <code>Controller</code>.</li>
+            <li>Declare o campo <code>private readonly ClinicaContext _context;</code> e receba o contexto pelo construtor.</li>
+            <li>Rode <code>dotnet run</code> e confirme que a aplicação sobe: se a injeção estiver errada, ela falha aqui.</li>
+          </ol>
+        </div>
+
+        <pre class="code-compact"><code class="language-bash" data-trim>git checkout main &amp;&amp; git pull
+git checkout -b feature/crud-pacientes
+dotnet run</code></pre>
+
+        <div class="slide-footer">
+          <div class="footer-bar">12 Laboratório, passo 1, branch e Controller</div>
+          <div class="footer-page">17</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 18: LAB PASSO 2 ==================== -->
+      <section class="exercise-slide content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Laboratório, passo 2 de 6: a listagem</h2>
+        </div>
+
+        <div class="exercise-container">
+          <h3>Index e a View tipada</h3>
+          <ol class="exercise-steps">
+            <li>Implemente <code>Index</code> como assíncrona, ordenando por <code>Nome</code>.</li>
+            <li>Crie <code>Views/Pacientes/Index.cshtml</code> com <code>@model IEnumerable&lt;Paciente&gt;</code>.</li>
+            <li>Monte a tabela com nome, CPF e telefone, e os links para <code>Details</code>, <code>Edit</code> e <code>Delete</code>.</li>
+            <li>Acrescente o link <strong>Novo paciente</strong>, apontando para <code>Create</code>.</li>
+          </ol>
+        </div>
+
+        <pre class="code-compact"><code class="language-csharp" data-trim>public async Task&lt;IActionResult&gt; Index()
+{
+    var pacientes = await _context.Pacientes.OrderBy(p =&gt; p.Nome).ToListAsync();
+    return View(pacientes);
+}</code></pre>
+
+        <div class="slide-footer">
+          <div class="footer-bar">12 Laboratório, passo 2, a listagem</div>
+          <div class="footer-page">18</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 19: LAB PASSO 3 ==================== -->
+      <section class="exercise-slide content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Laboratório, passo 3 de 6: a ficha do paciente</h2>
+        </div>
+
+        <div class="exercise-container">
+          <h3>Details, com o id inexistente tratado</h3>
+          <ol class="exercise-steps">
+            <li>Implemente <code>Details(int? id)</code> com as duas guardas de <code>NotFound()</code>.</li>
+            <li>Crie <code>Views/Pacientes/Details.cshtml</code> com <code>@model Paciente</code>.</li>
+            <li>Mostre os seis campos: <code>Nome</code>, <code>Cpf</code>, <code>DataNascimento</code>, <code>Telefone</code>, <code>Email</code> e o <code>Id</code>.</li>
+            <li>Teste na barra de endereços: <code>/Pacientes/Details/9999</code> precisa devolver 404, e não uma página de erro.</li>
+          </ol>
+        </div>
+
+        <pre class="code-compact"><code class="language-csharp" data-trim>var paciente = await _context.Pacientes.FirstOrDefaultAsync(p =&gt; p.Id == id);
+if (paciente == null) return NotFound();
+return View(paciente);</code></pre>
+
+        <div class="slide-footer">
+          <div class="footer-bar">12 Laboratório, passo 3, a ficha do paciente</div>
+          <div class="footer-page">19</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 20: LAB PASSO 4 ==================== -->
+      <section class="exercise-slide content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Laboratório, passo 4 de 6: o cadastro</h2>
+        </div>
+
+        <div class="exercise-container">
+          <h3>Create em GET e em POST, o fim do Ciclo 3</h3>
+          <ol class="exercise-steps">
+            <li><code>Create()</code> em GET devolve a View vazia; o POST grava.</li>
+            <li>Se <code>ModelState.IsValid</code> for falso, devolva a View com o objeto.</li>
+            <li>Sendo válido: <code>Add</code>, <code>SaveChangesAsync</code>, <code>TempData</code> e <code>RedirectToAction</code>.</li>
+            <li>Cadastre um paciente e confira a linha nova no MySQL Workbench.</li>
+          </ol>
+        </div>
+
+        <pre class="code-compact"><code class="language-csharp" data-trim>[HttpPost, ValidateAntiForgeryToken]
+public async Task&lt;IActionResult&gt; Create(Paciente paciente)
+{
+    if (!ModelState.IsValid) return View(paciente);
+    _context.Add(paciente);
+    await _context.SaveChangesAsync();
+    TempData["Sucesso"] = $"Paciente {paciente.Nome} cadastrado com sucesso.";
+    return RedirectToAction(nameof(Index));
+}</code></pre>
+
+        <div class="slide-footer">
+          <div class="footer-bar">12 Laboratório, passo 4, o cadastro</div>
+          <div class="footer-page">20</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 21: LAB PASSO 5 ==================== -->
+      <section class="exercise-slide content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Laboratório, passo 5 de 6: a edição</h2>
+        </div>
+
+        <p style="font-size:0.72em; margin-top:0;">Ciclo 4, sozinho. A partir daqui o professor circula pela sala, e o roteiro completo está em <code>labs/aula12-lab/</code>.</p>
+
+        <div class="exercise-container">
+          <h3>Edit em GET e em POST</h3>
+          <ol class="exercise-steps">
+            <li>No GET, carregue o paciente com <code>FindAsync</code> e devolva a View já preenchida.</li>
+            <li>No POST, receba <code>(int id, Paciente paciente)</code> e recuse com <code>NotFound()</code> se <code>id != paciente.Id</code>.</li>
+            <li>Guarde o <code>Id</code> em um campo oculto na View: sem ele, o POST chega com <code>Id</code> zero e o EF Core tenta um <code>INSERT</code>.</li>
+            <li>Grave com <code>Update</code> e <code>SaveChangesAsync</code>, e redirecione com a mensagem em <code>TempData</code>.</li>
+          </ol>
+        </div>
+
+        <pre class="code-compact"><code class="language-csharp" data-trim>if (id != paciente.Id) return NotFound();
+if (!ModelState.IsValid) return View(paciente);
+_context.Update(paciente);
+await _context.SaveChangesAsync();</code></pre>
+
+        <div class="slide-footer">
+          <div class="footer-bar">12 Laboratório, passo 5, a edição</div>
+          <div class="footer-page">21</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 22: LAB PASSO 6 ==================== -->
+      <section class="exercise-slide content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Laboratório, passo 6 de 6: a exclusão</h2>
+        </div>
+
+        <div class="exercise-container">
+          <h3>Delete em GET, DeleteConfirmed em POST</h3>
+          <ol class="exercise-steps">
+            <li>No GET, carregue o paciente e devolva a tela de confirmação com nome e CPF.</li>
+            <li>No POST, use <code>[HttpPost, ActionName("Delete")]</code> sobre o método <code>DeleteConfirmed</code>.</li>
+            <li>Remova, grave e redirecione, com a mensagem de sucesso em <code>TempData</code>.</li>
+            <li>Faça o teste do F5 nas três operações: cadastrar, editar e excluir. Nenhuma pode duplicar nada.</li>
+          </ol>
+        </div>
+
+        <pre class="code-compact"><code class="language-csharp" data-trim>[HttpPost, ActionName("Delete")]
+[ValidateAntiForgeryToken]
+public async Task&lt;IActionResult&gt; DeleteConfirmed(int id)
+{
+    var paciente = await _context.Pacientes.FindAsync(id);
+    if (paciente != null) _context.Pacientes.Remove(paciente);
+    await _context.SaveChangesAsync();
+    return RedirectToAction(nameof(Index));
+}</code></pre>
+
+        <div class="slide-footer">
+          <div class="footer-bar">12 Laboratório, passo 6, a exclusão</div>
+          <div class="footer-page">22</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 23: ENTREGÁVEL, COMMIT E PUSH ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Entregável de hoje, commit e push</h2>
+        </div>
+
+        <div class="side-by-side" style="margin-top:6px;">
+          <div class="side">
+            <h4>O que precisa estar funcionando</h4>
+            <ul style="margin:0; padding-left:20px;">
+              <li><code>PacientesController</code> com o contexto injetado.</li>
+              <li>As oito actions, todas as de banco assíncronas.</li>
+              <li>As cinco Views em <code>Views/Pacientes/</code>.</li>
+              <li>Post-Redirect-Get nos três POST, com <code>TempData</code>.</li>
+              <li><code>NotFound()</code> em toda action que recebe um <code>id</code>.</li>
+            </ul>
+          </div>
+          <div class="side">
+            <h4>Como o professor confere</h4>
+            <ul style="margin:0; padding-left:20px;">
+              <li>Cadastrar um paciente e vê-lo na tabela do MySQL.</li>
+              <li>Editar o telefone e recarregar: a alteração persiste.</li>
+              <li>Excluir pela tela de confirmação, nunca por link.</li>
+              <li>F5 depois de gravar: nada é duplicado.</li>
+              <li><code>/Pacientes/Details/9999</code> devolve 404.</li>
+            </ul>
+          </div>
+        </div>
+
+        <pre class="code-compact" style="margin-top:14px;"><code class="language-bash" data-trim>git add Controllers/PacientesController.cs Views/Pacientes/
+git commit -m "feat: CRUD completo de paciente com EF Core"
+git push -u origin feature/crud-pacientes</code></pre>
+
+        <div class="slide-footer">
+          <div class="footer-bar">12 Entregável, commit e push</div>
+          <div class="footer-page">23</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 24: FECHAMENTO DO MÓDULO 2 ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Módulo 2 fechado: o site virou aplicação que guarda dados</h2>
+        </div>
+
+        <p style="font-size:0.7em; margin-top:0;">Seis encontros atrás você não tinha o SDK instalado. Agora existe uma aplicação MVC que recebe dados pela tela, valida no servidor e grava em um banco relacional.</p>
+
+        <div class="timeline">
+          <div class="tl-item is-past">
+            <div class="tl-dot"></div>
+            <span class="tl-year">Aula 07</span>
+            <span class="tl-tool">Ambiente .NET</span>
+            <span class="tl-desc">O projeto <code>ClinicaVida.Web</code> rodando.</span>
+          </div>
+          <div class="tl-item is-past">
+            <div class="tl-dot"></div>
+            <span class="tl-year">Aula 08</span>
+            <span class="tl-tool">MVC e Razor</span>
+            <span class="tl-desc">Controller, rota e View da especialidade.</span>
+          </div>
+          <div class="tl-item is-past">
+            <div class="tl-dot"></div>
+            <span class="tl-year">Aula 09</span>
+            <span class="tl-tool">C# e coleções</span>
+            <span class="tl-desc">A lista de médicos filtrada no servidor.</span>
+          </div>
+          <div class="tl-item is-past">
+            <div class="tl-dot"></div>
+            <span class="tl-year">Aula 10</span>
+            <span class="tl-tool">Models e validação</span>
+            <span class="tl-desc">O formulário validado por Data Annotations.</span>
+          </div>
+          <div class="tl-item is-past">
+            <div class="tl-dot"></div>
+            <span class="tl-year">Aula 11</span>
+            <span class="tl-tool">EF Core e MySQL</span>
+            <span class="tl-desc">O banco <code>clinicavida</code> criado por migration.</span>
+          </div>
+          <div class="tl-item">
+            <div class="tl-dot"></div>
+            <span class="tl-year">Aula 12</span>
+            <span class="tl-tool">CRUD completo</span>
+            <span class="tl-desc">Os dados sobrevivem ao reinício.</span>
+          </div>
+        </div>
+
+        <div class="callout" style="margin-top:12px;">
+          <p><strong>Prévia da Aula 13:</strong> cadastre um paciente e abra a mesma aplicação em outra aba. Para o servidor, as duas abas são estranhos absolutos: o HTTP não guarda memória nenhuma entre uma requisição e a seguinte. Como, então, um site sabe que você continua sendo você? Começa o <strong>Módulo 3</strong>, com cookies e sessões.</p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">12 Fechamento do Módulo 2</div>
+          <div class="footer-page">24</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 25: REFERÊNCIAS ==================== -->
+      <section id="ref-slide" class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Referências desta aula</h2>
+        </div>
+
+        <p style="font-size:0.72em; margin-top:0;">Os números entre colchetes ao lado dos títulos remetem a esta lista, toda ela em português e aberta.</p>
+
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px 30px; margin-top:6px;">
+          <div class="concept-card" style="padding:14px 18px;">
+            <h4>[1] Injeção de dependência</h4>
+            <p style="font-size:0.7em; color:#444444;">MICROSOFT. <em>Injeção de dependência no ASP.NET Core</em>.<br>
+            <code style="font-size:0.82em;">learn.microsoft.com/pt-br/aspnet/core/fundamentals/dependency-injection</code></p>
+          </div>
+          <div class="concept-card" style="padding:14px 18px;">
+            <h4>[2] Consultas com LINQ</h4>
+            <p style="font-size:0.7em; color:#444444;">MICROSOFT. <em>Consultando dados com o Entity Framework Core</em>.<br>
+            <code style="font-size:0.82em;">learn.microsoft.com/pt-br/ef/core/querying/</code></p>
+          </div>
+          <div class="concept-card" style="padding:14px 18px;">
+            <h4>[3] Gravar, alterar e excluir</h4>
+            <p style="font-size:0.7em; color:#444444;">MICROSOFT. <em>Salvando dados com o Entity Framework Core</em>.<br>
+            <code style="font-size:0.82em;">learn.microsoft.com/pt-br/ef/core/saving/</code></p>
+          </div>
+          <div class="concept-card" style="padding:14px 18px;">
+            <h4>[4] async e await</h4>
+            <p style="font-size:0.7em; color:#444444;">MICROSOFT. <em>Guia da linguagem C#: programação assíncrona</em>.<br>
+            <code style="font-size:0.82em;">learn.microsoft.com/pt-br/dotnet/csharp/asynchronous-programming/</code></p>
+          </div>
+        </div>
+
+        <div class="callout" style="margin-top:14px;">
+          <p>O roteiro completo do laboratório de hoje está no portal, em <code>labs/aula12-lab/</code>.</p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">12 Referências</div>
+          <div class="footer-page">25</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 26: ENCERRAMENTO ==================== -->
+      <section class="end-slide">
+        <img src="../assets/img/uninove-logo.png" alt="Uninove, Universidade Nove de Julho"
+             style="max-width:300px; background:#FFFFFF; padding:20px 28px; border-radius:8px;">
+        <div class="copyright">
+          Copyright &copy; 2026<br>
+          Prof. José Romualdo da Costa Filho<br><br>
+          Todos os direitos reservados. É expressamente proibida a reprodução, divulgação<br>
+          total ou parcial, deste material acadêmico sem autorização formal,<br>
+          por escrito, do Professor autor da ementa.
+        </div>
+      </section>
+
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/highlight/highlight.js"></script>
+  <script src="../assets/js/uninove-quiz.js"></script>
+  <script type="module">
+    import { TURMAS, resolverTurma, dataDaAula, formatarData } from '../assets/js/turmas.js';
+    const turma = resolverTurma({
+      hoje: new Date(),
+      salva: localStorage.getItem('uninove-turma'),
+    });
+    const alvo = document.querySelector('[data-data-da-aula]');
+    if (alvo) {
+      const n = Number(alvo.getAttribute('data-data-da-aula'));
+      alvo.textContent = turma
+        ? `${TURMAS[turma].rotulo}, ${formatarData(dataDaAula(turma, n))}`
+        : `Quarta ${formatarData(dataDaAula('quarta', n))} ou quinta ${formatarData(dataDaAula('quinta', n))}`;
+    }
+  </script>
+  <script>
+    Reveal.initialize({
+      width: 1280, height: 720, center: false, margin: 0,
+      hash: true, slideNumber: false,
+      // Os chevrons de navegação caem sobre a footer-bar e sobre o triângulo
+      // azul do canto inferior direito; a barra de progresso encosta no rodapé
+      // e parece um segundo rodapé. Nenhum dos dois é usado na projeção.
+      controls: false, progress: false,
+      // Um slide por página no ?print-pdf, para o PDF bater com o deck.
+      pdfMaxPagesPerSlide: 1,
+      plugins: [RevealHighlight],
+    });
+  </script>
+</body>
+</html>

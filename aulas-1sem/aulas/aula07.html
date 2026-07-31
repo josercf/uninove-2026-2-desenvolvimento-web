@@ -1,0 +1,1148 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Aula 07, Ambiente de desenvolvimento .NET | Uninove</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/theme/white.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/highlight/monokai.css">
+  <link rel="stylesheet" href="../assets/css/uninove-theme.css">
+  <link rel="stylesheet" href="../assets/css/uninove-print.css">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+      <!-- ==================== SLIDE 1: CAPA ==================== -->
+      <section class="cover-slide">
+        <img src="../assets/img/uninove-logo.png" alt="Uninove, Universidade Nove de Julho" class="uninove-logo-full"
+             style="max-width:400px; background:#FFFFFF; padding:26px 36px; border-radius:10px;">
+        <div style="margin-top:36px; color:#FFFFFF; font-size:0.95em; font-weight:800; letter-spacing:4px; text-transform:uppercase;">Desenvolvimento Web</div>
+        <div style="margin-top:12px; color:#C84B31; font-size:0.6em; font-weight:700; letter-spacing:3px; text-transform:uppercase;">Graduação, 2026.2</div>
+      </section>
+
+      <!-- ==================== SLIDE 2: TÍTULO ==================== -->
+      <section class="title-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="title-card">
+          <div class="accent-bar"></div>
+          <h1>Desenvolvimento Web</h1>
+          <h2>Ambiente de desenvolvimento .NET</h2>
+          <h3>Prof. José Romualdo<br><span data-data-da-aula="7"></span></h3>
+        </div>
+        <div class="lesson-bar">AULA 07 &nbsp;|&nbsp; Módulo 2, Backend com C# e ASP.NET Core MVC</div>
+      </section>
+
+      <!-- ==================== SLIDE 3: AGENDA ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Agenda do encontro de hoje</h2>
+        </div>
+
+        <p style="font-size:0.76em; margin-top:0;">São 150 minutos corridos, em quatro ciclos. Hoje abre o Módulo 2: o back-end da Clínica Vida+.</p>
+
+        <table>
+          <thead>
+            <tr><th style="width:190px;">Horário</th><th style="width:200px;">Bloco</th><th>O que acontece</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>19h30 às 20h05</td><td>Ciclo 1</td><td>A plataforma .NET, SDK e runtime, e a linguagem C#</td></tr>
+            <tr><td>20h05 às 20h40</td><td>Ciclo 2</td><td>Projeto, <code>.csproj</code>, NuGet e a anatomia do projeto MVC</td></tr>
+            <tr><td>20h40 às 20h50</td><td>Quiz de fixação</td><td>Uma pergunta sobre o conceito central da aula</td></tr>
+            <tr><td>20h50 às 21h25</td><td>Ciclo 3</td><td>Laboratório guiado: SDK, branch e <code>dotnet new mvc</code></td></tr>
+            <tr><td>21h25 às 21h50</td><td>Ciclo 4</td><td>Laboratório: a home da clínica e o README, que é o entregável</td></tr>
+            <tr><td>21h50 às 22h00</td><td>Fechamento</td><td>Conferir que a aplicação sobe e prévia da Aula 08</td></tr>
+          </tbody>
+        </table>
+
+        <div class="slide-footer">
+          <div class="footer-bar">07 Agenda do encontro</div>
+          <div class="footer-page">3</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 4: RECAPITULAÇÃO DA AULA 06 ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>De onde viemos: o JavaScript da Aula 06</h2>
+        </div>
+
+        <p style="font-size:0.72em; margin-top:0;">Você entregou o <code>assets/js/agendamento.js</code>, com validação e filtro funcionando no navegador. O front-end da clínica está de pé, e é aí que ele para.</p>
+
+        <div class="side-by-side" style="margin-top:6px;">
+          <div class="side">
+            <h4>O que o seu JavaScript já faz</h4>
+            <ul style="margin:0; padding-left:20px;">
+              <li>Intercepta o <code>submit</code> sem recarregar a página.</li>
+              <li>Valida CPF, data futura e o expediente das 07h às 19h.</li>
+              <li>Mostra o resumo do agendamento na própria tela.</li>
+              <li>Filtra as especialidades enquanto o paciente digita.</li>
+            </ul>
+          </div>
+          <div class="side">
+            <h4>O que ele não consegue fazer</h4>
+            <ul style="margin:0; padding-left:20px;">
+              <li>O agendamento existe apenas na memória daquela aba.</li>
+              <li>A recepção não vê nada do que o paciente marcou.</li>
+              <li>Ninguém impede dois pacientes no mesmo horário.</li>
+              <li>Fechou o navegador, acabou: não sobra registro.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="callout" style="margin-top:16px;">
+          <p><strong>A pergunta que abre o Módulo 2:</strong> onde ficam guardados os agendamentos depois que o navegador fecha? A resposta não está no navegador. Está em um servidor, e o servidor desta disciplina fala C#.</p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">07 Recapitulação da Aula 06</div>
+          <div class="footer-page">4</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 5: A VIRADA DO MÓDULO 2 ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Módulo 2: o front-end está pronto, agora entra o servidor</h2>
+        </div>
+
+        <p style="font-size:0.72em; margin-top:0;">Nas Aulas 01 a 06 você construiu tudo o que roda dentro do navegador. Da Aula 07 à 12, o mesmo case ganha o outro lado da conversa: o código que roda na máquina da clínica e decide o que responder.</p>
+
+        <div class="slide-figure" style="margin-top:0;">
+          <svg viewBox="0 0 1140 250" role="img" aria-label="O front-end concluído nas Aulas 01 a 06 e o back-end que começa nas Aulas 07 a 12">
+            <defs>
+              <marker id="a07setaCoral" markerWidth="10" markerHeight="10" refX="9" refY="5" orient="auto">
+                <path d="M0,0 L10,5 L0,10 Z" fill="#C84B31"/>
+              </marker>
+            </defs>
+
+            <!-- FRONT-END, CONCLUÍDO -->
+            <rect x="24" y="46" width="360" height="150" rx="10" fill="#F5F5F5" stroke="#27ae60" stroke-width="2.5"/>
+            <text x="204" y="32" text-anchor="middle" font-size="17" font-weight="800" fill="#1e8449">Concluído, Aulas 01 a 06</text>
+            <text x="204" y="76" text-anchor="middle" font-size="15" font-weight="800" fill="#00274D">NAVEGADOR</text>
+            <rect x="46" y="94" width="98" height="34" rx="6" fill="#00274D"/>
+            <text x="95" y="116" text-anchor="middle" font-size="13" fill="#FFFFFF" font-weight="600">HTML</text>
+            <rect x="154" y="94" width="98" height="34" rx="6" fill="#00274D"/>
+            <text x="203" y="116" text-anchor="middle" font-size="13" fill="#FFFFFF" font-weight="600">CSS</text>
+            <rect x="262" y="94" width="98" height="34" rx="6" fill="#00274D"/>
+            <text x="311" y="116" text-anchor="middle" font-size="13" fill="#FFFFFF" font-weight="600">JS</text>
+            <text x="204" y="154" text-anchor="middle" font-size="13" fill="#555555">Desenha a tela e valida o formulário</text>
+            <text x="204" y="178" text-anchor="middle" font-size="12" fill="#c0392b">Nada sobrevive ao fechar da aba</text>
+
+            <!-- A LACUNA -->
+            <line x1="396" y1="121" x2="470" y2="121" stroke="#C84B31" stroke-width="3" stroke-dasharray="8,6" marker-end="url(#a07setaCoral)"/>
+            <text x="433" y="104" text-anchor="middle" font-size="12" font-weight="700" fill="#C84B31">HTTP</text>
+
+            <!-- BACK-END, A CONSTRUIR -->
+            <rect x="484" y="46" width="380" height="150" rx="10" fill="#FFF7F5" stroke="#C84B31" stroke-width="2.5" stroke-dasharray="7,5"/>
+            <text x="674" y="32" text-anchor="middle" font-size="17" font-weight="800" fill="#C84B31">A construir, Aulas 07 a 12</text>
+            <text x="674" y="76" text-anchor="middle" font-size="15" font-weight="800" fill="#00274D">SERVIDOR</text>
+            <rect x="506" y="94" width="80" height="34" rx="6" fill="#C84B31"/>
+            <text x="546" y="116" text-anchor="middle" font-size="13" fill="#FFFFFF" font-weight="600">C#</text>
+            <rect x="596" y="94" width="246" height="34" rx="6" fill="#C84B31"/>
+            <text x="719" y="116" text-anchor="middle" font-size="13" fill="#FFFFFF" font-weight="600">ASP.NET Core MVC</text>
+            <text x="674" y="154" text-anchor="middle" font-size="13" fill="#555555">Recebe, decide, valida e responde</text>
+            <text x="674" y="178" text-anchor="middle" font-size="12" fill="#1e8449">Hoje: montar o ambiente e criar o projeto</text>
+
+            <!-- BANCO -->
+            <line x1="876" y1="121" x2="940" y2="121" stroke="#999999" stroke-width="3" stroke-dasharray="8,6"/>
+            <ellipse cx="1040" cy="72" rx="72" ry="18" fill="#999999"/>
+            <rect x="968" y="72" width="144" height="82" fill="#999999"/>
+            <ellipse cx="1040" cy="154" rx="72" ry="18" fill="#999999"/>
+            <text x="1040" y="120" text-anchor="middle" font-size="16" font-weight="800" fill="#FFFFFF">MySQL</text>
+            <text x="1040" y="196" text-anchor="middle" font-size="12" fill="#888888">Aulas 11 e 12</text>
+          </svg>
+        </div>
+
+        <div class="takeaway">
+          <span class="takeaway-label">Takeaway</span>
+          <p>Guardar dado é trabalho de servidor. Antes de escrever uma linha de regra de negócio, é preciso ter a plataforma instalada e o projeto criado: é exatamente isso que a aula de hoje entrega.</p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">07 A virada do Módulo 2</div>
+          <div class="footer-page">5</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 6: SDK E RUNTIME ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>O que é o .NET: SDK e runtime <a href="#/ref-slide" class="ref-badge" title="Ver referências">[3]</a></h2>
+        </div>
+
+        <p style="font-size:0.72em; margin-top:0;">O .NET é uma plataforma: linguagem, compilador, bibliotecas e um ambiente de execução. A distinção que confunde todo mundo na primeira instalação é entre o <strong>SDK</strong>, com que se desenvolve, e o <strong>runtime</strong>, com que se executa.</p>
+
+        <div class="slide-figure" style="margin-top:0;">
+          <svg viewBox="0 0 1140 250" role="img" aria-label="O SDK contém o runtime; o runtime sozinho apenas executa a aplicação já compilada">
+            <!-- SDK -->
+            <rect x="24" y="30" width="640" height="188" rx="12" fill="#F5F5F5" stroke="#00274D" stroke-width="3"/>
+            <text x="46" y="60" font-size="18" font-weight="800" fill="#00274D">SDK, Software Development Kit</text>
+            <text x="46" y="82" font-size="13" fill="#777777">na máquina de quem desenvolve, a sua</text>
+
+            <rect x="46" y="96" width="176" height="38" rx="6" fill="#00274D"/>
+            <text x="134" y="120" text-anchor="middle" font-size="13" fill="#FFFFFF" font-weight="600">CLI dotnet</text>
+            <rect x="232" y="96" width="176" height="38" rx="6" fill="#00274D"/>
+            <text x="320" y="120" text-anchor="middle" font-size="13" fill="#FFFFFF" font-weight="600">compilador C#</text>
+            <rect x="418" y="96" width="222" height="38" rx="6" fill="#00274D"/>
+            <text x="529" y="120" text-anchor="middle" font-size="13" fill="#FFFFFF" font-weight="600">modelos de projeto</text>
+
+            <rect x="46" y="146" width="594" height="56" rx="8" fill="#FFFFFF" stroke="#C84B31" stroke-width="2.5"/>
+            <text x="66" y="170" font-size="14" font-weight="800" fill="#C84B31">Runtime, incluído</text>
+            <text x="66" y="190" font-size="12" fill="#666666">ambiente de execução e bibliotecas base: quem instala o SDK já tem o runtime</text>
+
+            <!-- RUNTIME SOZINHO -->
+            <rect x="700" y="30" width="416" height="188" rx="12" fill="#FFF7F5" stroke="#C84B31" stroke-width="3"/>
+            <text x="722" y="60" font-size="18" font-weight="800" fill="#C84B31">Runtime, sozinho</text>
+            <text x="722" y="82" font-size="13" fill="#777777">na máquina que só executa, o servidor de deploy</text>
+
+            <rect x="722" y="96" width="372" height="38" rx="6" fill="#C84B31"/>
+            <text x="908" y="120" text-anchor="middle" font-size="13" fill="#FFFFFF" font-weight="600">executa a aplicação já compilada</text>
+
+            <text x="722" y="162" font-size="12" fill="#666666">Não compila, não cria projeto, não roda</text>
+            <text x="722" y="182" font-size="12" fill="#666666">os comandos de desenvolvimento. Só executa.</text>
+            <text x="722" y="206" font-size="12" font-weight="700" fill="#00274D">Volta na Aula 19, no deploy.</text>
+          </svg>
+        </div>
+
+        <div class="takeaway">
+          <span class="takeaway-label">Takeaway</span>
+          <p>Na sua máquina instale o <strong>SDK</strong>, que já traz o runtime dentro. Runtime sozinho é para servidor: ele executa o que alguém compilou, mas não compila nada.</p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">07 SDK e runtime</div>
+          <div class="footer-page">6</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 7: VERSÕES, LTS E A CLI ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Versão LTS e a CLI <code>dotnet</code> <a href="#/ref-slide" class="ref-badge" title="Ver referências">[3]</a></h2>
+        </div>
+
+        <p style="font-size:0.72em; margin-top:0;">O .NET ganha uma versão maior por ano, sempre em novembro. As versões de número par são <strong>LTS</strong>, com suporte longo; as ímpares são STS, com janela de suporte mais curta.</p>
+
+        <div class="side-by-side" style="margin-top:6px;">
+          <div class="side">
+            <h4>Por que LTS importa</h4>
+            <ul style="margin:0; padding-left:20px;">
+              <li>Correções de segurança garantidas por três anos.</li>
+              <li>É o que uma empresa escolhe para um sistema que vai durar.</li>
+              <li>O <strong>.NET 10</strong> é LTS: saiu em novembro de 2025 e tem suporte até novembro de 2028.</li>
+            </ul>
+          </div>
+          <div class="side">
+            <h4>A CLI: conversar com o .NET pelo terminal</h4>
+            <pre class="code-compact" style="margin:0;"><code class="language-bash" data-trim>dotnet --version     # a versão do SDK em uso
+dotnet --list-sdks   # todos os SDKs instalados
+dotnet --info        # SDKs, runtimes e a máquina</code></pre>
+          </div>
+        </div>
+
+        <div class="callout" style="margin-top:16px;">
+          <p><strong>Nesta disciplina usamos o .NET 10 LTS.</strong> O projeto da Clínica Vida+ vai declarar <code>net10.0</code> no arquivo <code>.csproj</code>, e é essa versão que precisa aparecer no seu <code>dotnet --list-sdks</code> antes do laboratório de hoje.</p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">07 Versão LTS e a CLI dotnet</div>
+          <div class="footer-page">7</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 8: C# CONTRA JAVASCRIPT ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>C# contra JavaScript: tipagem estática <a href="#/ref-slide" class="ref-badge" title="Ver referências">[1]</a></h2>
+        </div>
+
+        <p style="font-size:0.72em; margin-top:0;">A diferença que você sente na primeira hora não é a sintaxe: é <strong>quando</strong> o erro aparece. No JavaScript, ao rodar, na frente do paciente. No C#, ao compilar, na sua tela.</p>
+
+        <div class="side-by-side" style="margin-top:6px;">
+          <div class="side">
+            <h4>JavaScript, tipagem dinâmica</h4>
+            <pre class="code-compact" style="margin:0 0 10px 0;"><code class="language-javascript" data-trim>let idade = 34;
+idade = "trinta e quatro";   // aceito
+
+const total = "10" + 5;      // "105"</code></pre>
+            <p style="margin:0;">O tipo pertence ao valor e muda a qualquer momento. O erro só aparece quando aquela linha executa.</p>
+          </div>
+          <div class="side">
+            <h4>C#, tipagem estática</h4>
+            <pre class="code-compact" style="margin:0 0 10px 0;"><code class="language-csharp" data-trim>int idade = 34;
+idade = "trinta e quatro";   // erro CS0029
+
+int total = "10" + 5;        // nem compila</code></pre>
+            <p style="margin:0;">O tipo pertence à variável e é conferido na compilação. O erro aparece antes de o programa existir.</p>
+          </div>
+        </div>
+
+        <div class="takeaway">
+          <span class="takeaway-label">Takeaway</span>
+          <p>Tipagem estática é o compilador lendo o seu código antes do usuário. Em troca de declarar o tipo, você recebe erro cedo e um editor que sabe o que cada variável é.</p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">07 C# contra JavaScript</div>
+          <div class="footer-page">8</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 9: TIPOS, VAR E CONVERSÕES ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Tipos, <code>var</code> e conversões <a href="#/ref-slide" class="ref-badge" title="Ver referências">[1]</a></h2>
+        </div>
+
+        <p style="font-size:0.72em; margin-top:0;">Os tipos que a Clínica Vida+ usa o semestre inteiro, e a regra de ouro da entrada de dados: tudo o que chega do teclado é texto.</p>
+
+        <pre class="code-compact"><code class="language-csharp" data-trim>string nome = "Ana Souza";                  // texto
+int idade = 34;                             // inteiro
+decimal valorConsulta = 180.00m;            // dinheiro: decimal, nunca double
+bool confirmada = true;                     // verdadeiro ou falso
+DateTime dataConsulta = new DateTime(2026, 9, 16, 14, 30, 0);
+
+var especialidade = "Cardiologia";          // var: o compilador infere string
+
+string digitado = Console.ReadLine() ?? ""; // do teclado sempre vem texto
+if (int.TryParse(digitado, out int minutos))
+    Console.WriteLine($"Consulta de {minutos} minutos.");
+else
+    Console.WriteLine("Digite um número inteiro de minutos.");</code></pre>
+
+        <div class="callout" style="margin-top:6px;">
+          <p><strong><code>var</code> não é o <code>let</code> do JavaScript.</strong> Ele não abre mão do tipo: só evita repeti-lo, porque o compilador já o deduziu do valor. A variável continua sendo <code>string</code> para sempre.</p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">07 Tipos, var e conversões</div>
+          <div class="footer-page">9</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 10: INTERPOLAÇÃO E CONSOLE ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Interpolação de strings e o console <a href="#/ref-slide" class="ref-badge" title="Ver referências">[1]</a></h2>
+        </div>
+
+        <p style="font-size:0.72em; margin-top:0;">O <code>$</code> antes das aspas liga a interpolação: o que estiver entre chaves é avaliado e colocado no lugar. É o equivalente exato das crases que você usou no JavaScript da Aula 06.</p>
+
+        <div class="side-by-side" style="margin-top:6px;">
+          <div class="side">
+            <h4>Entrada, saída e interpolação</h4>
+            <pre class="code-compact" style="margin:0;"><code class="language-csharp" data-trim>Console.Write("Nome do paciente: ");
+string paciente = Console.ReadLine() ?? "";
+
+string especialidade = "Cardiologia";
+string horario = "14:30";
+
+Console.WriteLine(
+    $"{horario} | {paciente} | {especialidade}");</code></pre>
+          </div>
+          <div class="side">
+            <h4>No terminal</h4>
+            <pre class="code-compact" style="margin:0;"><code class="language-text" data-trim>Nome do paciente: Ana Souza
+14:30 | Ana Souza | Cardiologia</code></pre>
+            <p style="margin:10px 0 0 0;"><code>Write</code> não quebra a linha, e por isso o cursor fica ao lado da pergunta. <code>WriteLine</code> quebra.</p>
+          </div>
+        </div>
+
+        <div class="callout" style="margin-top:16px;">
+          <p><strong>Concatenar com <code>+</code> ainda funciona</strong>, mas some no meio das aspas e dos espaços. Interpolação é o padrão do C# moderno. Já o <code>?? ""</code> está ali porque <code>ReadLine</code> pode devolver nulo quando não há mais entrada: ele troca o nulo por texto vazio e cala o aviso do compilador.</p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">07 Interpolação e console</div>
+          <div class="footer-page">10</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 11: DEMONSTRAÇÃO, A IDADE DO PACIENTE ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Demonstração: a idade do paciente</h2>
+        </div>
+
+        <p style="font-size:0.72em; margin-top:0;">Primeiro programa da disciplina em C#. <code>dotnet new console -n Idade</code>, escrever o <code>Program.cs</code> e <code>dotnet run</code>.</p>
+
+        <pre><code class="language-csharp" data-trim>Console.Write("Data de nascimento do paciente (dd/MM/yyyy): ");
+DateTime nascimento = DateTime.Parse(Console.ReadLine() ?? "");
+
+int idade = DateTime.Today.Year - nascimento.Year;
+if (nascimento.Date > DateTime.Today.AddYears(-idade))
+    idade--;                       // ainda não fez aniversário este ano
+
+Console.WriteLine($"O paciente tem {idade} anos.");</code></pre>
+
+        <div class="callout" style="margin-top:6px;">
+          <p>A subtração de anos sozinha erra em um ano inteiro para quem ainda não fez aniversário: em setembro, quem nasceu em dezembro tem um ano a menos do que a conta diz. O <code>if</code> corrige isso. <strong>Regra de negócio é exatamente isto</strong>, e é dela que o Módulo 2 trata.</p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">07 Demonstração, a idade do paciente</div>
+          <div class="footer-page">11</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 12: EXERCÍCIO DO CICLO 1 ==================== -->
+      <section class="exercise-slide content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Exercício do Ciclo 1: uma linha da agenda</h2>
+        </div>
+
+        <p style="font-size:0.72em; margin-top:0;">Dez minutos, na sua máquina. O objetivo é ver o ciclo completo funcionar: criar, escrever e executar.</p>
+
+        <div class="exercise-container">
+          <h3>No terminal</h3>
+          <ol class="exercise-steps">
+            <li>Crie o projeto: <code>dotnet new console -n AgendaDoDia</code> e entre na pasta com <code>cd AgendaDoDia</code>.</li>
+            <li>No <code>Program.cs</code>, declare quatro variáveis: <code>string paciente</code>, <code>string especialidade</code>, <code>string horario</code> e <code>string medico</code>.</li>
+            <li>Imprima <strong>uma única linha</strong> de agenda com interpolação, no formato <code>14:30 | Ana Souza | Cardiologia | Dr. Paulo Lima</code>.</li>
+            <li>Execute com <code>dotnet run</code> e confirme a linha no terminal.</li>
+          </ol>
+        </div>
+
+        <div class="callout" style="margin-top:14px;">
+          <p>Se o terminal reclamar que <code>dotnet</code> não é reconhecido, o SDK não está instalado ou o terminal foi aberto antes da instalação. Feche e abra o terminal de novo; o Ciclo 3 resolve o resto.</p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">07 Exercício do Ciclo 1</div>
+          <div class="footer-page">12</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 13: PROJETO, SOLUÇÃO E CSPROJ ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Projeto, solução e o arquivo <code>.csproj</code> <a href="#/ref-slide" class="ref-badge" title="Ver referências">[3]</a></h2>
+        </div>
+
+        <p style="font-size:0.72em; margin-top:0;">O <strong>projeto</strong> é uma unidade que compila em um único resultado, e o <code>.csproj</code> é a carteira de identidade dele. A <strong>solução</strong>, o <code>.sln</code>, apenas agrupa vários projetos; a Clínica Vida+ tem um projeto só.</p>
+
+        <div class="side-by-side" style="margin-top:6px;">
+          <div class="side">
+            <h4>ClinicaVida.Web.csproj</h4>
+            <pre class="code-compact" style="margin:0;"><code class="language-xml" data-trim>&lt;Project Sdk="Microsoft.NET.Sdk.Web"&gt;
+  &lt;PropertyGroup&gt;
+    &lt;TargetFramework&gt;net10.0&lt;/TargetFramework&gt;
+    &lt;Nullable&gt;enable&lt;/Nullable&gt;
+    &lt;ImplicitUsings&gt;enable&lt;/ImplicitUsings&gt;
+  &lt;/PropertyGroup&gt;
+&lt;/Project&gt;</code></pre>
+          </div>
+          <div class="side">
+            <h4>O que cada linha diz</h4>
+            <ul style="margin:0; padding-left:20px;">
+              <li><code>Sdk="...Web"</code>: é um projeto web, com o ASP.NET Core junto.</li>
+              <li><code>TargetFramework</code>: compila para o .NET 10.</li>
+              <li><code>ImplicitUsings</code>: os <code>using</code> mais comuns já vêm ligados.</li>
+              <li>Os pacotes NuGet do projeto também moram aqui.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="callout" style="margin-top:16px;">
+          <p><strong>Não existe lista de arquivos no <code>.csproj</code>.</strong> Todo <code>.cs</code> dentro da pasta entra na compilação automaticamente. Criar um arquivo novo é só criar o arquivo.</p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">07 Projeto, solução e csproj</div>
+          <div class="footer-page">13</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 14: NUGET ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Pacotes NuGet: código que você não escreve <a href="#/ref-slide" class="ref-badge" title="Ver referências">[3]</a></h2>
+        </div>
+
+        <p style="font-size:0.72em; margin-top:0;">O NuGet é o repositório de bibliotecas do .NET, o equivalente ao <code>npm</code> do mundo JavaScript. Adicionar um pacote escreve uma linha no <code>.csproj</code> e baixa a biblioteca.</p>
+
+        <pre><code class="language-bash" data-trim>dotnet add package Pomelo.EntityFrameworkCore.MySql   # o que usaremos na Aula 11
+
+dotnet list package     # o que já está no projeto
+dotnet restore          # baixa tudo o que o .csproj declara</code></pre>
+
+        <div class="side-by-side" style="margin-top:10px;">
+          <div class="side">
+            <h4>Como isso aparece no projeto</h4>
+            <pre class="code-compact" style="margin:0;"><code class="language-xml" data-trim>&lt;ItemGroup&gt;
+  &lt;PackageReference
+     Include="Pomelo.EntityFrameworkCore.MySql"
+     Version="..." /&gt;
+&lt;/ItemGroup&gt;</code></pre>
+          </div>
+          <div class="side">
+            <h4>Por que isso é versionado</h4>
+            <p style="margin:0;">O <code>.csproj</code> vai para o Git; as bibliotecas baixadas, não. Quem clonar o seu repositório roda <code>dotnet restore</code> e recebe exatamente os mesmos pacotes. É o mesmo princípio do <code>package.json</code>.</p>
+          </div>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">07 Pacotes NuGet</div>
+          <div class="footer-page">14</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 15: EDITOR ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>O editor: VS Code ou Visual Studio</h2>
+        </div>
+
+        <p style="font-size:0.72em; margin-top:0;">Os dois servem, e o projeto é o mesmo arquivo em disco nos dois casos. A escolha é de conforto, não de compatibilidade.</p>
+
+        <div class="concept-cards" style="grid-template-columns: repeat(3, 1fr); margin-top:12px;">
+          <div class="concept-card">
+            <h4>VS Code com o C# Dev Kit</h4>
+            <p>Leve, roda em Windows, macOS e Linux, e é o mesmo editor que você já usa desde a Aula 03. Instale a extensão <strong>C# Dev Kit</strong> para ter IntelliSense e depuração.</p>
+          </div>
+          <div class="concept-card">
+            <h4>Visual Studio</h4>
+            <p>Só Windows, mais pesado, com depurador e ferramentas visuais mais completas. A edição Community é gratuita para uso acadêmico.</p>
+          </div>
+          <div class="concept-card">
+            <h4>O terminal em qualquer um</h4>
+            <p>Todos os comandos da disciplina são de CLI. Editor bonito ajuda, mas quem cria, compila e executa é o <code>dotnet</code>.</p>
+          </div>
+        </div>
+
+        <div class="callout" style="margin-top:18px;">
+          <p><strong>Em sala usaremos o VS Code.</strong> Se você preferir o Visual Studio, tudo funciona igual: os comandos do laboratório rodam no terminal integrado dos dois.</p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">07 O editor</div>
+          <div class="footer-page">15</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 16: COMANDOS DO DIA A DIA ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Os quatro comandos do dia a dia <a href="#/ref-slide" class="ref-badge" title="Ver referências">[3]</a></h2>
+        </div>
+
+        <p style="font-size:0.72em; margin-top:0;">São estes quatro que você vai digitar até dezembro. Vale decorar o que cada um faz, porque o erro comum é usar um esperando o efeito do outro.</p>
+
+        <table>
+          <thead>
+            <tr><th style="width:290px;">Comando</th><th>O que faz</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><code>dotnet new mvc -n Nome</code></td><td>Cria um projeto novo a partir de um modelo. O <code>-n</code> dá o nome do projeto e da pasta</td></tr>
+            <tr><td><code>dotnet build</code></td><td>Compila o projeto e aponta os erros. Não executa nada</td></tr>
+            <tr><td><code>dotnet run</code></td><td>Compila e executa. Alterou o código, precisa parar e rodar de novo</td></tr>
+            <tr><td><code>dotnet watch run</code></td><td>Executa e fica observando os arquivos: salvou, ele recompila e atualiza sozinho</td></tr>
+          </tbody>
+        </table>
+
+        <div class="callout" style="margin-top:10px;">
+          <p><strong>No laboratório de hoje usaremos o <code>dotnet watch run</code></strong>, para editar a página da clínica e ver o resultado no navegador sem parar e subir a aplicação a cada mudança. Para encerrar, <code>Ctrl+C</code> no terminal.</p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">07 Comandos do dia a dia</div>
+          <div class="footer-page">16</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 17: ANATOMIA DO PROJETO MVC ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Anatomia do projeto MVC gerado <a href="#/ref-slide" class="ref-badge" title="Ver referências">[2]</a></h2>
+        </div>
+
+        <p style="font-size:0.7em; margin-top:0;">O que <code>dotnet new mvc -n ClinicaVida.Web</code> cria em disco. Cada pasta tem uma responsabilidade, e nas próximas cinco aulas você vai visitar todas elas.</p>
+
+        <div class="slide-figure" style="margin-top:0;">
+          <svg viewBox="0 0 1140 400" role="img" aria-label="Árvore de pastas do projeto ClinicaVida.Web com a responsabilidade de cada uma">
+            <text x="30" y="26" font-size="17" font-weight="800" fill="#00274D" font-family="'JetBrains Mono', monospace">ClinicaVida.Web/</text>
+
+            <line x1="44" y1="38" x2="44" y2="300" stroke="#C0C0C0" stroke-width="2"/>
+
+            <!-- Program.cs -->
+            <line x1="44" y1="60" x2="66" y2="60" stroke="#C0C0C0" stroke-width="2"/>
+            <text x="76" y="66" font-size="15" font-weight="700" fill="#00274D" font-family="'JetBrains Mono', monospace">Program.cs</text>
+            <text x="430" y="66" font-size="14" fill="#555555">ponto de entrada: liga os serviços e as rotas da aplicação</text>
+
+            <!-- csproj -->
+            <line x1="44" y1="98" x2="66" y2="98" stroke="#C0C0C0" stroke-width="2"/>
+            <text x="76" y="104" font-size="15" font-weight="700" fill="#00274D" font-family="'JetBrains Mono', monospace">ClinicaVida.Web.csproj</text>
+            <text x="430" y="104" font-size="14" fill="#555555">o projeto: <tspan font-family="'JetBrains Mono', monospace">net10.0</tspan> e os pacotes NuGet</text>
+
+            <!-- appsettings -->
+            <line x1="44" y1="136" x2="66" y2="136" stroke="#C0C0C0" stroke-width="2"/>
+            <text x="76" y="142" font-size="15" font-weight="700" fill="#00274D" font-family="'JetBrains Mono', monospace">appsettings.json</text>
+            <text x="430" y="142" font-size="14" fill="#555555">configuração; na Aula 11, a conexão com o MySQL</text>
+
+            <!-- Controllers -->
+            <line x1="44" y1="174" x2="66" y2="174" stroke="#C0C0C0" stroke-width="2"/>
+            <rect x="72" y="158" width="150" height="24" rx="4" fill="#C84B31"/>
+            <text x="80" y="176" font-size="15" font-weight="700" fill="#FFFFFF" font-family="'JetBrains Mono', monospace">Controllers/</text>
+            <text x="430" y="180" font-size="14" fill="#555555">recebem a requisição e decidem o que responder</text>
+            <text x="240" y="180" font-size="12" fill="#C84B31" font-weight="700">Aula 08</text>
+
+            <!-- Models -->
+            <line x1="44" y1="212" x2="66" y2="212" stroke="#C0C0C0" stroke-width="2"/>
+            <rect x="72" y="196" width="110" height="24" rx="4" fill="#C84B31"/>
+            <text x="80" y="214" font-size="15" font-weight="700" fill="#FFFFFF" font-family="'JetBrains Mono', monospace">Models/</text>
+            <text x="430" y="218" font-size="14" fill="#555555">Paciente, Médico, Especialidade e Consulta</text>
+            <text x="200" y="218" font-size="12" fill="#C84B31" font-weight="700">Aulas 09 a 11</text>
+
+            <!-- Views -->
+            <line x1="44" y1="250" x2="66" y2="250" stroke="#C0C0C0" stroke-width="2"/>
+            <rect x="72" y="234" width="104" height="24" rx="4" fill="#C84B31"/>
+            <text x="80" y="252" font-size="15" font-weight="700" fill="#FFFFFF" font-family="'JetBrains Mono', monospace">Views/</text>
+            <text x="430" y="256" font-size="14" fill="#555555">as telas em Razor, arquivos <tspan font-family="'JetBrains Mono', monospace">.cshtml</tspan></text>
+            <text x="194" y="256" font-size="12" fill="#C84B31" font-weight="700">Aula 08</text>
+
+            <!-- wwwroot -->
+            <line x1="44" y1="288" x2="66" y2="288" stroke="#C0C0C0" stroke-width="2"/>
+            <text x="76" y="294" font-size="15" font-weight="700" fill="#00274D" font-family="'JetBrains Mono', monospace">wwwroot/</text>
+            <text x="430" y="294" font-size="14" fill="#555555">servido como está: o seu CSS, o seu JavaScript e as imagens</text>
+
+            <!-- nota de rodapé da figura -->
+            <rect x="30" y="322" width="1080" height="70" rx="8" fill="#F5F5F5" stroke="#00274D" stroke-width="2"/>
+            <text x="52" y="350" font-size="14" font-weight="800" fill="#00274D">Onde o Módulo 1 reaparece</text>
+            <text x="52" y="376" font-size="13.5" fill="#555555">O HTML, o CSS e o JavaScript que você escreveu nas Aulas 03 a 06 vão morar dentro de <tspan font-family="'JetBrains Mono', monospace" font-weight="700">Views/</tspan> e <tspan font-family="'JetBrains Mono', monospace" font-weight="700">wwwroot/</tspan>. Nada é jogado fora.</text>
+          </svg>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">07 Anatomia do projeto MVC</div>
+          <div class="footer-page">17</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 18: PROGRAM.CS E APPSETTINGS ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Os dois arquivos que mandam no projeto <a href="#/ref-slide" class="ref-badge" title="Ver referências">[2]</a></h2>
+        </div>
+
+        <div class="side-by-side" style="margin-top:6px;">
+          <div class="side">
+            <h4>Program.cs, o ponto de entrada</h4>
+            <pre class="code-compact" style="margin:0;"><code class="language-csharp" data-trim>var builder = WebApplication.CreateBuilder(args);
+builder.Services.AddControllersWithViews();
+
+var app = builder.Build();
+app.UseStaticFiles();      // serve o wwwroot
+
+app.MapControllerRoute("default",
+  "{controller=Home}/{action=Index}/{id?}");
+
+app.Run();</code></pre>
+            <p style="margin:10px 0 0 0;">A última linha coloca o servidor no ar. Aquela rota é o assunto da Aula 08.</p>
+          </div>
+          <div class="side">
+            <h4>appsettings.json, a configuração</h4>
+            <pre class="code-compact" style="margin:0;"><code class="language-json" data-trim>{
+  "Logging": {
+    "LogLevel": {
+      "Default": "Information"
+    }
+  },
+  "AllowedHosts": "*"
+}</code></pre>
+            <p style="margin:10px 0 0 0;">É aqui que, na Aula 11, entra a chave <code>ConnectionStrings</code> com o endereço do banco <code>clinicavida</code>. Configuração fica fora do código.</p>
+          </div>
+        </div>
+
+        <div class="takeaway">
+          <span class="takeaway-label">Takeaway</span>
+          <p>Ao abrir um projeto ASP.NET Core que você nunca viu, comece pelo <code>Program.cs</code>: ele mostra, em vinte linhas, tudo o que a aplicação sabe fazer.</p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">07 Program.cs e appsettings.json</div>
+          <div class="footer-page">18</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 19: EXERCÍCIO DO CICLO 2 ==================== -->
+      <section class="exercise-slide content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Exercício do Ciclo 2: achar o texto da home</h2>
+        </div>
+
+        <p style="font-size:0.72em; margin-top:0;">Dez minutos. A pergunta é a que você fará a vida inteira em projeto alheio: <strong>onde fica o arquivo que gera o que estou vendo na tela?</strong></p>
+
+        <div class="exercise-container">
+          <h3>No projeto recém-criado</h3>
+          <ol class="exercise-steps">
+            <li>Suba a aplicação de exemplo com <code>dotnet run</code> e abra no navegador o endereço que o terminal imprimir.</li>
+            <li>A página mostra "Welcome" e um link para a documentação. Procure esse texto dentro da pasta <code>Views/</code>.</li>
+            <li>Encontre o arquivo <code>Views/Home/Index.cshtml</code> e troque o texto por <strong>Clínica Vida+</strong>.</li>
+            <li>Recarregue o navegador e confirme a mudança. Se estiver com <code>dotnet run</code>, pare com <code>Ctrl+C</code> e execute de novo.</li>
+          </ol>
+        </div>
+
+        <div class="callout" style="margin-top:14px;">
+          <p>Repare no caminho: <code>Views</code> + <code>Home</code> + <code>Index</code> é o mesmo <code>{controller=Home}/{action=Index}</code> que você acabou de ler no <code>Program.cs</code>. Não é coincidência, é convenção, e a Aula 08 é sobre ela.</p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">07 Exercício do Ciclo 2</div>
+          <div class="footer-page">19</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 20: QUIZ DE FIXAÇÃO ==================== -->
+      <section class="quiz-slide content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area"><div class="accent-bar"></div><h2>Quiz de fixação</h2></div>
+        <div class="quiz-container">
+          <div class="quiz-question">Qual comando cria um novo projeto ASP.NET Core MVC chamado <code>ClinicaVida.Web</code>?</div>
+          <ul class="quiz-options">
+            <li data-correct="false"><span class="option-letter">A</span><span class="option-text"><code>dotnet build mvc ClinicaVida.Web</code>, que compila o projeto a partir do modelo MVC e o deixa pronto para execução.</span></li>
+            <li data-correct="false"><span class="option-letter">B</span><span class="option-text"><code>dotnet add mvc ClinicaVida.Web</code>, que acrescenta o modelo MVC a um projeto vazio criado anteriormente.</span></li>
+            <li data-correct="false"><span class="option-letter">C</span><span class="option-text"><code>dotnet run mvc ClinicaVida.Web</code>, que gera o projeto a partir do modelo MVC e já o executa no servidor local.</span></li>
+            <li data-correct="true"><span class="option-letter">D</span><span class="option-text"><code>dotnet new mvc -n ClinicaVida.Web</code>, que gera a estrutura completa do projeto a partir do modelo MVC.</span></li>
+          </ul>
+          <div class="quiz-feedback"
+               data-correct-msg="Isso. Quem cria projeto a partir de um modelo é o dotnet new, e o -n dá o nome ao projeto e à pasta. O build compila, o run executa e o add acrescenta pacote."
+               data-incorrect-msg="Não é isso. O build apenas compila, o run compila e executa, e o add acrescenta pacote a um projeto que já existe. Criar projeto a partir de um modelo é sempre dotnet new."></div>
+        </div>
+        <div class="slide-footer"><div class="footer-bar">07 Quiz de fixação</div><div class="footer-page">20</div></div>
+      </section>
+
+      <!-- ==================== SLIDE 21: LAB PASSO 1 ==================== -->
+      <section class="exercise-slide content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Laboratório, passo 1 de 6: o SDK na sua máquina</h2>
+        </div>
+
+        <p style="font-size:0.72em; margin-top:0;">A missão dos próximos 60 minutos: criar o projeto que hospeda a Clínica Vida+ pelo resto do semestre. Começa por confirmar o SDK.</p>
+
+        <pre><code class="language-bash" data-trim>dotnet --list-sdks      # precisa aparecer uma linha começando com 10.
+dotnet --info</code></pre>
+
+        <div class="callout" style="margin-top:6px;">
+          <p><strong>Se não aparecer nada ou se a maior versão for menor que 10:</strong> baixe o <strong>SDK do .NET 10 LTS</strong> em <code>dotnet.microsoft.com/download</code>, instale, <strong>feche e abra o terminal</strong> e repita o comando. Terminal aberto antes da instalação não enxerga o <code>dotnet</code>.</p>
+        </div>
+
+        <div class="takeaway">
+          <span class="takeaway-label">Checkpoint</span>
+          <p>Guarde a versão exata que o <code>dotnet --list-sdks</code> imprimiu: ela vai para o <code>README.md</code> no Ciclo 4.</p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">07 Laboratório, passo 1, SDK</div>
+          <div class="footer-page">21</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 22: LAB PASSO 2 ==================== -->
+      <section class="exercise-slide content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Laboratório, passo 2 de 6: a branch do módulo</h2>
+        </div>
+
+        <p style="font-size:0.72em; margin-top:0;">Trabalho novo, branch nova. Parta sempre da <code>main</code> atualizada, dentro do seu fork da Clínica Vida+.</p>
+
+        <pre><code class="language-bash" data-trim>cd uninove-2026-2-clinica-vida
+
+git checkout main
+git pull
+
+git checkout -b feature/projeto-dotnet
+git status              # confirma a branch e a árvore limpa</code></pre>
+
+        <div class="callout" style="margin-top:6px;">
+          <p>O nome da branch é <strong><code>feature/projeto-dotnet</code></strong>, igual para a turma inteira. Isso mantém a correção previsível e é o mesmo padrão de nome que você usa desde a Aula 03.</p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">07 Laboratório, passo 2, branch</div>
+          <div class="footer-page">22</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 23: LAB PASSO 3 ==================== -->
+      <section class="exercise-slide content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Laboratório, passo 3 de 6: criar o projeto</h2>
+        </div>
+
+        <p style="font-size:0.72em; margin-top:0;">O nome do projeto é <strong><code>ClinicaVida.Web</code></strong>, exatamente assim, com o ponto. Ele é usado até a Aula 20, e trocá-lo quebra os comandos das próximas aulas.</p>
+
+        <pre><code class="language-bash" data-trim>dotnet new mvc -n ClinicaVida.Web    # na raiz do seu fork
+
+cd ClinicaVida.Web
+ls                                   # dir, no Windows</code></pre>
+
+        <div class="callout" style="margin-top:6px;">
+          <p>Abra o <code>ClinicaVida.Web.csproj</code> e confirme <code>net10.0</code> na linha do <code>TargetFramework</code>. Se estiver outra versão, o SDK ativo não é o 10: volte ao passo 1.</p>
+        </div>
+
+        <div class="takeaway">
+          <span class="takeaway-label">Confira</span>
+          <p>Dentro da pasta precisam existir <code>Program.cs</code>, <code>appsettings.json</code> e as pastas <code>Controllers</code>, <code>Models</code>, <code>Views</code> e <code>wwwroot</code>.</p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">07 Laboratório, passo 3, dotnet new mvc</div>
+          <div class="footer-page">23</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 24: LAB PASSO 4 ==================== -->
+      <section class="exercise-slide content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Laboratório, passo 4 de 6: o <code>.gitignore</code> do .NET</h2>
+        </div>
+
+        <p style="font-size:0.72em; margin-top:0;">Compilar gera as pastas <code>bin/</code> e <code>obj/</code>, com centenas de arquivos binários que <strong>não</strong> vão para o Git: eles são recriados a cada build e só poluem o histórico.</p>
+
+        <pre><code class="language-bash" data-trim>cd ..                       # de volta à raiz do fork
+dotnet new gitignore        # gera o .gitignore oficial do .NET
+
+git status                  # bin/ e obj/ não podem mais aparecer</code></pre>
+
+        <div class="callout" style="margin-top:6px;">
+          <p><strong>Se <code>bin/</code> ou <code>obj/</code> já tiverem sido adicionados</strong> antes do <code>.gitignore</code>, o Git continua rastreando os dois. Remova do índice sem apagar do disco: <code>git rm -r --cached ClinicaVida.Web/bin ClinicaVida.Web/obj</code></p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">07 Laboratório, passo 4, gitignore</div>
+          <div class="footer-page">24</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 25: LAB PASSO 5 ==================== -->
+      <section class="exercise-slide content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Laboratório, passo 5 de 6: subir a aplicação</h2>
+        </div>
+
+        <p style="font-size:0.72em; margin-top:0;">Fim do Ciclo 3. Agora a Clínica Vida+ tem, pela primeira vez, um servidor próprio no ar.</p>
+
+        <pre><code class="language-bash" data-trim>cd ClinicaVida.Web
+dotnet watch run
+
+# o terminal imprime algo como:
+#   Now listening on: https://localhost:7145
+#   Now listening on: http://localhost:5145</code></pre>
+
+        <div class="callout" style="margin-top:6px;">
+          <p>Abra <strong>o endereço que o seu terminal imprimiu</strong>, não o do slide: a porta é sorteada por máquina. Se o navegador avisar que o certificado não é confiável, rode <code>dotnet dev-certs https --trust</code> e recarregue.</p>
+        </div>
+
+        <div class="takeaway">
+          <span class="takeaway-label">Checkpoint</span>
+          <p>O professor passa de mesa em mesa: a página de exemplo do ASP.NET Core precisa abrir no navegador de cada um, servida pela sua própria máquina.</p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">07 Laboratório, passo 5, dotnet watch run</div>
+          <div class="footer-page">25</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 26: LAB PASSO 6 ==================== -->
+      <section class="exercise-slide content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Laboratório, passo 6 de 6: a home e o README</h2>
+        </div>
+
+        <p style="font-size:0.72em; margin-top:0;">Ciclo 4, sozinho, com o <code>dotnet watch run</code> ligado: salvou o arquivo, o navegador atualiza.</p>
+
+        <div class="exercise-container">
+          <h3>Duas edições</h3>
+          <ol class="exercise-steps">
+            <li>Em <code>Views/Home/Index.cshtml</code>, troque o conteúdo de exemplo pelo nome e pela apresentação da clínica: um título <strong>Clínica Vida+</strong> e um parágrafo curto dizendo o que ela faz.</li>
+            <li>No <code>README.md</code> da raiz do fork, registre a <strong>versão do SDK</strong> que o <code>dotnet --list-sdks</code> devolveu e o <strong>comando para executar</strong> o projeto.</li>
+          </ol>
+        </div>
+
+        <pre class="code-compact" style="margin-top:12px;"><code class="language-markdown" data-trim>## Ambiente .NET
+
+- SDK: 10.0.x (obtido com `dotnet --list-sdks`)
+- Executar: `cd ClinicaVida.Web` e depois `dotnet watch run`</code></pre>
+
+        <div class="slide-footer">
+          <div class="footer-bar">07 Laboratório, passo 6, home e README</div>
+          <div class="footer-page">26</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 27: ENTREGÁVEL, COMMIT E PUSH ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Entregável de hoje, commit e push</h2>
+        </div>
+
+        <p style="font-size:0.72em; margin-top:0;">Pare o <code>dotnet watch</code> com <code>Ctrl+C</code>, volte à raiz do fork e envie o trabalho.</p>
+
+        <pre class="code-compact" style="margin-top:8px;"><code class="language-bash" data-trim>git add .
+git commit -m "feat: projeto ClinicaVida.Web em ASP.NET Core MVC"
+git push -u origin feature/projeto-dotnet</code></pre>
+
+        <div class="side-by-side" style="margin-top:12px;">
+          <div class="side">
+            <h4>O que precisa estar no seu fork</h4>
+            <ul style="margin:0; padding-left:20px;">
+              <li>O projeto <code>ClinicaVida.Web</code>, executando localmente.</li>
+              <li><code>.gitignore</code> do .NET, sem <code>bin/</code> nem <code>obj/</code> versionados.</li>
+              <li>A home com o nome e a apresentação da clínica.</li>
+              <li><code>README.md</code> com a versão do SDK e o comando de execução.</li>
+            </ul>
+          </div>
+          <div class="side">
+            <h4>Confira antes de sair</h4>
+            <ul style="margin:0; padding-left:20px;">
+              <li>A branch <code>feature/projeto-dotnet</code> aparece no GitHub.</li>
+              <li>O commit é de sua autoria, com o seu nome ao lado.</li>
+              <li>A contagem de arquivos do commit é da ordem de dezenas, não de milhares: milhares é sinal de <code>bin/</code> versionado.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">07 Entregável, commit e push</div>
+          <div class="footer-page">27</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 28: FECHAMENTO ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Fechamento e prévia da Aula 08</h2>
+        </div>
+
+        <div class="side-by-side" style="margin-top:6px;">
+          <div class="side">
+            <h4>As três ideias de hoje</h4>
+            <ul style="margin:0; padding-left:20px;">
+              <li>O <strong>SDK</strong> desenvolve e já traz o runtime; o runtime sozinho só executa.</li>
+              <li>C# é de <strong>tipagem estática</strong>: o erro aparece na compilação, não na frente do paciente.</li>
+              <li>Cada pasta do projeto MVC tem uma responsabilidade, e você já sabe onde procurar cada coisa.</li>
+            </ul>
+          </div>
+          <div class="side">
+            <h4>Prévia da Aula 08</h4>
+            <ul style="margin:0; padding-left:20px;">
+              <li>O padrão <strong>MVC</strong> e a responsabilidade de cada camada.</li>
+              <li>Como a rota <code>{controller=Home}/{action=Index}</code> decide quem atende cada URL.</li>
+              <li>O <code>EspecialidadesController</code> e a primeira tela de verdade da clínica.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="takeaway" style="margin-top:18px;">
+          <span class="takeaway-label">Antes de fechar o notebook</span>
+          <p>A aplicação precisa subir na sua máquina hoje, em sala, com o professor por perto. Problema de instalação resolvido em casa sozinho custa a aula seguinte inteira.</p>
+        </div>
+
+        <p style="font-size:0.64em; color:#555555; margin-top:16px;">O roteiro completo do laboratório está no portal da disciplina, em <code>labs/aula07-lab/</code>, com a tabela de critérios de aceitação e a seção de erros comuns.</p>
+
+        <div class="slide-footer">
+          <div class="footer-bar">07 Fechamento</div>
+          <div class="footer-page">28</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 29: REFERÊNCIAS ==================== -->
+      <section id="ref-slide" class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Referências desta aula</h2>
+        </div>
+
+        <p style="font-size:0.72em; margin-top:0;">Os números entre colchetes ao lado dos títulos remetem a esta lista. Todas são a documentação oficial da Microsoft, em português, e ficam abertas ao seu lado o Módulo 2 inteiro.</p>
+
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px 30px; margin-top:6px;">
+          <div class="concept-card">
+            <h4>[1] A linguagem C#: tipos, variáveis e interpolação</h4>
+            <p style="font-size:0.72em; color:#444444;">MICROSOFT. <em>Guia da linguagem C#</em>.<br>
+            <code style="font-size:0.9em;">learn.microsoft.com/pt-br/dotnet/csharp/</code></p>
+          </div>
+          <div class="concept-card">
+            <h4>[2] ASP.NET Core: o projeto MVC e o Program.cs</h4>
+            <p style="font-size:0.72em; color:#444444;">MICROSOFT. <em>Documentação do ASP.NET Core</em>.<br>
+            <code style="font-size:0.9em;">learn.microsoft.com/pt-br/aspnet/core/</code></p>
+          </div>
+          <div class="concept-card">
+            <h4>[3] O SDK, a CLI e o comando dotnet new</h4>
+            <p style="font-size:0.72em; color:#444444;">MICROSOFT. <em>Ferramentas de CLI do .NET</em>.<br>
+            <code style="font-size:0.9em;">learn.microsoft.com/pt-br/dotnet/core/tools/</code></p>
+          </div>
+          <div class="concept-card">
+            <h4>Download do SDK</h4>
+            <p style="font-size:0.72em; color:#444444;">MICROSOFT. <em>Baixar o .NET 10 LTS</em>, usado no laboratório.<br>
+            <code style="font-size:0.9em;">dotnet.microsoft.com/download</code></p>
+          </div>
+        </div>
+
+        <div class="callout" style="margin-top:16px;">
+          <p>O seu repositório do case continua sendo o fork de <code>github.com/josercf/uninove-2026-2-clinica-vida</code>. O projeto <code>ClinicaVida.Web</code> nasce dentro dele e cresce até a Aula 20.</p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">07 Referências</div>
+          <div class="footer-page">29</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 30: ENCERRAMENTO ==================== -->
+      <section class="end-slide">
+        <img src="../assets/img/uninove-logo.png" alt="Uninove, Universidade Nove de Julho"
+             style="max-width:300px; background:#FFFFFF; padding:20px 28px; border-radius:8px;">
+        <div class="copyright">
+          Copyright &copy; 2026<br>
+          Prof. José Romualdo da Costa Filho<br><br>
+          Todos os direitos reservados. É expressamente proibida a reprodução, divulgação<br>
+          total ou parcial, deste material acadêmico sem autorização formal,<br>
+          por escrito, do Professor autor da ementa.
+        </div>
+      </section>
+
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/highlight/highlight.js"></script>
+  <script src="../assets/js/uninove-quiz.js"></script>
+  <script type="module">
+    import { TURMAS, resolverTurma, dataDaAula, formatarData } from '../assets/js/turmas.js';
+    const turma = resolverTurma({
+      hoje: new Date(),
+      salva: localStorage.getItem('uninove-turma'),
+    });
+    const alvo = document.querySelector('[data-data-da-aula]');
+    if (alvo) {
+      const n = Number(alvo.getAttribute('data-data-da-aula'));
+      alvo.textContent = turma
+        ? `${TURMAS[turma].rotulo}, ${formatarData(dataDaAula(turma, n))}`
+        : `Quarta ${formatarData(dataDaAula('quarta', n))} ou quinta ${formatarData(dataDaAula('quinta', n))}`;
+    }
+  </script>
+  <script>
+    Reveal.initialize({
+      width: 1280, height: 720, center: false, margin: 0,
+      hash: true, slideNumber: false,
+      // Os chevrons de navegação caem sobre a footer-bar e sobre o triângulo
+      // azul do canto inferior direito; a barra de progresso encosta no rodapé
+      // e parece um segundo rodapé. Nenhum dos dois é usado na projeção.
+      controls: false, progress: false,
+      // Um slide por página no ?print-pdf, para o PDF bater com o deck.
+      pdfMaxPagesPerSlide: 1,
+      plugins: [RevealHighlight],
+    });
+  </script>
+</body>
+</html>

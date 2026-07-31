@@ -1,0 +1,1029 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Aula 10, Formulários e Models no MVC | Uninove</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/theme/white.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/highlight/monokai.css">
+  <link rel="stylesheet" href="../assets/css/uninove-theme.css">
+  <link rel="stylesheet" href="../assets/css/uninove-print.css">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+      <!-- ==================== SLIDE 1: CAPA ==================== -->
+      <section class="cover-slide">
+        <img src="../assets/img/uninove-logo.png" alt="Uninove, Universidade Nove de Julho" class="uninove-logo-full"
+             style="max-width:400px; background:#FFFFFF; padding:26px 36px; border-radius:10px;">
+        <div style="margin-top:36px; color:#FFFFFF; font-size:0.95em; font-weight:800; letter-spacing:4px; text-transform:uppercase;">Desenvolvimento Web</div>
+        <div style="margin-top:12px; color:#C84B31; font-size:0.6em; font-weight:700; letter-spacing:3px; text-transform:uppercase;">Graduação, 2026.2</div>
+      </section>
+
+      <!-- ==================== SLIDE 2: TÍTULO ==================== -->
+      <section class="title-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="title-card">
+          <div class="accent-bar"></div>
+          <h1>Desenvolvimento Web</h1>
+          <h2>Formulários e Models no MVC</h2>
+          <h3>Prof. José Romualdo<br><span data-data-da-aula="10"></span></h3>
+        </div>
+        <div class="lesson-bar">AULA 10 &nbsp;|&nbsp; Módulo 2, Backend com C# e ASP.NET Core MVC</div>
+      </section>
+
+      <!-- ==================== SLIDE 3: AGENDA ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Agenda do encontro de hoje</h2>
+        </div>
+
+        <p style="font-size:0.76em; margin-top:0;">São 150 minutos corridos, em quatro ciclos. Hoje o formulário de agendamento sai do navegador e passa a ser processado pelo servidor.</p>
+
+        <table>
+          <thead>
+            <tr><th style="width:190px;">Horário</th><th style="width:200px;">Bloco</th><th>O que acontece</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>19h30 às 20h05</td><td>Ciclo 1</td><td>O Model, o model binding, o par GET e POST e os Tag Helpers</td></tr>
+            <tr><td>20h05 às 20h40</td><td>Ciclo 2</td><td>Data Annotations, <code>ModelState</code> e a devolução dos erros</td></tr>
+            <tr><td>20h40 às 20h50</td><td>Quiz de fixação</td><td>Uma pergunta sobre o conceito central da aula</td></tr>
+            <tr><td>20h50 às 21h25</td><td>Ciclo 3</td><td>Laboratório guiado: o Model <code>Consulta</code> e o <code>ConsultasController</code></td></tr>
+            <tr><td>21h25 às 21h50</td><td>Ciclo 4</td><td>Laboratório: a View com Tag Helpers, o POST e a confirmação</td></tr>
+            <tr><td>21h50 às 22h00</td><td>Fechamento</td><td>A limitação que sobra e prévia da Aula 11</td></tr>
+          </tbody>
+        </table>
+
+        <div class="slide-footer">
+          <div class="footer-bar">10 Agenda do encontro</div>
+          <div class="footer-page">3</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 4: RECAPITULAÇÃO DA AULA 09 ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>De onde viemos: o corpo clínico da Aula 09</h2>
+        </div>
+
+        <p style="font-size:0.72em; margin-top:0;">Você entregou a <strong>lista de médicos filtrada por especialidade</strong>, vinda do Controller e renderizada em uma View tipada. O dado saiu da View e passou a morar em classes e coleções.</p>
+
+        <div class="side-by-side" style="margin-top:6px;">
+          <div class="side">
+            <h4>O que já está de pé</h4>
+            <ul style="margin:0; padding-left:20px;">
+              <li>As classes <code>Especialidade</code> e <code>Medico</code> em <code>Models</code>.</li>
+              <li>O repositório em memória com os médicos da clínica.</li>
+              <li><code>MedicosController</code> com <code>Index</code> filtrando por LINQ.</li>
+              <li>Views tipadas com <code>@model IEnumerable&lt;Medico&gt;</code>.</li>
+            </ul>
+          </div>
+          <div class="side">
+            <h4>O que falta, e é a aula de hoje</h4>
+            <ul style="margin:0; padding-left:20px;">
+              <li>Até aqui o dado só <strong>sai</strong> do servidor para a tela.</li>
+              <li>Nenhuma tela ainda <strong>manda dado de volta</strong>.</li>
+              <li>Agendar uma consulta é o caminho inverso.</li>
+              <li>E dado que vem de fora precisa ser <strong>validado</strong>.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="callout" style="margin-top:12px;">
+          <p><strong>A virada de hoje:</strong> o Controller deixa de só entregar e passa a <strong>receber</strong>. O ASP.NET Core monta sozinho um objeto <code>Consulta</code> com o que o paciente digitou.</p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">10 Recapitulação da Aula 09</div>
+          <div class="footer-page">4</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 5: PONTE COM A AULA 05 ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>O mesmo formulário da Aula 05, agora com dono no servidor</h2>
+        </div>
+
+        <p style="font-size:0.72em; margin-top:0;">Na Aula 05 você escreveu o <code>agendamento.html</code> à mão, campo por campo. Hoje cada campo passa a ser gerado a partir de uma propriedade do Model. Repare no que <strong>some</strong> do lado direito.</p>
+
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:22px; margin-top:4px;">
+          <div>
+            <h4 style="font-size:0.72em; color:#C84B31; margin:0 0 4px 0;">Aula 05, HTML escrito à mão</h4>
+            <pre class="code-compact" style="margin-top:4px;"><code class="language-html" data-trim>&lt;label for="data"&gt;Data da consulta&lt;/label&gt;
+&lt;input type="date" id="data" name="data" required&gt;
+&lt;span class="aviso" id="aviso-data"&gt;&lt;/span&gt;</code></pre>
+          </div>
+          <div>
+            <h4 style="font-size:0.72em; color:#C84B31; margin:0 0 4px 0;">Aula 10, Tag Helpers sobre o Model</h4>
+            <pre class="code-compact" style="margin-top:4px;"><code class="language-html" data-trim>&lt;label asp-for="Data"&gt;&lt;/label&gt;
+&lt;input asp-for="Data" /&gt;
+&lt;span asp-validation-for="Data"&gt;&lt;/span&gt;</code></pre>
+          </div>
+        </div>
+
+        <div class="callout" style="margin-top:10px;">
+          <p><strong>O rótulo, o <code>id</code>, o <code>name</code>, o <code>type</code> e as regras de validação deixaram de ser digitados.</strong> Todos passam a ser deduzidos da propriedade <code>Data</code> do Model. Escrever o mesmo nome em quatro lugares diferentes era o convite para o erro de digitação que ninguém achava.</p>
+        </div>
+
+        <div class="takeaway" style="margin-top:12px;">
+          <span class="takeaway-label">Uma só fonte da verdade</span>
+          <p>A partir de hoje, quem descreve o campo é o Model. A View pergunta ao Model como desenhar, e o Controller pergunta ao Model se o que chegou é válido.</p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">10 Ponte com a Aula 05</div>
+          <div class="footer-page">5</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 6: O MODEL ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>O Model: o dado e a regra, no mesmo lugar</h2>
+        </div>
+
+        <p style="font-size:0.72em; margin-top:0;">O Model do MVC não é só um saco de propriedades: ele descreve <strong>o que o dado é</strong> e <strong>o que torna esse dado válido</strong>. A classe <code>Consulta</code> nasce hoje, ainda sem anotações.</p>
+
+        <pre class="code-compact"><code class="language-csharp" data-trim>namespace ClinicaVida.Web.Models;
+
+public class Consulta
+{
+    public int Id { get; set; }
+    public int PacienteId { get; set; }        // qual paciente, pelo identificador
+    public int MedicoId { get; set; }          // qual médico do corpo clínico
+    public DateTime Data { get; set; }
+    public TimeSpan Horario { get; set; }
+    public string? Observacoes { get; set; }
+}</code></pre>
+
+        <div class="callout" style="margin-top:8px;">
+          <p><strong>E a especialidade?</strong> Ela não vira propriedade da <code>Consulta</code>: o médico já carrega a dele, em <code>Medico.EspecialidadeId</code>. Na tela a especialidade continua aparecendo, mas só para <strong>filtrar a lista de médicos</strong>. Guardar o mesmo dado em dois lugares é onde a divergência começa.</p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">10 O Model Consulta</div>
+          <div class="footer-page">6</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 7: MODEL BINDING ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Model binding: do campo do formulário ao objeto C# <a href="#/ref-slide" class="ref-badge" title="Ver referências">[1]</a></h2>
+        </div>
+
+        <p style="font-size:0.72em; margin-top:0;">O navegador envia pares de <strong>nome e valor</strong>. O ASP.NET Core casa cada nome com uma propriedade do parâmetro da action, converte o texto para o tipo certo e entrega o objeto pronto.</p>
+
+        <div class="slide-figure" style="margin-top:2px;">
+          <svg viewBox="0 0 1140 300" role="img" aria-label="Os campos do formulário enviados no corpo da requisição virando propriedades preenchidas de um objeto Consulta em C#">
+            <defs>
+              <marker id="a10setaBind" markerWidth="10" markerHeight="10" refX="9" refY="5" orient="auto">
+                <path d="M0,0 L10,5 L0,10 Z" fill="#C84B31"/>
+              </marker>
+            </defs>
+
+            <text x="14" y="22" font-size="14" font-weight="800" fill="#00274D">O que o navegador envia</text>
+            <rect x="14" y="34" width="420" height="216" rx="8" fill="#F2F4F6" stroke="#00274D" stroke-width="2"/>
+            <text x="32" y="62" font-size="13" font-family="monospace" fill="#333333">POST /Consultas/Agendar</text>
+            <line x1="32" y1="74" x2="416" y2="74" stroke="#CCCCCC" stroke-width="1"/>
+            <text x="32" y="102" font-size="14" font-family="monospace" fill="#00274D">PacienteId=7</text>
+            <text x="32" y="132" font-size="14" font-family="monospace" fill="#00274D">MedicoId=3</text>
+            <text x="32" y="162" font-size="14" font-family="monospace" fill="#00274D">Data=2026-10-21</text>
+            <text x="32" y="192" font-size="14" font-family="monospace" fill="#00274D">Horario=14:30</text>
+            <text x="32" y="222" font-size="14" font-family="monospace" fill="#00274D">Observacoes=Retorno de exame</text>
+
+            <text x="500" y="128" text-anchor="middle" font-size="14" font-weight="800" fill="#C84B31">model binding</text>
+            <line x1="446" y1="146" x2="554" y2="146" stroke="#C84B31" stroke-width="3" marker-end="url(#a10setaBind)"/>
+            <text x="500" y="172" text-anchor="middle" font-size="12" fill="#777777">casa o nome</text>
+            <text x="500" y="188" text-anchor="middle" font-size="12" fill="#777777">e converte o tipo</text>
+
+            <text x="566" y="22" font-size="14" font-weight="800" fill="#00274D">O que a action recebe</text>
+            <rect x="566" y="34" width="560" height="216" rx="8" fill="#00274D"/>
+            <text x="586" y="62" font-size="13" font-family="monospace" fill="#9FD3C7">public IActionResult Agendar(Consulta consulta)</text>
+            <line x1="586" y1="74" x2="1106" y2="74" stroke="#33526F" stroke-width="1"/>
+            <text x="586" y="102" font-size="14" font-family="monospace" fill="#FFFFFF">consulta.PacienteId  = 7</text>
+            <text x="586" y="132" font-size="14" font-family="monospace" fill="#FFFFFF">consulta.MedicoId    = 3</text>
+            <text x="586" y="162" font-size="14" font-family="monospace" fill="#FFFFFF">consulta.Data        = 21/10/2026</text>
+            <text x="586" y="192" font-size="14" font-family="monospace" fill="#FFFFFF">consulta.Horario     = 14:30:00</text>
+            <text x="586" y="222" font-size="14" font-family="monospace" fill="#FFFFFF">consulta.Observacoes = "Retorno de exame"</text>
+
+            <text x="14" y="282" font-size="14" font-weight="700" fill="#1e8449">O objeto chega preenchido sem uma linha de código sua: o que casa é o nome do campo com o nome da propriedade.</text>
+          </svg>
+        </div>
+
+        <div class="callout" style="margin-top:14px;">
+          <p><strong>Quando o nome não casa, ninguém avisa.</strong> A propriedade simplesmente fica com o valor padrão do tipo: <code>0</code> para <code>int</code>, nulo para <code>string</code>. É o primeiro lugar onde olhar quando um campo chega vazio no servidor mesmo tendo sido preenchido na tela.</p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">10 Model binding</div>
+          <div class="footer-page">7</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 8: O PAR GET E POST ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Um formulário, duas actions com o mesmo nome</h2>
+        </div>
+
+        <p style="font-size:0.72em; margin-top:0;">O par <code>[HttpGet]</code> e <code>[HttpPost]</code> é a espinha de todo formulário no MVC: uma action <strong>mostra</strong>, a outra <strong>recebe</strong>. Quando a validação falha, a segunda devolve a mesma View, agora com os erros.</p>
+
+        <div class="slide-figure" style="margin-top:2px;">
+          <svg viewBox="0 0 1140 306" role="img" aria-label="Fluxo do GET exibindo o formulário e do POST recebendo o envio, com o desvio do ModelState inválido devolvendo a View com erros">
+            <defs>
+              <marker id="a10seta" markerWidth="9" markerHeight="9" refX="8" refY="4.5" orient="auto">
+                <path d="M0,0 L9,4.5 L0,9 Z" fill="#888888"/>
+              </marker>
+              <marker id="a10setaErro" markerWidth="9" markerHeight="9" refX="8" refY="4.5" orient="auto">
+                <path d="M0,0 L9,4.5 L0,9 Z" fill="#C84B31"/>
+              </marker>
+              <marker id="a10setaOk" markerWidth="9" markerHeight="9" refX="8" refY="4.5" orient="auto">
+                <path d="M0,0 L9,4.5 L0,9 Z" fill="#1e8449"/>
+              </marker>
+            </defs>
+
+            <text x="14" y="20" font-size="14" font-weight="800" fill="#00274D">1. Exibir o formulário</text>
+            <rect x="14" y="32" width="210" height="46" rx="7" fill="#F2F4F6" stroke="#00274D" stroke-width="2"/>
+            <text x="119" y="52" text-anchor="middle" font-size="13" fill="#00274D" font-weight="700">Navegador</text>
+            <text x="119" y="70" text-anchor="middle" font-size="12" font-family="monospace" fill="#555555">GET /Consultas/Agendar</text>
+            <line x1="230" y1="55" x2="272" y2="55" stroke="#888888" stroke-width="2.5" marker-end="url(#a10seta)"/>
+            <rect x="278" y="32" width="250" height="46" rx="7" fill="#00274D"/>
+            <text x="403" y="61" text-anchor="middle" font-size="13" font-family="monospace" fill="#FFFFFF">[HttpGet] Agendar()</text>
+            <line x1="534" y1="55" x2="576" y2="55" stroke="#888888" stroke-width="2.5" marker-end="url(#a10seta)"/>
+            <rect x="582" y="32" width="230" height="46" rx="7" fill="#00274D"/>
+            <text x="697" y="61" text-anchor="middle" font-size="13" font-family="monospace" fill="#FFFFFF">return View()</text>
+            <line x1="818" y1="55" x2="860" y2="55" stroke="#888888" stroke-width="2.5" marker-end="url(#a10seta)"/>
+            <rect x="866" y="32" width="260" height="46" rx="7" fill="#F2F4F6" stroke="#00274D" stroke-width="2"/>
+            <text x="996" y="61" text-anchor="middle" font-size="13" fill="#00274D" font-weight="600">formulário em branco</text>
+
+            <line x1="14" y1="102" x2="1126" y2="102" stroke="#E0E0E0" stroke-width="2"/>
+
+            <text x="14" y="132" font-size="14" font-weight="800" fill="#00274D">2. Receber o envio</text>
+            <rect x="14" y="144" width="210" height="46" rx="7" fill="#F2F4F6" stroke="#00274D" stroke-width="2"/>
+            <text x="119" y="164" text-anchor="middle" font-size="13" fill="#00274D" font-weight="700">Navegador</text>
+            <text x="119" y="182" text-anchor="middle" font-size="12" font-family="monospace" fill="#555555">POST com os campos</text>
+            <line x1="230" y1="167" x2="272" y2="167" stroke="#888888" stroke-width="2.5" marker-end="url(#a10seta)"/>
+            <rect x="278" y="144" width="250" height="46" rx="7" fill="#00274D"/>
+            <text x="403" y="167" text-anchor="middle" font-size="13" fill="#FFFFFF" font-weight="600">model binding monta</text>
+            <text x="403" y="183" text-anchor="middle" font-size="13" font-family="monospace" fill="#9FD3C7">Consulta consulta</text>
+            <line x1="534" y1="167" x2="576" y2="167" stroke="#888888" stroke-width="2.5" marker-end="url(#a10seta)"/>
+            <rect x="582" y="144" width="230" height="46" rx="7" fill="#FFFFFF" stroke="#C84B31" stroke-width="2.5"/>
+            <text x="697" y="173" text-anchor="middle" font-size="13" font-family="monospace" font-weight="700" fill="#C84B31">ModelState.IsValid?</text>
+
+            <path d="M812,158 L840,158 L840,124 L860,124" fill="none" stroke="#C84B31" stroke-width="2.5" marker-end="url(#a10setaErro)"/>
+            <rect x="866" y="104" width="260" height="42" rx="7" fill="#FDECE8" stroke="#C84B31" stroke-width="2"/>
+            <text x="996" y="122" text-anchor="middle" font-size="12" font-weight="800" fill="#C84B31">false</text>
+            <text x="996" y="139" text-anchor="middle" font-size="12" font-family="monospace" fill="#C84B31">return View(consulta)</text>
+
+            <path d="M812,176 L840,176 L840,214 L860,214" fill="none" stroke="#1e8449" stroke-width="2.5" marker-end="url(#a10setaOk)"/>
+            <rect x="866" y="194" width="260" height="42" rx="7" fill="#E9F7EF" stroke="#1e8449" stroke-width="2"/>
+            <text x="996" y="212" text-anchor="middle" font-size="12" font-weight="800" fill="#1e8449">true</text>
+            <text x="996" y="229" text-anchor="middle" font-size="12" font-family="monospace" fill="#1e8449">RedirectToAction</text>
+
+            <text x="14" y="272" font-size="13" font-weight="700" fill="#C84B31">Inválido: a mesma View volta, com os valores digitados e a mensagem em cada campo. O paciente não perde o que preencheu.</text>
+            <text x="14" y="292" font-size="13" font-weight="700" fill="#1e8449">Válido: grava e redireciona. Redirecionar evita que atualizar a página reenvie o mesmo agendamento.</text>
+          </svg>
+        </div>
+
+        <div class="takeaway" style="margin-top:14px;">
+          <span class="takeaway-label">Takeaway</span>
+          <p>Sucesso não devolve View, devolve redirecionamento. Sem isso, o paciente que atualizar a página de resposta reenvia o mesmo agendamento, e a clínica ganha uma consulta em duplicidade, exatamente o problema que este case veio resolver.</p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">10 O par GET e POST</div>
+          <div class="footer-page">8</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 9: TAG HELPERS ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Tag Helpers: HTML que sabe do Model <a href="#/ref-slide" class="ref-badge" title="Ver referências">[3]</a></h2>
+        </div>
+
+        <p style="font-size:0.72em; margin-top:0;">Um Tag Helper é um atributo que o servidor lê e substitui por HTML de verdade antes de a resposta sair. Quem escreve é você; quem preenche é o Razor.</p>
+
+        <pre class="code-compact"><code class="language-html" data-trim>@model ClinicaVida.Web.Models.Consulta
+
+&lt;form asp-controller="Consultas" asp-action="Agendar" method="post"&gt;
+  &lt;label asp-for="Data"&gt;&lt;/label&gt;
+  &lt;input asp-for="Data" /&gt;
+&lt;/form&gt;</code></pre>
+
+        <p style="font-size:0.7em; margin:8px 0 2px 0;">O que chega ao navegador, já com a rota resolvida e o valor do Model:</p>
+
+        <pre class="code-compact" style="margin-top:0;"><code class="language-html" data-trim>&lt;form action="/Consultas/Agendar" method="post"&gt;
+  &lt;label for="Data"&gt;Data da consulta&lt;/label&gt;
+  &lt;input type="date" id="Data" name="Data" value="2026-10-21"
+         data-val="true" data-val-required="Informe a data da consulta." /&gt;</code></pre>
+
+        <div class="callout" style="margin-top:10px;">
+          <p><strong>Por que não escrever o <code>action</code> à mão:</strong> <code>asp-controller</code> e <code>asp-action</code> pedem a URL ao roteamento. Se a rota mudar amanhã, o formulário continua apontando para o lugar certo.</p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">10 Tag Helpers de formulário</div>
+          <div class="footer-page">9</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 10: VALIDAÇÃO NA VIEW E O TOKEN ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Onde os erros aparecem, e o token antifalsificação <a href="#/ref-slide" class="ref-badge" title="Ver referências">[4]</a></h2>
+        </div>
+
+        <div class="side-by-side" style="margin-top:4px;">
+          <div class="side">
+            <h4>Por campo: asp-validation-for</h4>
+            <p style="margin:0;">Escreve a mensagem daquele campo, e só dela, ao lado do próprio campo. É o lugar onde o paciente olha.</p>
+          </div>
+          <div class="side">
+            <h4>Resumo: asp-validation-summary</h4>
+            <p style="margin:0;"><code>ModelOnly</code> lista os erros que não pertencem a nenhum campo; <code>All</code> lista todos, no topo do formulário.</p>
+          </div>
+        </div>
+
+        <pre class="code-compact" style="margin-top:12px;"><code class="language-html" data-trim>&lt;div asp-validation-summary="ModelOnly" class="erro-resumo"&gt;&lt;/div&gt;
+
+&lt;label asp-for="MedicoId"&gt;&lt;/label&gt;
+&lt;select asp-for="MedicoId" asp-items="ViewBag.Medicos"&gt;
+  &lt;option value=""&gt;Selecione o médico&lt;/option&gt;
+&lt;/select&gt;
+&lt;span asp-validation-for="MedicoId" class="erro-campo"&gt;&lt;/span&gt;</code></pre>
+
+        <div class="callout" style="margin-top:8px;">
+          <p><strong>O token antifalsificação:</strong> o Tag Helper de <code>form</code> injeta sozinho um campo oculto com um token, e <code>[ValidateAntiForgeryToken]</code> na action de POST exige esse token. É o que impede que um site qualquer, aberto em outra aba, poste um agendamento em nome do paciente logado.</p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">10 Validação na View e antifalsificação</div>
+          <div class="footer-page">10</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 11: EXERCÍCIO CURTO, CICLO 1 ==================== -->
+      <section class="exercise-slide content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Exercício do Ciclo 1: três campos da Aula 05 em Tag Helpers</h2>
+        </div>
+
+        <div class="exercise-container">
+          <h3>Abra o agendamento.html da Aula 05, 8 minutos</h3>
+          <ol class="exercise-steps">
+            <li>Escolha os campos <strong>paciente</strong>, <strong>data</strong> e <strong>horário</strong>.</li>
+            <li>Reescreva cada um em três linhas: <code>label asp-for</code>, o campo com <code>asp-for</code> e <code>span asp-validation-for</code>.</li>
+            <li>Troque o <code>select</code> de paciente escrito à mão por <code>asp-items="ViewBag.Pacientes"</code>.</li>
+            <li>Responda em voz alta: quantas vezes o nome da propriedade aparece agora, contra as quatro de antes?</li>
+          </ol>
+        </div>
+
+        <pre class="code-compact" style="margin-top:10px;"><code class="language-html" data-trim>&lt;!-- antes --&gt;  &lt;input type="time" id="horario" name="horario" required&gt;
+&lt;!-- depois --&gt; &lt;input asp-for="Horario" /&gt;</code></pre>
+
+        <div class="slide-footer">
+          <div class="footer-bar">10 Exercício do Ciclo 1</div>
+          <div class="footer-page">11</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 12: CATÁLOGO DE DATA ANNOTATIONS ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Data Annotations: a regra escrita ao lado do dado <a href="#/ref-slide" class="ref-badge" title="Ver referências">[2]</a></h2>
+        </div>
+
+        <p style="font-size:0.72em; margin-top:0;">Cada anotação é um atributo em cima da propriedade. Todas aceitam <code>ErrorMessage</code>, e nesta disciplina <strong>toda mensagem é escrita em português</strong>: quem lê é o paciente, não o programador.</p>
+
+        <table style="font-size:0.68em; margin-top:6px;">
+          <thead>
+            <tr><th style="width:230px;">Anotação</th><th>O que declara na Clínica Vida+</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><code>[Required]</code></td><td>O campo não pode chegar vazio: a data da consulta, por exemplo</td></tr>
+            <tr><td><code>[StringLength]</code></td><td>Tamanho máximo, e mínimo se quiser: 300 caracteres nas observações</td></tr>
+            <tr><td><code>[EmailAddress]</code></td><td>O texto precisa ter forma de e-mail, para o aviso de confirmação</td></tr>
+            <tr><td><code>[Phone]</code></td><td>O telefone de contato do paciente</td></tr>
+            <tr><td><code>[Range]</code></td><td>Faixa de valores: usada para exigir que uma lista suspensa seja escolhida</td></tr>
+            <tr><td><code>[DataType]</code></td><td>O papel do dado: <code>Date</code>, <code>Time</code>, <code>Password</code>. Define o <code>type</code> do input</td></tr>
+            <tr><td><code>[Display]</code></td><td>O rótulo que aparece na tela, com acento e espaço, no lugar do nome da propriedade</td></tr>
+            <tr><td><code>[RegularExpression]</code></td><td>Um formato exato, como a máscara do CPF</td></tr>
+          </tbody>
+        </table>
+
+        <div class="slide-footer">
+          <div class="footer-bar">10 Catálogo de Data Annotations</div>
+          <div class="footer-page">12</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 13: O MODEL ANOTADO ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>A mesma <code>Consulta</code>, agora anotada</h2>
+        </div>
+
+        <pre class="code-compact"><code class="language-csharp" data-trim>using System.ComponentModel.DataAnnotations;
+
+public class Consulta
+{
+    public int Id { get; set; }
+
+    [Display(Name = "Paciente")]
+    [Range(1, int.MaxValue, ErrorMessage = "Selecione o paciente.")]
+    public int PacienteId { get; set; }        // MedicoId segue igual
+
+    [Display(Name = "Data da consulta")]
+    [Required(ErrorMessage = "Informe a data da consulta.")]
+    [DataType(DataType.Date)]
+    public DateTime Data { get; set; }         // Horario usa DataType.Time
+
+    [Display(Name = "Observações")]
+    [StringLength(300, ErrorMessage = "No máximo {1} caracteres.")]
+    public string? Observacoes { get; set; }
+}</code></pre>
+
+        <p style="font-size:0.66em; color:#555555; margin-top:8px;">As duas propriedades omitidas repetem o padrão da vizinha: <code>MedicoId</code> como <code>PacienteId</code>, e <code>Horario</code> como <code>Data</code>. O roteiro do laboratório traz a classe inteira.</p>
+
+        <div class="slide-footer">
+          <div class="footer-bar">10 A Consulta anotada</div>
+          <div class="footer-page">13</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 14: MODELSTATE NO CONTROLLER ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2><code>ModelState</code>: o relatório da validação <a href="#/ref-slide" class="ref-badge" title="Ver referências">[2]</a></h2>
+        </div>
+
+        <p style="font-size:0.72em; margin-top:0;">Antes de a sua primeira linha executar, o framework já fez o binding e conferiu todas as anotações. O resultado chega em <code>ModelState</code>, e a decisão do que fazer com ele é <strong>sua</strong>.</p>
+
+        <pre class="code-compact"><code class="language-csharp" data-trim>[HttpPost]
+[ValidateAntiForgeryToken]
+public IActionResult Agendar(Consulta consulta)
+{
+    if (!ModelState.IsValid)
+    {
+        CarregarListas();          // as listas suspensas não sobrevivem ao POST
+        return View(consulta);     // mesma View, com os valores e os erros
+    }
+
+    consulta.Id = ClinicaEmMemoria.Consultas.Count + 1;
+    ClinicaEmMemoria.Consultas.Add(consulta);
+    return RedirectToAction(nameof(Confirmacao), new { id = consulta.Id });
+}</code></pre>
+
+        <div class="callout" style="margin-top:8px;">
+          <p><strong>A armadilha do dia:</strong> esquecer o <code>CarregarListas()</code> no caminho do erro. O formulário volta com as mensagens certas e os <code>select</code> vazios, porque o <code>ViewBag</code> só existe durante uma requisição.</p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">10 ModelState no Controller</div>
+          <div class="footer-page">14</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 15: CLIENTE E SERVIDOR ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>A regra de ouro da aula <a href="#/ref-slide" class="ref-badge" title="Ver referências">[2]</a></h2>
+        </div>
+
+        <p style="font-size:0.72em; margin-top:0;">As mesmas anotações geram os atributos <code>data-val</code> que a biblioteca de validação do navegador lê. Bonito e instantâneo, e completamente contornável.</p>
+
+        <div class="slide-figure" style="margin-top:0;">
+          <svg viewBox="0 0 1140 210" role="img" aria-label="Duas requisições chegando ao servidor: uma passando pela validação do cliente e outra enviada direto por uma ferramenta, ambas barradas apenas pela validação do servidor">
+            <defs>
+              <marker id="a10setaReq" markerWidth="9" markerHeight="9" refX="8" refY="4.5" orient="auto">
+                <path d="M0,0 L9,4.5 L0,9 Z" fill="#888888"/>
+              </marker>
+            </defs>
+
+            <rect x="14" y="24" width="300" height="58" rx="8" fill="#F2F4F6" stroke="#00274D" stroke-width="2"/>
+            <text x="164" y="48" text-anchor="middle" font-size="13" font-weight="700" fill="#00274D">Paciente no formulário</text>
+            <text x="164" y="68" text-anchor="middle" font-size="12" fill="#555555">a validação do cliente avisa antes de enviar</text>
+
+            <rect x="14" y="122" width="300" height="58" rx="8" fill="#FDECE8" stroke="#C84B31" stroke-width="2"/>
+            <text x="164" y="146" text-anchor="middle" font-size="13" font-weight="700" fill="#C84B31">POST forjado</text>
+            <text x="164" y="166" text-anchor="middle" font-size="12" fill="#C84B31">DevTools, curl ou script: nenhum JavaScript roda</text>
+
+            <line x1="322" y1="53" x2="486" y2="83" stroke="#888888" stroke-width="2.5" marker-end="url(#a10setaReq)"/>
+            <line x1="322" y1="151" x2="486" y2="121" stroke="#C84B31" stroke-width="2.5" marker-end="url(#a10setaReq)"/>
+
+            <rect x="500" y="62" width="300" height="80" rx="8" fill="#00274D"/>
+            <text x="650" y="94" text-anchor="middle" font-size="14" font-weight="700" fill="#FFFFFF">Servidor</text>
+            <text x="650" y="118" text-anchor="middle" font-size="13" font-family="monospace" fill="#9FD3C7">ModelState.IsValid</text>
+
+            <text x="830" y="76" font-size="13" font-weight="700" fill="#00274D">As duas requisições passam</text>
+            <text x="830" y="98" font-size="13" font-weight="700" fill="#00274D">exatamente pelo mesmo ponto.</text>
+            <text x="830" y="126" font-size="13" fill="#555555">Só o servidor vê as duas.</text>
+            <text x="830" y="148" font-size="13" fill="#555555">Só ele pode dizer não.</text>
+          </svg>
+        </div>
+
+        <div class="takeaway" style="margin-top:10px;">
+          <span class="takeaway-label">Regra de ouro</span>
+          <p>Validação no cliente é conforto; validação no servidor é segurança. A do cliente evita uma viagem à toa. A do servidor é a única que ninguém consegue desligar, e por isso ela nunca é opcional.</p>
+        </div>
+
+        <div class="callout" style="margin-top:12px;">
+          <p><strong>Demonstração de 30 segundos:</strong> abra o DevTools, apague o atributo <code>required</code> do campo obrigatório e envie. O navegador deixa passar; o servidor recusa com a mesma mensagem que você escreveu na anotação.</p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">10 Cliente é conforto, servidor é segurança</div>
+          <div class="footer-page">15</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 16: EXERCÍCIO CURTO, CICLO 2 ==================== -->
+      <section class="exercise-slide content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Exercício do Ciclo 2: anotar o CPF do paciente</h2>
+        </div>
+
+        <div class="exercise-container">
+          <h3>Em Models/Paciente.cs, 8 minutos</h3>
+          <ol class="exercise-steps">
+            <li>O CPF é <code>string</code> e chega com a máscara <code>000.000.000-00</code>: as regras precisam <strong>aceitar</strong> a máscara.</li>
+            <li>Escreva as anotações de obrigatoriedade, de tamanho e de formato, com mensagens em português.</li>
+            <li>Teste três entradas: em branco, <code>123456</code> e <code>123.456.789-09</code>.</li>
+          </ol>
+        </div>
+
+        <pre class="code-compact" style="margin-top:10px;"><code class="language-csharp" data-trim>[Display(Name = "CPF")]
+[Required(ErrorMessage = "Informe o CPF do paciente.")]
+[StringLength(14, MinimumLength = 14, ErrorMessage = "O CPF tem 14 caracteres com a máscara.")]
+[RegularExpression(@"^\d{3}\.\d{3}\.\d{3}-\d{2}$", ErrorMessage = "Use o formato 000.000.000-00.")]
+public string Cpf { get; set; } = string.Empty;</code></pre>
+
+        <div class="slide-footer">
+          <div class="footer-bar">10 Exercício do Ciclo 2</div>
+          <div class="footer-page">16</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 17: QUIZ DE FIXAÇÃO ==================== -->
+      <section class="quiz-slide content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area"><div class="accent-bar"></div><h2>Quiz de fixação</h2></div>
+        <div class="quiz-container">
+          <div class="quiz-question">Um formulário é enviado com um campo obrigatório em branco, e a validação do cliente foi contornada. O que acontece na action de POST?</div>
+          <ul class="quiz-options">
+            <li data-correct="true"><span class="option-letter">A</span><span class="option-text">A action executa, <code>ModelState.IsValid</code> fica falso e cabe ao Controller devolver a View com as mensagens de erro.</span></li>
+            <li data-correct="false"><span class="option-letter">B</span> A action não chega a ser executada, porque o framework bloqueia a requisição antes do model binding.</li>
+            <li data-correct="false"><span class="option-letter">C</span><span class="option-text">O Entity Framework Core rejeita o registro no <code>SaveChangesAsync</code> e devolve à action uma exceção de validação.</span></li>
+            <li data-correct="false"><span class="option-letter">D</span> O navegador exibe uma tela de erro do servidor, porque a propriedade obrigatória ficou sem valor no Model.</li>
+          </ul>
+          <div class="quiz-feedback"
+               data-correct-msg="Isso. O framework faz o binding, confere as anotações e entra na action de qualquer jeito. Ele apenas relata o resultado em ModelState; quem decide o que fazer com o erro é o seu código."
+               data-incorrect-msg="Não é isso. Nada bloqueia a requisição antes da action, e o banco de dados nem entrou nesta história: a validação do Model acontece no servidor, antes de qualquer persistência, e o resultado chega em ModelState.IsValid."></div>
+        </div>
+        <div class="slide-footer"><div class="footer-bar">10 Quiz de fixação</div><div class="footer-page">17</div></div>
+      </section>
+
+      <!-- ==================== SLIDE 18: LAB PASSO 1 ==================== -->
+      <section class="exercise-slide content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Laboratório, passo 1 de 6: a branch e o Model</h2>
+        </div>
+
+        <p style="font-size:0.72em; margin-top:0;">Missão dos próximos 60 minutos: trazer o formulário de agendamento para dentro da aplicação <code>ClinicaVida.Web</code>.</p>
+
+        <div class="exercise-container">
+          <h3>No seu fork, a partir da main atualizada</h3>
+          <ol class="exercise-steps">
+            <li>Crie a branch <code>feature/formulario-agendamento</code>.</li>
+            <li>Crie <code>Models/Consulta.cs</code> com as seis propriedades do slide 6.</li>
+            <li>Em <code>Models/ClinicaEmMemoria.cs</code>, da Aula 09, acrescente a lista <code>Pacientes</code>, com três pacientes, e a lista <code>Consultas</code>, vazia.</li>
+            <li>Compile antes de seguir: <code>dotnet build</code> precisa terminar sem erro.</li>
+          </ol>
+        </div>
+
+        <pre class="code-compact" style="margin-top:10px;"><code class="language-bash" data-trim>git checkout main &amp;&amp; git pull
+git checkout -b feature/formulario-agendamento
+dotnet build</code></pre>
+
+        <div class="slide-footer">
+          <div class="footer-bar">10 Laboratório, passo 1, branch e Model</div>
+          <div class="footer-page">18</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 19: LAB PASSO 2 ==================== -->
+      <section class="exercise-slide content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Laboratório, passo 2 de 6: as Data Annotations</h2>
+        </div>
+
+        <p style="font-size:0.72em; margin-top:0;">Anote as seis propriedades da <code>Consulta</code> como no slide 13, e o <code>Cpf</code> do <code>Paciente</code> como no exercício do Ciclo 2. Toda mensagem em português.</p>
+
+        <div class="exercise-container">
+          <h3>Confira o entendimento enquanto escreve</h3>
+          <ol class="exercise-steps">
+            <li><code>[Display]</code> muda o rótulo <strong>e</strong> o texto das mensagens padrão.</li>
+            <li><code>[Range(1, int.MaxValue)]</code> nas listas suspensas: sem escolha, o valor chega 0.</li>
+            <li><code>[DataType(DataType.Date)]</code> é o que faz o <code>asp-for</code> gerar <code>type="date"</code>.</li>
+            <li><code>{1}</code> dentro da mensagem do <code>[StringLength]</code> é substituído pelo tamanho máximo.</li>
+          </ol>
+        </div>
+
+        <pre class="code-compact" style="margin-top:10px;"><code class="language-csharp" data-trim>[Display(Name = "Data da consulta")]
+[Required(ErrorMessage = "Informe a data da consulta.")]
+[DataType(DataType.Date)]
+public DateTime Data { get; set; }</code></pre>
+
+        <div class="slide-footer">
+          <div class="footer-bar">10 Laboratório, passo 2, Data Annotations</div>
+          <div class="footer-page">19</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 20: LAB PASSO 3 ==================== -->
+      <section class="exercise-slide content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Laboratório, passo 3 de 6: o Controller e as listas</h2>
+        </div>
+
+        <p style="font-size:0.72em; margin-top:0;">Fim do Ciclo 3, comigo. As listas suspensas saem do <strong>repositório em memória da Aula 09</strong>: o banco de dados só chega na Aula 11.</p>
+
+        <pre class="code-compact"><code class="language-csharp" data-trim>// using ClinicaVida.Web.Models, Microsoft.AspNetCore.Mvc e Mvc.Rendering
+
+public class ConsultasController : Controller
+{
+    [HttpGet]
+    public IActionResult Agendar()
+    {
+        CarregarListas();
+        return View(new Consulta { Data = DateTime.Today });
+    }
+
+    private void CarregarListas()
+    {
+        ViewBag.Pacientes = new SelectList(ClinicaEmMemoria.Pacientes, "Id", "Nome");
+        ViewBag.Medicos   = new SelectList(ClinicaEmMemoria.Medicos,   "Id", "Nome");
+    }
+}</code></pre>
+
+        <div class="slide-footer">
+          <div class="footer-bar">10 Laboratório, passo 3, Controller e listas</div>
+          <div class="footer-page">20</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 21: LAB PASSO 4 ==================== -->
+      <section class="exercise-slide content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Laboratório, passo 4 de 6: a View com Tag Helpers</h2>
+        </div>
+
+        <p style="font-size:0.72em; margin-top:0;">Ciclo 4, sozinho. O arquivo é <code>Views/Consultas/Agendar.cshtml</code>. Repita o trio de linhas para cada um dos cinco campos.</p>
+
+        <pre class="code-compact"><code class="language-html" data-trim>@model ClinicaVida.Web.Models.Consulta
+@{ ViewData["Title"] = "Agendar consulta"; }
+
+&lt;h1&gt;Agendar consulta&lt;/h1&gt;
+
+&lt;form asp-controller="Consultas" asp-action="Agendar" method="post"&gt;
+  &lt;div asp-validation-summary="ModelOnly" class="erro-resumo"&gt;&lt;/div&gt;
+
+  &lt;label asp-for="PacienteId"&gt;&lt;/label&gt;
+  &lt;select asp-for="PacienteId" asp-items="ViewBag.Pacientes"&gt;
+    &lt;option value=""&gt;Selecione o paciente&lt;/option&gt;
+  &lt;/select&gt;
+  &lt;span asp-validation-for="PacienteId" class="erro-campo"&gt;&lt;/span&gt;
+
+  &lt;!-- MedicoId, Data, Horario e Observacoes seguem o mesmo trio --&gt;
+
+  &lt;button type="submit"&gt;Confirmar agendamento&lt;/button&gt;
+&lt;/form&gt;</code></pre>
+
+        <div class="slide-footer">
+          <div class="footer-bar">10 Laboratório, passo 4, a View</div>
+          <div class="footer-page">21</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 22: LAB PASSO 5 ==================== -->
+      <section class="exercise-slide content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Laboratório, passo 5 de 6: o POST e o ModelState</h2>
+        </div>
+
+        <p style="font-size:0.7em; margin-top:0;">A segunda action <code>Agendar</code>, mesmo nome e verbo diferente. Teste primeiro o caminho do erro: envie o formulário <strong>vazio</strong>. A data futura é <strong>regra de negócio</strong>, não formato: nenhuma anotação sabe o que é hoje, e por isso ela entra no relatório pela mão do Controller, com <code>ModelState.AddModelError</code>.</p>
+
+        <pre class="code-compact"><code class="language-csharp" data-trim>[HttpPost]
+[ValidateAntiForgeryToken]
+public IActionResult Agendar(Consulta consulta)
+{
+    if (consulta.Data.Date &lt; DateTime.Today)
+        ModelState.AddModelError("Data", "A consulta precisa ser em uma data futura.");
+
+    if (!ModelState.IsValid)
+    {
+        CarregarListas();
+        return View(consulta);
+    }
+
+    consulta.Id = ClinicaEmMemoria.Consultas.Count + 1;
+    ClinicaEmMemoria.Consultas.Add(consulta);
+    return RedirectToAction(nameof(Confirmacao), new { id = consulta.Id });
+}</code></pre>
+
+        <div class="slide-footer">
+          <div class="footer-bar">10 Laboratório, passo 5, o POST</div>
+          <div class="footer-page">22</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 23: LAB PASSO 6 ==================== -->
+      <section class="exercise-slide content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Laboratório, passo 6 de 6: a tela de confirmação</h2>
+        </div>
+
+        <p style="font-size:0.72em; margin-top:0;">O agendamento válido não devolve uma View: ele <strong>redireciona</strong>. Assim, atualizar a página de confirmação não reenvia a consulta.</p>
+
+        <pre class="code-compact"><code class="language-csharp" data-trim>[HttpGet]
+public IActionResult Confirmacao(int id)
+{
+    var consulta = ClinicaEmMemoria.Consultas.FirstOrDefault(c =&gt; c.Id == id);
+    if (consulta is null) return NotFound();
+
+    ViewBag.NomePaciente = ClinicaEmMemoria.Pacientes.First(p =&gt; p.Id == consulta.PacienteId).Nome;
+    ViewBag.NomeMedico   = ClinicaEmMemoria.Medicos.First(m =&gt; m.Id == consulta.MedicoId).Nome;
+    return View(consulta);
+}</code></pre>
+
+        <div class="takeaway" style="margin-top:8px;">
+          <span class="takeaway-label">Confira</span>
+          <p>A View <code>Confirmacao.cshtml</code> mostra paciente, médico, data e horário. A barra de endereços precisa terminar em <code>/Consultas/Confirmacao/1</code>, e não em <code>/Consultas/Agendar</code>.</p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">10 Laboratório, passo 6, confirmação</div>
+          <div class="footer-page">23</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 24: ENTREGÁVEL, COMMIT E PUSH ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Entregável de hoje, commit e push</h2>
+        </div>
+
+        <div class="side-by-side" style="margin-top:6px;">
+          <div class="side">
+            <h4>O que precisa estar funcionando</h4>
+            <ul style="margin:0; padding-left:20px;">
+              <li><code>Models/Consulta.cs</code> anotado, e o <code>Cpf</code> do <code>Paciente</code>.</li>
+              <li><code>ConsultasController</code> com <code>Agendar</code> em GET e em POST.</li>
+              <li>A View com Tag Helpers, resumo e listas suspensas.</li>
+              <li>A tela de confirmação alcançada por redirecionamento.</li>
+            </ul>
+          </div>
+          <div class="side">
+            <h4>Como o professor confere</h4>
+            <ul style="margin:0; padding-left:20px;">
+              <li>Envio vazio: mensagem em português em cada campo.</li>
+              <li>Os <code>select</code> continuam preenchidos depois do erro.</li>
+              <li>Data de ontem: recusada pela regra de negócio.</li>
+              <li>Envio válido: confirmação com os dados na tela.</li>
+            </ul>
+          </div>
+        </div>
+
+        <pre class="code-compact" style="margin-top:14px;"><code class="language-bash" data-trim>git add Models Controllers Views
+git commit -m "feat: formulario de agendamento com validacao no servidor"
+git push -u origin feature/formulario-agendamento</code></pre>
+
+        <div class="slide-footer">
+          <div class="footer-bar">10 Entregável, commit e push</div>
+          <div class="footer-page">24</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 25: FECHAMENTO E PRÉVIA ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>A limitação que sobra, e a prévia da Aula 11</h2>
+        </div>
+
+        <p style="font-size:0.72em; margin-top:0;">Faça o teste antes de fechar o notebook: agende uma consulta, veja a confirmação, pare a aplicação com <code>Ctrl+C</code> e rode <code>dotnet run</code> de novo. A consulta sumiu.</p>
+
+        <div class="flow-diagram" style="margin:10px 0 0 0; font-size:0.9em; gap:8px;">
+          <div class="flow-item">formulário</div>
+          <div class="flow-arrow">&rarr;</div>
+          <div class="flow-item">model binding</div>
+          <div class="flow-arrow">&rarr;</div>
+          <div class="flow-item">validação no servidor</div>
+          <div class="flow-arrow">&rarr;</div>
+          <div class="flow-item" style="background:#C84B31;">memória do processo</div>
+        </div>
+
+        <div class="callout" style="margin-top:18px;">
+          <p><strong>O elo que falta é o último:</strong> a lista em memória vive enquanto o processo vive. Uma clínica de verdade precisa que o agendamento continue lá amanhã, depois de reiniciar o servidor, e visível para a recepção em outra máquina.</p>
+        </div>
+
+        <div class="takeaway" style="margin-top:16px;">
+          <span class="takeaway-label">Prévia da Aula 11</span>
+          <p>Banco de dados relacional, MySQL e Entity Framework Core: o mesmo Model <code>Consulta</code> de hoje vira uma tabela, sem você escrever o <code>CREATE TABLE</code>. Traga o notebook com espaço em disco para instalar o MySQL.</p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">10 Fechamento e prévia da Aula 11</div>
+          <div class="footer-page">25</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 26: REFERÊNCIAS ==================== -->
+      <section id="ref-slide" class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Referências desta aula</h2>
+        </div>
+
+        <p style="font-size:0.7em; margin-top:0;">Os números entre colchetes ao lado dos títulos remetem a esta lista. Toda a documentação do ASP.NET Core é aberta e está em português.</p>
+
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px 26px; margin-top:4px;">
+          <div class="concept-card" style="padding:14px 16px;">
+            <h4>[1] Model binding</h4>
+            <p style="font-size:0.7em; color:#444444;">MICROSOFT. <em>Model binding no ASP.NET Core</em>.<br>
+            <code style="font-size:0.9em;">learn.microsoft.com/pt-br/aspnet/core/mvc/models/model-binding</code></p>
+          </div>
+          <div class="concept-card" style="padding:14px 16px;">
+            <h4>[2] Validação de modelo e Data Annotations</h4>
+            <p style="font-size:0.7em; color:#444444;">MICROSOFT. <em>Validação de modelo no ASP.NET Core MVC</em>.<br>
+            <code style="font-size:0.9em;">learn.microsoft.com/pt-br/aspnet/core/mvc/models/validation</code></p>
+          </div>
+          <div class="concept-card" style="padding:14px 16px;">
+            <h4>[3] Tag Helpers em formulários</h4>
+            <p style="font-size:0.7em; color:#444444;">MICROSOFT. <em>Trabalhando com formulários no ASP.NET Core</em>.<br>
+            <code style="font-size:0.9em;">learn.microsoft.com/pt-br/aspnet/core/mvc/views/working-with-forms</code></p>
+          </div>
+          <div class="concept-card" style="padding:14px 16px;">
+            <h4>[4] O token antifalsificação</h4>
+            <p style="font-size:0.7em; color:#444444;">MICROSOFT. <em>Impedir ataques de falsificação de solicitação</em>.<br>
+            <code style="font-size:0.9em;">learn.microsoft.com/pt-br/aspnet/core/security/anti-request-forgery</code></p>
+          </div>
+        </div>
+
+        <div class="callout" style="margin-top:12px;">
+          <p>O roteiro completo do laboratório de hoje está no portal da disciplina, em <code>labs/aula10-lab/</code>.</p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">10 Referências</div>
+          <div class="footer-page">26</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 27: ENCERRAMENTO ==================== -->
+      <section class="end-slide">
+        <img src="../assets/img/uninove-logo.png" alt="Uninove, Universidade Nove de Julho"
+             style="max-width:300px; background:#FFFFFF; padding:20px 28px; border-radius:8px;">
+        <div class="copyright">
+          Copyright &copy; 2026<br>
+          Prof. José Romualdo da Costa Filho<br><br>
+          Todos os direitos reservados. É expressamente proibida a reprodução, divulgação<br>
+          total ou parcial, deste material acadêmico sem autorização formal,<br>
+          por escrito, do Professor autor da ementa.
+        </div>
+      </section>
+
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/highlight/highlight.js"></script>
+  <script src="../assets/js/uninove-quiz.js"></script>
+  <script type="module">
+    import { TURMAS, resolverTurma, dataDaAula, formatarData } from '../assets/js/turmas.js';
+    const turma = resolverTurma({
+      hoje: new Date(),
+      salva: localStorage.getItem('uninove-turma'),
+    });
+    const alvo = document.querySelector('[data-data-da-aula]');
+    if (alvo) {
+      const n = Number(alvo.getAttribute('data-data-da-aula'));
+      alvo.textContent = turma
+        ? `${TURMAS[turma].rotulo}, ${formatarData(dataDaAula(turma, n))}`
+        : `Quarta ${formatarData(dataDaAula('quarta', n))} ou quinta ${formatarData(dataDaAula('quinta', n))}`;
+    }
+  </script>
+  <script>
+    Reveal.initialize({
+      width: 1280, height: 720, center: false, margin: 0,
+      hash: true, slideNumber: false,
+      // Os chevrons de navegação caem sobre a footer-bar e sobre o triângulo
+      // azul do canto inferior direito; a barra de progresso encosta no rodapé
+      // e parece um segundo rodapé. Nenhum dos dois é usado na projeção.
+      controls: false, progress: false,
+      // Um slide por página no ?print-pdf, para o PDF bater com o deck.
+      pdfMaxPagesPerSlide: 1,
+      plugins: [RevealHighlight],
+    });
+  </script>
+</body>
+</html>
