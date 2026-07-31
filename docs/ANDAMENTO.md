@@ -1,6 +1,6 @@
 # Andamento
 
-**Última atualização:** 31/07/2026
+**Última atualização:** 31/07/2026 (Task 12, lote do Módulo 1)
 
 ## Ordem de leitura ao abrir uma sessão
 
@@ -116,7 +116,8 @@
   por aula, e não aparecia em nenhum documento do repositório.
 - O ciclo do artefato fechou: `SKILL.md` e agente agora mandam criar
   `labs/aulaXX-lab/index.html` e habilitar o card da aula no portal.
-- Novo validador estático `tools/check_decks.py`, com sete checagens, cada uma
+- Novo validador estático `tools/check_decks.py`, com sete checagens (hoje
+  oito, ver Task 12), cada uma
   provada por defeito induzido numa cópia do padrão-ouro.
 - `.claude/agents/revisor-slides-uninove.md` criado, override do revisor da
   FIAP, que proibia os pesos de avaliação obrigatórios aqui.
@@ -128,16 +129,82 @@
   da Aula 01 ganhou a tabela que faltava. O checkpoint vale nota, e uma lista
   em prosa deixa margem para aluno e professor lerem coisas diferentes.
 
+**Task 12, lote do Módulo 1, Aulas 02 a 06 (31/07/2026):**
+
+- Cinco decks e cinco kits produzidos em paralelo, um agente
+  `construtor-aulas-uninove` por aula: `aula02.html` (22 slides, TCP/IP e DNS),
+  `aula03.html` (32, HTML semântico e o fluxo branch/PR), `aula04.html` (26,
+  CSS, box model e Flexbox), `aula05.html` (24, Grid, responsivo e
+  formulários) e `aula06.html` (29, JavaScript, DOM e eventos), cada um com
+  `labs/aulaXX-lab/README.md` e `index.html`.
+- Os cinco cards do portal habilitados em uma edição única, feita fora dos
+  agentes: cinco escritas concorrentes no mesmo `index.html` se atropelariam.
+  `check_portal.py` confirma os 12 links das seis aulas respondendo 200.
+- **Módulo 1 completo.** O front-end da Clínica Vida+ vai da página semântica
+  ao formulário com validação em JavaScript.
+
+**Reconciliação entre aulas produzidas em paralelo, 31/07/2026:**
+
+Produzir cinco aulas ao mesmo tempo cobra um preço específico: cada agente
+supõe o que as vizinhas vão entregar. O que foi encontrado e corrigido depois:
+
+- **Seletor do filtro de especialidades.** A Aula 04 faz o aluno escrever
+  `.lista-especialidades li`, com os cards como `<li>` sem classe; a Aula 06
+  filtrava por `.card-especialidade`, que não existiria no arquivo dele. A
+  Aula 06 passou a usar o seletor que a Aula 04 de fato produz, no deck e no
+  kit. Corrigido na aula dependente, não na que já entregou.
+- **IP de exemplo.** A Aula 02 usava `200.160.2.3`, endereço real do
+  registro.br. Trocado por `203.0.113.42`, do bloco de documentação da
+  RFC 5737, nas quatro ocorrências.
+- **Referência não verificada.** A Aula 02 citava Kurose e Ross e afirmava
+  estar "na biblioteca digital", o que ninguém conferiu, e o livro não consta
+  da bibliografia do `PLANO_DE_ENSINO.md`, que é toda documentação. Trocado
+  pelo glossário da MDN. Varredura nas seis aulas não achou outra citação fora
+  da lista oficial.
+- **Falso alarme registrado para não ser reinvestigado:** a divergência
+  aparente de CPF entre a Aula 05 (campo mascarado) e a Aula 06 (11 dígitos)
+  **não existe**. A Aula 06 faz `replace(/\D/g, '')` antes de contar.
+- **Paleta da Clínica Vida+.** Não existia em documento nenhum, e a Aula 04
+  precisou inventá-la. O professor decidiu mantê-la, e ela está registrada na
+  seção 3 do `SKILL.md` para as aulas seguintes herdarem.
+
+**Dois defeitos de tema, ADR-007 e a oitava checagem (31/07/2026):**
+
+Três dos cinco construtores, isolados um do outro, relataram o **mesmo par de
+defeitos**. Coincidência tripla em agentes independentes é defeito de tema, não
+de autoria, e cada aula nova pagaria o mesmo pedágio. Os dois passam nos quatro
+validadores e só aparecem na tela.
+
+- **Código cortado silenciosamente.** O `reveal.css` da CDN traz
+  `pre code { max-height: 400px; overflow: auto }`. Medido no laboratório da
+  Aula 03: bloco de 433px exibido com 410px, 23px de código fora da tela, com
+  o validador imprimindo OK, porque quem estoura é o `<code>` e não a caixa do
+  `<pre>`. O tema agora zera esse limite, o que troca falha silenciosa por
+  falha ruidosa: bloco alto passa a estourar a `section` e o `check_slides.py`
+  acusa. Os três contornos inline que a Aula 03 tinha criado foram removidos.
+- **Alternativa de quiz partida pelo flex**, descrito nas pendências abaixo.
+  Corrigido no tema com `.option-text` e transformado na oitava checagem do
+  `check_decks.py`.
+
+Os seis decks, incluindo a Aula 01, foram revalidados depois das mudanças de
+tema. `npm test` continua com 14 testes passando.
+
 ## Próximos passos
 
-A fundação do acervo está concluída (Tasks 1 a 11). O próximo passo é escrever
-o plano das Aulas 02 a 20, usando a Aula 01 como padrão-ouro (deck, lab e
-portal já validados) e o agente `construtor-aulas-uninove.md` para produção.
-A recomendação é produzir os 19 decks restantes em quatro lotes por módulo do
-`PLANO_DE_ENSINO.md`, com revisão entre um lote e o seguinte, em vez de
-produzir tudo de uma vez: cada lote incorpora o que for aprendido na revisão
-do lote anterior, e um defeito sistêmico (como os do ADR-005) é pego cedo, sem
-se multiplicar pelas 20 aulas.
+Produzir o **Módulo 2, Aulas 07 a 12** (ambiente .NET, MVC, C#, formulários e
+Models, EF Core e MySQL, CRUD), no mesmo formato de lote. Duas lições do lote
+anterior valem para o próximo:
+
+1. **Reconciliar contratos entre aulas é etapa do lote, não detalhe.** Quando
+   as aulas são produzidas em paralelo, cada agente supõe o que a vizinha
+   entrega. Nomes de classe, `id`, seletores e convenções de dado precisam ser
+   conferidos ao fim, com a correção feita na aula dependente. No Módulo 2 o
+   contrato é maior: nome de projeto, namespace, nome de Controller, nome de
+   propriedade de Model e connection string atravessam seis aulas.
+2. **Manter o portal fora dos agentes.** Habilitar os cards em uma edição
+   única, depois que todos os decks estiverem em disco.
+
+Depois, Módulo 3 (Aulas 13 a 17) e Módulo 4 (Aulas 18 a 20).
 
 ## Pendências conhecidas
 
@@ -150,6 +217,14 @@ se multiplicar pelas 20 aulas.
   triângulo é o `::after` (ver ADR-005). Para esse caso específico existe
   `tools/check_canto_coral.py`, que precisa rodar em conjunto com o
   `check_slides.py`, não no lugar dele.
+- **Alternativa de quiz com `<code>` precisa de `<span class="option-text">`**
+  em volta do texto, senão a `li`, que é `display: flex` com `gap: 12px`,
+  parte a frase com 12px de buraco em volta do trecho de código (ADR-007).
+  Escapou três vezes, por três autores diferentes, porque nenhum validador
+  pegava. **Deixou de ser pendência na Task 12:** virou a oitava checagem do
+  `check_decks.py`, provada por defeito induzido em três variantes (`<code>`,
+  `<strong>` e `<br>` soltos) mais um controle negativo com o `<code>` dentro
+  do `option-text`.
 - **15/10/2026 cai numa quinta-feira e é o Dia do Professor.** Se a
   coordenação suspender a aula nessa data, a turma de quinta perde a Aula 11;
   o plano B já registrado no `PLANO_DE_ENSINO.md` é fundir as Aulas 18 e 19.

@@ -22,9 +22,12 @@ por pixel:
   - `href="#/ref-slide"` sem o `id="ref-slide"` correspondente e um link morto;
   - rodape fora de sequencia depois de inserir ou remover um slide;
   - `src` ou `href` relativo apontando para arquivo que nao existe da 404 no
-    GitHub Pages, que nao faz listagem de diretorio.
+    GitHub Pages, que nao faz listagem de diretorio;
+  - `<code>` solto dentro de uma alternativa de quiz parte a frase na
+    projecao, porque a `li` e um contexto de flex (ADR-007). Este defeito
+    escapou tres vezes, em tres decks diferentes, antes de virar checagem.
 
-AS SETE CHECAGENS
+AS OITO CHECAGENS
 -----------------
 1. Existe exatamente um `data-data-da-aula` no deck, e o valor e igual ao
    numero da aula no nome do arquivo (`aula05.html` exige valor 5).
@@ -40,6 +43,10 @@ AS SETE CHECAGENS
 7. Todo `src` e `href` relativo a arquivo local existe no disco. Diretorio so
    conta como existente se tiver `index.html` dentro, porque e assim que o
    GitHub Pages se comporta.
+8. Nenhuma alternativa de quiz tem elemento inline solto como filho direto da
+   `<li>`: so `.option-letter` e `.option-text` sao permitidos. A `li` e
+   `display: flex` com `gap: 12px`, entao um `<code>` solto vira item de flex
+   proprio e a frase se parte com 12px de buraco de cada lado (ADR-007).
 
 NUMERACAO DOS SLIDES
 --------------------
@@ -75,13 +82,23 @@ ATRIBUTOS_DE_CAMINHO = ("src", "href")
 # Esquemas que nao apontam para arquivo local.
 ESQUEMAS_EXTERNOS = ("http", "https", "mailto", "tel", "data", "javascript")
 
+# Elementos sem tag de fechamento: nao abrem nivel de aninhamento.
+TAGS_VAZIAS = (
+    "area", "base", "br", "col", "embed", "hr", "img", "input",
+    "link", "meta", "param", "source", "track", "wbr",
+)
+
+# Os unicos filhos diretos que uma alternativa de quiz pode ter. Qualquer
+# outro elemento inline solto vira item de flex proprio (ADR-007).
+FILHOS_PERMITIDOS_NA_ALTERNATIVA = ("option-letter", "option-text")
+
 
 def classes_de(attrs):
     return (attrs.get("class") or "").split()
 
 
 class LeitorDeDeck(HTMLParser):
-    """Percorre o deck uma vez e recolhe tudo o que as sete checagens usam.
+    """Percorre o deck uma vez e recolhe tudo o que as oito checagens usam.
 
     As `section` dos decks nunca sao aninhadas (o Reveal usa slides verticais
     aninhados, que este acervo nao usa), entao 'a secao atual' e sempre a
@@ -97,8 +114,12 @@ class LeitorDeDeck(HTMLParser):
         self.ancoras = []         # (alvo, linha, secao)
         self.caminhos = []        # (atributo, valor, linha, secao)
         self.rodapes = []         # (valor_texto, linha, secao)
+        self.alternativas = []    # {'secao', 'linha', 'soltos'}
         self._quiz_aberto = None
         self._capturando_rodape = None
+        self._quiz_options_aberto = False
+        self._li_aberta = None
+        self._profundidade_na_li = 0
 
     # -- utilidades ------------------------------------------------------
     @property
@@ -129,6 +150,29 @@ class LeitorDeDeck(HTMLParser):
 
         if "decor-coral" in classes and self.secao_atual is not None:
             self.secoes[self.secao_atual]["decor"] = True
+
+        # -- alternativas de quiz (checagem 8) -----------------------------
+        # Precisamos saber se um elemento inline e filho DIRETO da <li>: o que
+        # esta dentro do `.option-text` ja e um item de flex so, e nao quebra.
+        if "quiz-options" in classes:
+            self._quiz_options_aberto = True
+
+        if self._quiz_options_aberto and tag == "li" and self._li_aberta is None:
+            self._li_aberta = {
+                "secao": self.secao_atual,
+                "linha": linha,
+                "soltos": [],
+            }
+            self._profundidade_na_li = 0
+        elif self._li_aberta is not None:
+            if self._profundidade_na_li == 0:
+                permitido = any(
+                    c in classes for c in FILHOS_PERMITIDOS_NA_ALTERNATIVA
+                )
+                if not permitido:
+                    self._li_aberta["soltos"].append(tag)
+            if not autofechada and tag not in TAGS_VAZIAS:
+                self._profundidade_na_li += 1
 
         if "quiz-container" in classes:
             self._quiz_aberto = {
@@ -166,6 +210,16 @@ class LeitorDeDeck(HTMLParser):
             self._capturando_rodape["texto"].append(data)
 
     def handle_endtag(self, tag):
+        if self._li_aberta is not None:
+            if self._profundidade_na_li > 0:
+                if tag not in TAGS_VAZIAS:
+                    self._profundidade_na_li -= 1
+            elif tag == "li":
+                self.alternativas.append(self._li_aberta)
+                self._li_aberta = None
+        if tag == "ul":
+            self._quiz_options_aberto = False
+
         if self._capturando_rodape is not None and tag == "div":
             rodape = self._capturando_rodape
             self._capturando_rodape = None
@@ -174,7 +228,7 @@ class LeitorDeDeck(HTMLParser):
             )
 
 
-# -- as sete checagens ---------------------------------------------------
+# -- as oito checagens ---------------------------------------------------
 def checar_data_da_aula(leitor, numero_da_aula, erros, rotulo):
     if len(leitor.datas_da_aula) != 1:
         erros.append(
@@ -236,6 +290,31 @@ def checar_quiz_com_uma_resposta(leitor, erros, rotulo):
                 "data-correct=\"true\", esperado exatamente 1"
                 % (rotulo, quiz["secao"], quiz["linha"], quiz["corretas"])
             )
+
+
+def checar_alternativas_sem_inline_solto(leitor, erros, rotulo):
+    """Checagem 8: alternativa de quiz nao pode ter elemento inline solto.
+
+    `.quiz-slide .quiz-options li` e `display: flex` com `gap: 12px`. Cada
+    trecho de texto solto e cada elemento inline vira um item de flex
+    separado, entao um `<code>` no meio da alternativa ganha 12px de buraco de
+    cada lado, no lugar onde deveria haver um espaco normal, e a frase se parte
+    na projecao. A saida e envolver o texto em `<span class="option-text">`.
+
+    Nada disso estoura os 1280x720 nem sobrepoe bloco, entao `check_slides.py`
+    aprova. O defeito apareceu tres vezes, em tres decks diferentes, antes de
+    virar esta checagem. Ver ADR-007.
+    """
+    for alt in leitor.alternativas:
+        if not alt["soltos"]:
+            continue
+        tags = ", ".join("<%s>" % t for t in sorted(set(alt["soltos"])))
+        erros.append(
+            "%s  slide %s (linha %d): alternativa de quiz com %s solto fora de "
+            "<span class=\"option-text\">; a li e display:flex com gap:12px, "
+            "entao o trecho vira item proprio e a frase se parte na projecao "
+            "(ADR-007)" % (rotulo, alt["secao"], alt["linha"], tags)
+        )
 
 
 def checar_ancoras_internas(leitor, erros, rotulo):
@@ -348,6 +427,7 @@ def checar_deck(caminho, erros):
     checar_decor_coral(leitor, erros, rotulo)
     checar_content_slide_em_quiz_e_exercicio(leitor, erros, rotulo)
     checar_quiz_com_uma_resposta(leitor, erros, rotulo)
+    checar_alternativas_sem_inline_solto(leitor, erros, rotulo)
     checar_ancoras_internas(leitor, erros, rotulo)
     checar_sequencia_dos_rodapes(leitor, erros, rotulo)
     checar_caminhos_locais(leitor, caminho, erros, rotulo)
@@ -362,7 +442,7 @@ def checar_deck(caminho, erros):
         for erro in erros[antes:]:
             print("  - %s" % erro)
     else:
-        print("  OK: as sete checagens estruturais passaram")
+        print("  OK: as oito checagens estruturais passaram")
     return novos
 
 
