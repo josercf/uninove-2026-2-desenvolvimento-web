@@ -1,0 +1,709 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Desenvolvimento Web, Uninove 2026.2</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --uninove-azul: #00274D;
+      --uninove-azul-painel: #063461;
+      --uninove-coral: #C84B31;
+      --uninove-texto: #F5F5F5;
+      --uninove-texto-fraco: #B7C3D1;
+      --uninove-borda: rgba(255, 255, 255, 0.14);
+      --uninove-fonte: 'Montserrat', 'Segoe UI', Arial, sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      background: var(--uninove-azul);
+      color: var(--uninove-texto);
+      font-family: var(--uninove-fonte);
+      line-height: 1.5;
+    }
+
+    a { color: inherit; }
+
+    /* ---------- Cabecalho ---------- */
+    .portal-header {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      padding: 20px 32px;
+      background: var(--uninove-azul-painel);
+      border-bottom: 3px solid var(--uninove-coral);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    .portal-marca {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      min-width: 0;
+    }
+
+    .portal-logo {
+      height: 52px;
+      background: #FFFFFF;
+      padding: 8px 12px;
+      border-radius: 8px;
+      flex-shrink: 0;
+    }
+
+    .portal-titulo h1 {
+      margin: 0;
+      font-size: 1.3rem;
+      font-weight: 800;
+      letter-spacing: 0.5px;
+    }
+
+    .portal-titulo p {
+      margin: 4px 0 0;
+      font-size: 0.85rem;
+      color: var(--uninove-texto-fraco);
+    }
+
+    .portal-turma {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .portal-turma label {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--uninove-texto-fraco);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    #seletor-turma {
+      background: var(--uninove-azul);
+      color: var(--uninove-texto);
+      border: 1px solid var(--uninove-borda);
+      border-radius: 6px;
+      padding: 8px 12px;
+      font-family: var(--uninove-fonte);
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    /* ---------- Conteudo principal ---------- */
+    main {
+      padding: 32px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .modulo {
+      margin-bottom: 44px;
+    }
+
+    .modulo-titulo {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin: 0 0 20px;
+    }
+
+    .modulo-titulo .accent-bar {
+      width: 6px;
+      height: 30px;
+      background: var(--uninove-coral);
+      border-radius: 3px;
+      flex-shrink: 0;
+    }
+
+    .modulo-titulo h2 {
+      margin: 0;
+      font-size: 1.15rem;
+      font-weight: 700;
+    }
+
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 20px;
+    }
+
+    /* ---------- Card de aula ---------- */
+    .card {
+      position: relative;
+      background: var(--uninove-azul-painel);
+      border: 1px solid var(--uninove-borda);
+      border-radius: 10px;
+      padding: 18px 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .card-header {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .card-numero {
+      font-size: 0.75rem;
+      font-weight: 800;
+      letter-spacing: 0.5px;
+      color: var(--uninove-coral);
+      text-transform: uppercase;
+    }
+
+    .card-data {
+      font-size: 0.8rem;
+      color: var(--uninove-texto-fraco);
+      font-weight: 600;
+      white-space: nowrap;
+    }
+
+    .card-titulo {
+      margin: 0;
+      font-size: 0.95rem;
+      font-weight: 600;
+      min-height: 2.8em;
+    }
+
+    .card-acoes {
+      display: flex;
+      gap: 10px;
+      margin-top: auto;
+    }
+
+    .btn {
+      flex: 1;
+      text-align: center;
+      display: inline-block;
+      padding: 8px 12px;
+      border-radius: 6px;
+      text-decoration: none;
+      font-weight: 700;
+      font-size: 0.82rem;
+      background: var(--uninove-coral);
+      color: #FFFFFF;
+      transition: background 0.2s ease;
+    }
+
+    .btn:hover { background: #A63C27; }
+
+    .btn.disabled {
+      background: rgba(255, 255, 255, 0.08);
+      color: rgba(255, 255, 255, 0.4);
+      cursor: not-allowed;
+      pointer-events: none;
+    }
+
+    .badge-producao {
+      align-self: flex-start;
+      font-size: 0.68rem;
+      font-weight: 700;
+      letter-spacing: 0.4px;
+      text-transform: uppercase;
+      color: rgba(255, 255, 255, 0.55);
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid var(--uninove-borda);
+      border-radius: 20px;
+      padding: 3px 10px;
+    }
+
+    /* ---------- Modal de escolha de turma ---------- */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 8, 20, 0.85);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      z-index: 100;
+    }
+
+    .modal-overlay[hidden] { display: none; }
+
+    .modal-caixa {
+      background: var(--uninove-azul-painel);
+      border: 1px solid var(--uninove-borda);
+      border-radius: 12px;
+      padding: 32px;
+      max-width: 420px;
+      width: 100%;
+      text-align: center;
+    }
+
+    .modal-caixa h2 {
+      margin: 0 0 10px;
+      font-size: 1.15rem;
+    }
+
+    .modal-caixa p {
+      margin: 0 0 24px;
+      color: var(--uninove-texto-fraco);
+      font-size: 0.9rem;
+    }
+
+    .modal-opcoes {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .modal-opcoes button {
+      font-family: var(--uninove-fonte);
+      font-size: 0.95rem;
+      font-weight: 700;
+      padding: 14px 16px;
+      border-radius: 8px;
+      border: 1px solid var(--uninove-coral);
+      background: transparent;
+      color: var(--uninove-texto);
+      cursor: pointer;
+      transition: background 0.2s ease;
+    }
+
+    .modal-opcoes button:hover {
+      background: var(--uninove-coral);
+    }
+
+    /* ---------- Responsividade ---------- */
+    @media (max-width: 640px) {
+      .portal-header {
+        padding: 16px 18px;
+        justify-content: center;
+        text-align: center;
+      }
+
+      .portal-marca {
+        flex-direction: column;
+        text-align: center;
+      }
+
+      .portal-turma {
+        width: 100%;
+        justify-content: center;
+      }
+
+      main {
+        padding: 20px 16px;
+      }
+
+      .cards-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .card-header {
+        flex-wrap: wrap;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="portal-header">
+    <div class="portal-marca">
+      <img src="assets/img/uninove-logo.png" alt="Uninove, Universidade Nove de Julho" class="portal-logo">
+      <div class="portal-titulo">
+        <h1>Desenvolvimento Web</h1>
+        <p>Uninove, 2026.2, Prof. José Romualdo</p>
+      </div>
+    </div>
+    <div class="portal-turma">
+      <label for="seletor-turma">Turma</label>
+      <select id="seletor-turma">
+        <option value="quarta">Quarta-feira</option>
+        <option value="quinta">Quinta-feira</option>
+      </select>
+    </div>
+  </header>
+
+  <main id="cards" data-total-cards="20">
+
+    <section class="modulo" data-modulo="1">
+      <div class="modulo-titulo">
+        <div class="accent-bar"></div>
+        <h2>Módulo 1, Fundamentos da Web e Front-End</h2>
+      </div>
+      <div class="cards-grid">
+
+        <article class="card" data-aula="1">
+          <div class="card-header">
+            <span class="card-numero">Aula 01</span>
+            <span class="card-data"></span>
+          </div>
+          <h3 class="card-titulo">Apresentação, panorama da web, Git e GitHub</h3>
+          <div class="card-acoes">
+            <a class="btn" href="aulas/aula01.html">Slides</a>
+            <a class="btn" href="labs/aula01-lab/">Lab</a>
+          </div>
+        </article>
+
+        <article class="card" data-aula="2">
+          <div class="card-header">
+            <span class="card-numero">Aula 02</span>
+            <span class="card-data"></span>
+          </div>
+          <h3 class="card-titulo">Estrutura da web e redes TCP/IP</h3>
+          <div class="card-acoes">
+            <a class="btn disabled" aria-disabled="true">Slides</a>
+            <a class="btn disabled" aria-disabled="true">Lab</a>
+          </div>
+          <span class="badge-producao">Em produção</span>
+        </article>
+
+        <article class="card" data-aula="3">
+          <div class="card-header">
+            <span class="card-numero">Aula 03</span>
+            <span class="card-data"></span>
+          </div>
+          <h3 class="card-titulo">Introdução ao HTML</h3>
+          <div class="card-acoes">
+            <a class="btn disabled" aria-disabled="true">Slides</a>
+            <a class="btn disabled" aria-disabled="true">Lab</a>
+          </div>
+          <span class="badge-producao">Em produção</span>
+        </article>
+
+        <article class="card" data-aula="4">
+          <div class="card-header">
+            <span class="card-numero">Aula 04</span>
+            <span class="card-data"></span>
+          </div>
+          <h3 class="card-titulo">Introdução ao CSS</h3>
+          <div class="card-acoes">
+            <a class="btn disabled" aria-disabled="true">Slides</a>
+            <a class="btn disabled" aria-disabled="true">Lab</a>
+          </div>
+          <span class="badge-producao">Em produção</span>
+        </article>
+
+        <article class="card" data-aula="5">
+          <div class="card-header">
+            <span class="card-numero">Aula 05</span>
+            <span class="card-data"></span>
+          </div>
+          <h3 class="card-titulo">CSS avançado e formulários HTML</h3>
+          <div class="card-acoes">
+            <a class="btn disabled" aria-disabled="true">Slides</a>
+            <a class="btn disabled" aria-disabled="true">Lab</a>
+          </div>
+          <span class="badge-producao">Em produção</span>
+        </article>
+
+        <article class="card" data-aula="6">
+          <div class="card-header">
+            <span class="card-numero">Aula 06</span>
+            <span class="card-data"></span>
+          </div>
+          <h3 class="card-titulo">Introdução ao JavaScript</h3>
+          <div class="card-acoes">
+            <a class="btn disabled" aria-disabled="true">Slides</a>
+            <a class="btn disabled" aria-disabled="true">Lab</a>
+          </div>
+          <span class="badge-producao">Em produção</span>
+        </article>
+
+      </div>
+    </section>
+
+    <section class="modulo" data-modulo="2">
+      <div class="modulo-titulo">
+        <div class="accent-bar"></div>
+        <h2>Módulo 2, Backend com C# e ASP.NET Core MVC</h2>
+      </div>
+      <div class="cards-grid">
+
+        <article class="card" data-aula="7">
+          <div class="card-header">
+            <span class="card-numero">Aula 07</span>
+            <span class="card-data"></span>
+          </div>
+          <h3 class="card-titulo">Ambiente de desenvolvimento .NET</h3>
+          <div class="card-acoes">
+            <a class="btn disabled" aria-disabled="true">Slides</a>
+            <a class="btn disabled" aria-disabled="true">Lab</a>
+          </div>
+          <span class="badge-producao">Em produção</span>
+        </article>
+
+        <article class="card" data-aula="8">
+          <div class="card-header">
+            <span class="card-numero">Aula 08</span>
+            <span class="card-data"></span>
+          </div>
+          <h3 class="card-titulo">Primeiros passos com ASP.NET Core MVC</h3>
+          <div class="card-acoes">
+            <a class="btn disabled" aria-disabled="true">Slides</a>
+            <a class="btn disabled" aria-disabled="true">Lab</a>
+          </div>
+          <span class="badge-producao">Em produção</span>
+        </article>
+
+        <article class="card" data-aula="9">
+          <div class="card-header">
+            <span class="card-numero">Aula 09</span>
+            <span class="card-data"></span>
+          </div>
+          <h3 class="card-titulo">Estruturas de controle e coleções em C#</h3>
+          <div class="card-acoes">
+            <a class="btn disabled" aria-disabled="true">Slides</a>
+            <a class="btn disabled" aria-disabled="true">Lab</a>
+          </div>
+          <span class="badge-producao">Em produção</span>
+        </article>
+
+        <article class="card" data-aula="10">
+          <div class="card-header">
+            <span class="card-numero">Aula 10</span>
+            <span class="card-data"></span>
+          </div>
+          <h3 class="card-titulo">Formulários e Models no MVC</h3>
+          <div class="card-acoes">
+            <a class="btn disabled" aria-disabled="true">Slides</a>
+            <a class="btn disabled" aria-disabled="true">Lab</a>
+          </div>
+          <span class="badge-producao">Em produção</span>
+        </article>
+
+        <article class="card" data-aula="11">
+          <div class="card-header">
+            <span class="card-numero">Aula 11</span>
+            <span class="card-data"></span>
+          </div>
+          <h3 class="card-titulo">Entity Framework Core e MySQL</h3>
+          <div class="card-acoes">
+            <a class="btn disabled" aria-disabled="true">Slides</a>
+            <a class="btn disabled" aria-disabled="true">Lab</a>
+          </div>
+          <span class="badge-producao">Em produção</span>
+        </article>
+
+        <article class="card" data-aula="12">
+          <div class="card-header">
+            <span class="card-numero">Aula 12</span>
+            <span class="card-data"></span>
+          </div>
+          <h3 class="card-titulo">CRUD completo com EF Core</h3>
+          <div class="card-acoes">
+            <a class="btn disabled" aria-disabled="true">Slides</a>
+            <a class="btn disabled" aria-disabled="true">Lab</a>
+          </div>
+          <span class="badge-producao">Em produção</span>
+        </article>
+
+      </div>
+    </section>
+
+    <section class="modulo" data-modulo="3">
+      <div class="modulo-titulo">
+        <div class="accent-bar"></div>
+        <h2>Módulo 3, Acesso a Dados e Funcionalidades Avançadas</h2>
+      </div>
+      <div class="cards-grid">
+
+        <article class="card" data-aula="13">
+          <div class="card-header">
+            <span class="card-numero">Aula 13</span>
+            <span class="card-data"></span>
+          </div>
+          <h3 class="card-titulo">Cookies e sessões</h3>
+          <div class="card-acoes">
+            <a class="btn disabled" aria-disabled="true">Slides</a>
+            <a class="btn disabled" aria-disabled="true">Lab</a>
+          </div>
+          <span class="badge-producao">Em produção</span>
+        </article>
+
+        <article class="card" data-aula="14">
+          <div class="card-header">
+            <span class="card-numero">Aula 14</span>
+            <span class="card-data"></span>
+          </div>
+          <h3 class="card-titulo">Requisições HTTP assíncronas com AJAX</h3>
+          <div class="card-acoes">
+            <a class="btn disabled" aria-disabled="true">Slides</a>
+            <a class="btn disabled" aria-disabled="true">Lab</a>
+          </div>
+          <span class="badge-producao">Em produção</span>
+        </article>
+
+        <article class="card" data-aula="15">
+          <div class="card-header">
+            <span class="card-numero">Aula 15</span>
+            <span class="card-data"></span>
+          </div>
+          <h3 class="card-titulo">Autenticação e autorização</h3>
+          <div class="card-acoes">
+            <a class="btn disabled" aria-disabled="true">Slides</a>
+            <a class="btn disabled" aria-disabled="true">Lab</a>
+          </div>
+          <span class="badge-producao">Em produção</span>
+        </article>
+
+        <article class="card" data-aula="16">
+          <div class="card-header">
+            <span class="card-numero">Aula 16</span>
+            <span class="card-data"></span>
+          </div>
+          <h3 class="card-titulo">API REST com ASP.NET Core</h3>
+          <div class="card-acoes">
+            <a class="btn disabled" aria-disabled="true">Slides</a>
+            <a class="btn disabled" aria-disabled="true">Lab</a>
+          </div>
+          <span class="badge-producao">Em produção</span>
+        </article>
+
+        <article class="card" data-aula="17">
+          <div class="card-header">
+            <span class="card-numero">Aula 17</span>
+            <span class="card-data"></span>
+          </div>
+          <h3 class="card-titulo">Relacionamentos e EF Core avançado</h3>
+          <div class="card-acoes">
+            <a class="btn disabled" aria-disabled="true">Slides</a>
+            <a class="btn disabled" aria-disabled="true">Lab</a>
+          </div>
+          <span class="badge-producao">Em produção</span>
+        </article>
+
+      </div>
+    </section>
+
+    <section class="modulo" data-modulo="4">
+      <div class="modulo-titulo">
+        <div class="accent-bar"></div>
+        <h2>Módulo 4, Tópicos Avançados e Projeto Final</h2>
+      </div>
+      <div class="cards-grid">
+
+        <article class="card" data-aula="18">
+          <div class="card-header">
+            <span class="card-numero">Aula 18</span>
+            <span class="card-data"></span>
+          </div>
+          <h3 class="card-titulo">Layout, Partial Views e Bootstrap</h3>
+          <div class="card-acoes">
+            <a class="btn disabled" aria-disabled="true">Slides</a>
+            <a class="btn disabled" aria-disabled="true">Lab</a>
+          </div>
+          <span class="badge-producao">Em produção</span>
+        </article>
+
+        <article class="card" data-aula="19">
+          <div class="card-header">
+            <span class="card-numero">Aula 19</span>
+            <span class="card-data"></span>
+          </div>
+          <h3 class="card-titulo">Publicação e deploy</h3>
+          <div class="card-acoes">
+            <a class="btn disabled" aria-disabled="true">Slides</a>
+            <a class="btn disabled" aria-disabled="true">Lab</a>
+          </div>
+          <span class="badge-producao">Em produção</span>
+        </article>
+
+        <article class="card" data-aula="20">
+          <div class="card-header">
+            <span class="card-numero">Aula 20</span>
+            <span class="card-data"></span>
+          </div>
+          <h3 class="card-titulo">Revisão geral e projeto final</h3>
+          <div class="card-acoes">
+            <a class="btn disabled" aria-disabled="true">Slides</a>
+            <a class="btn disabled" aria-disabled="true">Lab</a>
+          </div>
+          <span class="badge-producao">Em produção</span>
+        </article>
+
+      </div>
+    </section>
+
+  </main>
+
+  <div class="modal-overlay" id="modal-turma" role="dialog" aria-modal="true" aria-labelledby="modal-turma-titulo" hidden>
+    <div class="modal-caixa">
+      <h2 id="modal-turma-titulo">Qual é a sua turma?</h2>
+      <p>Escolha a turma para que o portal mostre as datas certas de cada aula.</p>
+      <div class="modal-opcoes">
+        <button type="button" data-turma="quarta">Turma de quarta-feira</button>
+        <button type="button" data-turma="quinta">Turma de quinta-feira</button>
+      </div>
+    </div>
+  </div>
+
+  <script type="module">
+    import { resolverTurma, dataDaAula, formatarData } from './assets/js/turmas.js';
+
+    const CHAVE_TURMA = 'uninove-turma';
+
+    const seletor = document.getElementById('seletor-turma');
+    const modal = document.getElementById('modal-turma');
+    const cardsDeAula = [...document.querySelectorAll('[data-aula]')];
+
+    function renderizarDatas(turma) {
+      for (const card of cardsDeAula) {
+        const numero = Number(card.dataset.aula);
+        const alvo = card.querySelector('.card-data');
+        if (!alvo) continue;
+        if (turma) {
+          alvo.textContent = formatarData(dataDaAula(turma, numero));
+        } else {
+          alvo.textContent =
+            `${formatarData(dataDaAula('quarta', numero))} ou ${formatarData(dataDaAula('quinta', numero))}`;
+        }
+      }
+    }
+
+    function mostrarModal() {
+      modal.hidden = false;
+    }
+
+    function esconderModal() {
+      modal.hidden = true;
+    }
+
+    function escolherTurma(turma) {
+      localStorage.setItem(CHAVE_TURMA, turma);
+      seletor.value = turma;
+      renderizarDatas(turma);
+      esconderModal();
+    }
+
+    seletor.addEventListener('change', () => {
+      const turma = seletor.value;
+      localStorage.setItem(CHAVE_TURMA, turma);
+      renderizarDatas(turma);
+    });
+
+    for (const botao of modal.querySelectorAll('[data-turma]')) {
+      botao.addEventListener('click', () => escolherTurma(botao.dataset.turma));
+    }
+
+    const turmaResolvida = resolverTurma({
+      hoje: new Date(),
+      salva: localStorage.getItem(CHAVE_TURMA),
+    });
+
+    if (turmaResolvida) {
+      seletor.value = turmaResolvida;
+      renderizarDatas(turmaResolvida);
+      esconderModal();
+    } else {
+      renderizarDatas(null);
+      mostrarModal();
+    }
+  </script>
+
+</body>
+</html>
