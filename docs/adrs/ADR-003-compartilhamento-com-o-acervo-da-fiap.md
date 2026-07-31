@@ -39,6 +39,19 @@ risco de os dois acervos divergirem silenciosamente.
     repositório; portanto um symlink quebrado no ambiente do Actions não afeta o
     site publicado.
 
+    > **Nota de superação, 31/07/2026.** A mitigação acima está errada e foi
+    > superada pela **ADR-006**. Um symlink quebrado no runner **derrubou** a
+    > publicação: `actions/upload-pages-artifact@v3` empacota o artefato com
+    > `tar --dereference`, que segue todo symlink até um arquivo real. Os seis
+    > symlinks apontam para o acervo da FIAP, que não existe no runner, e o
+    > `tar` abortava com código 1 antes de qualquer deploy. Não bastava não
+    > executar os arquivos: bastava que eles estivessem dentro do artefato. A
+    > correção real está na ADR-006, que monta um `_site` com `rsync` excluindo
+    > `tools/`, `.claude/`, `tests/` e `docs/referencia/`, e falha o build se
+    > sobrar qualquer symlink dentro de `_site`. A decisão original desta ADR,
+    > compartilhar por symlink relativo, continua valendo; o que caiu foi a
+    > avaliação do risco.
+
 ## Consequências
 
 **Positivas:**
@@ -56,3 +69,5 @@ risco de os dois acervos divergirem silenciosamente.
 ## ADRs relacionadas
 
 - ADR-001: migração dos decks para Reveal.js
+- ADR-006: artefato de publicação sem as ferramentas, que supera a mitigação de
+  risco registrada aqui

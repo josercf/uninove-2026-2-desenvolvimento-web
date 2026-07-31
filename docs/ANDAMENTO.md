@@ -99,10 +99,34 @@
   a causa raiz do bloqueio anterior era `actions/upload-pages-artifact@v3`
   empacotando com `tar --dereference`, que seguia os seis symlinks
   compartilhados com a FIAP até um alvo inexistente no runner e abortava.
-- Publicação confirmada com sucesso, com as sete URLs de aceite (portal, deck
+- Publicação confirmada com sucesso, com as seis URLs de aceite (portal, deck
   da Aula 01, lab, tema, `turmas.js`, logo) respondendo 200, e
   `tools/check_portal.py` e `.claude/settings.json` respondendo 404 no site
   publicado, confirmando que as ferramentas não foram ao ar.
+
+**Revisão final do conjunto, 31/07/2026:**
+
+- A metodologia documentada (`aulas-1sem/SKILL.md` e
+  `.claude/agents/construtor-aulas-uninove.md`) passou a descrever o deck que
+  a Aula 01 realmente é: esqueleto fiel com o `<link>` do Google Fonts e o
+  `Reveal.initialize` completo, o mecanismo `data-data-da-aula`, a ordem
+  canônica com o slide de referências, o formato do `<title>` e do
+  `footer-bar`, e a lista completa de blocos do tema.
+- **`data-data-da-aula` está documentado.** É o único ponto do deck que muda
+  por aula, e não aparecia em nenhum documento do repositório.
+- O ciclo do artefato fechou: `SKILL.md` e agente agora mandam criar
+  `labs/aulaXX-lab/index.html` e habilitar o card da aula no portal.
+- Novo validador estático `tools/check_decks.py`, com sete checagens, cada uma
+  provada por defeito induzido numa cópia do padrão-ouro.
+- `.claude/agents/revisor-slides-uninove.md` criado, override do revisor da
+  FIAP, que proibia os pesos de avaliação obrigatórios aqui.
+- Carga horária corrigida para 60 horas-aula; e-mail do professor confirmado
+  em 31/07/2026 e registrado no `PLANO_DE_ENSINO.md`.
+- Resíduos de intervalo removidos do tema (`.break-slide` nos dois CSS e o
+  comentário do `startTimer`).
+- **Decisão sobre critérios de aceitação:** a regra do `SKILL.md` fica, e o kit
+  da Aula 01 ganhou a tabela que faltava. O checkpoint vale nota, e uma lista
+  em prosa deixa margem para aluno e professor lerem coisas diferentes.
 
 ## Próximos passos
 

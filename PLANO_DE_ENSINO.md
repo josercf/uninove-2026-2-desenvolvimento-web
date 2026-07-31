@@ -9,11 +9,17 @@
 | Nível | Graduação |
 | Semestre | 2026.2 |
 | Professor | José Romualdo |
-| Contato | <jose.romualdo@uni9.pro.br> |
+| Contato | <jose.romualdo@uni9.pro.br> (endereço confirmado pelo professor em 31/07/2026) |
 | Turmas | Duas turmas com conteúdo idêntico: uma às quartas-feiras, outra às quintas-feiras |
 | Horário | 19h30 às 22h00 |
 | Encontros | 20 encontros de 150 minutos cada |
-| Carga horária total | 50 horas-aula |
+| Carga horária total | 60 horas-aula |
+
+A carga horária de **60 horas-aula** vem da conta institucional: a hora-aula da
+Uninove tem 50 minutos, cada encontro de 150 minutos corridos equivale a 3
+horas-aula, e 3 horas-aula vezes 20 encontros dão 60 horas-aula. O domínio
+`uni9.pro.br` do contato acima é o endereço institucional do professor e foi
+confirmado por ele em 31/07/2026; não deve ser trocado por nenhuma variação.
 | Entrega de atividades | Google Classroom, quando as turmas forem configuradas pela instituição |
 | Repositório do acervo | <https://github.com/josercf/uninove-2026-2-desenvolvimento-web> |
 | Repositório-esqueleto do case | <https://github.com/josercf/uninove-2026-2-clinica-vida> |
@@ -149,8 +155,8 @@ acessível pela internet.
 | 04 | 26/08/2026 | 27/08/2026 | 1 | Introdução ao CSS | `assets/css/site.css` estilizando a página inicial com a identidade visual da clínica |
 | 05 | 02/09/2026 | 03/09/2026 | 1 | CSS avançado e formulários HTML | `agendamento.html` responsivo, com formulário completo e validação nativa |
 | 06 | 09/09/2026 | 10/09/2026 | 1 | Introdução ao JavaScript | `assets/js/agendamento.js` validando o formulário e filtrando a lista de especialidades |
-| 07 | 16/09/2026 | 17/09/2026 | 2 Backend com C# e ASP.NET Core MVC | Ambiente de desenvolvimento .NET | Projeto `ClinicaVida.Web` criado, executando localmente, com o print do `dotnet --info` no README |
-| 08 | 23/09/2026 | 24/09/2026 | 2 | Primeiros passos com ASP.NET Core MVC | `EspecialidadesController` com a action `Index` e View Razor correspondente |
+| 07 | 16/09/2026 | 17/09/2026 | 2 Backend com C# e ASP.NET Core MVC | Ambiente de desenvolvimento .NET | Projeto `ClinicaVida.Web` criado, executando localmente, com `.gitignore` adequado e a versão do SDK registrada no `README.md` |
+| 08 | 23/09/2026 | 24/09/2026 | 2 | Primeiros passos com ASP.NET Core MVC | `EspecialidadesController` com as actions `Index` e `Detalhes`, Views Razor correspondentes e navegação funcionando |
 | 09 | 30/09/2026 | 01/10/2026 | 2 | Estruturas de controle e coleções em C# | Lista de médicos em memória, filtrada por especialidade e exibida na View |
 | 10 | 07/10/2026 | 08/10/2026 | 2 | Formulários e Models no MVC | Model `Consulta` com Data Annotations e formulário de agendamento validando no servidor |
 | 11 | 14/10/2026 | 15/10/2026 | 2 | Entity Framework Core e MySQL | `ClinicaContext` configurado, migration inicial aplicada e banco `clinicavida` criado no MySQL |
