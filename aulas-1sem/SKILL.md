@@ -210,6 +210,47 @@ Convenções que valem para o código de todas as aulas:
   devolver **401** em caminhos sob `/api`, senão o 401 da tabela de status
   seria mentira dentro da própria aplicação do aluno.
 
+### Deploy, Aula 19: Docker e GitHub Codespaces
+
+Decisão do professor. A Clínica Vida+ é **containerizada com Docker** e roda no
+**GitHub Codespaces**, com a porta encaminhada em modo público, o que dá a URL
+acessível pela internet que a Aula 19 e a apresentação da Aula 20 exigem.
+
+Artefatos que o aluno cria na Aula 19, todos na raiz do fork:
+
+| Arquivo | Conteúdo |
+|---|---|
+| `Dockerfile` | Multi-stage: build em `mcr.microsoft.com/dotnet/sdk:10.0`, runtime em `mcr.microsoft.com/dotnet/aspnet:10.0` |
+| `compose.yaml` | Dois serviços, `web` e `db`; o `db` é `mysql:8.4`, com volume nomeado para os dados sobreviverem ao `down` |
+| `.dockerignore` | `bin/`, `obj/`, `.git/`, `.env` |
+| `.env` | Senhas do MySQL e a connection string. **Vai para o `.gitignore`, nunca para o repositório** |
+| `.devcontainer/devcontainer.json` | O que faz o Codespaces subir com .NET 10 e Docker disponíveis |
+
+Convenções que valem no deck e no kit:
+
+- **Configuração por variável de ambiente, com a convenção de duplo
+  sublinhado:** `ConnectionStrings__DefaultConnection` sobrescreve o
+  `appsettings.json` sem que o aluno precise editar arquivo nenhum. É o
+  argumento concreto do quiz desta aula, cuja resposta correta é justamente
+  "fora do repositório".
+- `ASPNETCORE_ENVIRONMENT=Production` no serviço `web`, para o aluno ver a
+  página de erro amigável no lugar da página de exceção detalhada.
+- **Dentro do compose, o host do banco é `db`, não `localhost`.** É o nome do
+  serviço que vira nome de host na rede do compose, e é o erro número um de
+  quem containeriza pela primeira vez.
+- As migrations são aplicadas contra o banco do contêiner. O `db` precisa estar
+  saudável antes de o `web` tentar conectar: use `healthcheck` no `db` e
+  `depends_on` com `condition: service_healthy`.
+
+**Diga a limitação em voz alta, no deck e no kit.** A URL do Codespaces existe
+enquanto o codespace está rodando: ele hiberna por inatividade e a URL para de
+responder. Isso não é defeito do material, é como o Codespaces funciona, e o
+aluno precisa saber para **iniciar o codespace antes da apresentação da Aula
+20**. O material deve dizer isso com todas as letras, e o checklist de
+publicação da Aula 19 deve incluir "a porta está marcada como pública, e não
+privada", que é o esquecimento mais comum e faz a URL responder 401 para quem
+não é o dono.
+
 ---
 
 ## 4. Anatomia do deck Reveal.js

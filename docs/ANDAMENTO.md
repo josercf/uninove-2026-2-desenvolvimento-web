@@ -1,6 +1,6 @@
 # Andamento
 
-**Última atualização:** 31/07/2026 (Task 14, lote do Módulo 3)
+**Última atualização:** 01/08/2026 (Task 15, Módulo 4; as 20 aulas prontas)
 
 ## Ordem de leitura ao abrir uma sessão
 
@@ -297,17 +297,89 @@ de uma convenção; no título do exercício não havia nada a alinhar, e deu pa
 remover a armadilha na origem, sem convenção nova e sem checagem nova. Preferir
 sempre a correção que não cria regra para alguém lembrar.
 
+**Task 15, lote do Módulo 4, Aulas 18 a 20 (01/08/2026):**
+
+- Três decks e três kits: `aula18.html` (31 slides, layout, Partial Views e
+  Bootstrap), `aula19.html` (31, publicação e deploy) e `aula20.html` (27,
+  revisão geral e projeto final). Cards 18 a 20 habilitados.
+- **As 20 aulas estão prontas e publicadas.** O portal tem 20 cards, todos com
+  os dois botões funcionando, e os quatro validadores passam nos 20 decks.
+- Decisão do professor sobre o deploy: **Docker e GitHub Codespaces**,
+  registrada na seção 3 do `SKILL.md`. `Dockerfile` multi-stage sobre .NET 10,
+  `compose.yaml` com `web` e `db` em `mysql:8.4`, `.env` fora do repositório,
+  `devcontainer.json`, e a configuração por `ConnectionStrings__DefaultConnection`,
+  que vira o argumento concreto do quiz da Aula 19.
+
+**A cascata que a escolha do Codespaces provocou, e que o planejamento não
+previa.** Vale registrar porque nenhuma delas era óbvia antes de construir:
+
+- **O seed da Aula 15 lê a senha de `user-secrets`, que não existe dentro do
+  contêiner.** Sem tratamento, a aplicação derruba no arranque. A Aula 19 passa
+  `SeedRecepcao__Senha` pelo `.env`, o que de quebra reforça a lição do duplo
+  sublinhado.
+- **Sem `UseForwardedHeaders`, o login da Aula 15 quebra atrás do proxy do
+  Codespaces.** É consequência direta do provedor, não do código do aluno.
+- **A imagem de runtime não tem o SDK**, então `docker compose exec web dotnet
+  ef database update` falharia em sala. A Aula 20 pegou isso e trocou pelo
+  caminho que funciona.
+
+**A limitação que o material diz em voz alta:** a URL do Codespaces existe
+enquanto o codespace está rodando, e ele hiberna por inatividade. O
+`PLANO_DE_ENSINO.md` cobra "deploy funcional acessível por URL" no projeto
+final, então o checklist da Aula 19 e o da Aula 20 mandam **iniciar o codespace
+antes de apresentar**, e incluem "a porta está marcada como pública", cujo
+esquecimento faz a URL responder 401 para todo mundo, inclusive para o
+professor na hora de corrigir.
+
+**Reconciliação do Módulo 4:**
+
+- E-mails de demonstração alinhados em `@clinicavida.local`, que sinaliza
+  domínio não real. A Aula 20 usava `@clinicavida.com`, divergindo das Aulas 15
+  e 19.
+- Conferidos e **sem conflito**: o acoplamento entre as Aulas 18, 19 e 20, que
+  se reconciliaram sozinhas durante a produção; o vocabulário da recapitulação
+  de cada uma; e as três chaves de `TempData` do projeto (`Sucesso` na 12,
+  `Aviso` na 13, `Erro` na 17), que a Aula 18 rastreou e corrigiu no próprio
+  deck.
+
+**Um método que vale manter.** O construtor da Aula 18 **gerou um
+`dotnet new mvc` real** com o SDK da máquina em vez de escrever de memória, e
+com isso descobriu o ponto técnico central da aula: redefinir `--bs-primary`
+não repinta o botão, porque o `.btn-primary` compilado do Bootstrap 5.3 declara
+`--bs-btn-bg` literalmente. Verificar contra a ferramenta real, e não contra a
+lembrança, é o que separa material que funciona em sala de material que parece
+certo.
+
 ## Próximos passos
 
-Produzir o **Módulo 4, Aulas 18 a 20** (layout com Partial Views e Bootstrap,
-publicação e deploy, revisão geral e projeto final), fechando as 20 aulas.
+As 20 aulas estão prontas. O que resta é opcional e depende do professor:
 
-Antes de despachar, decidir com o professor o que o planejamento não fixa:
-onde a aplicação será publicada na Aula 19 (o planejamento fala em variável de
-ambiente e `appsettings.Production.json`, mas não nomeia provedor), e como o
-banco MySQL de produção será provido. Sem isso, cinco agentes inventariam cinco
-provedores diferentes, que é exatamente o erro que os Módulos 2 e 3 ensinaram a
-não cometer.
+1. **Revisar as Aulas 07 e 11 à luz do Codespaces.** Elas ensinam instalar o
+   SDK e o MySQL na máquina do aluno, o que continua válido, mas se a turma
+   trabalhar no Codespaces desde o começo, o `devcontainer.json` resolveria o
+   ponto mais caro do semestre, que é o professor atendendo problema de
+   instalação de MySQL em sala. É mudança de escopo em aula publicada, e por
+   isso não foi feita por conta própria.
+2. **Permanência do deploy.** Se a URL precisar responder sem o aluno ligar o
+   codespace, o caminho é publicar a imagem no GHCR e rodá-la num host que
+   fique de pé. É outra decisão, e muda a Aula 19.
+3. **Passar o revisor `revisor-slides-uninove` nos 20 decks**, como leitura
+   final independente da produção.
+4. **Itens que os construtores deixaram em aberto** e que cabem numa passada
+   de ajuste: a data da AV2 no slide 25 da Aula 20, se a instituição divulgar;
+   e a decisão sobre modal e paginação valerem nota na Aula 18.
+
+O que os quatro lotes ensinaram, e que vale para qualquer produção futura:
+
+1. **Fixar o contrato técnico antes de despachar.** Está na seção 3 do
+   `SKILL.md` e cobre da Aula 07 à 20.
+2. **Manter o portal fora dos agentes**, habilitando os cards numa edição única.
+3. **Reconciliar contratos ao fim do lote** é etapa, não detalhe, e inclui
+   confrontar números e nomes inventados contra o que já foi publicado.
+4. **Medir o corte horizontal de código**, que nenhum validador cobre. Desde a
+   Task 14 a instrução vai no prompt de cada agente, e desde então nenhum caso
+   chegou à reconciliação.
+5. **Verificar contra a ferramenta real** quando a aula ensina uma ferramenta.
 
 O que os três lotes ensinaram, e que o próximo deve repetir:
 
