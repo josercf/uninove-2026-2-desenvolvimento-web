@@ -31,11 +31,11 @@ Módulo 1: ao fim desta aula, o front-end da Clínica Vida+ está de pé.
 
 ---
 
-## Passo 1: a branch e o arquivo (10 min)
+## Passo 1: a branch e o arquivo (8 min)
 
 ```bash
-git checkout main && git pull
-git checkout -b feature/js-agendamento
+git switch main && git pull
+git switch -c feature/js-agendamento
 mkdir -p assets/js
 ```
 
@@ -112,7 +112,7 @@ que o seu código escreveu na tela.
 
 ---
 
-## Passo 3: a validação do CPF (15 min)
+## Passo 3: a validação do CPF (13 min)
 
 A primeira regra que o HTML não expressa. A mensagem aparece **ao lado do
 campo**, nunca em um `alert`.
@@ -205,7 +205,7 @@ código.
 
 ---
 
-## Passo 6: o filtro de especialidades (10 min)
+## Passo 6: o filtro de especialidades (9 min)
 
 Na página inicial, um campo de busca que filtra os cards de especialidade
 enquanto o paciente digita. Aqui o evento é `input`, que dispara a cada

@@ -205,7 +205,7 @@
 
         <p style="font-size:0.72em; margin-top:0;">A mesma lista de especialidades que na Aula 04 virou uma fileira de Flexbox agora vira uma grade de verdade, com controle sobre linhas e colunas.</p>
 
-        <pre><code class="language-css" data-trim>.especialidades {
+        <pre><code class="language-css" data-trim>.lista-especialidades {
   display: grid;
   grid-template-columns: repeat(3, 1fr);  /* três colunas iguais */
   grid-template-rows: auto auto;          /* duas linhas pelo conteúdo */
@@ -213,7 +213,7 @@
 }
 
 /* A grade que se adapta sozinha, ainda sem nenhuma media query */
-.especialidades {
+.lista-especialidades {
   grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
 }</code></pre>
 
@@ -445,14 +445,14 @@ footer { grid-area: rodape; }</code></pre>
           </ol>
         </div>
 
-        <pre class="code-compact"><code class="language-css" data-trim>.especialidades {                    /* base: o celular */
+        <pre class="code-compact"><code class="language-css" data-trim>.lista-especialidades {                    /* base: o celular */
   display: grid;
   grid-template-columns: 1fr;
   gap: 20px;
 }
 
 @media (min-width: 640px) {          /* daqui para cima, três colunas */
-  .especialidades { grid-template-columns: repeat(3, 1fr); }
+  .lista-especialidades { grid-template-columns: repeat(3, 1fr); }
 }</code></pre>
 
         <div class="slide-footer">
@@ -724,9 +724,9 @@ label.obrigatorio::after { content: " *"; color: #C84B31; } /* marca visual do r
           </ol>
         </div>
 
-        <pre class="code-compact"><code class="language-bash" data-trim>git checkout main
+        <pre class="code-compact"><code class="language-bash" data-trim>git switch main
 git pull
-git checkout -b feature/agendamento
+git switch -c feature/agendamento
 git branch                 # a branch atual aparece com um asterisco</code></pre>
 
         <div class="slide-footer">

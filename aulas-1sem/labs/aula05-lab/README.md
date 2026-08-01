@@ -32,9 +32,9 @@ individuais.
 ## Passo 1: a branch e o esqueleto da página (10 min)
 
 ```bash
-git checkout main
+git switch main
 git pull
-git checkout -b feature/agendamento
+git switch -c feature/agendamento
 git branch              # a branch atual aparece com um asterisco
 ```
 

@@ -70,7 +70,7 @@ Por isso:
 
 ---
 
-## Passo 1: a aplicação publicada respondendo (15 min)
+## Passo 1: a aplicação publicada respondendo (12 min)
 
 No codespace do seu fork:
 
@@ -92,7 +92,7 @@ Anote a URL exata. Ela vai para o `README.md` e para o Google Classroom.
 
 ---
 
-## Passo 2: o `README.md` que a banca lê primeiro (10 min)
+## Passo 2: o `README.md` que a banca lê primeiro (8 min)
 
 Na raiz do seu fork, o `README.md` precisa responder, na primeira tela, a três
 perguntas: o que é isso, como eu executo e onde eu vejo funcionando.
@@ -139,7 +139,7 @@ variável de ambiente, com a convenção de duplo sublinhado
 
 ---
 
-## Passo 3: banco com dados de demonstração (10 min)
+## Passo 3: banco com dados de demonstração (8 min)
 
 Sistema vazio não demonstra nada, e uma lista de "teste 1, teste 2" custa nota em
 **banco de dados** e em **apresentação**.
@@ -153,27 +153,35 @@ Garanta, no banco `clinicavida` da sua publicação:
   dia, o histórico do paciente e o relatório por especialidade terem o que
   mostrar.
 
-Se o banco da publicação estiver vazio, aplique as migrations contra ele antes de
-semear:
+Se o banco da publicação estiver vazio, as migrations se aplicam sozinhas: o
+`contexto.Database.Migrate()` que você pôs no `Program.cs` na Aula 19 roda a
+cada subida da aplicação.
 
 ```bash
-docker compose ps          # o serviço db precisa estar healthy
-dotnet ef database update  # com a configuração de ambiente da Aula 19
+docker compose ps                 # o serviço db precisa estar healthy
+docker compose up -d --build      # o Migrate() do Program.cs aplica o que faltar
+docker compose logs web | tail    # confirme que subiu sem erro de conexão
 ```
+
+**Não tente `dotnet ef database update` do terminal do codespace.** O
+`compose.yaml` da Aula 19 publica só a porta do `web`; o serviço `db` não expõe
+porta nenhuma para fora, e o nome de host `db` só existe dentro da rede do
+compose. Do terminal você não alcança o banco, e o comando falha por timeout de
+conexão, que é um erro que parece de configuração e não é.
 
 Depois cadastre pelos próprios formulários, ou pelo `HasData` do
 `ClinicaContext`, e confira na tela que nenhuma página quebra com o banco cheio.
 
 ---
 
-## Passo 4: tudo integrado na `main` (10 min)
+## Passo 4: tudo integrado na `main` (7 min)
 
 A correção clona a `main` do seu fork. Funcionalidade que ficou numa branch
 esquecida não existe para quem corrige.
 
 ```bash
 git branch -a
-git checkout main && git pull
+git switch main && git pull
 git merge feature/deploy   # repita para cada branch que faltar
 # resolva os conflitos, rode a aplicação e só então siga para a próxima branch
 git push origin main
@@ -269,8 +277,12 @@ igual a 6,0**.
 - **A aplicação sobe e o banco não conecta**: dentro do compose o host do banco é
   `db`, o nome do serviço, e não `localhost`. Confirme também que o `db` está
   saudável antes de o `web` tentar conectar.
-- **`Pending model changes` ao subir**: existe migration criada e não aplicada.
-  Rode `dotnet ef migrations list` e depois `dotnet ef database update`.
+- **`Pending model changes` ao subir**: existe alteração de Model sem migration
+  correspondente. Gere a migration **na sua máquina ou no terminal do
+  codespace**, com `dotnet ef migrations add NomeDaMigration`, commite o arquivo
+  gerado e refaça `docker compose up -d --build`: o `Migrate()` do `Program.cs`
+  aplica a nova migration ao subir. Gerar migration é trabalho de SDK e acontece
+  fora do contêiner; aplicar acontece dentro dele, no arranque.
 - **`git merge` acusa conflito em arquivo que você nem lembra de ter mexido**:
   resolva mantendo o que está na `main` quando a dúvida for só de formatação, e
   rode a aplicação depois de cada merge, um por vez.

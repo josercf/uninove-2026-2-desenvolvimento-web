@@ -39,8 +39,8 @@ dotnet ef database update # não pode ter migration pendente
 ## Passo 1: a branch e a configuração (10 min)
 
 ```bash
-git checkout main && git pull
-git checkout -b feature/autenticacao
+git switch main && git pull
+git switch -c feature/autenticacao
 dotnet add package Microsoft.AspNetCore.Identity.EntityFrameworkCore
 ```
 

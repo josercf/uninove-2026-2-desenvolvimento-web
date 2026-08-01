@@ -46,11 +46,11 @@ necessariamente a do colega ao lado, nem a `7145` usada como exemplo nos slides.
 
 ---
 
-## Passo 1: a branch e as propriedades de navegação (10 min)
+## Passo 1: a branch e as propriedades de navegação (8 min)
 
 ```bash
-git checkout main && git pull
-git checkout -b feature/relacionamentos
+git switch main && git pull
+git switch -c feature/relacionamentos
 ```
 
 As chaves estrangeiras já existem desde a Aula 11 e **não mudam de nome**. O que
@@ -158,7 +158,7 @@ O `HasData` das especialidades continua onde estava, depois do mapeamento.
 
 ---
 
-## Passo 3: comportamento de exclusão, índices e migration (15 min)
+## Passo 3: comportamento de exclusão, índices e migration (14 min)
 
 ### O comportamento de exclusão
 
@@ -279,7 +279,7 @@ Rode de novo e conte os comandos outra vez. Precisa sobrar **um**.
 
 ---
 
-## Passo 5: o histórico do paciente (10 min)
+## Passo 5: o histórico do paciente (9 min)
 
 Uma tela nova, que parte do lado 1 do relacionamento: um paciente e as consultas
 dele.
@@ -313,7 +313,7 @@ Acrescente na ficha do paciente, da Aula 12, o link para a tela nova:
 
 ---
 
-## Passo 6: o relatório por especialidade (10 min)
+## Passo 6: o relatório por especialidade (9 min)
 
 A direção da clínica quer um número por especialidade, não uma lista de
 consultas. Agrupar no banco significa trafegar cinco linhas em vez de cinco mil.

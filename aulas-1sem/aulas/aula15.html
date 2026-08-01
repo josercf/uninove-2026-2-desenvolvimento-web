@@ -597,7 +597,7 @@ dotnet ef database update</code></pre>
             <h4>Antes, no banco clinicavida</h4>
             <ul style="margin:0; padding-left:20px;">
               <li>Especialidades, Medicos, Pacientes e Consultas.</li>
-              <li>Uma migration aplicada, a <code>InicialClinicaVida</code>.</li>
+              <li>Três migrations aplicadas, das Aulas 11 e 13.</li>
               <li>Nenhuma noção de usuário.</li>
             </ul>
           </div>
@@ -606,7 +606,7 @@ dotnet ef database update</code></pre>
             <ul style="margin:0; padding-left:20px;">
               <li>As mesmas quatro tabelas, intactas e com os dados.</li>
               <li>Mais as sete <code>AspNet...</code>, criadas pela nova migration.</li>
-              <li>Duas migrations na mesma cadeia, na mesma pasta.</li>
+              <li>Quatro migrations na mesma cadeia, na mesma pasta.</li>
             </ul>
           </div>
         </div>
@@ -845,8 +845,8 @@ public class ConsultasController : Controller
           </ol>
         </div>
 
-        <pre class="code-compact"><code class="language-bash" data-trim>git checkout main &amp;&amp; git pull
-git checkout -b feature/autenticacao
+        <pre class="code-compact"><code class="language-bash" data-trim>git switch main &amp;&amp; git pull
+git switch -c feature/autenticacao
 dotnet add package Microsoft.AspNetCore.Identity.EntityFrameworkCore</code></pre>
 
         <div class="slide-footer">

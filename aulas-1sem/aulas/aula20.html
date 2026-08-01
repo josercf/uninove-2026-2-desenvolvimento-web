@@ -426,7 +426,7 @@
             <strong>Confusão frequente:</strong> tratar validação do navegador como segurança. O que vale é o que o servidor confere.</p>
           </div>
           <div class="concept-card" style="padding:12px 16px;">
-            <h4>Módulo 4, layout e publicação</h4>
+            <h4>Módulo 4, layout e publicação <a href="#/ref-slide" class="ref-badge" title="Ver referências">[4]</a></h4>
             <p style="font-size:0.64em; color:#444444;">Layout e Partial Views, grid e componentes do Bootstrap 5, contêiner, imagem e serviço, configuração por variável de ambiente.<br>
             <strong>Confusão frequente:</strong> guardar senha no <code>appsettings.json</code> versionado. Segredo fica fora do repositório.</p>
           </div>
@@ -789,13 +789,14 @@ docker compose up -d --build
             <li>Garanta <strong>4</strong> especialidades, <strong>3</strong> médicos com CRM válido, <strong>5</strong> pacientes e <strong>8</strong> consultas.</li>
             <li>Distribua as consultas entre datas passadas e futuras, para as telas de agenda e histórico terem o que mostrar.</li>
             <li>Confirme que nenhuma tela quebra com o banco preenchido: agenda do dia, histórico e relatório por especialidade.</li>
-            <li>Se o banco de produção estiver vazio, aplique as migrations contra ele antes de semear.</li>
+            <li>Se o banco de produção estiver vazio, suba a pilha: o <code>Migrate()</code> da Aula 19 aplica as migrations sozinho no arranque.</li>
           </ol>
         </div>
 
-        <pre class="code-compact"><code class="language-bash" data-trim>docker compose ps          # o servico db precisa estar healthy antes de aplicar
-dotnet ef database update  # com a configuracao de ambiente da Aula 19
-# depois, cadastre pelos formulários ou pelo HasData, e confira na tela</code></pre>
+        <pre class="code-compact"><code class="language-bash" data-trim>docker compose ps                # o servico db precisa estar healthy
+docker compose up -d --build     # o Migrate() do Program.cs aplica o que faltar
+docker compose logs web | tail   # subiu sem erro de conexao?
+# o db nao publica porta: dotnet ef do terminal nao alcanca o banco</code></pre>
 
         <div class="slide-footer">
           <div class="footer-bar">20 Laboratório, passo 3, dados de demonstração</div>
@@ -826,7 +827,7 @@ dotnet ef database update  # com a configuracao de ambiente da Aula 19
         </div>
 
         <pre class="code-compact"><code class="language-bash" data-trim>git branch -a
-git checkout main &amp;&amp; git pull
+git switch main &amp;&amp; git pull
 git merge feature/deploy      # repita para cada branch que faltar
 git push origin main</code></pre>
 

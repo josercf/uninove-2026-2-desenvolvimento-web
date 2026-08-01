@@ -35,10 +35,10 @@ professor; os passos 4 a 6 você faz sozinho.
 ## Passo 1: a branch e a aplicação no ar (5 min)
 
 ```bash
-git checkout main
+git switch main
 git pull
 
-git checkout -b feature/controllers-iniciais
+git switch -c feature/controllers-iniciais
 
 cd ClinicaVida.Web
 dotnet watch run

@@ -69,8 +69,8 @@ Quem vai criar o banco é a migration, no Passo 5.
 ## Passo 1: a branch e os pacotes (10 min)
 
 ```bash
-git checkout main && git pull
-git checkout -b feature/ef-core-mysql
+git switch main && git pull
+git switch -c feature/ef-core-mysql
 
 dotnet tool install --global dotnet-ef      # se ainda não tiver a ferramenta
 dotnet add package Pomelo.EntityFrameworkCore.MySql
@@ -87,7 +87,7 @@ dotnet build
 
 ---
 
-## Passo 2: as quatro classes em `Models/` (10 min)
+## Passo 2: as quatro classes em `Models/` (9 min)
 
 Uma classe por arquivo, todas no namespace `ClinicaVida.Web.Models`. As
 Data Annotations da Aula 10 continuam valendo, e agora elas têm um segundo
@@ -203,7 +203,7 @@ O nome da propriedade `DbSet` vira o nome da tabela: `Pacientes`, e não
 
 ---
 
-## Passo 4: a connection string e o registro do contexto (10 min)
+## Passo 4: a connection string e o registro do contexto (8 min)
 
 Em `appsettings.json`, no mesmo nível de `"Logging"`:
 
@@ -257,7 +257,7 @@ Confira, nesta ordem:
 
 ---
 
-## Passo 6: semear as especialidades com `HasData` (10 min)
+## Passo 6: semear as especialidades com `HasData` (8 min)
 
 Um banco vazio não demonstra nada. As especialidades da clínica fazem parte
 do esquema, então entram pela própria migration. Em `ClinicaContext`:

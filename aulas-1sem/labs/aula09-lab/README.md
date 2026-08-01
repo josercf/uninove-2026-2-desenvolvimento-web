@@ -44,10 +44,10 @@ professor; os passos 4 a 6 você faz sozinho.
 ## Passo 1: a branch e os dois Models (10 min)
 
 ```bash
-git checkout main
+git switch main
 git pull
 
-git checkout -b feature/medicos-em-memoria
+git switch -c feature/medicos-em-memoria
 
 cd ClinicaVida.Web
 dotnet watch run

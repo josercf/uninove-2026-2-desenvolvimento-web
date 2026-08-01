@@ -69,8 +69,8 @@ GROUP BY e.Nome;
 ## Passo 1: a branch e a action `MedicosPorEspecialidade` (10 min)
 
 ```bash
-git checkout main && git pull
-git checkout -b feature/ajax-horarios
+git switch main && git pull
+git switch -c feature/ajax-horarios
 ```
 
 No `Controllers/ConsultasController.cs`, o contexto já chega por injeção desde
@@ -225,8 +225,8 @@ public async Task<JsonResult> HorariosDisponiveis(int medicoId, DateTime data)
         .ToListAsync();
 
     var livres = new List<string>();
-    var inicio = new TimeSpan(8, 0, 0);
-    var fim = new TimeSpan(18, 0, 0);
+    var inicio = new TimeSpan(7, 0, 0);      // o expediente da clínica começa às 07h
+    var fim = new TimeSpan(19, 0, 0);        // e termina às 19h, como você validou na Aula 06
 
     for (var h = inicio; h < fim; h += TimeSpan.FromMinutes(30))
     {

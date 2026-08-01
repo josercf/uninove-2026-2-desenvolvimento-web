@@ -47,8 +47,8 @@ A regra de ouro do dia, que vale para o resto do semestre e da sua carreira:
 ## Passo 1: a branch e o Model `Consulta` (10 min)
 
 ```bash
-git checkout main && git pull
-git checkout -b feature/formulario-agendamento
+git switch main && git pull
+git switch -c feature/formulario-agendamento
 ```
 
 Crie `Models/Consulta.cs`. Por enquanto, só as propriedades:
@@ -72,8 +72,33 @@ tela, para filtrar a lista de médicos, mas não vira propriedade da `Consulta`,
 porque o médico já carrega a dele em `Medico.EspecialidadeId`. Guardar o mesmo
 dado em dois lugares é onde a divergência começa.
 
-Em `Models/ClinicaEmMemoria.cs`, acrescente duas listas: a dos pacientes, que
-vai alimentar a lista suspensa, e a que vai receber os agendamentos.
+Antes das listas, falta uma classe. A `Consulta` guarda `PacienteId`, mas o
+paciente ainda não existe como Model: nas Aulas 09 e 10 você criou
+`Especialidade`, `Medico` e agora `Consulta`. Crie `Models/Paciente.cs` com as
+seis propriedades que o paciente terá até o fim do semestre, para não precisar
+mexer nesta classe de novo na Aula 11, quando ela virar tabela no banco.
+
+```csharp
+namespace ClinicaVida.Web.Models;
+
+public class Paciente
+{
+    public int Id { get; set; }
+    public string Nome { get; set; } = string.Empty;
+    public string Cpf { get; set; } = string.Empty;
+    public DateTime DataNascimento { get; set; }
+    public string? Telefone { get; set; }
+    public string? Email { get; set; }
+}
+```
+
+Hoje o formulário usa só `Id`, `Nome` e `Cpf`. As outras três entram agora
+porque o cadastro completo de paciente é o laboratório da Aula 12, e mudar a
+classe depois significaria refazer a migration.
+
+Agora, em `Models/ClinicaEmMemoria.cs`, acrescente duas listas: a dos
+pacientes, que vai alimentar a lista suspensa, e a que vai receber os
+agendamentos.
 
 ```csharp
 public static List<Paciente> Pacientes { get; } = new()

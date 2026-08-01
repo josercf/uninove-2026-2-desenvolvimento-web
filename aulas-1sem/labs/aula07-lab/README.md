@@ -46,7 +46,7 @@ deles quebra os comandos dos laboratórios seguintes.
 
 ---
 
-## Passo 1: o SDK na sua máquina (10 min)
+## Passo 1: o SDK na sua máquina (12 min)
 
 ```bash
 dotnet --list-sdks      # precisa aparecer uma linha começando com 10.
@@ -75,16 +75,16 @@ Trabalho novo, branch nova, sempre a partir da `main` atualizada.
 ```bash
 cd uninove-2026-2-clinica-vida
 
-git checkout main
+git switch main
 git pull
 
-git checkout -b feature/projeto-dotnet
+git switch -c feature/projeto-dotnet
 git status
 ```
 
 ---
 
-## Passo 3: criar o projeto (10 min)
+## Passo 3: criar o projeto (11 min)
 
 Na **raiz do fork**, ao lado do `index.html` e do `agendamento.html` que você
 já tem:
@@ -150,7 +150,7 @@ git rm -r --cached ClinicaVida.Web/bin ClinicaVida.Web/obj
 
 ---
 
-## Passo 5: subir a aplicação (10 min)
+## Passo 5: subir a aplicação (12 min)
 
 ```bash
 cd ClinicaVida.Web

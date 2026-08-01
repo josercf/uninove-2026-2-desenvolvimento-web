@@ -59,8 +59,8 @@ exemplo em tutoriais.
 ## Passo 1: a branch e o inventário (5 min)
 
 ```bash
-git checkout main && git pull
-git checkout -b feature/layout-bootstrap
+git switch main && git pull
+git switch -c feature/layout-bootstrap
 ```
 
 Antes de mudar qualquer coisa, rode a aplicação e **tire uma captura da tela de

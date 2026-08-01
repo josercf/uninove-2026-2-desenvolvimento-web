@@ -414,9 +414,9 @@ public class Consulta
         <div class="exercise-container">
           <h3>Abra o agendamento.html da Aula 05, 8 minutos</h3>
           <ol class="exercise-steps">
-            <li>Escolha os campos <strong>paciente</strong>, <strong>data</strong> e <strong>horário</strong>.</li>
+            <li>Escolha os campos <strong>médico</strong>, <strong>data</strong> e <strong>horário</strong>.</li>
             <li>Reescreva cada um em três linhas: <code>label asp-for</code>, o campo com <code>asp-for</code> e <code>span asp-validation-for</code>.</li>
-            <li>Troque o <code>select</code> de paciente escrito à mão por <code>asp-items="ViewBag.Pacientes"</code>.</li>
+            <li>Troque o <code>select</code> de médico escrito à mão na Aula 05 por <code>asp-items="ViewBag.Medicos"</code>.</li>
             <li>Responda em voz alta: quantas vezes o nome da propriedade aparece agora, contra as quatro de antes?</li>
           </ol>
         </div>
@@ -670,8 +670,8 @@ public string Cpf { get; set; } = string.Empty;</code></pre>
           </ol>
         </div>
 
-        <pre class="code-compact" style="margin-top:10px;"><code class="language-bash" data-trim>git checkout main &amp;&amp; git pull
-git checkout -b feature/formulario-agendamento
+        <pre class="code-compact" style="margin-top:10px;"><code class="language-bash" data-trim>git switch main &amp;&amp; git pull
+git switch -c feature/formulario-agendamento
 dotnet build</code></pre>
 
         <div class="slide-footer">

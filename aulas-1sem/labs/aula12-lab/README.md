@@ -41,8 +41,8 @@ dotnet ef database update # não pode ter migration pendente
 ## Passo 1: a branch e o Controller (10 min)
 
 ```bash
-git checkout main && git pull
-git checkout -b feature/crud-pacientes
+git switch main && git pull
+git switch -c feature/crud-pacientes
 ```
 
 Crie `Controllers/PacientesController.cs`. O contexto **não** é criado aqui:

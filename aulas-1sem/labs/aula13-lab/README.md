@@ -60,8 +60,8 @@ exemplo). A listagem precisa carregar com pelo menos um paciente.
 ## Passo 1: a branch e a sessão no pipeline (10 min)
 
 ```bash
-git checkout main && git pull
-git checkout -b feature/sessao-agendamento
+git switch main && git pull
+git switch -c feature/sessao-agendamento
 ```
 
 A sessão do ASP.NET Core precisa de duas coisas: um **lugar para guardar** o

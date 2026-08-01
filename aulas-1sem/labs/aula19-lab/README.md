@@ -53,8 +53,8 @@ seu. Nenhuma delas pode terminar em arquivo versionado.
 ## Passo 1: a branch e a faxina de segredos (8 min)
 
 ```bash
-git checkout main && git pull
-git checkout -b feature/deploy
+git switch main && git pull
+git switch -c feature/deploy
 ```
 
 ### O `.gitignore` primeiro, o arquivo depois

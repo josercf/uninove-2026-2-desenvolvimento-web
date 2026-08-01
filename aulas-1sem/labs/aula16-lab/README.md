@@ -48,11 +48,11 @@ dotnet run                 # anote a porta que o terminal imprimir
 
 ---
 
-## Passo 1: a branch e o Controller de API (8 min)
+## Passo 1: a branch e o Controller de API (6 min)
 
 ```bash
-git checkout main && git pull
-git checkout -b feature/api-consultas
+git switch main && git pull
+git switch -c feature/api-consultas
 ```
 
 Crie `Controllers/ConsultasApiController.cs`:
@@ -100,7 +100,7 @@ E **`[Authorize]`**, que é o assunto do passo 2.
 
 ---
 
-## Passo 2: o 401 que o cookie não devolve sozinho (5 min)
+## Passo 2: o 401 que o cookie não devolve sozinho (4 min)
 
 A API é a mesma aplicação da Aula 15, então ela herda a autenticação por
 cookie do Identity. O `[Authorize]` no Controller já barra quem não está
@@ -137,7 +137,7 @@ builder.Services.ConfigureApplicationCookie(options =>
 
 ---
 
-## Passo 3: os dois DTOs (10 min)
+## Passo 3: os dois DTOs (8 min)
 
 Crie a pasta `Models/Dtos/` e, dentro dela, `ConsultaDtos.cs`:
 
@@ -204,7 +204,7 @@ traduzir para SQL costuma falhar em tempo de execução: primeiro
 
 ---
 
-## Passo 4: `GET api/consultas`, com filtros (10 min)
+## Passo 4: `GET api/consultas`, com filtros (8 min)
 
 ```csharp
 [HttpGet]
@@ -232,7 +232,7 @@ existe, ela só não tem nada dentro naquele dia.
 
 ---
 
-## Passo 5: `GET api/consultas/{id}` (7 min)
+## Passo 5: `GET api/consultas/{id}` (6 min)
 
 ```csharp
 [HttpGet("{id:int}")]
@@ -253,7 +253,7 @@ nem chega à sua action. Guarde o nome desta action: é para ela que o
 
 ---
 
-## Passo 6: `POST`, `PUT` e `DELETE` (20 min)
+## Passo 6: `POST`, `PUT` e `DELETE` (16 min)
 
 ```csharp
 [HttpPost]
@@ -338,7 +338,7 @@ de olhar um número.
 
 ---
 
-## Passo 7: testar os cinco endpoints (10 min)
+## Passo 7: testar os cinco endpoints (8 min)
 
 Crie `ClinicaVida.http` na raiz do projeto. Antes de executar as chamadas,
 faça login na aplicação pelo navegador, abra o DevTools em **Application,
@@ -410,7 +410,7 @@ Na chamada 5, olhe a **aba de cabeçalhos** da resposta, e não só o corpo: o
 
 ---
 
-## Passo 8: documentar a API (5 min)
+## Passo 8: documentar a API (4 min)
 
 No `README.md` do seu fork, acrescente a seção da API, com a mesma tabela que
 você montou no exercício do Ciclo 1:

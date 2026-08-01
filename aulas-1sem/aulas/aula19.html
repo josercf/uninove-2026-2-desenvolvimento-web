@@ -827,8 +827,8 @@ using (var escopo = app.Services.CreateScope())
           </ol>
         </div>
 
-        <pre class="code-compact" style="margin-top:8px;"><code class="language-bash" data-trim>git checkout main &amp;&amp; git pull
-git checkout -b feature/deploy
+        <pre class="code-compact" style="margin-top:8px;"><code class="language-bash" data-trim>git switch main &amp;&amp; git pull
+git switch -c feature/deploy
 echo ".env" &gt;&gt; .gitignore
 git status          # o .env não pode aparecer aqui, nunca
 </code></pre>
