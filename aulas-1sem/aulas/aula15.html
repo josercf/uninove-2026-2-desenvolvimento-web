@@ -1,0 +1,1147 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Aula 15, Autenticação e autorização | Uninove</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/theme/white.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/highlight/monokai.css">
+  <link rel="stylesheet" href="../assets/css/uninove-theme.css">
+  <link rel="stylesheet" href="../assets/css/uninove-print.css">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+      <!-- ==================== SLIDE 1: CAPA ==================== -->
+      <section class="cover-slide">
+        <img src="../assets/img/uninove-logo.png" alt="Uninove, Universidade Nove de Julho" class="uninove-logo-full"
+             style="max-width:400px; background:#FFFFFF; padding:26px 36px; border-radius:10px;">
+        <div style="margin-top:36px; color:#FFFFFF; font-size:0.95em; font-weight:800; letter-spacing:4px; text-transform:uppercase;">Desenvolvimento Web</div>
+        <div style="margin-top:12px; color:#C84B31; font-size:0.6em; font-weight:700; letter-spacing:3px; text-transform:uppercase;">Graduação, 2026.2</div>
+      </section>
+
+      <!-- ==================== SLIDE 2: TÍTULO ==================== -->
+      <section class="title-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="title-card">
+          <div class="accent-bar"></div>
+          <h1>Desenvolvimento Web</h1>
+          <h2>Autenticação e autorização</h2>
+          <h3>Prof. José Romualdo<br><span data-data-da-aula="15"></span></h3>
+        </div>
+        <div class="lesson-bar">AULA 15 &nbsp;|&nbsp; Módulo 3, Acesso a Dados e Funcionalidades Avançadas</div>
+      </section>
+
+      <!-- ==================== SLIDE 3: AGENDA ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Agenda do encontro de hoje</h2>
+        </div>
+
+        <p style="font-size:0.76em; margin-top:0;">São 150 minutos corridos, em quatro ciclos. Não há intervalo formal: a troca de ciclo é o respiro da aula.</p>
+
+        <table>
+          <thead>
+            <tr><th style="width:190px;">Horário</th><th style="width:200px;">Bloco</th><th>O que acontece</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>19h30 às 20h05</td><td>Ciclo 1</td><td>Autenticar contra autorizar, hash com salt e o cookie de autenticação</td></tr>
+            <tr><td>20h05 às 20h40</td><td>Ciclo 2</td><td>Identity na aplicação, telas de conta, perfis e <code>[Authorize]</code></td></tr>
+            <tr><td>20h40 às 20h50</td><td>Quiz de fixação</td><td>Uma pergunta sobre o conceito central da aula</td></tr>
+            <tr><td>20h50 às 21h25</td><td>Ciclo 3</td><td>Laboratório guiado: Identity configurado, migration e telas de conta</td></tr>
+            <tr><td>21h25 às 21h50</td><td>Ciclo 4</td><td>Laboratório: perfis, área da recepção protegida e menu adaptado</td></tr>
+            <tr><td>21h50 às 22h00</td><td>Fechamento</td><td>Teste com dois perfis, commit, push e prévia da Aula 16</td></tr>
+          </tbody>
+        </table>
+
+        <div class="slide-footer">
+          <div class="footer-bar">15 Agenda do encontro</div>
+          <div class="footer-page">3</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 4: RECAPITULAÇÃO DA AULA 14 ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>De onde viemos: o agendamento fluido da Aula 14</h2>
+        </div>
+
+        <p style="font-size:0.72em; margin-top:0;">Você entregou a consulta de médicos e de horários livres por AJAX, sem recarregar a página: <code>MedicosPorEspecialidade</code> e <code>HorariosDisponiveis</code> devolvendo JSON, o <code>fetch</code> montando a lista no DOM, com indicação de carregamento e tratamento de erro.</p>
+
+        <div class="side-by-side" style="margin-top:6px;">
+          <div class="side">
+            <h4>O que a Clínica Vida+ já faz</h4>
+            <ul style="margin:0; padding-left:20px;">
+              <li>Guarda pacientes, médicos e consultas no MySQL.</li>
+              <li>Agenda em duas etapas, com sessão e cookie.</li>
+              <li>Devolve JSON para a tela sem recarregar nada.</li>
+              <li>Cadastra, edita e exclui paciente pela recepção.</li>
+            </ul>
+          </div>
+          <div class="side">
+            <h4>O buraco que ninguém tapou</h4>
+            <ul style="margin:0; padding-left:20px;">
+              <li><strong>Qualquer pessoa</strong> com o endereço abre a agenda.</li>
+              <li><code>/Pacientes</code> lista CPF e telefone para o mundo.</li>
+              <li>Um clique em <code>Excluir</code> apaga um paciente real.</li>
+              <li>O sistema não sabe dizer <strong>quem</strong> fez cada coisa.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="callout" style="margin-top:16px;">
+          <p><strong>Dado de saúde é dado sensível.</strong> Hoje a Clínica Vida+ publica o prontuário administrativo da clínica para quem souber digitar a URL. Esta aula fecha essa porta, e ela tem duas fechaduras: <strong>autenticação</strong> e <strong>autorização</strong>.</p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">15 Recapitulação da Aula 14</div>
+          <div class="footer-page">4</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 5: AUTENTICAÇÃO CONTRA AUTORIZAÇÃO ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Duas perguntas diferentes, na ordem certa <a href="#/ref-slide" class="ref-badge" title="Ver referências">[1]</a></h2>
+        </div>
+
+        <p style="font-size:0.7em; margin-top:0;">São palavras parecidas e conceitos distintos. Autenticar é <strong>provar quem se é</strong>. Autorizar é <strong>decidir o que essa pessoa pode fazer</strong>. Uma vem sempre antes da outra.</p>
+
+        <div class="slide-figure" style="margin-top:2px;">
+          <svg viewBox="0 0 1140 330" role="img" aria-label="Autenticação responde quem é você, com e-mail e senha; autorização responde o que você pode fazer, comparando o perfil do usuário com a regra da action">
+            <defs>
+              <marker id="a15setaAuth" markerWidth="9" markerHeight="9" refX="8" refY="4.5" orient="auto">
+                <path d="M0,0 L9,4.5 L0,9 Z" fill="#C84B31"/>
+              </marker>
+            </defs>
+
+            <rect x="4" y="8" width="516" height="248" rx="10" fill="#00274D"/>
+            <text x="262" y="40" text-anchor="middle" font-size="17" font-weight="700" fill="#FFFFFF">AUTENTICAÇÃO</text>
+            <text x="262" y="64" text-anchor="middle" font-size="14" fill="#C84B31" font-weight="700">Quem é você?</text>
+            <text x="262" y="90" text-anchor="middle" font-size="12.5" fill="#C8D6E5">Provar a identidade diante do sistema.</text>
+
+            <rect x="34" y="106" width="452" height="60" rx="8" fill="#0E3A63"/>
+            <text x="52" y="130" font-size="12.5" fill="#FFFFFF">E-mail: ana@clinicavida.local</text>
+            <text x="52" y="152" font-size="12.5" fill="#FFFFFF">Senha: a que só a Ana conhece</text>
+
+            <text x="262" y="192" text-anchor="middle" font-size="12.5" fill="#9FE2C0">Resultado: o sistema passa a saber que</text>
+            <text x="262" y="212" text-anchor="middle" font-size="12.5" fill="#9FE2C0">esta requisição é da Ana, e não de um estranho.</text>
+            <text x="262" y="240" text-anchor="middle" font-size="12" fill="#C8D6E5">Falhou? Ninguém entra. Status 401.</text>
+
+            <line x1="524" y1="132" x2="592" y2="132" stroke="#C84B31" stroke-width="3" marker-end="url(#a15setaAuth)"/>
+            <text x="558" y="118" text-anchor="middle" font-size="11.5" font-weight="700" fill="#C84B31">e só então</text>
+
+            <rect x="600" y="8" width="536" height="248" rx="10" fill="#F5F5F5" stroke="#00274D" stroke-width="2"/>
+            <text x="868" y="40" text-anchor="middle" font-size="17" font-weight="700" fill="#00274D">AUTORIZAÇÃO</text>
+            <text x="868" y="64" text-anchor="middle" font-size="14" fill="#C84B31" font-weight="700">O que você pode fazer?</text>
+            <text x="868" y="90" text-anchor="middle" font-size="12.5" fill="#444444">Comparar o perfil de quem entrou com a regra da tela.</text>
+
+            <rect x="626" y="106" width="484" height="34" rx="6" fill="#EAF5F1" stroke="#2E9E7E" stroke-width="1.5"/>
+            <text x="642" y="128" font-size="12.5" fill="#1F2A30">Ana, perfil Recepcao, abre a agenda da clínica</text>
+            <text x="1092" y="128" text-anchor="end" font-size="12.5" font-weight="700" fill="#0B6E75">pode</text>
+
+            <rect x="626" y="148" width="484" height="34" rx="6" fill="#FDECE8" stroke="#C84B31" stroke-width="1.5"/>
+            <text x="642" y="170" font-size="12.5" fill="#1F2A30">Dr. Bruno, perfil Medico, exclui um paciente</text>
+            <text x="1092" y="170" text-anchor="end" font-size="12.5" font-weight="700" fill="#C84B31">não pode</text>
+
+            <rect x="626" y="190" width="484" height="34" rx="6" fill="#FDECE8" stroke="#C84B31" stroke-width="1.5"/>
+            <text x="642" y="212" font-size="12.5" fill="#1F2A30">Visitante não autenticado abre /Pacientes</text>
+            <text x="1092" y="212" text-anchor="end" font-size="12.5" font-weight="700" fill="#C84B31">não pode</text>
+
+            <text x="868" y="243" text-anchor="middle" font-size="12" fill="#444444">Autenticado, mas sem o perfil certo? Status 403.</text>
+
+            <rect x="4" y="270" width="1132" height="52" rx="8" fill="#FDECE8" stroke="#C84B31" stroke-width="1.5"/>
+            <text x="570" y="292" text-anchor="middle" font-size="13.5" font-weight="700" fill="#00274D">Estar autenticado nunca significa estar autorizado.</text>
+            <text x="570" y="312" text-anchor="middle" font-size="12.5" fill="#7A2A18">O crachá prova quem você é; ele não abre todas as portas do prédio.</text>
+          </svg>
+        </div>
+
+        <div class="takeaway">
+          <span class="takeaway-label">Takeaway</span>
+          <p>As duas decisões acontecem no <strong>servidor</strong>, a cada requisição. Nenhuma delas depende do que a tela mostra ou deixa de mostrar ao usuário.</p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">15 Autenticação contra autorização</div>
+          <div class="footer-page">5</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 6: HASH E SALT ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Duas contas, a mesma senha, hashes diferentes <a href="#/ref-slide" class="ref-badge" title="Ver referências">[4]</a></h2>
+        </div>
+
+        <p style="font-size:0.7em; margin-top:0;">Ana e Bruno escolheram, por coincidência, a mesma senha. Olhe o que o banco guarda em cada caso.</p>
+
+        <div class="slide-figure" style="margin-top:2px;">
+          <svg viewBox="0 0 1140 340" role="img" aria-label="Sem salt, a mesma senha gera o mesmo hash para os dois usuários; com salt aleatório por usuário, a mesma senha gera hashes completamente diferentes">
+            <defs>
+              <marker id="a15setaHash" markerWidth="9" markerHeight="9" refX="8" refY="4.5" orient="auto">
+                <path d="M0,0 L9,4.5 L0,9 Z" fill="#C84B31"/>
+              </marker>
+            </defs>
+
+            <rect x="380" y="4" width="380" height="44" rx="8" fill="#00274D"/>
+            <text x="570" y="32" text-anchor="middle" font-size="14" font-weight="700" fill="#FFFFFF">Ana e Bruno digitam a mesma senha</text>
+
+            <line x1="450" y1="50" x2="330" y2="76" stroke="#C84B31" stroke-width="2.5" marker-end="url(#a15setaHash)"/>
+            <line x1="690" y1="50" x2="810" y2="76" stroke="#C84B31" stroke-width="2.5" marker-end="url(#a15setaHash)"/>
+
+            <rect x="4" y="82" width="552" height="192" rx="10" fill="#FDECE8" stroke="#C84B31" stroke-width="2"/>
+            <text x="280" y="108" text-anchor="middle" font-size="14.5" font-weight="700" fill="#C84B31">Hash sem salt: o erro</text>
+            <g font-family="'JetBrains Mono', monospace" font-size="12" style="font-variant-ligatures:none;">
+              <text x="24" y="140" fill="#1F2A30">ana   -&gt; hash = 6f1ed002ab5595859014ebf0</text>
+              <text x="24" y="164" fill="#1F2A30">bruno -&gt; hash = 6f1ed002ab5595859014ebf0</text>
+            </g>
+            <rect x="24" y="176" width="508" height="26" rx="5" fill="#C84B31"/>
+            <text x="278" y="194" text-anchor="middle" font-size="12.5" font-weight="700" fill="#FFFFFF">São idênticos, e isso entrega informação</text>
+            <text x="278" y="224" text-anchor="middle" font-size="12.5" fill="#7A2A18">Quem vazar o banco vê que as duas contas usam a mesma senha</text>
+            <text x="278" y="244" text-anchor="middle" font-size="12.5" fill="#7A2A18">e quebra as duas de uma vez, com uma tabela já pronta de hashes</text>
+            <text x="278" y="264" text-anchor="middle" font-size="12.5" fill="#7A2A18">de senhas comuns. Descobrir uma é descobrir todas.</text>
+
+            <rect x="584" y="82" width="552" height="192" rx="10" fill="#EAF5F1" stroke="#2E9E7E" stroke-width="2"/>
+            <text x="860" y="108" text-anchor="middle" font-size="14.5" font-weight="700" fill="#0B6E75">Hash com salt: o que o Identity faz</text>
+            <g font-family="'JetBrains Mono', monospace" font-size="12" style="font-variant-ligatures:none;">
+              <text x="604" y="140" fill="#1F2A30">ana   salt=k3Za... -&gt; c92b7f41d0a8e5b3</text>
+              <text x="604" y="164" fill="#1F2A30">bruno salt=Qw8p... -&gt; 04ef1c7a9b26d8f0</text>
+            </g>
+            <rect x="604" y="176" width="508" height="26" rx="5" fill="#2E9E7E"/>
+            <text x="858" y="194" text-anchor="middle" font-size="12.5" font-weight="700" fill="#FFFFFF">Mesma senha, resultados sem nenhuma relação</text>
+            <text x="858" y="224" text-anchor="middle" font-size="12.5" fill="#0B6E75">O salt é um valor aleatório, gerado uma vez por usuário e</text>
+            <text x="858" y="244" text-anchor="middle" font-size="12.5" fill="#0B6E75">guardado junto do hash. Ele não é segredo: a função dele é</text>
+            <text x="858" y="264" text-anchor="middle" font-size="12.5" fill="#0B6E75">tornar inútil qualquer tabela de hashes calculada de antemão.</text>
+
+            <rect x="4" y="288" width="1132" height="48" rx="8" fill="#00274D"/>
+            <text x="570" y="309" text-anchor="middle" font-size="13" font-weight="700" fill="#FFFFFF">O Identity usa PBKDF2 com HMAC-SHA256, salt aleatório e cem mil iterações por senha.</text>
+            <text x="570" y="328" text-anchor="middle" font-size="12" fill="#C8D6E5">A lentidão é deliberada: o atraso é imperceptível em um login e devastador em um ataque de força bruta.</text>
+          </svg>
+        </div>
+
+        <div class="takeaway">
+          <span class="takeaway-label">Takeaway</span>
+          <p>Você não escreve nada disso: <code>CreateAsync</code> gera o salt, aplica a derivação e grava o resultado em <code>PasswordHash</code>. O que se espera de você é <strong>não</strong> inventar o seu próprio esquema no lugar deste.</p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">15 Hash e salt</div>
+          <div class="footer-page">6</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 7: HASH NÃO É CRIPTOGRAFIA ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Hash não é criptografia <a href="#/ref-slide" class="ref-badge" title="Ver referências">[3]</a></h2>
+        </div>
+
+        <p style="font-size:0.7em; margin-top:0;">A confusão é comum e tem consequência prática: quem acha que a senha está "criptografada" acredita que existe um jeito de lê-la de volta. Não existe, e é isso que se quer.</p>
+
+        <div class="slide-figure" style="margin-top:2px;">
+          <svg viewBox="0 0 1140 300" role="img" aria-label="Criptografia é mão dupla, com chave que reverte o texto cifrado; hash é mão única, sem volta, e a conferência refaz o hash e compara">
+            <defs>
+              <marker id="a15setaCripto" markerWidth="9" markerHeight="9" refX="8" refY="4.5" orient="auto">
+                <path d="M0,0 L9,4.5 L0,9 Z" fill="#00274D"/>
+              </marker>
+              <marker id="a15setaMao" markerWidth="9" markerHeight="9" refX="8" refY="4.5" orient="auto">
+                <path d="M0,0 L9,4.5 L0,9 Z" fill="#C84B31"/>
+              </marker>
+            </defs>
+
+            <rect x="4" y="4" width="552" height="140" rx="10" fill="#F5F5F5" stroke="#00274D" stroke-width="2"/>
+            <text x="280" y="30" text-anchor="middle" font-size="14.5" font-weight="700" fill="#00274D">Criptografia: mão dupla</text>
+            <rect x="30" y="48" width="150" height="38" rx="6" fill="#00274D"/>
+            <text x="105" y="72" text-anchor="middle" font-size="12.5" fill="#FFFFFF">texto original</text>
+            <rect x="380" y="48" width="150" height="38" rx="6" fill="#00274D"/>
+            <text x="455" y="72" text-anchor="middle" font-size="12.5" fill="#FFFFFF">texto cifrado</text>
+            <line x1="186" y1="60" x2="374" y2="60" stroke="#00274D" stroke-width="2.5" marker-end="url(#a15setaCripto)"/>
+            <line x1="374" y1="78" x2="186" y2="78" stroke="#00274D" stroke-width="2.5" marker-end="url(#a15setaCripto)"/>
+            <text x="280" y="108" text-anchor="middle" font-size="12" fill="#444444">Quem tem a chave volta ao texto original quando quiser.</text>
+            <text x="280" y="130" text-anchor="middle" font-size="12" fill="#444444">Serve para dado que precisa ser lido depois. Senha não é isso.</text>
+
+            <rect x="584" y="4" width="552" height="140" rx="10" fill="#00274D"/>
+            <text x="860" y="30" text-anchor="middle" font-size="14.5" font-weight="700" fill="#FFFFFF">Hash: mão única</text>
+            <rect x="610" y="48" width="150" height="38" rx="6" fill="#0E3A63"/>
+            <text x="685" y="72" text-anchor="middle" font-size="12.5" fill="#FFFFFF">senha</text>
+            <rect x="960" y="48" width="150" height="38" rx="6" fill="#0E3A63"/>
+            <text x="1035" y="72" text-anchor="middle" font-size="12.5" fill="#FFFFFF">hash gravado</text>
+            <line x1="766" y1="67" x2="954" y2="67" stroke="#C84B31" stroke-width="2.5" marker-end="url(#a15setaMao)"/>
+            <line x1="954" y1="88" x2="800" y2="88" stroke="#7A2A18" stroke-width="2.5" stroke-dasharray="6 6"/>
+            <line x1="860" y1="78" x2="884" y2="100" stroke="#C84B31" stroke-width="3"/>
+            <line x1="884" y1="78" x2="860" y2="100" stroke="#C84B31" stroke-width="3"/>
+            <text x="860" y="126" text-anchor="middle" font-size="12" fill="#C8D6E5">Não há chave, não há volta. Nem o dono do banco lê a senha.</text>
+
+            <rect x="4" y="158" width="1132" height="60" rx="8" fill="#EAF5F1" stroke="#2E9E7E" stroke-width="1.5"/>
+            <text x="570" y="182" text-anchor="middle" font-size="13.5" font-weight="700" fill="#0B6E75">Então como o login funciona, se ninguém consegue ler a senha guardada?</text>
+            <text x="570" y="206" text-anchor="middle" font-size="12.5" fill="#1F2A30">O sistema pega a senha digitada agora, aplica o mesmo hash com o mesmo salt daquele usuário e compara os dois resultados.</text>
+
+            <rect x="4" y="232" width="1132" height="62" rx="8" fill="#FDECE8" stroke="#C84B31" stroke-width="1.5"/>
+            <text x="570" y="256" text-anchor="middle" font-size="13" font-weight="700" fill="#00274D">Consequência que aparece na tela: sistema sério não devolve a sua senha por e-mail.</text>
+            <text x="570" y="280" text-anchor="middle" font-size="12.5" fill="#7A2A18">Ele manda um link para você cadastrar outra. Quem consegue reenviar a senha antiga é porque não a guardou como hash.</text>
+          </svg>
+        </div>
+
+        <div class="takeaway">
+          <span class="takeaway-label">Takeaway</span>
+          <p>Guardar senha "criptografada" é defeito, não elogio: significa que existe uma chave capaz de devolver a senha de todo mundo. Senha se guarda como hash, e hash não tem volta.</p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">15 Hash não é criptografia</div>
+          <div class="footer-page">7</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 8: O FLUXO DO LOGIN E DO COOKIE ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>O login acontece uma vez; o cookie sustenta o resto <a href="#/ref-slide" class="ref-badge" title="Ver referências">[1]</a></h2>
+        </div>
+
+        <p style="font-size:0.7em; margin-top:0;">O HTTP continua sem estado, exatamente como na Aula 13. A autenticação por cookie resolve isso do mesmo jeito: um cookie, emitido pelo servidor, viaja em toda requisição seguinte.</p>
+
+        <div class="slide-figure" style="margin-top:2px;">
+          <svg viewBox="0 0 1140 330" role="img" aria-label="Fluxo do login: POST com credenciais, validação do hash, resposta com Set-Cookie, e requisições seguintes já autenticadas pelo cookie">
+            <defs>
+              <marker id="a15setaFluxo" markerWidth="9" markerHeight="9" refX="8" refY="4.5" orient="auto">
+                <path d="M0,0 L9,4.5 L0,9 Z" fill="#C84B31"/>
+              </marker>
+              <marker id="a15setaVerde" markerWidth="9" markerHeight="9" refX="8" refY="4.5" orient="auto">
+                <path d="M0,0 L9,4.5 L0,9 Z" fill="#2E9E7E"/>
+              </marker>
+            </defs>
+
+            <rect x="4" y="6" width="150" height="284" rx="10" fill="#F5F5F5" stroke="#00274D" stroke-width="2"/>
+            <text x="79" y="34" text-anchor="middle" font-size="14" font-weight="700" fill="#00274D">Navegador</text>
+            <text x="79" y="58" text-anchor="middle" font-size="11.5" fill="#444444">da Ana, na</text>
+            <text x="79" y="76" text-anchor="middle" font-size="11.5" fill="#444444">recepção</text>
+            <rect x="20" y="196" width="118" height="76" rx="6" fill="#00274D"/>
+            <text x="79" y="218" text-anchor="middle" font-size="11.5" font-weight="700" fill="#C84B31">cookie</text>
+            <text x="79" y="238" text-anchor="middle" font-size="10.5" fill="#FFFFFF">guardado e</text>
+            <text x="79" y="254" text-anchor="middle" font-size="10.5" fill="#FFFFFF">reenviado</text>
+            <text x="79" y="268" text-anchor="middle" font-size="10.5" fill="#FFFFFF">sozinho</text>
+
+            <line x1="158" y1="112" x2="238" y2="112" stroke="#C84B31" stroke-width="3" marker-end="url(#a15setaFluxo)"/>
+            <text x="198" y="102" text-anchor="middle" font-size="10.5" font-weight="700" fill="#C84B31">envia</text>
+
+            <rect x="244" y="60" width="420" height="96" rx="8" fill="#00274D"/>
+            <text x="454" y="84" text-anchor="middle" font-size="13" font-weight="700" fill="#FFFFFF">1. POST /Conta/Login, uma única vez</text>
+            <g font-family="'JetBrains Mono', monospace" font-size="11.5" fill="#9FE2C0" style="font-variant-ligatures:none;">
+              <text x="264" y="110">Email=ana@clinicavida.local</text>
+              <text x="264" y="130">Senha=&lt;o que a Ana digitou&gt;</text>
+            </g>
+            <text x="454" y="150" text-anchor="middle" font-size="11" fill="#C8D6E5">A senha trafega aqui, e só aqui, sempre sob HTTPS.</text>
+
+            <rect x="684" y="60" width="452" height="96" rx="8" fill="#F5F5F5" stroke="#00274D" stroke-width="2"/>
+            <text x="910" y="84" text-anchor="middle" font-size="13" font-weight="700" fill="#00274D">2. SignInManager confere</text>
+            <text x="910" y="106" text-anchor="middle" font-size="11.5" fill="#444444">Busca o usuário, aplica o hash com o salt dele</text>
+            <text x="910" y="124" text-anchor="middle" font-size="11.5" fill="#444444">e compara com o que está gravado em AspNetUsers.</text>
+            <text x="910" y="146" text-anchor="middle" font-size="11.5" font-weight="700" fill="#C84B31">Não bateu? Volta para a tela de login.</text>
+
+            <line x1="910" y1="160" x2="910" y2="182" stroke="#C84B31" stroke-width="3" marker-end="url(#a15setaFluxo)"/>
+
+            <rect x="244" y="184" width="892" height="52" rx="8" fill="#EAF5F1" stroke="#2E9E7E" stroke-width="1.5"/>
+            <text x="264" y="206" font-size="12.5" font-weight="700" fill="#0B6E75">3. Resposta 302 com Set-Cookie: .AspNetCore.Identity.Application=...</text>
+            <text x="264" y="226" font-size="11.5" fill="#1F2A30">HttpOnly, Secure, SameSite. O conteúdo é assinado e cifrado pelo servidor: o navegador carrega, mas não altera nem lê.</text>
+
+            <line x1="238" y1="204" x2="160" y2="204" stroke="#2E9E7E" stroke-width="3" marker-end="url(#a15setaVerde)"/>
+            <text x="199" y="194" text-anchor="middle" font-size="10.5" font-weight="700" fill="#0B6E75">recebe</text>
+
+            <line x1="158" y1="286" x2="238" y2="286" stroke="#C84B31" stroke-width="3" marker-end="url(#a15setaFluxo)"/>
+            <text x="198" y="276" text-anchor="middle" font-size="10.5" font-weight="700" fill="#C84B31">reenvia</text>
+
+            <rect x="244" y="244" width="892" height="76" rx="8" fill="#00274D"/>
+            <text x="264" y="266" font-size="12.5" font-weight="700" fill="#FFFFFF">4. Da próxima requisição em diante: GET /Pacientes, com Cookie: .AspNetCore.Identity.Application=...</text>
+            <text x="264" y="288" font-size="11.5" fill="#C8D6E5">UseAuthentication lê o cookie e monta o HttpContext.User. UseAuthorization confere a regra da action e libera ou barra.</text>
+            <text x="264" y="310" font-size="11.5" fill="#9FE2C0">A senha não trafega mais. Nenhuma tela pergunta quem você é de novo, até o logout ou o vencimento do cookie.</text>
+          </svg>
+        </div>
+
+        <div class="takeaway">
+          <span class="takeaway-label">Takeaway</span>
+          <p>É o mesmo cookie da Aula 13, com uma diferença: este é assinado e cifrado pelo servidor. Adulterar o valor no navegador não vira "sou a Ana", vira cookie inválido e volta para o login.</p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">15 Fluxo do login e do cookie</div>
+          <div class="footer-page">8</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 9: O QUE O IDENTITY TRAZ PRONTO ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>O que o ASP.NET Core Identity traz pronto <a href="#/ref-slide" class="ref-badge" title="Ver referências">[1]</a></h2>
+        </div>
+
+        <p style="font-size:0.7em; margin-top:0;">Ninguém escreve o próprio esquema de senhas em produção. O Identity é a implementação que já vem no framework, com o hash, o salt, o cookie e o modelo de usuários e perfis.</p>
+
+        <div class="side-by-side" style="margin-top:6px;">
+          <div class="side">
+            <h4>Os serviços que você vai injetar</h4>
+            <ul style="margin:0; padding-left:20px;">
+              <li><code>UserManager&lt;IdentityUser&gt;</code>: cria usuário, aplica o hash, associa perfis.</li>
+              <li><code>SignInManager&lt;IdentityUser&gt;</code>: valida a senha, emite e derruba o cookie.</li>
+              <li><code>RoleManager&lt;IdentityRole&gt;</code>: cria e consulta os perfis.</li>
+              <li>O hasher de senha e a proteção do cookie, configurados por padrão.</li>
+            </ul>
+          </div>
+          <div class="side">
+            <h4>As sete tabelas da migration</h4>
+            <ul style="margin:0; padding-left:20px;">
+              <li><code>AspNetUsers</code>, com <code>PasswordHash</code> e <code>SecurityStamp</code>.</li>
+              <li><code>AspNetRoles</code> e <code>AspNetUserRoles</code>, os perfis e o vínculo.</li>
+              <li><code>AspNetUserClaims</code> e <code>AspNetRoleClaims</code>.</li>
+              <li><code>AspNetUserLogins</code> e <code>AspNetUserTokens</code>.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="takeaway">
+          <span class="takeaway-label">Takeaway</span>
+          <p>Não existe coluna de senha em lugar nenhum. O que o banco guarda é <code>PasswordHash</code>, e o valor dele não volta a ser senha por caminho nenhum.</p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">15 O que o Identity traz pronto</div>
+          <div class="footer-page">9</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 10: MATRIZ DE ACESSO DO CASE ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>A matriz de acesso da Clínica Vida+</h2>
+        </div>
+
+        <p style="font-size:0.7em; margin-top:0;">Antes de escrever qualquer atributo, decide-se a regra. Esta tabela orienta todo o laboratório de hoje.</p>
+
+        <table style="font-size:0.66em; margin-top:8px;">
+          <thead>
+            <tr><th style="width:330px;">Tela ou action</th><th style="width:210px;">Quem acessa</th><th>Por quê</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Home e páginas institucionais</td><td>Público</td><td>É a vitrine da clínica, precisa aparecer em busca</td></tr>
+            <tr><td>Lista de especialidades e de médicos</td><td>Público</td><td>O paciente escolhe antes de ter qualquer conta</td></tr>
+            <tr><td>Solicitação de agendamento</td><td>Público</td><td>Exigir cadastro aqui derrubaria a procura pela clínica</td></tr>
+            <tr><td><code>Conta/Login</code> e <code>Conta/Registrar</code></td><td>Público</td><td>Se exigisse login, ninguém conseguiria fazer o primeiro</td></tr>
+            <tr><td>Cadastro de pacientes, o CRUD inteiro</td><td>Perfil <code>Recepcao</code></td><td>CPF, telefone e e-mail são dados pessoais de terceiros</td></tr>
+            <tr><td>Agenda da clínica, todas as consultas</td><td>Perfil <code>Recepcao</code></td><td>Mostra quem consulta com quem, e quando</td></tr>
+            <tr><td>Minha agenda do dia</td><td>Perfil <code>Medico</code></td><td>Cada médico vê a própria agenda, não a dos colegas</td></tr>
+          </tbody>
+        </table>
+
+        <div class="slide-footer">
+          <div class="footer-bar">15 Matriz de acesso do case</div>
+          <div class="footer-page">10</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 11: EXERCÍCIO DO CICLO 1 ==================== -->
+      <section class="exercise-slide content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Exercício do Ciclo 1: a sua matriz de acesso</h2>
+        </div>
+
+        <div class="exercise-container">
+          <h3>No caderno ou em um arquivo do projeto, 8 minutos</h3>
+          <ol class="exercise-steps">
+            <li>Abra a sua Clínica Vida+ e percorra <strong>todas</strong> as telas que existem hoje, uma a uma.</li>
+            <li>Classifique cada uma em três colunas: <strong>pública</strong>, <strong>da recepção</strong> ou <strong>do médico</strong>.</li>
+            <li>Para cada tela não pública, escreva em uma linha <strong>por que</strong> ela não pode ficar aberta.</li>
+            <li>Marque as telas em que você ficou em dúvida: elas são o assunto do Ciclo 2.</li>
+          </ol>
+        </div>
+
+        <div class="callout" style="margin-top:14px;">
+          <p><strong>Critério para decidir:</strong> pergunte o que acontece se um estranho abrir aquela tela. Se a resposta envolve dado de um paciente, alteração de agenda ou exclusão de registro, a tela não é pública.</p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">15 Exercício do Ciclo 1</div>
+          <div class="footer-page">11</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 12: INSTALAR E CONFIGURAR ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Instalar e ligar o Identity no <code>Program.cs</code> <a href="#/ref-slide" class="ref-badge" title="Ver referências">[1]</a></h2>
+        </div>
+
+        <pre class="code-compact" style="margin-top:6px;"><code class="language-bash" data-trim>dotnet add package Microsoft.AspNetCore.Identity.EntityFrameworkCore</code></pre>
+
+        <pre class="code-compact" style="margin-top:8px;"><code class="language-csharp" data-trim>builder.Services.AddIdentity&lt;IdentityUser, IdentityRole&gt;(opcoes =&gt;
+{
+    opcoes.Password.RequiredLength = 8;
+    opcoes.Password.RequireNonAlphanumeric = false;
+    opcoes.User.RequireUniqueEmail = true;
+})
+.AddEntityFrameworkStores&lt;ClinicaContext&gt;();
+
+builder.Services.ConfigureApplicationCookie(opcoes =&gt;
+{
+    opcoes.LoginPath = "/Conta/Login";
+    opcoes.AccessDeniedPath = "/Conta/AcessoNegado";
+});</code></pre>
+
+        <div class="callout" style="margin-top:10px;">
+          <p><strong>A ordem no pipeline não é negociável:</strong> <code>app.UseAuthentication()</code> vem <strong>antes</strong> de <code>app.UseAuthorization()</code>, e os dois depois de <code>app.UseRouting()</code>. Invertidos, o <code>HttpContext.User</code> ainda está vazio quando a autorização decide, e todo mundo é barrado.</p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">15 Instalação e configuração</div>
+          <div class="footer-page">12</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 13: UM CONTEXTO SÓ ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Um contexto só: o <code>ClinicaContext</code> muda de pai <a href="#/ref-slide" class="ref-badge" title="Ver referências">[1]</a></h2>
+        </div>
+
+        <p style="font-size:0.68em; margin-top:0;">O Identity precisa de um <code>DbContext</code>. Em vez de criar um segundo, o contexto da Aula 11 passa a herdar de <code>IdentityDbContext&lt;IdentityUser&gt;</code>: uma cadeia de migrations, um banco coerente.</p>
+
+        <pre class="code-compact" style="margin-top:6px;"><code class="language-csharp" data-trim>public class ClinicaContext : IdentityDbContext&lt;IdentityUser&gt;
+{
+    public ClinicaContext(DbContextOptions&lt;ClinicaContext&gt; opcoes)
+        : base(opcoes) { }
+
+    public DbSet&lt;Paciente&gt; Pacientes =&gt; Set&lt;Paciente&gt;();
+    // os demais DbSet continuam como estavam
+
+    protected override void OnModelCreating(ModelBuilder builder)
+    {
+        base.OnModelCreating(builder);   // esta linha é obrigatória
+        builder.Entity&lt;Especialidade&gt;().HasData(/* ... */);
+    }
+}</code></pre>
+
+        <div class="callout" style="margin-top:8px; padding:10px 20px;">
+          <p style="font-size:0.72em;"><strong>Esqueceu o <code>base.OnModelCreating(builder)</code>?</strong> A aplicação nem sobe: <code>IdentityUserLogin&lt;string&gt; requires a primary key</code>. É a classe base que mapeia as tabelas do Identity.</p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">15 Um contexto só</div>
+          <div class="footer-page">13</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 14: A MIGRATION DA IDENTIDADE ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>A migration que a troca de herança gera</h2>
+        </div>
+
+        <p style="font-size:0.7em; margin-top:0;">Trocar a classe base muda o modelo, e todo modelo alterado vira migration. As suas quatro tabelas continuam onde estavam; a migration só acrescenta as sete do Identity.</p>
+
+        <pre class="code-compact" style="margin-top:6px;"><code class="language-bash" data-trim>dotnet ef migrations add IdentityClinicaVida
+dotnet ef database update</code></pre>
+
+        <div class="side-by-side" style="margin-top:10px;">
+          <div class="side">
+            <h4>Antes, no banco clinicavida</h4>
+            <ul style="margin:0; padding-left:20px;">
+              <li>Especialidades, Medicos, Pacientes e Consultas.</li>
+              <li>Uma migration aplicada, a <code>InicialClinicaVida</code>.</li>
+              <li>Nenhuma noção de usuário.</li>
+            </ul>
+          </div>
+          <div class="side">
+            <h4>Depois, no mesmo banco</h4>
+            <ul style="margin:0; padding-left:20px;">
+              <li>As mesmas quatro tabelas, intactas e com os dados.</li>
+              <li>Mais as sete <code>AspNet...</code>, criadas pela nova migration.</li>
+              <li>Duas migrations na mesma cadeia, na mesma pasta.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="takeaway">
+          <span class="takeaway-label">Takeaway</span>
+          <p>Confira a migration gerada antes de aplicá-la. Se ela mandar apagar alguma das suas tabelas, o modelo saiu do lugar e o <code>database update</code> levaria os dados junto.</p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">15 A migration da identidade</div>
+          <div class="footer-page">14</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 15: O CONTACONTROLLER ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>O <code>ContaController</code>, escrito à mão, em MVC</h2>
+        </div>
+
+        <p style="font-size:0.68em; margin-top:0;">Continuamos em MVC: Controller, action e View. Quem conversa com o Identity é o <code>SignInManager</code>, injetado pelo construtor como qualquer outro serviço.</p>
+
+        <pre class="code-compact" style="margin-top:6px;"><code class="language-csharp" data-trim>[HttpPost]
+[ValidateAntiForgeryToken]
+public async Task&lt;IActionResult&gt; Login(LoginViewModel modelo)
+{
+    if (!ModelState.IsValid) return View(modelo);
+
+    var resultado = await _signInManager.PasswordSignInAsync(
+        modelo.Email, modelo.Senha, modelo.Lembrar,
+        lockoutOnFailure: true);
+
+    if (resultado.Succeeded) return RedirectToAction("Index", "Home");
+    ModelState.AddModelError("", "E-mail ou senha inválidos.");
+    return View(modelo);
+}</code></pre>
+
+        <div class="callout" style="margin-top:6px; padding:10px 20px;">
+          <p style="font-size:0.72em;"><strong>A mensagem de erro é genérica de propósito:</strong> "esse e-mail não existe" conta a um atacante quais contas a clínica tem. <code>Logout</code> chama <code>SignOutAsync</code>, e <code>Registrar</code> chama <code>CreateAsync</code>, que já aplica o hash com salt.</p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">15 O ContaController</div>
+          <div class="footer-page">15</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 16: OS ATRIBUTOS DE AUTORIZAÇÃO ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Três atributos, e a regra fica no código <a href="#/ref-slide" class="ref-badge" title="Ver referências">[2]</a></h2>
+        </div>
+
+        <table style="font-size:0.68em; margin-top:4px;">
+          <thead>
+            <tr><th style="width:340px;">Atributo</th><th>O que acontece com a requisição</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><code>[Authorize]</code></td><td>Só entra quem está autenticado. Anônimo é redirecionado para o <code>LoginPath</code></td></tr>
+            <tr><td><code>[Authorize(Roles = "Recepcao")]</code></td><td>Autenticado <strong>e</strong> no perfil. Autenticado sem o perfil recebe 403 e cai no acesso negado</td></tr>
+            <tr><td><code>[AllowAnonymous]</code></td><td>Abre uma action específica dentro de um Controller que está protegido</td></tr>
+          </tbody>
+        </table>
+
+        <pre class="code-compact" style="margin-top:8px;"><code class="language-csharp" data-trim>[Authorize(Roles = "Recepcao")]
+public class PacientesController : Controller
+{
+    // as oito actions da Aula 12 seguem protegidas de uma vez
+}</code></pre>
+
+        <div class="takeaway">
+          <span class="takeaway-label">Takeaway</span>
+          <p>No atributo sobre a classe, a regra vale para todas as actions do Controller. Sem nenhum atributo, a action continua pública: no ASP.NET Core, protegido é o que você marcou, não o contrário.</p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">15 Os atributos de autorização</div>
+          <div class="footer-page">16</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 17: PERFIS E O USUÁRIO INICIAL ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Os perfis e o primeiro usuário, semeados na subida <a href="#/ref-slide" class="ref-badge" title="Ver referências">[2]</a></h2>
+        </div>
+
+        <p style="font-size:0.68em; margin-top:0;">Perfil é linha na tabela <code>AspNetRoles</code>: se ninguém criar, <code>[Authorize(Roles = "Recepcao")]</code> barra todo mundo. E falta o primeiro usuário, já que a tela de cadastro ficará protegida.</p>
+
+        <pre class="code-compact" style="margin-top:6px;"><code class="language-csharp" data-trim>foreach (var perfil in new[] { "Recepcao", "Medico" })
+    if (!await roleManager.RoleExistsAsync(perfil))
+        await roleManager.CreateAsync(new IdentityRole(perfil));
+
+var email = "recepcao@clinicavida.local";
+if (await userManager.FindByEmailAsync(email) is null)
+{
+    var usuario = new IdentityUser { UserName = email, Email = email };
+    var senha = config["SeedRecepcao:Senha"]
+        ?? throw new InvalidOperationException("Defina a senha.");
+    await userManager.CreateAsync(usuario, senha);
+    await userManager.AddToRoleAsync(usuario, "Recepcao");
+}</code></pre>
+
+        <div class="callout" style="margin-top:6px; padding:10px 20px;">
+          <p style="font-size:0.72em;"><strong>A senha inicial não é escrita no código nem commitada.</strong> Ela vem da configuração, hoje guardada pelo <code style="white-space:nowrap;">user-secrets</code> da sua máquina. Este usuário é <strong>didático e local</strong>: em produção, o primeiro acesso é criado por outro caminho e trocado logo depois.</p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">15 Perfis e usuário inicial</div>
+          <div class="footer-page">17</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 18: O MENU CONDICIONAL ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>O menu mostra só o que aquele usuário alcança</h2>
+        </div>
+
+        <pre class="code-compact" style="margin-top:6px;"><code class="language-html" data-trim>@if (User.Identity is not null &amp;&amp; User.Identity.IsAuthenticated)
+{
+    @if (User.IsInRole("Recepcao"))
+    {
+        &lt;a asp-controller="Pacientes" asp-action="Index"&gt;Pacientes&lt;/a&gt;
+    }
+    &lt;form asp-controller="Conta" asp-action="Logout" method="post"&gt;
+        &lt;button type="submit"&gt;Sair, @User.Identity.Name&lt;/button&gt;
+    &lt;/form&gt;
+}
+else
+{
+    &lt;a asp-controller="Conta" asp-action="Login"&gt;Entrar&lt;/a&gt;
+}</code></pre>
+
+        <div class="takeaway">
+          <span class="takeaway-label">Takeaway</span>
+          <p>Esconder o link é experiência de uso, <strong>não</strong> é segurança. A URL continua existindo e pode ser digitada. Quem protege de verdade é o <code>[Authorize]</code> no servidor; o menu apenas evita mostrar ao usuário uma porta que ele não abre.</p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">15 O menu condicional</div>
+          <div class="footer-page">18</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 19: EXERCÍCIO DO CICLO 2 ==================== -->
+      <section class="exercise-slide content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Exercício do Ciclo 2: anotar três actions</h2>
+        </div>
+
+        <div class="exercise-container">
+          <h3>Voltando à matriz do Ciclo 1, 8 minutos</h3>
+          <ol class="exercise-steps">
+            <li>Escolha <strong>três</strong> actions da sua aplicação, uma de cada linha da matriz: pública, da recepção e do médico.</li>
+            <li>Escreva, para cada uma, o atributo exato que ela deve receber, e diga se ele vai sobre a classe ou sobre a action.</li>
+            <li>Uma delas precisa ser uma action pública dentro de um Controller protegido: nela use <code>[AllowAnonymous]</code>.</li>
+            <li>Ao lado de cada uma, anote o que o usuário <strong>errado</strong> vê ao tentar acessar: a tela de login ou o acesso negado.</li>
+          </ol>
+        </div>
+
+        <pre class="code-compact"><code class="language-csharp" data-trim>[Authorize(Roles = "Recepcao")]   // sobre a classe
+public class ConsultasController : Controller
+{
+    [AllowAnonymous]              // sobre a action
+    public IActionResult Solicitar() =&gt; View();
+}</code></pre>
+
+        <div class="slide-footer">
+          <div class="footer-bar">15 Exercício do Ciclo 2</div>
+          <div class="footer-page">19</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 20: QUIZ DE FIXAÇÃO ==================== -->
+      <section class="quiz-slide content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area"><div class="accent-bar"></div><h2>Quiz de fixação</h2></div>
+        <div class="quiz-container">
+          <div class="quiz-question">O que o atributo <code>[Authorize]</code> aplicado a um Controller garante?</div>
+          <ul class="quiz-options">
+            <li data-correct="false"><span class="option-letter">A</span> Que o usuário autenticado tem perfil de administrador, com acesso irrestrito a todas as actions do Controller.</li>
+            <li data-correct="false"><span class="option-letter">B</span> Que a senha do usuário é armazenada de forma criptografada nas tabelas criadas pelo Identity.</li>
+            <li data-correct="false"><span class="option-letter">C</span> Que a aplicação passa a responder somente por HTTPS, recusando qualquer requisição feita em texto puro.</li>
+            <li data-correct="true"><span class="option-letter">D</span> Que somente requisições autenticadas chegam às actions, sendo as demais redirecionadas para a tela de login.</li>
+          </ul>
+          <div class="quiz-feedback"
+               data-correct-msg="Isso. O atributo é sobre autorização: quem não está autenticado nem chega à action, é redirecionado para o LoginPath. Ele não diz nada sobre perfil, a menos que você escreva Roles, e nada sobre como a senha é guardada."
+               data-incorrect-msg="Não é isso. Perfil só entra com [Authorize(Roles = ...)]; a senha é guardada como hash com salt, e não criptografada, com ou sem o atributo; e HTTPS é assunto de outro middleware, o UseHttpsRedirection. O que o atributo garante é que a requisição anônima não chega à action."></div>
+        </div>
+        <div class="slide-footer"><div class="footer-bar">15 Quiz de fixação</div><div class="footer-page">20</div></div>
+      </section>
+
+      <!-- ==================== SLIDE 21: LAB PASSO 1 ==================== -->
+      <section class="exercise-slide content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Laboratório, passo 1 de 5: a branch e a configuração</h2>
+        </div>
+
+        <p style="font-size:0.72em; margin-top:0;">Missão dos próximos 60 minutos: controlar o acesso à Clínica Vida+.</p>
+
+        <div class="exercise-container">
+          <h3>No seu fork, a partir da main atualizada</h3>
+          <ol class="exercise-steps">
+            <li>Crie a branch <code>feature/autenticacao</code> e instale o pacote do Identity com EF Core.</li>
+            <li>Em <code>Program.cs</code>, registre <code>AddIdentity</code> com <code>AddEntityFrameworkStores&lt;ClinicaContext&gt;()</code>.</li>
+            <li>Configure o cookie com <code>LoginPath</code> e <code>AccessDeniedPath</code> apontando para <code>/Conta/...</code>.</li>
+            <li>Ponha <code>UseAuthentication()</code> <strong>antes</strong> de <code>UseAuthorization()</code>, os dois depois de <code>UseRouting()</code>.</li>
+          </ol>
+        </div>
+
+        <pre class="code-compact"><code class="language-bash" data-trim>git checkout main &amp;&amp; git pull
+git checkout -b feature/autenticacao
+dotnet add package Microsoft.AspNetCore.Identity.EntityFrameworkCore</code></pre>
+
+        <div class="slide-footer">
+          <div class="footer-bar">15 Laboratório, passo 1, branch e configuração</div>
+          <div class="footer-page">21</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 22: LAB PASSO 2 ==================== -->
+      <section class="exercise-slide content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Laboratório, passo 2 de 5: o contexto e a migration</h2>
+        </div>
+
+        <div class="exercise-container">
+          <h3>Em Data/ClinicaContext.cs</h3>
+          <ol class="exercise-steps">
+            <li>Troque a herança de <code>DbContext</code> para <code>IdentityDbContext&lt;IdentityUser&gt;</code>.</li>
+            <li>Acrescente <code>base.OnModelCreating(builder)</code> como <strong>primeira</strong> linha do método, sem mexer no <code>HasData</code>.</li>
+            <li>Gere a migration <code>IdentityClinicaVida</code> e <strong>leia</strong> o arquivo gerado antes de aplicar.</li>
+            <li>Aplique e confira no MySQL Workbench: as suas quatro tabelas continuam lá, e agora existem sete <code>AspNet...</code>.</li>
+          </ol>
+        </div>
+
+        <pre class="code-compact"><code class="language-bash" data-trim>dotnet ef migrations add IdentityClinicaVida
+dotnet ef database update
+# no Workbench: SHOW TABLES FROM clinicavida;</code></pre>
+
+        <div class="slide-footer">
+          <div class="footer-bar">15 Laboratório, passo 2, contexto e migration</div>
+          <div class="footer-page">22</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 23: LAB PASSO 3 ==================== -->
+      <section class="exercise-slide content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Laboratório, passo 3 de 5: registro, login e logout</h2>
+        </div>
+
+        <div class="exercise-container">
+          <h3>ContaController e as Views em Views/Conta/</h3>
+          <ol class="exercise-steps">
+            <li>Crie <code>Models/LoginViewModel.cs</code> e <code>Models/RegistroViewModel.cs</code>, com Data Annotations e <code>[DataType(DataType.Password)]</code>.</li>
+            <li>Crie <code>ContaController</code> recebendo <code>SignInManager</code> e <code>UserManager</code> pelo construtor.</li>
+            <li>Escreva <code>Registrar</code> e <code>Login</code>, cada um em GET e POST, mais <code>Logout</code> em POST e <code>AcessoNegado</code>.</li>
+            <li>Registre uma conta, faça logout e entre de novo. Depois olhe <code>AspNetUsers</code> no Workbench.</li>
+          </ol>
+        </div>
+
+        <div class="callout" style="margin-top:12px;">
+          <p>Na tabela, procure a coluna <code>PasswordHash</code>. A senha que você digitou não está ali, nem em nenhuma outra coluna, e é exatamente esse o objetivo.</p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">15 Laboratório, passo 3, telas de conta</div>
+          <div class="footer-page">23</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 24: LAB PASSO 4 ==================== -->
+      <section class="exercise-slide content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Laboratório, passo 4 de 5: perfis e usuário inicial</h2>
+        </div>
+
+        <p style="font-size:0.72em; margin-top:0;">Ciclo 4, sozinho. Daqui em diante você trabalha com a matriz de acesso que montou no Ciclo 1.</p>
+
+        <div class="exercise-container">
+          <h3>Em Data/SeedIdentity.cs, chamado no Program.cs</h3>
+          <ol class="exercise-steps">
+            <li>Crie os perfis <code>Recepcao</code> e <code>Medico</code>, apenas se ainda não existirem.</li>
+            <li>Semeie um usuário da recepção, lendo a senha da configuração, e associe-o ao perfil <code>Recepcao</code>.</li>
+            <li>Guarde a senha local com <code>dotnet user-secrets</code>: ela não entra no código nem no commit.</li>
+            <li>Suba a aplicação e confira as linhas em <code>AspNetRoles</code> e <code>AspNetUserRoles</code>.</li>
+          </ol>
+        </div>
+
+        <pre class="code-compact"><code class="language-bash" data-trim>dotnet user-secrets init
+dotnet user-secrets set "SeedRecepcao:Senha" "&lt;escolha uma senha local&gt;"</code></pre>
+
+        <div class="slide-footer">
+          <div class="footer-bar">15 Laboratório, passo 4, perfis e seed</div>
+          <div class="footer-page">24</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 25: LAB PASSO 5 ==================== -->
+      <section class="exercise-slide content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Laboratório, passo 5 de 5: proteger e adaptar o menu</h2>
+        </div>
+
+        <div class="exercise-container">
+          <h3>Nos Controllers e no _Layout.cshtml</h3>
+          <ol class="exercise-steps">
+            <li>Anote <code>PacientesController</code> e a agenda com <code>[Authorize(Roles = "Recepcao")]</code>.</li>
+            <li>Deixe públicas as páginas institucionais e a solicitação de agendamento, com <code>[AllowAnonymous]</code> onde for preciso.</li>
+            <li>No layout, mostre <strong>Entrar</strong> para anônimo, e o nome do usuário com <strong>Sair</strong> para quem entrou.</li>
+            <li>Teste sem estar logado: <code>/Pacientes</code> tem que <strong>redirecionar para o login</strong>, e não abrir.</li>
+          </ol>
+        </div>
+
+        <div class="callout" style="margin-top:12px;">
+          <p><strong>O teste que vale:</strong> digite a URL protegida na barra de endereços, sem passar pelo menu. Se ela abrir, o menu está escondendo o link e o servidor não está protegendo nada.</p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">15 Laboratório, passo 5, proteção e menu</div>
+          <div class="footer-page">25</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 26: ENTREGÁVEL, COMMIT E PUSH ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Entregável de hoje, commit e push</h2>
+        </div>
+
+        <div class="side-by-side" style="margin-top:6px;">
+          <div class="side">
+            <h4>O que precisa estar funcionando</h4>
+            <ul style="margin:0; padding-left:20px;">
+              <li>Login e logout, pelas telas em <code>Views/Conta/</code>.</li>
+              <li>As sete tabelas do Identity no banco <code>clinicavida</code>.</li>
+              <li>Perfis <code>Recepcao</code> e <code>Medico</code> semeados.</li>
+              <li>Área da recepção com <code>[Authorize(Roles = "Recepcao")]</code>.</li>
+              <li>Menu adaptado ao usuário que está na sessão.</li>
+            </ul>
+          </div>
+          <div class="side">
+            <h4>Como o professor confere</h4>
+            <ul style="margin:0; padding-left:20px;">
+              <li>Abrir <code>/Pacientes</code> deslogado e cair no login.</li>
+              <li>Entrar como recepção e a mesma URL abrir.</li>
+              <li>Entrar como médico e receber o acesso negado.</li>
+              <li><code>PasswordHash</code> preenchido, e nenhuma senha em texto.</li>
+              <li>Nenhuma senha escrita em arquivo commitado.</li>
+            </ul>
+          </div>
+        </div>
+
+        <pre class="code-compact" style="margin-top:14px;"><code class="language-bash" data-trim>git add Data/ Controllers/ContaController.cs Views/Conta/ Models/ Program.cs
+git commit -m "feat: autenticacao e autorizacao por perfil com Identity"
+git push -u origin feature/autenticacao</code></pre>
+
+        <div class="slide-footer">
+          <div class="footer-bar">15 Entregável, commit e push</div>
+          <div class="footer-page">26</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 27: FECHAMENTO ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Fechamento: teste com dois perfis, lado a lado</h2>
+        </div>
+
+        <p style="font-size:0.7em; margin-top:0;">A prova de que a autorização funciona não é o menu bonito: é o mesmo endereço se comportando de dois jeitos diferentes conforme quem está logado.</p>
+
+        <table style="font-size:0.68em; margin-top:6px;">
+          <thead>
+            <tr><th style="width:240px;">Endereço que você digita</th><th style="width:180px;">Anônimo</th><th style="width:190px;">Logado, sem perfil</th><th style="width:170px;">Recepcao</th><th>Medico</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>A home institucional</td><td>Abre</td><td>Abre</td><td>Abre</td><td>Abre</td></tr>
+            <tr><td><code>/Pacientes</code></td><td>Vai para o login</td><td>Acesso negado</td><td>Abre</td><td>Acesso negado</td></tr>
+            <tr><td><code>/Consultas</code>, a agenda</td><td>Vai para o login</td><td>Acesso negado</td><td>Abre</td><td>Acesso negado</td></tr>
+          </tbody>
+        </table>
+
+        <div class="callout" style="margin-top:12px;">
+          <p><strong>Prévia da Aula 16:</strong> o laboratório parceiro da Clínica Vida+ quer consultar a agenda pelo sistema dele, e não por tela. Ninguém vai pedir para o laboratório abrir o navegador e preencher um formulário. Vamos expor os dados da clínica em uma <strong>API REST</strong>, com recursos, verbos HTTP e códigos de status, protegida pela autenticação que você acabou de configurar.</p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">15 Fechamento e prévia da Aula 16</div>
+          <div class="footer-page">27</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 28: REFERÊNCIAS ==================== -->
+      <section id="ref-slide" class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Referências desta aula</h2>
+        </div>
+
+        <p style="font-size:0.72em; margin-top:0;">Os números entre colchetes ao lado dos títulos remetem a esta lista, toda ela aberta e gratuita.</p>
+
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px 30px; margin-top:6px;">
+          <div class="concept-card" style="padding:14px 18px;">
+            <h4>[1] ASP.NET Core Identity</h4>
+            <p style="font-size:0.7em; color:#444444;">MICROSOFT. <em>Introdução ao Identity no ASP.NET Core</em>.<br>
+            <code style="font-size:0.82em;">learn.microsoft.com/pt-br/aspnet/core/security/authentication/identity</code></p>
+          </div>
+          <div class="concept-card" style="padding:14px 18px;">
+            <h4>[2] Autorização por perfis</h4>
+            <p style="font-size:0.7em; color:#444444;">MICROSOFT. <em>Autorização baseada em função no ASP.NET Core</em>.<br>
+            <code style="font-size:0.82em;">learn.microsoft.com/pt-br/aspnet/core/security/authorization/roles</code></p>
+          </div>
+          <div class="concept-card" style="padding:14px 18px;">
+            <h4>[3] Hash de senha no framework</h4>
+            <p style="font-size:0.7em; color:#444444;">MICROSOFT. <em>Hash de senhas no ASP.NET Core</em>.<br>
+            <code style="font-size:0.82em;">learn.microsoft.com/pt-br/aspnet/core/security/<br>data-protection/consumer-apis/password-hashing</code></p>
+          </div>
+          <div class="concept-card" style="padding:14px 18px;">
+            <h4>[4] Como guardar senha, em inglês</h4>
+            <p style="font-size:0.7em; color:#444444;">OWASP. <em>Password Storage Cheat Sheet</em>.<br>
+            <code style="font-size:0.82em;">cheatsheetseries.owasp.org/cheatsheets/<br>Password_Storage_Cheat_Sheet.html</code></p>
+          </div>
+        </div>
+
+        <div class="callout" style="margin-top:14px;">
+          <p>O roteiro completo do laboratório de hoje está no portal, em <code>labs/aula15-lab/</code>.</p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">15 Referências</div>
+          <div class="footer-page">28</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 29: ENCERRAMENTO ==================== -->
+      <section class="end-slide">
+        <img src="../assets/img/uninove-logo.png" alt="Uninove, Universidade Nove de Julho"
+             style="max-width:300px; background:#FFFFFF; padding:20px 28px; border-radius:8px;">
+        <div class="copyright">
+          Copyright &copy; 2026<br>
+          Prof. José Romualdo da Costa Filho<br><br>
+          Todos os direitos reservados. É expressamente proibida a reprodução, divulgação<br>
+          total ou parcial, deste material acadêmico sem autorização formal,<br>
+          por escrito, do Professor autor da ementa.
+        </div>
+      </section>
+
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/highlight/highlight.js"></script>
+  <script src="../assets/js/uninove-quiz.js"></script>
+  <script type="module">
+    import { TURMAS, resolverTurma, dataDaAula, formatarData } from '../assets/js/turmas.js';
+    const turma = resolverTurma({
+      hoje: new Date(),
+      salva: localStorage.getItem('uninove-turma'),
+    });
+    const alvo = document.querySelector('[data-data-da-aula]');
+    if (alvo) {
+      const n = Number(alvo.getAttribute('data-data-da-aula'));
+      alvo.textContent = turma
+        ? `${TURMAS[turma].rotulo}, ${formatarData(dataDaAula(turma, n))}`
+        : `Quarta ${formatarData(dataDaAula('quarta', n))} ou quinta ${formatarData(dataDaAula('quinta', n))}`;
+    }
+  </script>
+  <script>
+    Reveal.initialize({
+      width: 1280, height: 720, center: false, margin: 0,
+      hash: true, slideNumber: false,
+      // Os chevrons de navegação caem sobre a footer-bar e sobre o triângulo
+      // azul do canto inferior direito; a barra de progresso encosta no rodapé
+      // e parece um segundo rodapé. Nenhum dos dois é usado na projeção.
+      controls: false, progress: false,
+      // Um slide por página no ?print-pdf, para o PDF bater com o deck.
+      pdfMaxPagesPerSlide: 1,
+      plugins: [RevealHighlight],
+    });
+  </script>
+</body>
+</html>

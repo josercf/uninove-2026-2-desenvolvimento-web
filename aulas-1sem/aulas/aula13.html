@@ -1,0 +1,1116 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Aula 13, Cookies e sessões | Uninove</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/theme/white.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/highlight/monokai.css">
+  <link rel="stylesheet" href="../assets/css/uninove-theme.css">
+  <link rel="stylesheet" href="../assets/css/uninove-print.css">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+      <!-- ==================== SLIDE 1: CAPA ==================== -->
+      <section class="cover-slide">
+        <img src="../assets/img/uninove-logo.png" alt="Uninove, Universidade Nove de Julho" class="uninove-logo-full"
+             style="max-width:400px; background:#FFFFFF; padding:26px 36px; border-radius:10px;">
+        <div style="margin-top:36px; color:#FFFFFF; font-size:0.95em; font-weight:800; letter-spacing:4px; text-transform:uppercase;">Desenvolvimento Web</div>
+        <div style="margin-top:12px; color:#C84B31; font-size:0.6em; font-weight:700; letter-spacing:3px; text-transform:uppercase;">Graduação, 2026.2</div>
+      </section>
+
+      <!-- ==================== SLIDE 2: TÍTULO ==================== -->
+      <section class="title-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="title-card">
+          <div class="accent-bar"></div>
+          <h1>Desenvolvimento Web</h1>
+          <h2>Cookies e sessões</h2>
+          <h3>Prof. José Romualdo<br><span data-data-da-aula="13"></span></h3>
+        </div>
+        <div class="lesson-bar">AULA 13 &nbsp;|&nbsp; Módulo 3, Acesso a Dados e Funcionalidades Avançadas</div>
+      </section>
+
+      <!-- ==================== SLIDE 3: AGENDA ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Agenda do encontro de hoje</h2>
+        </div>
+
+        <p style="font-size:0.76em; margin-top:0;">São 150 minutos corridos, em quatro ciclos. Hoje a aplicação para de tratar cada requisição como se fosse a primeira da vida.</p>
+
+        <table>
+          <thead>
+            <tr><th style="width:190px;">Horário</th><th style="width:200px;">Bloco</th><th>O que acontece</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>19h30 às 20h05</td><td>Ciclo 1</td><td>O HTTP sem estado, o cookie e seus atributos de segurança</td></tr>
+            <tr><td>20h05 às 20h40</td><td>Ciclo 2</td><td>Sessão no ASP.NET Core e a escolha entre cookie, sessão e <code>TempData</code></td></tr>
+            <tr><td>20h40 às 20h50</td><td>Quiz de fixação</td><td>Uma pergunta sobre o conceito central da aula</td></tr>
+            <tr><td>20h50 às 21h25</td><td>Ciclo 3</td><td>Laboratório guiado: sessão no pipeline e a etapa 1 do agendamento</td></tr>
+            <tr><td>21h25 às 21h50</td><td>Ciclo 4</td><td>Laboratório: a etapa 2, a guarda de acesso e o cookie de unidade</td></tr>
+            <tr><td>21h50 às 22h00</td><td>Fechamento</td><td>Commit, push e prévia da Aula 14</td></tr>
+          </tbody>
+        </table>
+
+        <div class="slide-footer">
+          <div class="footer-bar">13 Agenda do encontro</div>
+          <div class="footer-page">3</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 4: RECAPITULAÇÃO DA AULA 12 ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>De onde viemos: o CRUD de pacientes da Aula 12</h2>
+        </div>
+
+        <p style="font-size:0.72em; margin-top:0;">Você entregou o CRUD completo de <code>Paciente</code> persistindo no banco <code>clinicavida</code>, com Post-Redirect-Get nos três POST e a mensagem de sucesso em <code>TempData</code>.</p>
+
+        <div class="side-by-side" style="margin-top:6px;">
+          <div class="side">
+            <h4>O que a aplicação já sabe fazer</h4>
+            <ul style="margin:0; padding-left:20px;">
+              <li>Guardar dados que sobrevivem ao reinício.</li>
+              <li>Ler, gravar, alterar e excluir pacientes.</li>
+              <li>Redirecionar depois de gravar, sem duplicar.</li>
+              <li>Levar uma mensagem através do redirecionamento.</li>
+            </ul>
+          </div>
+          <div class="side">
+            <h4>O que ela ainda não sabe fazer</h4>
+            <ul style="margin:0; padding-left:20px;">
+              <li>Lembrar de qualquer escolha feita na tela anterior.</li>
+              <li>Reconhecer que duas requisições vieram da mesma pessoa.</li>
+              <li>Montar um fluxo com mais de uma etapa.</li>
+              <li>Guardar uma preferência entre uma visita e a próxima.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="callout" style="margin-top:14px;">
+          <p><strong>A pergunta de hoje:</strong> o <code>TempData</code> da Aula 12 atravessou um redirecionamento inteiro e chegou do outro lado. Como o servidor soube que a segunda requisição era do <strong>mesmo</strong> navegador?</p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">13 Recapitulação da Aula 12</div>
+          <div class="footer-page">4</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 5: ABERTURA DO MÓDULO 3 ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Começa o Módulo 3: de guardar dados a guardar contexto</h2>
+        </div>
+
+        <p style="font-size:0.72em; margin-top:0;">O Módulo 2 ensinou a aplicação a guardar <strong>dados</strong>: linhas em tabelas, iguais para todo mundo. O Módulo 3 ensina a guardar <strong>contexto</strong>: o que está acontecendo agora, com esta pessoa, neste navegador.</p>
+
+        <div class="timeline" style="margin-top:18px;">
+          <div class="tl-item">
+            <div class="tl-dot"></div>
+            <span class="tl-year">Aula 13</span>
+            <span class="tl-tool">Cookies e sessões</span>
+            <span class="tl-desc">O servidor passa a reconhecer o navegador.</span>
+          </div>
+          <div class="tl-item">
+            <div class="tl-dot"></div>
+            <span class="tl-year">Aula 14</span>
+            <span class="tl-tool">AJAX</span>
+            <span class="tl-desc">A tela atualiza sem recarregar.</span>
+          </div>
+          <div class="tl-item">
+            <div class="tl-dot"></div>
+            <span class="tl-year">Aula 15</span>
+            <span class="tl-tool">Autenticação</span>
+            <span class="tl-desc">O navegador vira uma pessoa com nome.</span>
+          </div>
+          <div class="tl-item">
+            <div class="tl-dot"></div>
+            <span class="tl-year">Aula 16</span>
+            <span class="tl-tool">API REST</span>
+            <span class="tl-desc">Outros sistemas passam a conversar.</span>
+          </div>
+          <div class="tl-item">
+            <div class="tl-dot"></div>
+            <span class="tl-year">Aula 17</span>
+            <span class="tl-tool">Relacionamentos</span>
+            <span class="tl-desc">As quatro entidades ficam ligadas.</span>
+          </div>
+        </div>
+
+        <div class="callout" style="margin-top:16px;">
+          <p><strong>Dado e contexto não têm a mesma escala:</strong> a linha gravada no banco é da clínica e vale para todo mundo, indefinidamente. O contexto é de uma pessoa, de um navegador e, muitas vezes, só dos próximos vinte minutos.</p>
+        </div>
+
+        <div class="takeaway">
+          <span class="takeaway-label">Takeaway</span>
+          <p>Tudo o que vem nas próximas cinco aulas, inclusive o login da Aula 15, se apoia no mecanismo desta noite. Sem estado entre requisições não existe usuário logado.</p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">13 Abertura do Módulo 3</div>
+          <div class="footer-page">5</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 6: O HTTP SEM ESTADO ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>O HTTP não guarda estado, e isso vem da Aula 02 <a href="#/ref-slide" class="ref-badge" title="Ver referências">[1]</a></h2>
+        </div>
+
+        <p style="font-size:0.7em; margin-top:0;">Na <strong>Aula 02</strong> você leu uma requisição e uma resposta HTTP linha a linha e ouviu que o protocolo é <strong>sem estado</strong>. Hoje a consequência prática aparece na tela.</p>
+
+        <div class="slide-figure" style="margin-top:0;">
+          <svg viewBox="0 0 1140 410" role="img" aria-label="Duas requisicoes do mesmo navegador chegam ao servidor com trinta segundos de diferenca; entre elas o servidor nao guarda nada, e na segunda ele nao sabe quem e o remetente nem qual especialidade foi escolhida">
+            <defs>
+              <marker id="a13setaAzul" markerWidth="9" markerHeight="9" refX="8" refY="4.5" orient="auto">
+                <path d="M0,0 L9,4.5 L0,9 Z" fill="#00274D"/>
+              </marker>
+              <marker id="a13setaVerde" markerWidth="9" markerHeight="9" refX="8" refY="4.5" orient="auto">
+                <path d="M0,0 L9,4.5 L0,9 Z" fill="#2E9E7E"/>
+              </marker>
+              <marker id="a13setaCoral" markerWidth="9" markerHeight="9" refX="8" refY="4.5" orient="auto">
+                <path d="M0,0 L9,4.5 L0,9 Z" fill="#C84B31"/>
+              </marker>
+            </defs>
+
+            <text x="6" y="26" font-size="15" font-weight="700" fill="#0B6E75">19h04min12s, a recep&#231;&#227;o escolhe a especialidade e o m&#233;dico</text>
+
+            <rect x="6" y="48" width="124" height="70" rx="8" fill="#00274D"/>
+            <text x="68" y="89" text-anchor="middle" font-size="14" fill="#FFFFFF" font-weight="600">Navegador</text>
+
+            <line x1="136" y1="83" x2="400" y2="83" stroke="#00274D" stroke-width="2.5" marker-end="url(#a13setaAzul)"/>
+            <text x="268" y="66" text-anchor="middle" font-size="13" font-weight="700" fill="#00274D">POST /Consultas/Agendar</text>
+            <text x="268" y="106" text-anchor="middle" font-size="12.5" fill="#555555">EspecialidadeId = 2, Cardiologia</text>
+            <circle r="6" cy="83" fill="#2E9E7E">
+              <animate attributeName="cx" dur="2.6s" repeatCount="indefinite" values="142;396" keyTimes="0;1"/>
+              <animate attributeName="opacity" dur="2.6s" repeatCount="indefinite" values="0;1;1;0" keyTimes="0;0.12;0.88;1"/>
+            </circle>
+
+            <rect x="414" y="48" width="140" height="70" rx="8" fill="#00274D"/>
+            <text x="484" y="89" text-anchor="middle" font-size="14" fill="#FFFFFF" font-weight="600">Servidor</text>
+
+            <line x1="560" y1="83" x2="664" y2="83" stroke="#2E9E7E" stroke-width="2.5" marker-end="url(#a13setaVerde)"/>
+            <text x="612" y="66" text-anchor="middle" font-size="12.5" font-weight="700" fill="#0B6E75">302 Redirect</text>
+
+            <rect x="672" y="48" width="462" height="70" rx="8" fill="#EAF5F1" stroke="#2E9E7E" stroke-width="1.5"/>
+            <text x="903" y="77" text-anchor="middle" font-size="13.5" font-weight="700" fill="#0B6E75">A etapa 1 terminou bem</text>
+            <text x="903" y="100" text-anchor="middle" font-size="12.5" fill="#1F5A50">O servidor respondeu, liberou a mem&#243;ria e esqueceu tudo.</text>
+
+            <line x1="6" y1="160" x2="1134" y2="160" stroke="#BBBBBB" stroke-width="1.5" stroke-dasharray="8 6"/>
+            <text x="570" y="190" text-anchor="middle" font-size="14" font-weight="700" fill="#777777">entre uma requisi&#231;&#227;o e outra o servidor n&#227;o guarda absolutamente nada sobre voc&#234;</text>
+
+            <text x="6" y="240" font-size="15" font-weight="700" fill="#C84B31">19h04min38s, a mesma pessoa, no mesmo navegador, pede a etapa seguinte</text>
+
+            <rect x="6" y="262" width="124" height="70" rx="8" fill="#00274D"/>
+            <text x="68" y="303" text-anchor="middle" font-size="14" fill="#FFFFFF" font-weight="600">Navegador</text>
+
+            <line x1="136" y1="297" x2="400" y2="297" stroke="#00274D" stroke-width="2.5" marker-end="url(#a13setaAzul)"/>
+            <text x="268" y="280" text-anchor="middle" font-size="13" font-weight="700" fill="#00274D">GET /Consultas/AgendarHorario</text>
+            <text x="268" y="320" text-anchor="middle" font-size="12.5" fill="#555555">nenhum dado da etapa 1 vai junto</text>
+            <circle r="6" cy="297" fill="#C84B31">
+              <animate attributeName="cx" dur="2.6s" repeatCount="indefinite" values="142;396" keyTimes="0;1"/>
+              <animate attributeName="opacity" dur="2.6s" repeatCount="indefinite" values="0;1;1;0" keyTimes="0;0.12;0.88;1"/>
+            </circle>
+
+            <rect x="414" y="262" width="140" height="70" rx="8" fill="#00274D"/>
+            <text x="484" y="303" text-anchor="middle" font-size="14" fill="#FFFFFF" font-weight="600">Servidor</text>
+
+            <line x1="560" y1="297" x2="664" y2="297" stroke="#C84B31" stroke-width="2.5" marker-end="url(#a13setaCoral)"/>
+            <text x="612" y="280" text-anchor="middle" font-size="15" font-weight="700" fill="#C84B31">?</text>
+
+            <rect x="672" y="262" width="462" height="70" rx="8" fill="#FDECE8" stroke="#C84B31" stroke-width="1.5"/>
+            <text x="903" y="291" text-anchor="middle" font-size="13.5" font-weight="700" fill="#C84B31">Quem &#233; voc&#234;? Que especialidade?</text>
+            <text x="903" y="314" text-anchor="middle" font-size="12.5" fill="#7A2A18">Para o servidor, este &#233; um visitante que nunca esteve aqui.</text>
+
+            <text x="570" y="386" text-anchor="middle" font-size="14" font-weight="700" fill="#00274D">Se nada identificar o remetente, duas requisi&#231;&#245;es da mesma pessoa s&#227;o de dois desconhecidos.</text>
+          </svg>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">13 O HTTP sem estado</div>
+          <div class="footer-page">6</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 7: O FLUXO DO COOKIE ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>A solução: um crachá que o navegador devolve toda vez <a href="#/ref-slide" class="ref-badge" title="Ver referências">[4]</a></h2>
+        </div>
+
+        <p style="font-size:0.7em; margin-top:0;">Um <strong>cookie</strong> é um par nome e valor que o servidor manda no cabeçalho <code>Set-Cookie</code>. O navegador guarda e o devolve, sozinho, no cabeçalho <code>Cookie</code>, em toda requisição seguinte ao mesmo domínio.</p>
+
+        <div class="slide-figure" style="margin-top:0;">
+          <svg viewBox="0 0 1140 410" role="img" aria-label="Na primeira visita o navegador nao manda cookie; o servidor responde com Set-Cookie contendo um identificador de sessao; a partir dai toda requisicao leva o cabecalho Cookie com o mesmo identificador">
+            <defs>
+              <marker id="a13ck1" markerWidth="9" markerHeight="9" refX="8" refY="4.5" orient="auto">
+                <path d="M0,0 L9,4.5 L0,9 Z" fill="#00274D"/>
+              </marker>
+              <marker id="a13ck2" markerWidth="9" markerHeight="9" refX="8" refY="4.5" orient="auto">
+                <path d="M0,0 L9,4.5 L0,9 Z" fill="#2E9E7E"/>
+              </marker>
+            </defs>
+
+            <rect x="6" y="34" width="196" height="348" rx="10" fill="#F4F7F6" stroke="#00274D" stroke-width="2"/>
+            <text x="104" y="64" text-anchor="middle" font-size="15" font-weight="700" fill="#00274D">Navegador</text>
+            <rect x="22" y="196" width="164" height="112" rx="8" fill="#FFFFFF" stroke="#2E9E7E" stroke-width="1.5" stroke-dasharray="5 4"/>
+            <text x="104" y="226" text-anchor="middle" font-size="13" font-weight="700" fill="#0B6E75">pote de cookies</text>
+            <text x="104" y="256" text-anchor="middle" font-size="11.5" fill="#1F2A30" font-family="'JetBrains Mono', monospace" style="font-variant-ligatures:none;">.ClinicaVida.Sessao</text>
+            <text x="104" y="278" text-anchor="middle" font-size="11.5" fill="#1F2A30" font-family="'JetBrains Mono', monospace" style="font-variant-ligatures:none;">= 8f3a91c2</text>
+
+            <rect x="938" y="34" width="196" height="348" rx="10" fill="#F4F7F6" stroke="#00274D" stroke-width="2"/>
+            <text x="1036" y="64" text-anchor="middle" font-size="15" font-weight="700" fill="#00274D">Servidor</text>
+            <text x="1036" y="228" text-anchor="middle" font-size="13" fill="#555555">s&#243; reconhece quem</text>
+            <text x="1036" y="252" text-anchor="middle" font-size="13" fill="#555555">apresenta o crach&#225;</text>
+
+            <text x="214" y="102" font-size="13.5" font-weight="700" fill="#00274D">1. Primeira visita: o navegador n&#227;o tem nada para mandar</text>
+            <line x1="214" y1="122" x2="928" y2="122" stroke="#00274D" stroke-width="2.5" marker-end="url(#a13ck1)"/>
+            <text x="222" y="146" font-size="12" fill="#555555" font-family="'JetBrains Mono', monospace" style="font-variant-ligatures:none;">GET / HTTP/1.1</text>
+
+            <text x="214" y="204" font-size="13.5" font-weight="700" fill="#0B6E75">2. O servidor entrega o crach&#225; na resposta</text>
+            <line x1="928" y1="224" x2="214" y2="224" stroke="#2E9E7E" stroke-width="2.5" marker-end="url(#a13ck2)"/>
+            <text x="222" y="250" font-size="12" fill="#0B6E75" font-family="'JetBrains Mono', monospace" style="font-variant-ligatures:none;">Set-Cookie: .ClinicaVida.Sessao=8f3a91c2; Path=/;</text>
+            <text x="222" y="272" font-size="12" fill="#0B6E75" font-family="'JetBrains Mono', monospace" style="font-variant-ligatures:none;">HttpOnly; Secure; SameSite=Lax</text>
+
+            <text x="214" y="316" font-size="13.5" font-weight="700" fill="#00274D">3. Daqui em diante, toda requisi&#231;&#227;o leva o crach&#225; de volta</text>
+            <line x1="214" y1="336" x2="928" y2="336" stroke="#00274D" stroke-width="2.5" marker-end="url(#a13ck1)"/>
+            <circle r="6.5" cy="336" fill="#C84B31">
+              <animate attributeName="cx" dur="3s" repeatCount="indefinite" values="220;922" keyTimes="0;1"/>
+              <animate attributeName="opacity" dur="3s" repeatCount="indefinite" values="0;1;1;0" keyTimes="0;0.1;0.9;1"/>
+            </circle>
+            <text x="222" y="362" font-size="12" fill="#555555" font-family="'JetBrains Mono', monospace" style="font-variant-ligatures:none;">GET /Consultas/AgendarHorario HTTP/1.1</text>
+            <text x="222" y="384" font-size="12" fill="#C84B31" font-family="'JetBrains Mono', monospace" style="font-variant-ligatures:none;">Cookie: .ClinicaVida.Sessao=8f3a91c2</text>
+          </svg>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">13 O fluxo do cookie</div>
+          <div class="footer-page">7</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 8: ATRIBUTOS DO COOKIE ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Os atributos do cookie são a segurança dele <a href="#/ref-slide" class="ref-badge" title="Ver referências">[3]</a></h2>
+        </div>
+
+        <p style="font-size:0.7em; margin:0 0 4px 0;">O par nome e valor é a parte fácil. O que separa um cookie seguro de um vazamento são os atributos depois do ponto e vírgula.</p>
+
+        <table style="font-size:0.7em; margin:6px 0 0 0;">
+          <thead>
+            <tr><th style="width:150px;">Atributo</th><th style="width:330px;">O que faz</th><th>Na Clínica Vida+</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><code>HttpOnly</code></td><td>Esconde o cookie do JavaScript da página</td><td>Sempre. Script injetado não lê o crachá</td></tr>
+            <tr><td><code>Secure</code></td><td>Só trafega sobre HTTPS</td><td>Sempre. Sem ele, o crachá vai em texto claro</td></tr>
+            <tr><td><code>SameSite</code></td><td>Controla o envio em requisição vinda de outro site</td><td><code>Lax</code>, o padrão do ASP.NET Core</td></tr>
+            <tr><td><code>Expires</code></td><td>Validade; sem ela morre ao fechar o navegador</td><td>30 dias na unidade preferida</td></tr>
+            <tr><td><code>Domain</code>, <code>Path</code></td><td>Delimitam a quais endereços o cookie é enviado</td><td><code>Path=/</code>, vale para a aplicação inteira</td></tr>
+          </tbody>
+        </table>
+
+        <div class="callout" style="margin-top:10px; padding:11px 20px;">
+          <p><strong>Limite de tamanho:</strong> cerca de <strong>4 KB por cookie</strong>, e tudo sobe em <em>toda</em> requisição, inclusive nas de imagem e CSS.</p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">13 Atributos do cookie</div>
+          <div class="footer-page">8</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 9: COOKIE NO ASP.NET CORE ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Gravar e ler um cookie no ASP.NET Core</h2>
+        </div>
+
+        <p style="font-size:0.7em; margin-top:0;">Dentro de qualquer Controller, <code>Response</code> e <code>Request</code> já estão disponíveis. Gravar é acrescentar um cabeçalho na resposta; ler é consultar o cabeçalho que veio na requisição.</p>
+
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:22px; margin-top:4px;">
+          <div>
+            <h4 style="font-size:0.66em; color:#C84B31; margin:0 0 4px 0; font-weight:700;">Gravar, na resposta</h4>
+            <pre class="code-compact" style="margin:0;"><code class="language-csharp" data-trim>Response.Cookies.Append("unidade-preferida", "Tatuapé",
+    new CookieOptions
+    {
+        Expires  = DateTimeOffset.UtcNow.AddDays(30),
+        HttpOnly = true,
+        Secure   = true,
+        SameSite = SameSiteMode.Lax,
+        IsEssential = true
+    });</code></pre>
+          </div>
+          <div>
+            <h4 style="font-size:0.66em; color:#C84B31; margin:0 0 4px 0; font-weight:700;">Ler, na requisição</h4>
+            <pre class="code-compact" style="margin:0;"><code class="language-csharp" data-trim>if (Request.Cookies.TryGetValue(
+        "unidade-preferida", out var unidade))
+{
+    ViewBag.Unidade = unidade;
+}
+
+// Apagar é sobrescrever com data no passado:
+Response.Cookies.Delete("unidade-preferida");</code></pre>
+          </div>
+        </div>
+
+        <div class="takeaway">
+          <span class="takeaway-label">Takeaway</span>
+          <p>O valor que volta é sempre <code>string</code>, e sempre veio do computador do usuário. Trate cookie como campo de formulário: valide antes de confiar.</p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">13 Cookies no ASP.NET Core</div>
+          <div class="footer-page">9</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 10: PRIVACIDADE E LGPD ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Dado de paciente é dado sensível</h2>
+        </div>
+
+        <p style="font-size:0.7em; margin-top:0;">Cookie fica gravado no disco de uma máquina que não é sua, muitas vezes compartilhada, e viaja em toda requisição. Na Clínica Vida+ isso tem peso legal, não só técnico.</p>
+
+        <div class="side-by-side" style="margin-top:6px;">
+          <div class="side">
+            <h4>Nunca em um cookie</h4>
+            <ul style="margin:0; padding-left:20px;">
+              <li>CPF, nome completo e data de nascimento.</li>
+              <li>Especialidade, diagnóstico ou motivo da consulta.</li>
+              <li>Qualquer coisa que revele que a pessoa é paciente.</li>
+              <li>Um <code>Id</code> de paciente sem nada que o proteja.</li>
+            </ul>
+          </div>
+          <div class="side">
+            <h4>Pode ir, com atributos corretos</h4>
+            <ul style="margin:0; padding-left:20px;">
+              <li>Um identificador de sessão opaco e sorteado.</li>
+              <li>A unidade da clínica preferida pelo usuário.</li>
+              <li>Preferências de exibição, como fonte maior.</li>
+              <li>O aceite do aviso de cookies.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="callout" style="margin-top:16px;">
+          <p><strong>LGPD, Lei nº 13.709 de 2018:</strong> dado sobre saúde é <strong>dado pessoal sensível</strong> e tem regra mais dura de tratamento e de consentimento. Uma escolha de especialidade guardada no navegador do balcão da recepção é histórico clínico exposto a quem chegar depois.</p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">13 Cookies, privacidade e LGPD</div>
+          <div class="footer-page">10</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 11: EXERCÍCIO CURTO, CICLO 1 ==================== -->
+      <section class="exercise-slide content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Exercício do Ciclo 1: a unidade preferida no cabeçalho</h2>
+        </div>
+
+        <div class="exercise-container">
+          <h3>No HomeController e no _Layout.cshtml, 8 minutos</h3>
+          <ol class="exercise-steps">
+            <li>Em <code>Index</code>, grave o cookie <code>unidade-preferida</code> com o valor <strong>Tatuapé</strong>, válido por 30 dias.</li>
+            <li>Leia o cookie na mesma action e publique o valor em <code>ViewBag.Unidade</code>.</li>
+            <li>Exiba a unidade no topo da Home, com um texto padrão quando o cookie não existir.</li>
+            <li>Abra o DevTools, aba <strong>Network</strong>, e encontre o <code>Set-Cookie</code> na primeira resposta e o <code>Cookie</code> na requisição seguinte.</li>
+          </ol>
+        </div>
+
+        <pre class="code-compact"><code class="language-csharp" data-trim>ViewBag.Unidade = Request.Cookies["unidade-preferida"] ?? "Unidade não escolhida";</code></pre>
+
+        <div class="slide-footer">
+          <div class="footer-bar">13 Exercício do Ciclo 1</div>
+          <div class="footer-page">11</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 12: SESSÃO NO PIPELINE ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Sessão: o dado fica no servidor, só o crachá viaja <a href="#/ref-slide" class="ref-badge" title="Ver referências">[2]</a></h2>
+        </div>
+
+        <p style="font-size:0.7em; margin-top:0;">A sessão resolve o limite de 4 KB e o risco de privacidade: o navegador carrega apenas um identificador sorteado, e o conteúdo fica guardado do lado do servidor.</p>
+
+        <pre class="code-compact" style="margin-top:6px;"><code class="language-csharp" data-trim>// Program.cs, antes do builder.Build()
+builder.Services.AddDistributedMemoryCache();
+builder.Services.AddSession(options =&gt;
+{
+    options.IdleTimeout = TimeSpan.FromMinutes(20);
+    options.Cookie.Name = ".ClinicaVida.Sessao";
+    options.Cookie.HttpOnly = true;
+    options.Cookie.IsEssential = true;
+});</code></pre>
+
+        <div class="flow-diagram" style="margin:12px 0 0 0; font-size:0.8em; gap:8px;">
+          <div class="flow-item">app.UseRouting()</div>
+          <div class="flow-arrow">&rarr;</div>
+          <div class="flow-item" style="background:#C84B31; font-weight:800;">app.UseSession()</div>
+          <div class="flow-arrow">&rarr;</div>
+          <div class="flow-item">app.UseAuthorization()</div>
+          <div class="flow-arrow">&rarr;</div>
+          <div class="flow-item">app.MapControllerRoute()</div>
+        </div>
+
+        <div class="takeaway">
+          <span class="takeaway-label">Takeaway</span>
+          <p>A ordem no pipeline não é decoração. <code>UseSession</code> depois de <code>UseRouting</code> e antes do mapeamento das rotas; fora daí, <code>HttpContext.Session</code> lança exceção no primeiro acesso.</p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">13 Sessão no pipeline</div>
+          <div class="footer-page">12</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 13: HTTPCONTEXT.SESSION ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Ler e gravar em <code>HttpContext.Session</code> <a href="#/ref-slide" class="ref-badge" title="Ver referências">[2]</a></h2>
+        </div>
+
+        <p style="font-size:0.7em; margin-top:0;">A sessão guarda bytes, e a API expõe dois pares prontos: texto e inteiro. Para qualquer outra coisa, serialize o objeto em JSON e guarde o texto.</p>
+
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:22px; margin-top:4px;">
+          <div>
+            <h4 style="font-size:0.66em; color:#C84B31; margin:0 0 4px 0; font-weight:700;">Texto e inteiro, direto</h4>
+            <pre class="code-compact" style="margin:0;"><code class="language-csharp" data-trim>HttpContext.Session.SetInt32("MedicoId", 7);
+HttpContext.Session.SetString("Unidade", "Tatuapé");
+
+int? medicoId =
+    HttpContext.Session.GetInt32("MedicoId");
+string? unidade =
+    HttpContext.Session.GetString("Unidade");
+
+HttpContext.Session.Remove("MedicoId");
+HttpContext.Session.Clear();</code></pre>
+          </div>
+          <div>
+            <h4 style="font-size:0.66em; color:#C84B31; margin:0 0 4px 0; font-weight:700;">Objeto, serializado em JSON</h4>
+            <pre class="code-compact" style="margin:0;"><code class="language-csharp" data-trim>var rascunho = new Consulta { MedicoId = 7 };
+
+HttpContext.Session.SetString("Rascunho",
+    JsonSerializer.Serialize(rascunho));
+
+var json = HttpContext.Session.GetString("Rascunho");
+var volta = json is null
+    ? null
+    : JsonSerializer.Deserialize&lt;Consulta&gt;(json);</code></pre>
+          </div>
+        </div>
+
+        <div class="takeaway">
+          <span class="takeaway-label">Takeaway</span>
+          <p><code>GetInt32</code> devolve <code>int?</code> e <code>GetString</code> devolve <code>string?</code>: <code>null</code> significa que a chave nunca existiu <strong>ou</strong> que os 20 minutos de inatividade expiraram. Sempre trate esse <code>null</code>.</p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">13 HttpContext.Session</div>
+          <div class="footer-page">13</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 14: COOKIE, SESSÃO E TEMPDATA ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Onde vive cada um: cookie, sessão e <code>TempData</code></h2>
+        </div>
+
+        <p style="font-size:0.7em; margin-top:0;">Os três guardam estado, e os três dependem do mesmo crachá no cabeçalho. O que muda é <strong>onde o dado fica</strong> e <strong>quanto tempo ele dura</strong>.</p>
+
+        <div class="slide-figure" style="margin-top:0;">
+          <svg viewBox="0 0 1140 410" role="img" aria-label="O cookie fica no navegador do usuario; a sessao e o TempData ficam no servidor, com apenas o identificador viajando dentro de um cookie">
+            <defs>
+              <marker id="a13cmp" markerWidth="9" markerHeight="9" refX="8" refY="4.5" orient="auto">
+                <path d="M0,0 L9,4.5 L0,9 Z" fill="#C84B31"/>
+              </marker>
+            </defs>
+
+            <rect x="6" y="16" width="404" height="384" rx="10" fill="#F4F7F6" stroke="#00274D" stroke-width="2"/>
+            <text x="208" y="46" text-anchor="middle" font-size="15" font-weight="700" fill="#00274D">No navegador do usu&#225;rio</text>
+
+            <rect x="24" y="64" width="368" height="152" rx="8" fill="#FFFFFF" stroke="#2E9E7E" stroke-width="1.8"/>
+            <text x="42" y="94" font-size="14.5" font-weight="700" fill="#0B6E75">Cookie</text>
+            <text x="42" y="126" font-size="12.5" fill="#1F2A30">Vive no disco da m&#225;quina do usu&#225;rio.</text>
+            <text x="42" y="154" font-size="12.5" fill="#1F2A30">Dura dias ou meses, at&#233; a data de validade.</text>
+            <text x="42" y="182" font-size="12.5" fill="#1F2A30">At&#233; 4 KB, e sobe em toda requisi&#231;&#227;o.</text>
+
+            <rect x="24" y="232" width="368" height="152" rx="8" fill="#FFF7F5" stroke="#C84B31" stroke-width="1.5" stroke-dasharray="5 4"/>
+            <text x="42" y="262" font-size="13.5" font-weight="700" fill="#C84B31">Use para</text>
+            <text x="42" y="292" font-size="12.5" fill="#7A2A18">prefer&#234;ncia que precisa sobreviver ao fechar</text>
+            <text x="42" y="316" font-size="12.5" fill="#7A2A18">o navegador, e que n&#227;o seja dado sens&#237;vel.</text>
+            <text x="42" y="352" font-size="12.5" font-weight="700" fill="#7A2A18">No case: a unidade preferida da cl&#237;nica.</text>
+
+            <text x="440" y="26" text-anchor="middle" font-size="12" font-weight="700" fill="#777777">a rede</text>
+            <line x1="440" y1="40" x2="440" y2="156" stroke="#BBBBBB" stroke-width="1.5" stroke-dasharray="8 6"/>
+            <line x1="440" y1="252" x2="440" y2="392" stroke="#BBBBBB" stroke-width="1.5" stroke-dasharray="8 6"/>
+            <line x1="416" y1="180" x2="464" y2="180" stroke="#C84B31" stroke-width="2.5" marker-end="url(#a13cmp)"/>
+            <text x="440" y="208" text-anchor="middle" font-size="11.5" fill="#C84B31" font-family="'JetBrains Mono', monospace" style="font-variant-ligatures:none;">Cookie:</text>
+            <text x="440" y="228" text-anchor="middle" font-size="11.5" fill="#C84B31" font-family="'JetBrains Mono', monospace" style="font-variant-ligatures:none;">8f3a91c2</text>
+
+            <rect x="470" y="16" width="664" height="384" rx="10" fill="#F4F7F6" stroke="#00274D" stroke-width="2"/>
+            <text x="802" y="46" text-anchor="middle" font-size="15" font-weight="700" fill="#00274D">No servidor da cl&#237;nica</text>
+
+            <rect x="488" y="64" width="312" height="320" rx="8" fill="#FFFFFF" stroke="#2E9E7E" stroke-width="1.8"/>
+            <text x="506" y="94" font-size="14.5" font-weight="700" fill="#0B6E75">Sess&#227;o</text>
+            <text x="506" y="126" font-size="12.5" fill="#1F2A30">Vive na mem&#243;ria do servidor.</text>
+            <text x="506" y="152" font-size="12.5" fill="#1F2A30">Dura enquanto houver atividade;</text>
+            <text x="506" y="174" font-size="12.5" fill="#1F2A30">20 minutos parados e expira.</text>
+            <text x="506" y="200" font-size="12.5" fill="#1F2A30">Tamanho livre, mas gasta mem&#243;ria.</text>
+            <text x="506" y="248" font-size="13.5" font-weight="700" fill="#C84B31">Use para</text>
+            <text x="506" y="278" font-size="12" fill="#7A2A18">o que atravessa v&#225;rias telas da mesma visita.</text>
+            <text x="506" y="322" font-size="12.5" font-weight="700" fill="#7A2A18">No case: a especialidade e o m&#233;dico</text>
+            <text x="506" y="346" font-size="12.5" font-weight="700" fill="#7A2A18">escolhidos na etapa 1 do agendamento.</text>
+
+            <rect x="812" y="64" width="308" height="320" rx="8" fill="#FFFFFF" stroke="#2E9E7E" stroke-width="1.8"/>
+            <text x="830" y="94" font-size="14.5" font-weight="700" fill="#0B6E75">TempData</text>
+            <text x="830" y="126" font-size="12.5" fill="#1F2A30">Vive dentro da sess&#227;o, por padr&#227;o.</text>
+            <text x="830" y="152" font-size="12.5" fill="#1F2A30">Dura uma leitura: &#233; lido e some.</text>
+            <text x="830" y="174" font-size="12.5" fill="#1F2A30">Feito para atravessar um</text>
+            <text x="830" y="200" font-size="12.5" fill="#1F2A30">redirecionamento, e nada al&#233;m.</text>
+            <text x="830" y="248" font-size="13.5" font-weight="700" fill="#C84B31">Use para</text>
+            <text x="830" y="278" font-size="12" fill="#7A2A18">avisar o usu&#225;rio do que acabou de acontecer.</text>
+            <text x="830" y="322" font-size="12.5" font-weight="700" fill="#7A2A18">No case: a mensagem que voc&#234; j&#225; usou</text>
+            <text x="830" y="346" font-size="12.5" font-weight="700" fill="#7A2A18">na Aula 12, sem saber que era isto.</text>
+          </svg>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">13 Cookie, sessão e TempData</div>
+          <div class="footer-page">14</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 15: DEMONSTRAÇÃO, FLUXO DE DUAS ETAPAS ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Demonstração: um agendamento em duas etapas</h2>
+        </div>
+
+        <p style="font-size:0.7em; margin-top:0;">A etapa 1 guarda a escolha e redireciona. A etapa 2 recupera o que foi guardado e, se não achar nada, manda o usuário de volta em vez de quebrar.</p>
+
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:22px; margin-top:4px;">
+          <div>
+            <h4 style="font-size:0.66em; color:#C84B31; margin:0 0 4px 0; font-weight:700;">Etapa 1: gravar e redirecionar</h4>
+            <pre class="code-compact" style="margin:0;"><code class="language-csharp" data-trim>[HttpPost]
+public IActionResult Agendar(int medicoId)
+{
+    HttpContext.Session.SetInt32(
+        "AgendamentoMedicoId", medicoId);
+
+    return RedirectToAction(nameof(AgendarHorario));
+}</code></pre>
+          </div>
+          <div>
+            <h4 style="font-size:0.66em; color:#C84B31; margin:0 0 4px 0; font-weight:700;">Etapa 2: recuperar e se defender</h4>
+            <pre class="code-compact" style="margin:0;"><code class="language-csharp" data-trim>[HttpGet]
+public IActionResult AgendarHorario()
+{
+    var medicoId = HttpContext.Session
+        .GetInt32("AgendamentoMedicoId");
+
+    if (medicoId is null)
+    {
+        TempData["Aviso"] = "Escolha o médico antes.";
+        return RedirectToAction(nameof(Agendar));
+    }
+    return View();
+}</code></pre>
+          </div>
+        </div>
+
+        <div class="takeaway">
+          <span class="takeaway-label">Takeaway</span>
+          <p>Toda etapa que depende da anterior começa conferindo a sessão. O usuário digita a URL na barra de endereços, e o servidor não pode contar com um caminho feliz.</p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">13 Fluxo de duas etapas</div>
+          <div class="footer-page">15</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 16: EXERCÍCIO CURTO, CICLO 2 ==================== -->
+      <section class="exercise-slide content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Exercício do Ciclo 2: escolher o mecanismo certo</h2>
+        </div>
+
+        <div class="exercise-container" style="padding-bottom:8px;">
+          <h3>Em dupla, 8 minutos: cookie, sessão, TempData ou nenhum dos três? Uma das cinco linhas é armadilha</h3>
+        </div>
+
+        <table style="font-size:0.72em; margin:10px 0 0 0;">
+          <thead>
+            <tr><th style="width:40px;">#</th><th>Dado da Clínica Vida+</th><th style="width:300px;">Sua escolha e o porquê</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>1</td><td>A unidade da clínica escolhida na visita da semana passada</td><td style="color:#BBBBBB;">.................................</td></tr>
+            <tr><td>2</td><td>A especialidade da etapa 1 de um agendamento em andamento</td><td style="color:#BBBBBB;">.................................</td></tr>
+            <tr><td>3</td><td>A frase "Consulta agendada com sucesso", após o redirecionamento</td><td style="color:#BBBBBB;">.................................</td></tr>
+            <tr><td>4</td><td>O CPF do paciente que está sendo atendido no balcão agora</td><td style="color:#BBBBBB;">.................................</td></tr>
+            <tr><td>5</td><td>A preferência por fonte maior na leitura das telas</td><td style="color:#BBBBBB;">.................................</td></tr>
+          </tbody>
+        </table>
+
+        <div class="slide-footer">
+          <div class="footer-bar">13 Exercício do Ciclo 2</div>
+          <div class="footer-page">16</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 17: QUIZ DE FIXAÇÃO ==================== -->
+      <section class="quiz-slide content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area"><div class="accent-bar"></div><h2>Quiz de fixação</h2></div>
+        <div class="quiz-container">
+          <div class="quiz-question">Por padrão, onde ficam guardados os dados de uma sessão do ASP.NET Core?</div>
+          <ul class="quiz-options">
+            <li data-correct="true"><span class="option-letter">A</span> No servidor, com o navegador guardando apenas o identificador da sessão em um cookie enviado a cada requisição.</li>
+            <li data-correct="false"><span class="option-letter">B</span> No navegador do usuário, inteiros dentro do próprio cookie, que trafega completo a cada requisição feita.</li>
+            <li data-correct="false"><span class="option-letter">C</span> No banco de dados da aplicação, gravados pelo EF Core a cada alteração que for feita no conteúdo da sessão.</li>
+            <li data-correct="false"><span class="option-letter">D</span> Na query string de cada URL da aplicação, acrescentada pelo framework no momento em que a página é renderizada.</li>
+          </ul>
+          <div class="quiz-feedback"
+               data-correct-msg="Isso. Com AddDistributedMemoryCache o conteúdo fica na memória do servidor. O navegador carrega apenas um identificador opaco dentro de um cookie, e é ele que o servidor usa para reencontrar a sessão certa a cada requisição."
+               data-incorrect-msg="Não é isso. Quem vive no navegador é o cookie comum, limitado a cerca de 4 KB; a sessão guarda o conteúdo no servidor. O EF Core não participa, e a query string não carrega sessão nenhuma."></div>
+        </div>
+        <div class="slide-footer"><div class="footer-bar">13 Quiz de fixação</div><div class="footer-page">17</div></div>
+      </section>
+
+      <!-- ==================== SLIDE 18: LAB PASSO 1 ==================== -->
+      <section class="exercise-slide content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Laboratório, passo 1 de 6: a sessão no pipeline</h2>
+        </div>
+
+        <p style="font-size:0.72em; margin-top:0;">Missão dos próximos 60 minutos: transformar o agendamento da Clínica Vida+ em um fluxo de duas etapas que lembra o que foi escolhido na primeira.</p>
+
+        <div class="exercise-container">
+          <h3>No seu fork, a partir da main atualizada</h3>
+          <ol class="exercise-steps">
+            <li>Crie a branch <code>feature/sessao-agendamento</code>.</li>
+            <li>Em <code>Program.cs</code>, registre <code>AddDistributedMemoryCache</code> e <code>AddSession</code> antes do <code>builder.Build()</code>.</li>
+            <li>Insira <code>app.UseSession()</code> <strong>depois</strong> de <code>app.UseRouting()</code> e antes do <code>MapControllerRoute</code>.</li>
+            <li>Suba a aplicação e confirme no DevTools o cookie <code>.ClinicaVida.Sessao</code> na aba Application.</li>
+          </ol>
+        </div>
+
+        <pre class="code-compact"><code class="language-bash" data-trim>git checkout main &amp;&amp; git pull
+git checkout -b feature/sessao-agendamento
+dotnet run</code></pre>
+
+        <div class="slide-footer">
+          <div class="footer-bar">13 Laboratório, passo 1, sessão no pipeline</div>
+          <div class="footer-page">18</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 19: LAB PASSO 2 ==================== -->
+      <section class="exercise-slide content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Laboratório, passo 2 de 6: médicos no banco</h2>
+        </div>
+
+        <p style="font-size:0.72em; margin-top:0;">A etapa 1 pede uma lista de médicos, e a tabela <code>Medicos</code> está vazia desde a Aula 11. Semeie os quatro pela migration, como você fez com as especialidades.</p>
+
+        <div class="exercise-container">
+          <h3>Em ClinicaContext, no OnModelCreating que já existe</h3>
+          <ol class="exercise-steps">
+            <li>Acrescente um <code>HasData</code> para <code>Medico</code>, com <code>Id</code> escrito à mão.</li>
+            <li>Ligue cada médico a uma das quatro especialidades pelo <code>EspecialidadeId</code>.</li>
+            <li>Gere a migration <code>MedicosIniciais</code> e aplique com <code>database update</code>.</li>
+            <li>Confira no Workbench: <code>SELECT * FROM Medicos;</code> precisa devolver quatro linhas.</li>
+          </ol>
+        </div>
+
+        <pre class="code-compact"><code class="language-csharp" data-trim>modelBuilder.Entity&lt;Medico&gt;().HasData(
+    new Medico { Id = 1, Nome = "Dra. Helena Braga", Crm = "SP-100234", EspecialidadeId = 1 },
+    new Medico { Id = 2, Nome = "Dr. Paulo Nakano",  Crm = "SP-118907", EspecialidadeId = 2 });
+// faltam os Id 3 e 4, um para Pediatria e outro para Dermatologia</code></pre>
+
+        <div class="slide-footer">
+          <div class="footer-bar">13 Laboratório, passo 2, médicos no banco</div>
+          <div class="footer-page">19</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 20: LAB PASSO 3 ==================== -->
+      <section class="exercise-slide content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Laboratório, passo 3 de 6: a etapa 1 do agendamento</h2>
+        </div>
+
+        <div class="exercise-container">
+          <h3>Em ConsultasController, o fim do Ciclo 3</h3>
+          <ol class="exercise-steps">
+            <li>Receba o <code>ClinicaContext</code> por injeção, como você fez no <code>PacientesController</code>.</li>
+            <li>Reescreva <code>Agendar</code> em GET para listar especialidades e médicos vindos do banco.</li>
+            <li>No POST, grave <code>EspecialidadeId</code> e <code>MedicoId</code> na sessão e redirecione para <code>AgendarHorario</code>.</li>
+            <li>Ajuste <code>Views/Consultas/Agendar.cshtml</code> para conter apenas os dois campos da etapa 1.</li>
+          </ol>
+        </div>
+
+        <pre class="code-compact"><code class="language-csharp" data-trim>HttpContext.Session.SetInt32("AgendamentoEspecialidadeId", especialidadeId);
+HttpContext.Session.SetInt32("AgendamentoMedicoId", medicoId);
+return RedirectToAction(nameof(AgendarHorario));</code></pre>
+
+        <div class="slide-footer">
+          <div class="footer-bar">13 Laboratório, passo 3, a etapa 1</div>
+          <div class="footer-page">20</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 21: LAB PASSO 4 ==================== -->
+      <section class="exercise-slide content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Laboratório, passo 4 de 6: a etapa 2 e a guarda</h2>
+        </div>
+
+        <p style="font-size:0.72em; margin-top:0;">Começa o Ciclo 4, sozinho. A etapa 2 escolhe paciente, data e horário, e só existe se a etapa 1 tiver acontecido.</p>
+
+        <div class="exercise-container">
+          <h3>AgendarHorario em GET</h3>
+          <ol class="exercise-steps">
+            <li>Leia <code>AgendamentoMedicoId</code> da sessão logo na primeira linha da action.</li>
+            <li>Se vier <code>null</code>, grave um aviso em <code>TempData</code> e redirecione para <code>Agendar</code>.</li>
+            <li>Carregue o médico escolhido pelo <code>Id</code> e mostre o nome dele no topo da tela.</li>
+            <li>Teste digitando <code>/Consultas/AgendarHorario</code> direto na barra de endereços, sem passar pela etapa 1.</li>
+          </ol>
+        </div>
+
+        <pre class="code-compact"><code class="language-csharp" data-trim>var medicoId = HttpContext.Session.GetInt32("AgendamentoMedicoId");
+if (medicoId is null) return RedirectToAction(nameof(Agendar));</code></pre>
+
+        <div class="slide-footer">
+          <div class="footer-bar">13 Laboratório, passo 4, a etapa 2 e a guarda</div>
+          <div class="footer-page">21</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 22: LAB PASSO 5 ==================== -->
+      <section class="exercise-slide content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Laboratório, passo 5 de 6: gravar e limpar a sessão</h2>
+        </div>
+
+        <div class="exercise-container">
+          <h3>AgendarHorario em POST</h3>
+          <ol class="exercise-steps">
+            <li>Repita a guarda: a sessão pode ter expirado entre a tela e o envio do formulário.</li>
+            <li>Monte a <code>Consulta</code> com o <code>MedicoId</code> da sessão e o resto vindo do formulário.</li>
+            <li>Grave com <code>Add</code> e <code>SaveChangesAsync</code>, remova as duas chaves da sessão e redirecione para <code>Confirmacao</code>.</li>
+            <li>Agende duas consultas seguidas: a segunda precisa começar de novo, com a etapa 1 em branco.</li>
+          </ol>
+        </div>
+
+        <pre class="code-compact"><code class="language-csharp" data-trim>await _context.SaveChangesAsync();
+HttpContext.Session.Remove("AgendamentoEspecialidadeId");
+HttpContext.Session.Remove("AgendamentoMedicoId");
+TempData["Sucesso"] = "Consulta agendada com sucesso.";
+return RedirectToAction(nameof(Confirmacao), new { id = consulta.Id });</code></pre>
+
+        <div class="slide-footer">
+          <div class="footer-bar">13 Laboratório, passo 5, gravar e limpar</div>
+          <div class="footer-page">22</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 23: LAB PASSO 6 ==================== -->
+      <section class="exercise-slide content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Laboratório, passo 6 de 6: o cookie da unidade</h2>
+        </div>
+
+        <div class="exercise-container">
+          <h3>A preferência que sobrevive ao fechar o navegador</h3>
+          <ol class="exercise-steps">
+            <li>Na etapa 1, ofereça a escolha entre <strong>Tatuapé</strong>, <strong>Santana</strong> e <strong>Vila Mariana</strong>.</li>
+            <li>Grave a escolha no cookie <code>unidade-preferida</code>, com validade de 30 dias e os três atributos de segurança.</li>
+            <li>No GET da etapa 1, leia o cookie e deixe a unidade dele já selecionada.</li>
+            <li>Feche o navegador, reabra a aplicação e confirme que a unidade continua escolhida.</li>
+          </ol>
+        </div>
+
+        <pre class="code-compact"><code class="language-csharp" data-trim>Response.Cookies.Append("unidade-preferida", unidade, new CookieOptions
+{
+    Expires = DateTimeOffset.UtcNow.AddDays(30),
+    HttpOnly = true, Secure = true, SameSite = SameSiteMode.Lax, IsEssential = true
+});</code></pre>
+
+        <div class="slide-footer">
+          <div class="footer-bar">13 Laboratório, passo 6, o cookie da unidade</div>
+          <div class="footer-page">23</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 24: ENTREGÁVEL, COMMIT E PUSH ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Entregável de hoje, commit e push</h2>
+        </div>
+
+        <div class="side-by-side" style="margin-top:6px;">
+          <div class="side">
+            <h4>O que precisa estar funcionando</h4>
+            <ul style="margin:0; padding-left:20px;">
+              <li>Sessão registrada e <code>UseSession</code> na posição certa.</li>
+              <li>Agendamento em duas etapas, com a etapa 1 na sessão.</li>
+              <li>Guarda de acesso direto na etapa 2, nos dois verbos.</li>
+              <li>Consulta gravada no banco e sessão limpa depois.</li>
+              <li>Cookie <code>unidade-preferida</code>, válido por 30 dias.</li>
+            </ul>
+          </div>
+          <div class="side">
+            <h4>Como o professor confere</h4>
+            <ul style="margin:0; padding-left:20px;">
+              <li>DevTools: o cookie de sessão aparece e é <code>HttpOnly</code>.</li>
+              <li><code>/Consultas/AgendarHorario</code> direto volta para a etapa 1.</li>
+              <li>A consulta agendada aparece na tabela <code>Consultas</code>.</li>
+              <li>O segundo agendamento começa do zero.</li>
+              <li>Reabrir o navegador mantém a unidade escolhida.</li>
+            </ul>
+          </div>
+        </div>
+
+        <pre class="code-compact" style="margin-top:8px;"><code class="language-bash" data-trim>git add Program.cs Data/ Migrations/ Controllers/ Views/Consultas/
+git commit -m "feat: agendamento em duas etapas com sessao"
+git push -u origin feature/sessao-agendamento</code></pre>
+
+        <div class="slide-footer">
+          <div class="footer-bar">13 Entregável, commit e push</div>
+          <div class="footer-page">24</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 25: FECHAMENTO ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>O que fica desta noite e a prévia da Aula 14</h2>
+        </div>
+
+        <div class="concept-cards" style="margin-top:8px;">
+          <div class="concept-card">
+            <h4>O protocolo esquece</h4>
+            <p>O HTTP trata cada requisição como a primeira. Estado é algo que a aplicação constrói por cima, não algo que o protocolo entrega.</p>
+          </div>
+          <div class="concept-card">
+            <h4>O cookie é o crachá</h4>
+            <p>Um par nome e valor no cabeçalho, com <code>HttpOnly</code>, <code>Secure</code> e <code>SameSite</code>. Pequeno, visível ao usuário e nunca confiável sem validação.</p>
+          </div>
+          <div class="concept-card">
+            <h4>A sessão é o armário</h4>
+            <p>O dado fica no servidor e só o identificador viaja. É o que sustenta o fluxo de duas etapas e, na Aula 15, o usuário logado.</p>
+          </div>
+        </div>
+
+        <div class="callout" style="margin-top:18px;">
+          <p><strong>Prévia da Aula 14:</strong> hoje, escolher a especialidade recarrega a página inteira só para trocar a lista de médicos. São dezenas de kilobytes de HTML redesenhados para atualizar um único <code>select</code>. Na próxima aula a página aprende a pedir <strong>só o pedaço que mudou</strong>, com <code>fetch</code>, JSON e uma action que devolve dados em vez de tela.</p>
+        </div>
+
+        <div class="takeaway">
+          <span class="takeaway-label">Antes de sair</span>
+          <p>Commit e push na branch <code>feature/sessao-agendamento</code>. O trabalho de hoje é o ponto de partida do laboratório da Aula 14.</p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">13 Fechamento</div>
+          <div class="footer-page">25</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 26: REFERÊNCIAS ==================== -->
+      <section id="ref-slide" class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Referências desta aula</h2>
+        </div>
+
+        <p style="font-size:0.72em; margin-top:0;">Os números entre colchetes ao lado dos títulos remetem a esta lista, toda ela em português e aberta.</p>
+
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px 30px; margin-top:6px;">
+          <div class="concept-card" style="padding:14px 18px;">
+            <h4>[1] Cookies HTTP</h4>
+            <p style="font-size:0.7em; color:#444444;">MOZILLA. <em>Usando cookies HTTP</em>. MDN Web Docs.<br>
+            <code style="font-size:0.82em;">developer.mozilla.org/pt-BR/docs/Web/HTTP/Cookies</code></p>
+          </div>
+          <div class="concept-card" style="padding:14px 18px;">
+            <h4>[2] Estado no ASP.NET Core</h4>
+            <p style="font-size:0.7em; color:#444444;">MICROSOFT. <em>Gerenciamento de estado de sessão e de aplicativo</em>.<br>
+            <code style="font-size:0.82em;">learn.microsoft.com/pt-br/aspnet/core/fundamentals/app-state</code></p>
+          </div>
+          <div class="concept-card" style="padding:14px 18px;">
+            <h4>[3] SameSite e segurança</h4>
+            <p style="font-size:0.7em; color:#444444;">MICROSOFT. <em>Trabalhar com cookies SameSite no ASP.NET Core</em>.<br>
+            <code style="font-size:0.82em;">learn.microsoft.com/pt-br/aspnet/core/security/samesite</code></p>
+          </div>
+          <div class="concept-card" style="padding:14px 18px;">
+            <h4>[4] O cabeçalho Set-Cookie</h4>
+            <p style="font-size:0.7em; color:#444444;">MOZILLA. <em>Set-Cookie</em>. MDN Web Docs.<br>
+            <code style="font-size:0.82em;">developer.mozilla.org/pt-BR/docs/Web/HTTP/Headers/Set-Cookie</code></p>
+          </div>
+        </div>
+
+        <div class="callout" style="margin-top:14px;">
+          <p>O roteiro completo do laboratório de hoje está no portal, em <code>labs/aula13-lab/</code>.</p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">13 Referências</div>
+          <div class="footer-page">26</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 27: ENCERRAMENTO ==================== -->
+      <section class="end-slide">
+        <img src="../assets/img/uninove-logo.png" alt="Uninove, Universidade Nove de Julho"
+             style="max-width:300px; background:#FFFFFF; padding:20px 28px; border-radius:8px;">
+        <div class="copyright">
+          Copyright &copy; 2026<br>
+          Prof. José Romualdo da Costa Filho<br><br>
+          Todos os direitos reservados. É expressamente proibida a reprodução, divulgação<br>
+          total ou parcial, deste material acadêmico sem autorização formal,<br>
+          por escrito, do Professor autor da ementa.
+        </div>
+      </section>
+
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/highlight/highlight.js"></script>
+  <script src="../assets/js/uninove-quiz.js"></script>
+  <script type="module">
+    import { TURMAS, resolverTurma, dataDaAula, formatarData } from '../assets/js/turmas.js';
+    const turma = resolverTurma({
+      hoje: new Date(),
+      salva: localStorage.getItem('uninove-turma'),
+    });
+    const alvo = document.querySelector('[data-data-da-aula]');
+    if (alvo) {
+      const n = Number(alvo.getAttribute('data-data-da-aula'));
+      alvo.textContent = turma
+        ? `${TURMAS[turma].rotulo}, ${formatarData(dataDaAula(turma, n))}`
+        : `Quarta ${formatarData(dataDaAula('quarta', n))} ou quinta ${formatarData(dataDaAula('quinta', n))}`;
+    }
+  </script>
+  <script>
+    Reveal.initialize({
+      width: 1280, height: 720, center: false, margin: 0,
+      hash: true, slideNumber: false,
+      // Os chevrons de navegação caem sobre a footer-bar e sobre o triângulo
+      // azul do canto inferior direito; a barra de progresso encosta no rodapé
+      // e parece um segundo rodapé. Nenhum dos dois é usado na projeção.
+      controls: false, progress: false,
+      // Um slide por página no ?print-pdf, para o PDF bater com o deck.
+      pdfMaxPagesPerSlide: 1,
+      plugins: [RevealHighlight],
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,1016 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Aula 16, API REST com ASP.NET Core | Uninove</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/theme/white.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/highlight/monokai.css">
+  <link rel="stylesheet" href="../assets/css/uninove-theme.css">
+  <link rel="stylesheet" href="../assets/css/uninove-print.css">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+      <!-- ==================== SLIDE 1: CAPA ==================== -->
+      <section class="cover-slide">
+        <img src="../assets/img/uninove-logo.png" alt="Uninove, Universidade Nove de Julho" class="uninove-logo-full"
+             style="max-width:400px; background:#FFFFFF; padding:26px 36px; border-radius:10px;">
+        <div style="margin-top:36px; color:#FFFFFF; font-size:0.95em; font-weight:800; letter-spacing:4px; text-transform:uppercase;">Desenvolvimento Web</div>
+        <div style="margin-top:12px; color:#C84B31; font-size:0.6em; font-weight:700; letter-spacing:3px; text-transform:uppercase;">Graduação, 2026.2</div>
+      </section>
+
+      <!-- ==================== SLIDE 2: TÍTULO ==================== -->
+      <section class="title-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="title-card">
+          <div class="accent-bar"></div>
+          <h1>Desenvolvimento Web</h1>
+          <h2>API REST com ASP.NET Core</h2>
+          <h3>Prof. José Romualdo<br><span data-data-da-aula="16"></span></h3>
+        </div>
+        <div class="lesson-bar">AULA 16 &nbsp;|&nbsp; Módulo 3, Acesso a Dados e Funcionalidades Avançadas</div>
+      </section>
+
+      <!-- ==================== SLIDE 3: AGENDA ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Agenda do encontro de hoje</h2>
+        </div>
+
+        <p style="font-size:0.76em; margin-top:0;">São 150 minutos corridos, em quatro ciclos. Não há intervalo formal: a troca de ciclo é o respiro da aula.</p>
+
+        <table>
+          <thead>
+            <tr><th style="width:190px;">Horário</th><th style="width:200px;">Bloco</th><th>O que acontece</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>19h30 às 20h05</td><td>Ciclo 1</td><td>O que é REST, recurso, verbos e códigos de status</td></tr>
+            <tr><td>20h05 às 20h40</td><td>Ciclo 2</td><td>O Controller de API, os DTOs e a ferramenta de teste</td></tr>
+            <tr><td>20h40 às 20h50</td><td>Quiz de fixação</td><td>Uma pergunta sobre o conceito central da aula</td></tr>
+            <tr><td>20h50 às 21h25</td><td>Ciclo 3</td><td>Laboratório guiado: o Controller de API e os dois GET</td></tr>
+            <tr><td>21h25 às 21h50</td><td>Ciclo 4</td><td>Laboratório: POST, PUT e DELETE, que é o entregável</td></tr>
+            <tr><td>21h50 às 22h00</td><td>Fechamento</td><td>Revisão das ideias centrais e prévia da Aula 17</td></tr>
+          </tbody>
+        </table>
+
+        <div class="slide-footer">
+          <div class="footer-bar">16 Agenda do encontro</div>
+          <div class="footer-page">3</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 4: RECAPITULAÇÃO DA AULA 15 ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>De onde viemos: a clínica trancada da Aula 15</h2>
+        </div>
+
+        <p style="font-size:0.72em; margin-top:0;">Você entregou o login e o logout funcionando, com a área da recepção protegida por <code>[Authorize(Roles = "Recepcao")]</code> e o menu adaptado ao usuário. A agenda deixou de ser pública.</p>
+
+        <div class="side-by-side" style="margin-top:6px;">
+          <div class="side">
+            <h4>O que já existe na sua máquina</h4>
+            <ul style="margin:0; padding-left:20px;">
+              <li>O Identity instalado e o <code>ClinicaContext</code> herdando de <code>IdentityDbContext</code>.</li>
+              <li><code>ContaController</code> com <code>Login</code>, <code>Logout</code> e <code>Registrar</code>.</li>
+              <li>Os perfis <code>Recepcao</code> e <code>Medico</code>, com um usuário semeado.</li>
+            </ul>
+          </div>
+          <div class="side">
+            <h4>A nova demanda do case</h4>
+            <ul style="margin:0; padding-left:20px;">
+              <li>O laboratório de análises parceiro precisa da agenda do dia.</li>
+              <li>Ele <strong>não</strong> vai abrir a tela da clínica e copiar a lista.</li>
+              <li>Quer um endereço que devolva <strong>dados</strong>, não página, e quer agendar o retorno pelo sistema dele.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="callout" style="margin-top:16px;">
+          <p><strong>Tudo o que fizemos até aqui devolve tela.</strong> Hoje a Clínica Vida+ ganha uma porta feita para outro programa entrar: uma <strong>API REST</strong>.</p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">16 Recapitulação da Aula 15</div>
+          <div class="footer-page">4</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 5: API E REST ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>O que é uma API e o que REST acrescenta <a href="#/ref-slide" class="ref-badge" title="Ver referências">[1]</a></h2>
+        </div>
+
+        <p style="font-size:0.72em; margin-top:0;">API é o contrato pelo qual um programa fala com outro. <strong>REST</strong> é um estilo de organizar esse contrato usando o que o HTTP já tinha: endereço, verbo e código de status.</p>
+
+        <div class="concept-cards" style="margin-top:8px;">
+          <div class="concept-card">
+            <h4>O recurso é um substantivo</h4>
+            <p>Consulta, paciente, médico. A URL nomeia a coisa, no plural, e nunca a ação: <code>api/consultas</code>.</p>
+          </div>
+          <div class="concept-card">
+            <h4>O verbo diz a operação</h4>
+            <p>O mesmo endereço serve para ler, criar, alterar e remover. O que muda é o método HTTP da requisição.</p>
+          </div>
+          <div class="concept-card">
+            <h4>Sem estado entre chamadas</h4>
+            <p>Cada requisição carrega tudo o que o servidor precisa. Ele não guarda memória de quem chamou antes.</p>
+          </div>
+        </div>
+
+        <pre class="code-compact" style="margin-top:12px;"><code class="language-http" data-trim>GET    /api/consultas              certo: o recurso no plural
+GET    /api/consultas/42           certo: um item do recurso, pelo identificador
+GET    /api/listarConsultas        errado: o verbo virou pedaço da URL
+POST   /api/consultas/excluir/42   errado: DELETE já existe para isso</code></pre>
+
+        <div class="slide-footer">
+          <div class="footer-bar">16 API e REST</div>
+          <div class="footer-page">5</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 6: MVC x API ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Isto não é o JSON da Aula 14</h2>
+        </div>
+
+        <p style="font-size:0.7em; margin-top:0;">Na Aula 14 você escreveu <code>HorariosDisponiveis</code> devolvendo <code>Json(...)</code> de dentro de um Controller MVC, para alimentar <strong>a sua própria tela</strong>. Hoje o consumidor é de fora, e isso muda o contrato inteiro.</p>
+
+        <table style="font-size:0.66em;">
+          <thead>
+            <tr><th style="width:210px;">Aspecto</th><th>Controller MVC, Aulas 08 a 15</th><th>Controller de API, hoje</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Quem consome</td><td>o navegador de quem usa o site</td><td>outro sistema, que você não escreveu</td></tr>
+            <tr><td>O que devolve</td><td>HTML montado por uma View Razor</td><td>JSON, sem View nenhuma</td></tr>
+            <tr><td>Classe base</td><td><code>Controller</code></td><td><code>ControllerBase</code>, sem suporte a View</td></tr>
+            <tr><td>Endereço</td><td><code>/Consultas/Details/5</code></td><td><code>api/consultas/5</code></td></tr>
+            <tr><td>Quando dá errado</td><td>página de erro, ou a View de volta</td><td>código de status e corpo com o motivo</td></tr>
+            <tr><td>Quem lê a resposta</td><td>uma pessoa</td><td>um programa, que decide pelo status</td></tr>
+          </tbody>
+        </table>
+
+        <div class="takeaway">
+          <span class="takeaway-label">Takeaway</span>
+          <p>Devolver JSON não faz uma API. O que faz é o contrato: recurso no endereço, verbo na operação e status honesto na resposta, estável o bastante para outro time programar em cima.</p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">16 Controller MVC e Controller de API</div>
+          <div class="footer-page">6</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 7: VERBOS HTTP ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Um endereço, cinco verbos <a href="#/ref-slide" class="ref-badge" title="Ver referências">[2]</a></h2>
+        </div>
+
+        <p style="font-size:0.72em; margin-top:0;">Na Aula 02 você viu GET e POST em formulários. A API usa a família inteira, e cada verbo carrega uma promessa sobre o que acontece com o recurso.</p>
+
+        <table style="font-size:0.68em;">
+          <thead>
+            <tr><th style="width:130px;">Verbo</th><th style="width:230px;">Intenção</th><th style="width:250px;">Sobre qual endereço</th><th>Repetir a mesma chamada</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><strong>GET</strong></td><td>ler, sem alterar nada</td><td>a coleção ou um item</td><td>não muda nada, à vontade</td></tr>
+            <tr><td><strong>POST</strong></td><td>criar um item novo</td><td>a coleção</td><td>cria outro; cuidado com o clique duplo</td></tr>
+            <tr><td><strong>PUT</strong></td><td>substituir o item inteiro</td><td>um item</td><td>o resultado é sempre o mesmo</td></tr>
+            <tr><td><strong>PATCH</strong></td><td>alterar só uma parte</td><td>um item</td><td>o resultado é sempre o mesmo</td></tr>
+            <tr><td><strong>DELETE</strong></td><td>remover</td><td>um item</td><td>da segunda vez, já não existe</td></tr>
+          </tbody>
+        </table>
+
+        <div class="takeaway">
+          <span class="takeaway-label">Takeaway</span>
+          <p>Se a sua URL tem verbo dentro, a modelagem está errada. O verbo viaja no método HTTP, não no caminho.</p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">16 Os verbos HTTP</div>
+          <div class="footer-page">7</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 8: CÓDIGOS DE STATUS ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>As famílias da Aula 02, agora sobre recursos <a href="#/ref-slide" class="ref-badge" title="Ver referências">[2]</a></h2>
+        </div>
+
+        <p style="font-size:0.7em; margin-top:0;">As quatro famílias você já conhece: 2xx deu certo, 3xx foi para outro lugar, 4xx o cliente errou, 5xx o servidor errou. O que muda é que agora <strong>quem lê o número é um programa</strong>, e ele decide o que fazer só por ele.</p>
+
+        <table style="font-size:0.65em; margin-top:10px;">
+          <thead>
+            <tr><th style="width:230px;">Status</th><th>Quando a API da Clínica Vida+ devolve</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><strong>200</strong> OK</td><td>leitura concluída, com o recurso no corpo da resposta</td></tr>
+            <tr><td><strong>201</strong> Created</td><td>recurso criado, com o endereço dele no cabeçalho <code>Location</code></td></tr>
+            <tr><td><strong>204</strong> No Content</td><td>alteração ou remoção concluída, e não há o que devolver</td></tr>
+            <tr><td><strong>400</strong> Bad Request</td><td>o corpo enviado está inválido: falta o médico, a data não é data</td></tr>
+            <tr><td><strong>401</strong> Unauthorized</td><td>ninguém se identificou nesta requisição</td></tr>
+            <tr><td><strong>403</strong> Forbidden</td><td>identificou-se, mas esse usuário não pode fazer isso</td></tr>
+            <tr><td><strong>404</strong> Not Found</td><td>a consulta 9999 não existe</td></tr>
+            <tr><td><strong>500</strong> Internal Server Error</td><td>quebrou do nosso lado, e a culpa não é de quem chamou</td></tr>
+          </tbody>
+        </table>
+
+        <div class="slide-footer">
+          <div class="footer-bar">16 Códigos de status</div>
+          <div class="footer-page">8</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 9: EXERCÍCIO CURTO, CICLO 1 ==================== -->
+      <section class="exercise-slide content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Exercício do Ciclo 1: o contrato do recurso Consulta</h2>
+        </div>
+
+        <div class="exercise-container">
+          <h3>No caderno ou em um arquivo do VS Code, 8 minutos</h3>
+          <ol class="exercise-steps">
+            <li>Monte uma tabela com quatro colunas: <strong>verbo</strong>, <strong>rota</strong>, <strong>o que faz</strong> e <strong>status de sucesso</strong>.</li>
+            <li>Escreva uma linha para cada coisa que o laboratório parceiro precisa: ver a agenda, ver uma consulta específica, agendar, remarcar e cancelar.</li>
+            <li>Em cada linha, acrescente o <strong>status de falha</strong> mais provável daquela operação.</li>
+            <li>Regra única: nenhuma rota pode conter verbo. Se você escreveu <code>criarConsulta</code>, apague e comece de novo.</li>
+          </ol>
+        </div>
+
+        <div class="callout" style="margin-top:14px;">
+          <p>Essa tabela não é exercício de aquecimento: é o <strong>contrato</strong> que o parceiro vai receber, e é exatamente o que o laboratório de hoje implementa, linha por linha.</p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">16 Exercício do Ciclo 1</div>
+          <div class="footer-page">9</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 10: A TABELA DE ENDPOINTS ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>O contrato da agenda, em cinco linhas</h2>
+        </div>
+
+        <p style="font-size:0.7em; margin-top:0;">Este é o mapa do resto da aula. Cada linha vira um método do <code>ConsultasApiController</code>, e o status de sucesso não é opinião: é a resposta certa para aquela operação.</p>
+
+        <table style="font-size:0.62em; margin-top:8px;">
+          <thead>
+            <tr><th style="width:105px;">Verbo</th><th style="width:250px;">Rota</th><th>O que faz</th><th style="width:150px;">Sucesso</th><th style="width:150px;">Falha comum</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><strong>GET</strong></td><td><code>api/consultas</code></td><td>lista a agenda, com filtro por data e por médico</td><td>200 OK</td><td>401</td></tr>
+            <tr><td><strong>GET</strong></td><td><code>api/consultas/{id}</code></td><td>devolve uma consulta específica</td><td>200 OK</td><td>404</td></tr>
+            <tr><td><strong>POST</strong></td><td><code>api/consultas</code></td><td>agenda uma consulta nova</td><td>201 Created</td><td>400</td></tr>
+            <tr><td><strong>PUT</strong></td><td><code>api/consultas/{id}</code></td><td>remarca, substituindo os dados da consulta</td><td>204 No Content</td><td>400, 404</td></tr>
+            <tr><td><strong>DELETE</strong></td><td><code>api/consultas/{id}</code></td><td>cancela a consulta</td><td>204 No Content</td><td>404</td></tr>
+          </tbody>
+        </table>
+
+        <div class="takeaway">
+          <span class="takeaway-label">Takeaway</span>
+          <p>Duas rotas apenas, a coleção e o item, atendem as cinco operações. Quem multiplica rota está reinventando o verbo HTTP.</p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">16 A tabela de endpoints</div>
+          <div class="footer-page">10</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 11: [ApiController] E A ROTA ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>O Controller de API: três atributos e nenhuma View <a href="#/ref-slide" class="ref-badge" title="Ver referências">[3]</a></h2>
+        </div>
+
+        <pre class="code-compact" style="margin-top:6px;"><code class="language-csharp" data-trim>[ApiController]              // liga o comportamento de API neste Controller
+[Route("api/consultas")]     // o recurso, no plural, sem verbo nenhum
+[Authorize]                  // herda o cookie de autenticação da Aula 15
+public class ConsultasApiController : ControllerBase
+{
+    private readonly ClinicaContext _context;
+
+    public ConsultasApiController(ClinicaContext context) =&gt; _context = context;
+}</code></pre>
+
+        <ul style="font-size:0.68em; margin-top:10px;">
+          <li><code>[ApiController]</code> transforma modelo inválido em <strong>400</strong> sozinho, antes da action rodar, e lê o corpo JSON sem precisar de <code>[FromBody]</code>.</li>
+          <li><code>ControllerBase</code> é o <code>Controller</code> sem o que só serve a HTML: nada de View, nada de <code>TempData</code>.</li>
+        </ul>
+
+        <div class="callout" style="margin-top:10px;">
+          <p><strong>Sobre a rota:</strong> a convenção é <code>[Route("api/[controller]")]</code>, com o token virando o nome da classe sem o sufixo <code>Controller</code>. Aqui ele daria <code>api/consultasapi</code>, porque a classe se chama <code>ConsultasApiController</code> para não colidir com o Controller MVC. Quem manda é o recurso: fixamos <code>api/consultas</code>.</p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">16 ApiController e a rota</div>
+          <div class="footer-page">11</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 12: DTO ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Por que não devolver a entidade do EF Core</h2>
+        </div>
+
+        <p style="font-size:0.68em; margin-top:0;">É tentador escrever <code>return Ok(consulta)</code> e ir para casa. O problema não aparece hoje: aparece quando a sua tabela mudar e o sistema do parceiro parar sem que ninguém tenha mexido nele.</p>
+
+        <div class="side-by-side" style="margin-top:4px;">
+          <div class="side">
+            <h4>Devolvendo a entidade</h4>
+            <ul style="margin:0; padding-left:20px; font-size:0.76em;">
+              <li>O contrato vira cópia da tabela, e os tipos são os do banco: <code>Horario</code> sai como <code>"14:30:00"</code>.</li>
+              <li>Na Aula 17, a navegação entre entidades gera ciclos na serialização.</li>
+            </ul>
+          </div>
+          <div class="side">
+            <h4>Devolvendo um DTO</h4>
+            <ul style="margin:0; padding-left:20px; font-size:0.76em;">
+              <li>Você escolhe, campo a campo, o que sai, com que nome e em que formato: <code>"14:30"</code>.</li>
+              <li>O DTO de entrada define o que a API <strong>aceita</strong>, e nada além disso.</li>
+            </ul>
+          </div>
+        </div>
+
+        <pre class="code-compact" style="margin-top:6px;"><code class="language-csharp" data-trim>public record ConsultaResponse(int Id, int PacienteId, int MedicoId,   // saída
+                               string Data, string Horario, string? Observacoes);
+public class ConsultaRequest   // entrada: sem Id, porque quem gera o Id é o banco
+{
+    [Required] public int PacienteId { get; set; }
+    [Required] public int MedicoId { get; set; }
+    [Required] public DateTime Data { get; set; }          // "2026-11-25"
+    [Required] public string Horario { get; set; } = "";   // "14:30"
+}</code></pre>
+
+        <div class="slide-footer">
+          <div class="footer-bar">16 DTO de entrada e de saída</div>
+          <div class="footer-page">12</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 13: RESPOSTAS NO CÓDIGO ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Cada status tem um método <a href="#/ref-slide" class="ref-badge" title="Ver referências">[3]</a></h2>
+        </div>
+
+        <p style="font-size:0.7em; margin-top:0;">A action é declarada como <code>ActionResult&lt;T&gt;</code>: ou ela devolve o objeto <code>T</code>, ou devolve um resultado de status. Um tipo só cobre os dois caminhos.</p>
+
+        <table style="font-size:0.66em; margin-top:8px;">
+          <thead>
+            <tr><th style="width:330px;">O que você quer dizer</th><th style="width:340px;">O que você escreve</th><th>Status</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>aqui está o recurso</td><td><code>return Ok(dto);</code></td><td>200</td></tr>
+            <tr><td>criei, e ele mora neste endereço</td><td><code>return CreatedAtAction(...);</code></td><td>201</td></tr>
+            <tr><td>feito, e não há o que devolver</td><td><code>return NoContent();</code></td><td>204</td></tr>
+            <tr><td>o que você mandou não serve</td><td><code>return BadRequest("motivo");</code></td><td>400</td></tr>
+            <tr><td>esse recurso não existe</td><td><code>return NotFound();</code></td><td>404</td></tr>
+          </tbody>
+        </table>
+
+        <div class="callout" style="margin-top:14px;">
+          <p>O <strong>400</strong> de campo obrigatório faltando você não escreve: com <code>[ApiController]</code>, a validação das Data Annotations roda antes da action e a requisição inválida nem chega ao seu código. O <code>BadRequest</code> que você escreve à mão é para a regra de negócio, como um <code>MedicoId</code> que não existe no banco.</p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">16 Respostas e status no código</div>
+          <div class="footer-page">13</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 14: 201 CREATED E LOCATION ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>O 201 e o cabeçalho que quase todo mundo esquece <a href="#/ref-slide" class="ref-badge" title="Ver referências">[2]</a></h2>
+        </div>
+
+        <p style="font-size:0.72em; margin-top:0;">O <strong>201</strong> não é um 200 mais bonito. Ele diz duas coisas que o 200 não diz: que alguma coisa passou a existir, e em que endereço ela mora.</p>
+
+        <div class="slide-figure" style="margin-top:2px;">
+          <svg viewBox="0 0 1140 300" role="img" aria-label="O sistema parceiro envia POST para api barra consultas com o JSON da consulta; a API valida, grava e responde 201 Created com o cabeçalho Location apontando para api barra consultas barra 42, permitindo ao parceiro consultar o recurso criado">
+            <defs>
+              <marker id="a16seta" markerWidth="9" markerHeight="9" refX="8" refY="4.5" orient="auto">
+                <path d="M0,0 L9,4.5 L0,9 Z" fill="#C84B31"/>
+              </marker>
+            </defs>
+
+            <rect x="6" y="30" width="240" height="150" rx="10" fill="#00274D"/>
+            <text x="126" y="58" text-anchor="middle" font-size="14" font-weight="700" fill="#FFFFFF">Sistema parceiro</text>
+            <g font-family="'JetBrains Mono', monospace" font-size="11" fill="#9FE2C0" style="font-variant-ligatures:none;">
+              <text x="22" y="86">POST /api/consultas</text>
+              <text x="22" y="106">Content-Type: application/json</text>
+              <text x="22" y="130">{ "pacienteId": 1,</text>
+              <text x="22" y="148">  "medicoId": 3,</text>
+              <text x="22" y="166">  "horario": "14:30" }</text>
+            </g>
+
+            <line x1="252" y1="105" x2="292" y2="105" stroke="#C84B31" stroke-width="3" marker-end="url(#a16seta)"/>
+
+            <rect x="300" y="30" width="250" height="150" rx="10" fill="#F5F5F5" stroke="#00274D" stroke-width="2"/>
+            <text x="425" y="58" text-anchor="middle" font-size="14" font-weight="700" fill="#00274D">API da Clínica Vida+</text>
+            <text x="425" y="86" text-anchor="middle" font-size="12" fill="#444444">1. valida o corpo recebido</text>
+            <text x="425" y="110" text-anchor="middle" font-size="12" fill="#444444">2. grava com SaveChangesAsync</text>
+            <text x="425" y="134" text-anchor="middle" font-size="12" fill="#444444">3. o banco gera o Id 42</text>
+            <text x="425" y="162" text-anchor="middle" font-size="12" font-weight="700" fill="#C84B31">CreatedAtAction(...)</text>
+
+            <line x1="556" y1="105" x2="596" y2="105" stroke="#C84B31" stroke-width="3" marker-end="url(#a16seta)"/>
+
+            <rect x="604" y="30" width="530" height="150" rx="10" fill="#1E1E1E"/>
+            <text x="869" y="56" text-anchor="middle" font-size="14" font-weight="700" fill="#C84B31">A resposta</text>
+            <g font-family="'JetBrains Mono', monospace" font-size="12" fill="#d4d4d4" style="font-variant-ligatures:none;">
+              <text x="622" y="82">HTTP/1.1 201 Created</text>
+              <text x="622" y="104">Location: /api/consultas/42</text>
+              <text x="622" y="132">{ "id": 42, "pacienteId": 1, "medicoId": 3,</text>
+              <text x="622" y="150">  "data": "2026-11-25", "horario": "14:30" }</text>
+            </g>
+
+            <rect x="6" y="200" width="1128" height="48" rx="8" fill="#FDECE8" stroke="#C84B31" stroke-width="1.5"/>
+            <text x="570" y="221" text-anchor="middle" font-size="13" font-weight="700" fill="#00274D">Com o Location, o parceiro sabe onde a consulta ficou e pode fazer GET /api/consultas/42 depois.</text>
+            <text x="570" y="239" text-anchor="middle" font-size="12" fill="#7A2A18">Com um 200 seco, ele sabe que deu certo e não sabe o que foi criado nem onde encontrá-lo.</text>
+
+            <text x="570" y="276" text-anchor="middle" font-family="'JetBrains Mono', monospace" font-size="12" fill="#00274D" style="font-variant-ligatures:none;">return CreatedAtAction(nameof(GetConsulta), new { id = consulta.Id }, resposta);</text>
+          </svg>
+        </div>
+
+        <div class="takeaway">
+          <span class="takeaway-label">Takeaway</span>
+          <p><code>CreatedAtAction</code> monta o <code>Location</code> a partir da action que lê o item. Se você renomear essa action, o <code>nameof</code> acompanha e o cabeçalho continua certo.</p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">16 O 201 Created e o Location</div>
+          <div class="footer-page">14</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 15: A API PROTEGIDA ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>A agenda que trancamos na semana passada continua trancada</h2>
+        </div>
+
+        <p style="font-size:0.7em; margin-top:0;">Seria estranho proteger a agenda na Aula 15 e, sete dias depois, publicar <code>GET api/consultas</code> aberto para a internet inteira. A API é a <strong>mesma aplicação</strong>: o <code>[Authorize]</code> no Controller reaproveita o cookie do Identity.</p>
+
+        <pre class="code-compact" style="margin-top:8px;"><code class="language-csharp" data-trim>// Program.cs: quem chama /api sem cookie recebe 401, e não a tela de login em HTML
+builder.Services.ConfigureApplicationCookie(options =&gt;
+{
+    options.Events.OnRedirectToLogin = ctx =&gt;
+    {
+        if (ctx.Request.Path.StartsWithSegments("/api")) ctx.Response.StatusCode = 401;
+        else ctx.Response.Redirect(ctx.RedirectUri);
+        return Task.CompletedTask;
+    };
+});</code></pre>
+
+        <div class="callout" style="margin-top:10px;">
+          <p><strong>Com honestidade:</strong> cookie foi feito para navegador, e o navegador o reenvia sozinho. Um sistema parceiro não tem navegador, e teria de guardar o nosso cookie na mão. Integração de verdade usa <strong>token</strong>, com padrões como OAuth 2.0 e JWT. Não está na ementa da disciplina e não entra hoje: fica como estudo adiante.</p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">16 A API protegida</div>
+          <div class="footer-page">15</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 16: TESTAR A API ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Como se testa o que não tem tela <a href="#/ref-slide" class="ref-badge" title="Ver referências">[4]</a></h2>
+        </div>
+
+        <p style="font-size:0.7em; margin-top:0;">A barra de endereços do navegador só faz GET. Para os outros quatro verbos você precisa de uma ferramenta: um arquivo <code>.http</code> no próprio projeto, o Postman ou uma interface de Swagger.</p>
+
+        <pre class="code-compact" style="margin-top:6px;"><code class="language-http" data-trim>@host = https://localhost:7145
+@cookie = .AspNetCore.Identity.Application=COLE_AQUI_O_SEU
+
+### agenda de um dia, de um médico
+GET {{host}}/api/consultas?data=2026-11-25&amp;medicoId=3
+Cookie: {{cookie}}
+
+### agendar uma consulta nova
+POST {{host}}/api/consultas
+Content-Type: application/json
+Cookie: {{cookie}}
+
+{ "pacienteId": 1, "medicoId": 3, "data": "2026-11-25", "horario": "14:30" }</code></pre>
+
+        <div class="callout" style="margin-top:10px;">
+          <p>A porta <code>7145</code> é exemplo: use <strong>a porta que o seu terminal imprimiu</strong>. O cookie sai do DevTools, aba Application, depois do login. Copiar cookie à mão é chato: é a limitação do slide anterior, na prática.</p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">16 Testar a API</div>
+          <div class="footer-page">16</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 17: EXERCÍCIO CURTO, CICLO 2 ==================== -->
+      <section class="exercise-slide content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Exercício do Ciclo 2: os status errados</h2>
+        </div>
+
+        <div class="exercise-container">
+          <h3>Leia o código, aponte os dois defeitos, 7 minutos</h3>
+          <ol class="exercise-steps">
+            <li>As duas actions gravam certo no banco e, mesmo assim, mentem para quem chamou.</li>
+            <li>Diga qual status cada uma deveria devolver, e o que falta na resposta da primeira.</li>
+          </ol>
+        </div>
+
+        <pre class="code-compact" style="margin-top:4px;"><code class="language-csharp" data-trim>[HttpPost]
+public async Task&lt;IActionResult&gt; PostConsulta(ConsultaRequest dto)
+{
+    _context.Consultas.Add(consulta);
+    await _context.SaveChangesAsync();
+    return Ok(consulta);                    // 1. o que está errado aqui?
+}
+[HttpDelete("{id:int}")]
+public async Task&lt;IActionResult&gt; DeleteConsulta(int id)
+{
+    _context.Consultas.Remove(consulta);
+    await _context.SaveChangesAsync();
+    return Ok("Consulta excluída.");        // 2. e aqui?
+}</code></pre>
+
+
+        <div class="slide-footer">
+          <div class="footer-bar">16 Exercício do Ciclo 2</div>
+          <div class="footer-page">17</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 18: QUIZ DE FIXAÇÃO ==================== -->
+      <section class="quiz-slide content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area"><div class="accent-bar"></div><h2>Quiz de fixação</h2></div>
+        <div class="quiz-container">
+          <div class="quiz-question">Qual código de status uma API REST deve devolver ao criar um recurso com sucesso?</div>
+          <ul class="quiz-options">
+            <li data-correct="false"><span class="option-letter">A</span> 200 OK sempre, porque a requisição foi processada com sucesso e o corpo já traz o recurso criado.</li>
+            <li data-correct="false"><span class="option-letter">B</span> 204 No Content, porque o cliente conhece os dados que enviou e o corpo da resposta se torna dispensável.</li>
+            <li data-correct="true"><span class="option-letter">C</span><span class="option-text">201 Created, com o cabeçalho <code>Location</code> apontando para o endereço do recurso recém-criado.</span></li>
+            <li data-correct="false"><span class="option-letter">D</span> 302 Found, redirecionando o cliente para o endereço em que o recurso criado pode ser consultado.</li>
+          </ul>
+          <div class="quiz-feedback"
+               data-correct-msg="Isso. 201 diz que algo passou a existir, e o Location diz onde. É o que permite ao sistema parceiro consultar depois a consulta que ele acabou de agendar. No ASP.NET Core, quem monta os dois é o CreatedAtAction."
+               data-incorrect-msg="Não. 200 não informa que um recurso novo nasceu nem onde ele ficou; 204 é para operação sem corpo, como o PUT e o DELETE; e 302 é redirecionamento de navegação, não criação de recurso. A resposta é 201 Created, com o cabeçalho Location."></div>
+        </div>
+        <div class="slide-footer"><div class="footer-bar">16 Quiz de fixação</div><div class="footer-page">18</div></div>
+      </section>
+
+      <!-- ==================== SLIDE 19: LAB PASSO 1 ==================== -->
+      <section class="exercise-slide content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Laboratório, passo 1 de 6: a branch e o Controller</h2>
+        </div>
+
+        <p style="font-size:0.72em; margin-top:0;">Missão dos próximos 60 minutos: publicar a agenda da Clínica Vida+ para o sistema do laboratório parceiro.</p>
+
+        <div class="exercise-container">
+          <h3>No seu fork, a partir da main atualizada</h3>
+          <ol class="exercise-steps">
+            <li>Crie a branch <code>feature/api-consultas</code>.</li>
+            <li>Crie <code>Controllers/ConsultasApiController.cs</code>, herdando de <code>ControllerBase</code>, com <code>[ApiController]</code>, <code>[Route("api/consultas")]</code> e <code>[Authorize]</code>.</li>
+            <li>Receba o <code>ClinicaContext</code> pelo construtor, como você já fez no <code>PacientesController</code>.</li>
+            <li>Em <code>Program.cs</code>, aplique o ajuste do cookie para que <code>/api</code> devolva 401 em vez da tela de login.</li>
+          </ol>
+        </div>
+
+        <pre class="code-compact"><code class="language-bash" data-trim>git checkout main &amp;&amp; git pull
+git checkout -b feature/api-consultas
+dotnet run</code></pre>
+
+        <div class="slide-footer">
+          <div class="footer-bar">16 Laboratório, passo 1, branch e Controller</div>
+          <div class="footer-page">19</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 20: LAB PASSO 2 ==================== -->
+      <section class="exercise-slide content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Laboratório, passo 2 de 6: os dois DTOs</h2>
+        </div>
+
+        <div class="exercise-container">
+          <h3>Em <code>Models/Dtos/</code></h3>
+          <ol class="exercise-steps">
+            <li>Crie <code>ConsultaResponse</code>, o que a API mostra, com a data e o horário já formatados como texto.</li>
+            <li>Crie <code>ConsultaRequest</code>, o que a API aceita, com Data Annotations em todos os campos obrigatórios.</li>
+            <li>Escreva o método privado que converte uma <code>Consulta</code> em <code>ConsultaResponse</code>: ele será usado por três actions.</li>
+          </ol>
+        </div>
+
+        <pre class="code-compact" style="margin-top:8px;"><code class="language-csharp" data-trim>private static ConsultaResponse ParaResposta(Consulta c) =&gt; new(
+    c.Id, c.PacienteId, c.MedicoId,
+    c.Data.ToString("yyyy-MM-dd"),
+    c.Horario.ToString(@"hh\:mm"),
+    c.Observacoes);</code></pre>
+
+        <div class="slide-footer">
+          <div class="footer-bar">16 Laboratório, passo 2, os DTOs</div>
+          <div class="footer-page">20</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 21: LAB PASSO 3 ==================== -->
+      <section class="exercise-slide content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Laboratório, passo 3 de 6: <code>GET api/consultas</code></h2>
+        </div>
+
+        <div class="exercise-container">
+          <h3>A listagem, com filtro por data e por médico</h3>
+          <ol class="exercise-steps">
+            <li>Os dois filtros são <strong>opcionais</strong>: sem nenhum deles, a resposta é a agenda inteira.</li>
+            <li>Monte a consulta condicionalmente e só vá ao banco no <code>ToListAsync</code>.</li>
+            <li>Lista vazia é <strong>200</strong> com <code>[]</code> no corpo, nunca 404: a coleção existe, e está vazia.</li>
+          </ol>
+        </div>
+
+        <pre class="code-compact" style="margin-top:8px;"><code class="language-csharp" data-trim>[HttpGet]
+public async Task&lt;ActionResult&lt;IEnumerable&lt;ConsultaResponse&gt;&gt;&gt; GetConsultas(
+    [FromQuery] DateTime? data, [FromQuery] int? medicoId)
+{
+    var query = _context.Consultas.AsQueryable();
+    if (data is not null) query = query.Where(c =&gt; c.Data == data.Value.Date);
+    if (medicoId is not null) query = query.Where(c =&gt; c.MedicoId == medicoId);
+
+    var consultas = await query.OrderBy(c =&gt; c.Data).ThenBy(c =&gt; c.Horario).ToListAsync();
+    return Ok(consultas.Select(ParaResposta));
+}</code></pre>
+
+        <div class="slide-footer">
+          <div class="footer-bar">16 Laboratório, passo 3, a listagem com filtros</div>
+          <div class="footer-page">21</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 22: LAB PASSO 4 ==================== -->
+      <section class="exercise-slide content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Laboratório, passo 4 de 6: <code>GET api/consultas/{id}</code></h2>
+        </div>
+
+        <div class="exercise-container">
+          <h3>Uma consulta específica, e o 404 honesto</h3>
+          <ol class="exercise-steps">
+            <li>A restrição <code>{id:int}</code> na rota descarta sozinha um <code>/api/consultas/abc</code>.</li>
+            <li>Registro inexistente devolve <code>NotFound()</code>, e não uma resposta vazia com 200.</li>
+            <li>Esta é a action que o <code>CreatedAtAction</code> do passo 5 vai apontar: guarde o nome dela.</li>
+          </ol>
+        </div>
+
+        <pre class="code-compact" style="margin-top:8px;"><code class="language-csharp" data-trim>[HttpGet("{id:int}")]
+public async Task&lt;ActionResult&lt;ConsultaResponse&gt;&gt; GetConsulta(int id)
+{
+    var consulta = await _context.Consultas.FindAsync(id);
+    if (consulta is null) return NotFound();
+
+    return Ok(ParaResposta(consulta));
+}</code></pre>
+
+        <div class="slide-footer">
+          <div class="footer-bar">16 Laboratório, passo 4, a consulta por id</div>
+          <div class="footer-page">22</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 23: LAB PASSO 5 ==================== -->
+      <section class="exercise-slide content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Laboratório, passo 5 de 6: <code>POST api/consultas</code></h2>
+        </div>
+
+        <div class="exercise-container">
+          <h3>Criar, agora sozinho</h3>
+          <ol class="exercise-steps">
+            <li>Converta o <code>Horario</code> de texto para <code>TimeSpan</code> com <code>TryParse</code>, devolvendo <code>BadRequest</code> se não der.</li>
+            <li>Confira se o <code>PacienteId</code> e o <code>MedicoId</code> existem no banco: se não existirem, é <strong>400</strong>, não 500.</li>
+            <li>Grave e devolva <strong>201</strong> com <code>CreatedAtAction</code>, apontando para a action do passo 4.</li>
+          </ol>
+        </div>
+
+        <pre class="code-compact" style="margin-top:8px;"><code class="language-csharp" data-trim>[HttpPost]
+public async Task&lt;ActionResult&lt;ConsultaResponse&gt;&gt; PostConsulta(ConsultaRequest dto)
+{
+    // ... validações e montagem da entidade Consulta
+    _context.Consultas.Add(consulta);
+    await _context.SaveChangesAsync();
+
+    var resposta = ParaResposta(consulta);
+    return CreatedAtAction(nameof(GetConsulta), new { id = consulta.Id }, resposta);
+}</code></pre>
+
+        <div class="slide-footer">
+          <div class="footer-bar">16 Laboratório, passo 5, o POST</div>
+          <div class="footer-page">23</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 24: LAB PASSO 6 ==================== -->
+      <section class="exercise-slide content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Laboratório, passo 6 de 6: PUT, DELETE e o teste</h2>
+        </div>
+
+        <div class="exercise-container">
+          <h3>Remarcar, cancelar e provar que funciona</h3>
+          <ol class="exercise-steps">
+            <li><code>PUT api/consultas/{id}</code> substitui os dados da consulta e devolve <strong>204</strong>; id inexistente é 404.</li>
+            <li><code>DELETE api/consultas/{id}</code> remove e devolve <strong>204</strong>; id inexistente é 404.</li>
+            <li>Registre as cinco chamadas em <code>ClinicaVida.http</code>, na raiz do projeto, e execute todas.</li>
+            <li>Documente a tabela de endpoints no <code>README.md</code> do seu fork.</li>
+          </ol>
+        </div>
+
+        <pre class="code-compact" style="margin-top:8px;"><code class="language-csharp" data-trim>[HttpDelete("{id:int}")]
+public async Task&lt;IActionResult&gt; DeleteConsulta(int id)
+{
+    var consulta = await _context.Consultas.FindAsync(id);
+    if (consulta is null) return NotFound();
+    _context.Consultas.Remove(consulta);
+    await _context.SaveChangesAsync();
+    return NoContent();
+}</code></pre>
+
+        <div class="slide-footer">
+          <div class="footer-bar">16 Laboratório, passo 6, PUT e DELETE</div>
+          <div class="footer-page">24</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 25: ENTREGÁVEL, COMMIT E PUSH ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Entregável de hoje, commit e push</h2>
+        </div>
+
+        <div class="side-by-side" style="margin-top:6px;">
+          <div class="side">
+            <h4>O que precisa estar funcionando</h4>
+            <ul style="margin:0; padding-left:20px;">
+              <li><code>ConsultasApiController</code> com os <strong>cinco</strong> endpoints.</li>
+              <li>Os <strong>dois</strong> DTOs, de entrada e de saída.</li>
+              <li><code>[ApiController]</code>, <code>[Route("api/consultas")]</code> e <code>[Authorize]</code>.</li>
+              <li><code>ClinicaVida.http</code> com as cinco chamadas registradas.</li>
+              <li>A tabela de endpoints no <code>README.md</code>.</li>
+            </ul>
+          </div>
+          <div class="side">
+            <h4>Como o professor confere</h4>
+            <ul style="margin:0; padding-left:20px;">
+              <li>POST devolve <strong>201</strong> e traz o <code>Location</code>.</li>
+              <li>PUT e DELETE devolvem <strong>204</strong>, sem corpo.</li>
+              <li><code>api/consultas/9999</code> devolve <strong>404</strong>.</li>
+              <li>Corpo sem <code>medicoId</code> devolve <strong>400</strong>.</li>
+              <li>Chamada sem cookie devolve <strong>401</strong>.</li>
+            </ul>
+          </div>
+        </div>
+
+        <pre class="code-compact" style="margin-top:14px;"><code class="language-bash" data-trim>git add Controllers/ConsultasApiController.cs Models/Dtos/ Program.cs
+git add ClinicaVida.http README.md
+git commit -m "feat: API REST de consultas com os cinco endpoints"
+git push -u origin feature/api-consultas</code></pre>
+
+        <div class="slide-footer">
+          <div class="footer-bar">16 Entregável, commit e push</div>
+          <div class="footer-page">25</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 26: FECHAMENTO ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>O que fica desta aula</h2>
+        </div>
+
+        <p style="font-size:0.72em; margin-top:0;">Uma aula atrás a Clínica Vida+ só sabia conversar com pessoas. Agora ela conversa com outros sistemas, e o que garante isso não é o JSON: é o contrato.</p>
+
+        <div class="concept-cards" style="margin-top:10px;">
+          <div class="concept-card">
+            <h4>O recurso manda na URL</h4>
+            <p>Duas rotas, <code>api/consultas</code> e <code>api/consultas/{id}</code>, dão conta das cinco operações. O verbo vai no método HTTP.</p>
+          </div>
+          <div class="concept-card">
+            <h4>O status é resposta, não enfeite</h4>
+            <p>200, 201 com <code>Location</code>, 204, 400, 401 e 404. Quem lê o número é um programa, e ele decide por ele.</p>
+          </div>
+          <div class="concept-card">
+            <h4>O DTO protege as duas pontas</h4>
+            <p>O contrato da API não é a sua tabela. Mudar o banco por dentro não pode quebrar quem consome de fora.</p>
+          </div>
+        </div>
+
+        <div class="callout" style="margin-top:18px;">
+          <p><strong>Prévia da Aula 17:</strong> a resposta que a sua API devolve hoje traz <code>pacienteId: 1</code> e <code>medicoId: 3</code>. O laboratório parceiro quer o <strong>nome</strong> do paciente e a <strong>especialidade</strong> do médico, e você não tem como buscá-los sem sair do <code>Consultas</code>. Na próxima aula as quatro entidades do case se ligam de verdade, com chaves estrangeiras, propriedades de navegação e <code>Include</code>.</p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">16 Fechamento e prévia da Aula 17</div>
+          <div class="footer-page">26</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 27: REFERÊNCIAS ==================== -->
+      <section id="ref-slide" class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Referências desta aula</h2>
+        </div>
+
+        <p style="font-size:0.72em; margin-top:0;">Os números entre colchetes ao lado dos títulos remetem a esta lista, toda ela em português e aberta.</p>
+
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px 30px; margin-top:6px;">
+          <div class="concept-card" style="padding:14px 18px;">
+            <h4>[1] APIs web no ASP.NET Core</h4>
+            <p style="font-size:0.7em; color:#444444;">MICROSOFT. <em>Criar APIs Web com o ASP.NET Core</em>.<br>
+            <code style="font-size:0.82em;">learn.microsoft.com/pt-br/aspnet/core/web-api/</code></p>
+          </div>
+          <div class="concept-card" style="padding:14px 18px;">
+            <h4>[2] Verbos e códigos de status</h4>
+            <p style="font-size:0.7em; color:#444444;">MDN WEB DOCS. <em>Códigos de status de respostas HTTP</em>.<br>
+            <code style="font-size:0.82em;">developer.mozilla.org/pt-BR/docs/Web/HTTP/Status</code></p>
+          </div>
+          <div class="concept-card" style="padding:14px 18px;">
+            <h4>[3] Tipos de retorno das actions</h4>
+            <p style="font-size:0.7em; color:#444444;">MICROSOFT. <em>Tipos de retorno de ação do controlador na API Web</em>.<br>
+            <code style="font-size:0.82em;">learn.microsoft.com/pt-br/aspnet/core/web-api/action-return-types</code></p>
+          </div>
+          <div class="concept-card" style="padding:14px 18px;">
+            <h4>[4] Arquivos <code>.http</code></h4>
+            <p style="font-size:0.7em; color:#444444;">MICROSOFT. <em>Usar arquivos .http no Visual Studio</em>.<br>
+            <code style="font-size:0.82em;">learn.microsoft.com/pt-br/aspnet/core/test/http-files</code></p>
+          </div>
+        </div>
+
+        <div class="callout" style="margin-top:14px;">
+          <p>O roteiro completo do laboratório de hoje está no portal, em <code>labs/aula16-lab/</code>.</p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">16 Referências</div>
+          <div class="footer-page">27</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 28: ENCERRAMENTO ==================== -->
+      <section class="end-slide">
+        <img src="../assets/img/uninove-logo.png" alt="Uninove, Universidade Nove de Julho"
+             style="max-width:300px; background:#FFFFFF; padding:20px 28px; border-radius:8px;">
+        <div class="copyright">
+          Copyright &copy; 2026<br>
+          Prof. José Romualdo da Costa Filho<br><br>
+          Todos os direitos reservados. É expressamente proibida a reprodução, divulgação<br>
+          total ou parcial, deste material acadêmico sem autorização formal,<br>
+          por escrito, do Professor autor da ementa.
+        </div>
+      </section>
+
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/highlight/highlight.js"></script>
+  <script src="../assets/js/uninove-quiz.js"></script>
+  <script type="module">
+    import { TURMAS, resolverTurma, dataDaAula, formatarData } from '../assets/js/turmas.js';
+    const turma = resolverTurma({
+      hoje: new Date(),
+      salva: localStorage.getItem('uninove-turma'),
+    });
+    const alvo = document.querySelector('[data-data-da-aula]');
+    if (alvo) {
+      const n = Number(alvo.getAttribute('data-data-da-aula'));
+      alvo.textContent = turma
+        ? `${TURMAS[turma].rotulo}, ${formatarData(dataDaAula(turma, n))}`
+        : `Quarta ${formatarData(dataDaAula('quarta', n))} ou quinta ${formatarData(dataDaAula('quinta', n))}`;
+    }
+  </script>
+  <script>
+    Reveal.initialize({
+      width: 1280, height: 720, center: false, margin: 0,
+      hash: true, slideNumber: false,
+      // Os chevrons de navegação caem sobre a footer-bar e sobre o triângulo
+      // azul do canto inferior direito; a barra de progresso encosta no rodapé
+      // e parece um segundo rodapé. Nenhum dos dois é usado na projeção.
+      controls: false, progress: false,
+      // Um slide por página no ?print-pdf, para o PDF bater com o deck.
+      pdfMaxPagesPerSlide: 1,
+      plugins: [RevealHighlight],
+    });
+  </script>
+</body>
+</html>

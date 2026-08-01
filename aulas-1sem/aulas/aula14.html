@@ -1,0 +1,1024 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Aula 14, Requisições HTTP assíncronas com AJAX | Uninove</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/theme/white.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/highlight/monokai.css">
+  <link rel="stylesheet" href="../assets/css/uninove-theme.css">
+  <link rel="stylesheet" href="../assets/css/uninove-print.css">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+      <!-- ==================== SLIDE 1: CAPA ==================== -->
+      <section class="cover-slide">
+        <img src="../assets/img/uninove-logo.png" alt="Uninove, Universidade Nove de Julho" class="uninove-logo-full"
+             style="max-width:400px; background:#FFFFFF; padding:26px 36px; border-radius:10px;">
+        <div style="margin-top:36px; color:#FFFFFF; font-size:0.95em; font-weight:800; letter-spacing:4px; text-transform:uppercase;">Desenvolvimento Web</div>
+        <div style="margin-top:12px; color:#C84B31; font-size:0.6em; font-weight:700; letter-spacing:3px; text-transform:uppercase;">Graduação, 2026.2</div>
+      </section>
+
+      <!-- ==================== SLIDE 2: TÍTULO ==================== -->
+      <section class="title-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="title-card">
+          <div class="accent-bar"></div>
+          <h1>Desenvolvimento Web</h1>
+          <h2>Requisições HTTP assíncronas com AJAX</h2>
+          <h3>Prof. José Romualdo<br><span data-data-da-aula="14"></span></h3>
+        </div>
+        <div class="lesson-bar">AULA 14 &nbsp;|&nbsp; Módulo 3, Acesso a Dados e Funcionalidades Avançadas</div>
+      </section>
+
+      <!-- ==================== SLIDE 3: AGENDA ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Agenda do encontro de hoje</h2>
+        </div>
+
+        <p style="font-size:0.76em; margin-top:0;">São 150 minutos corridos, em quatro ciclos. Hoje o agendamento da Clínica Vida+ deixa de recarregar a página inteira a cada escolha do usuário.</p>
+
+        <table>
+          <thead>
+            <tr><th style="width:190px;">Horário</th><th style="width:200px;">Bloco</th><th>O que acontece</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>19h30 às 20h05</td><td>Ciclo 1</td><td>O que é AJAX, o formato JSON e o <code>fetch</code> com <code>async</code> e <code>await</code></td></tr>
+            <tr><td>20h05 às 20h40</td><td>Ciclo 2</td><td>Actions que devolvem JSON e o DOM montado a partir da resposta</td></tr>
+            <tr><td>20h40 às 20h50</td><td>Quiz de fixação</td><td>Uma pergunta sobre o conceito central da aula</td></tr>
+            <tr><td>20h50 às 21h25</td><td>Ciclo 3</td><td>Laboratório guiado: <code>MedicosPorEspecialidade</code> e a lista que troca sozinha</td></tr>
+            <tr><td>21h25 às 21h50</td><td>Ciclo 4</td><td>Laboratório: <code>HorariosDisponiveis</code>, os três estados da tela e o entregável</td></tr>
+            <tr><td>21h50 às 22h00</td><td>Fechamento</td><td>Commit, push e prévia da Aula 15</td></tr>
+          </tbody>
+        </table>
+
+        <div class="slide-footer">
+          <div class="footer-bar">14 Agenda do encontro</div>
+          <div class="footer-page">3</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 4: RECAPITULAÇÃO DA AULA 13 ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>De onde viemos: o agendamento em duas etapas da Aula 13</h2>
+        </div>
+
+        <p style="font-size:0.72em; margin-top:0;">Você entregou o agendamento em duas etapas usando <code>HttpContext.Session</code>, mais o cookie com a unidade preferida da clínica. O fluxo funciona, e ele tem um custo que ninguém mediu ainda.</p>
+
+        <div class="side-by-side" style="margin-top:6px;">
+          <div class="side">
+            <h4>O que já funciona</h4>
+            <ul style="margin:0; padding-left:20px;">
+              <li>Etapa 1 guarda especialidade e médico na sessão.</li>
+              <li>Etapa 2 recupera a sessão e grava a <code>Consulta</code>.</li>
+              <li>O acesso direto à etapa 2 é bloqueado.</li>
+              <li>A unidade preferida volta do cookie.</li>
+            </ul>
+          </div>
+          <div class="side">
+            <h4>O que incomoda quem usa</h4>
+            <ul style="margin:0; padding-left:20px;">
+              <li>Cada escolha do usuário exige um envio de formulário.</li>
+              <li>Cada envio devolve uma <strong>página inteira</strong> nova.</li>
+              <li>A tela pisca, e a rolagem volta para o topo.</li>
+              <li>Para saber os horários livres, é preciso avançar de tela.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="callout" style="margin-top:16px;">
+          <p><strong>A pergunta de hoje:</strong> dá para trocar <em>um pedaço</em> da página, buscando dados no servidor durante o uso, sem recarregar nada em volta? Dá, e essa técnica tem nome: <strong>AJAX</strong>.</p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">14 Recapitulação da Aula 13</div>
+          <div class="footer-page">4</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 5: RECARGA TOTAL CONTRA TROCA DE PEDAÇO ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>A página inteira contra o pedaço que se atualiza</h2>
+        </div>
+
+        <p style="font-size:0.7em; margin-top:0;">O usuário trocou a especialidade. Só a lista de médicos precisa mudar. Compare o que o navegador faz nos dois casos.</p>
+
+        <div class="slide-figure" style="margin-top:0;">
+          <svg viewBox="0 0 1140 420" role="img" aria-label="À esquerda, o envio de formulário devolve a página inteira: cabeçalho, menu, formulário e rodapé voltam do servidor. À direita, a requisição AJAX troca apenas a lista de médicos, e o resto da página permanece na tela">
+            <text x="6" y="18" font-size="15" font-weight="700" fill="#C84B31">Envio de formulário: o servidor devolve a página inteira</text>
+            <text x="586" y="18" font-size="15" font-weight="700" fill="#0B6E75">Requisição AJAX: o servidor devolve só os dados</text>
+
+            <rect x="6" y="30" width="548" height="290" rx="8" fill="#FFFFFF" stroke="#C84B31" stroke-width="2"/>
+            <rect x="8" y="32" width="544" height="28" fill="#C84B31"/>
+            <circle cx="26" cy="46" r="5.5" fill="#FFFFFF" opacity="0.8"/>
+            <circle cx="44" cy="46" r="5.5" fill="#FFFFFF" opacity="0.6"/>
+            <circle cx="62" cy="46" r="5.5" fill="#FFFFFF" opacity="0.4"/>
+            <text x="84" y="51" font-size="12" fill="#FFFFFF" font-family="'JetBrains Mono', monospace" style="font-variant-ligatures:none;">POST /Consultas/Agendar</text>
+
+            <rect x="22" y="72" width="516" height="42" rx="5" fill="#FDECE8" stroke="#C84B31" stroke-width="1.5" stroke-dasharray="6 4"/>
+            <text x="280" y="98" text-anchor="middle" font-size="13" font-weight="600" fill="#7A2A18">cabeçalho, logo e CSS, tudo de novo</text>
+            <rect x="22" y="122" width="516" height="36" rx="5" fill="#FDECE8" stroke="#C84B31" stroke-width="1.5" stroke-dasharray="6 4"/>
+            <text x="280" y="145" text-anchor="middle" font-size="13" font-weight="600" fill="#7A2A18">menu de navegação, de novo</text>
+            <rect x="22" y="166" width="516" height="96" rx="5" fill="#FDECE8" stroke="#C84B31" stroke-width="1.5" stroke-dasharray="6 4"/>
+            <text x="280" y="196" text-anchor="middle" font-size="14" font-weight="700" fill="#C84B31">formulário inteiro remontado</text>
+            <text x="280" y="222" text-anchor="middle" font-size="12.5" fill="#7A2A18">o que o usuário já tinha digitado só volta</text>
+            <text x="280" y="244" text-anchor="middle" font-size="12.5" fill="#7A2A18">se o servidor devolver de novo</text>
+            <rect x="22" y="270" width="516" height="36" rx="5" fill="#FDECE8" stroke="#C84B31" stroke-width="1.5" stroke-dasharray="6 4"/>
+            <text x="280" y="293" text-anchor="middle" font-size="13" font-weight="600" fill="#7A2A18">rodapé, de novo</text>
+
+            <rect x="586" y="30" width="548" height="290" rx="8" fill="#FFFFFF" stroke="#2E9E7E" stroke-width="2"/>
+            <rect x="588" y="32" width="544" height="28" fill="#0B6E75"/>
+            <circle cx="606" cy="46" r="5.5" fill="#FFFFFF" opacity="0.8"/>
+            <circle cx="624" cy="46" r="5.5" fill="#FFFFFF" opacity="0.6"/>
+            <circle cx="642" cy="46" r="5.5" fill="#FFFFFF" opacity="0.4"/>
+            <text x="664" y="51" font-size="12" fill="#FFFFFF" font-family="'JetBrains Mono', monospace" style="font-variant-ligatures:none;">a URL da barra nem muda</text>
+
+            <rect x="602" y="72" width="516" height="42" rx="5" fill="#EFEFEF" stroke="#CCCCCC" stroke-width="1.5"/>
+            <text x="860" y="98" text-anchor="middle" font-size="13" fill="#777777">cabeçalho intacto na tela</text>
+            <rect x="602" y="122" width="516" height="36" rx="5" fill="#EFEFEF" stroke="#CCCCCC" stroke-width="1.5"/>
+            <text x="860" y="145" text-anchor="middle" font-size="13" fill="#777777">menu intacto na tela</text>
+            <rect x="602" y="166" width="516" height="96" rx="5" fill="#EFEFEF" stroke="#CCCCCC" stroke-width="1.5"/>
+            <rect x="614" y="180" width="492" height="68" rx="5" fill="#EAF5F1" stroke="#2E9E7E" stroke-width="2"/>
+            <text x="860" y="208" text-anchor="middle" font-size="14" font-weight="700" fill="#0B6E75">só este &lt;select&gt; é redesenhado</text>
+            <text x="860" y="232" text-anchor="middle" font-size="12.5" fill="#1F5A50">o que já estava digitado continua digitado</text>
+            <rect x="602" y="270" width="516" height="36" rx="5" fill="#EFEFEF" stroke="#CCCCCC" stroke-width="1.5"/>
+            <text x="860" y="293" text-anchor="middle" font-size="13" fill="#777777">rodapé intacto na tela</text>
+
+            <rect x="6" y="340" width="548" height="74" rx="8" fill="#FDECE8" stroke="#C84B31" stroke-width="1.5"/>
+            <text x="280" y="370" text-anchor="middle" font-size="14.5" font-weight="700" fill="#C84B31">Trafega um documento HTML completo</text>
+            <text x="280" y="396" text-anchor="middle" font-size="13" fill="#7A2A18">A tela pisca e a rolagem volta ao topo.</text>
+
+            <rect x="586" y="340" width="548" height="74" rx="8" fill="#EAF5F1" stroke="#2E9E7E" stroke-width="1.5"/>
+            <text x="860" y="370" text-anchor="middle" font-size="14.5" font-weight="700" fill="#0B6E75">Trafega uma linha de JSON com os médicos</text>
+            <text x="860" y="396" text-anchor="middle" font-size="13" fill="#1F5A50">Nada pisca, e o foco do teclado não se perde.</text>
+          </svg>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">14 Recarga total e troca de pedaço</div>
+          <div class="footer-page">5</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 6: LINHA DO TEMPO DA REQUISIÇÃO ASSÍNCRONA ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>O que "assíncrona" quer dizer, na linha do tempo</h2>
+        </div>
+
+        <p style="font-size:0.7em; margin-top:0;">Assíncrono não é rápido. É <strong>não bloquear</strong>: a requisição parte, e a interface continua respondendo enquanto o dado não chegou.</p>
+
+        <div class="slide-figure" style="margin-top:0;">
+          <svg viewBox="0 0 1140 420" role="img" aria-label="Três faixas ao longo do tempo: a interface continua respondendo o tempo todo, a rede leva a requisição ao servidor e traz o JSON de volta, e o JavaScript só trabalha em dois instantes, no disparo e na chegada da resposta">
+            <defs>
+              <marker id="a14setaTempo" markerWidth="9" markerHeight="9" refX="8" refY="4.5" orient="auto">
+                <path d="M0,0 L9,4.5 L0,9 Z" fill="#666666"/>
+              </marker>
+            </defs>
+
+            <text x="6" y="62" font-size="13" font-weight="700" fill="#00274D">Interface</text>
+            <rect x="150" y="26" width="984" height="66" rx="6" fill="#EAF5F1" stroke="#2E9E7E" stroke-width="2"/>
+            <text x="642" y="56" text-anchor="middle" font-size="14" font-weight="700" fill="#0B6E75">a página continua na tela e respondendo o tempo todo</text>
+            <text x="642" y="80" text-anchor="middle" font-size="12.5" fill="#1F5A50">o usuário rola, lê a ficha ao lado e digita a observação, sem esperar por nada</text>
+
+            <text x="6" y="168" font-size="13" font-weight="700" fill="#00274D">Rede</text>
+            <rect x="250" y="120" width="640" height="96" rx="6" fill="#F5F5F5" stroke="#00274D" stroke-width="1.5" stroke-dasharray="7 5"/>
+            <text x="570" y="150" text-anchor="middle" font-size="13" font-weight="600" fill="#00274D">a requisição vai ao servidor, que consulta o MySQL e devolve o JSON</text>
+            <text x="570" y="174" text-anchor="middle" font-size="12" fill="#555555">costuma levar dezenas de milissegundos, e ninguém do lado do navegador espera parado</text>
+            <line x1="266" y1="198" x2="874" y2="198" stroke="#C8D6E5" stroke-width="3" stroke-linecap="round"/>
+            <circle r="7" fill="#C84B31">
+              <animate attributeName="cx" dur="2.6s" repeatCount="indefinite" values="266;874;874" keyTimes="0;0.85;1"/>
+              <animate attributeName="cy" dur="2.6s" repeatCount="indefinite" values="198;198;198" keyTimes="0;0.85;1"/>
+              <animate attributeName="opacity" dur="2.6s" repeatCount="indefinite" values="1;1;0" keyTimes="0;0.85;1"/>
+            </circle>
+
+            <text x="6" y="286" font-size="13" font-weight="700" fill="#00274D">Seu JavaScript</text>
+            <rect x="150" y="244" width="104" height="76" rx="6" fill="#00274D"/>
+            <text x="202" y="276" text-anchor="middle" font-size="12" fill="#FFFFFF" font-weight="600">dispara o</text>
+            <text x="202" y="296" text-anchor="middle" font-size="12" fill="#FFFFFF" font-weight="600">fetch</text>
+            <rect x="260" y="244" width="624" height="76" rx="6" fill="#FFFFFF" stroke="#AAAAAA" stroke-width="1.5" stroke-dasharray="5 5"/>
+            <text x="572" y="274" text-anchor="middle" font-size="13" font-weight="700" fill="#666666">no ponto do await, o seu código simplesmente não está rodando</text>
+            <text x="572" y="298" text-anchor="middle" font-size="12" fill="#888888">a thread do navegador fica livre para tratar cliques, rolagem e digitação</text>
+            <rect x="890" y="244" width="244" height="76" rx="6" fill="#00274D"/>
+            <text x="1012" y="276" text-anchor="middle" font-size="12" fill="#FFFFFF" font-weight="600">recebe o JSON e monta</text>
+            <text x="1012" y="296" text-anchor="middle" font-size="12" fill="#FFFFFF" font-weight="600">as options no DOM</text>
+
+            <line x1="150" y1="348" x2="1116" y2="348" stroke="#666666" stroke-width="2" marker-end="url(#a14setaTempo)"/>
+            <text x="1100" y="338" text-anchor="end" font-size="13" font-weight="700" fill="#666666">tempo</text>
+            <line x1="202" y1="336" x2="202" y2="360" stroke="#C84B31" stroke-width="2"/>
+            <text x="202" y="380" text-anchor="middle" font-size="12.5" font-weight="700" fill="#C84B31">o usuário troca a especialidade</text>
+            <line x1="890" y1="336" x2="890" y2="360" stroke="#C84B31" stroke-width="2"/>
+            <text x="890" y="380" text-anchor="middle" font-size="12.5" font-weight="700" fill="#C84B31">a resposta chega</text>
+
+            <text x="570" y="412" text-anchor="middle" font-size="14" font-weight="700" fill="#00274D">Na recarga total, essa mesma espera é uma tela em branco. Aqui, é uma tela viva com um aviso de "Carregando".</text>
+          </svg>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">14 A linha do tempo assíncrona</div>
+          <div class="footer-page">6</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 7: JSON ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>JSON: o formato em que os dados viajam <a href="#/ref-slide" class="ref-badge" title="Ver referências">[2]</a></h2>
+        </div>
+
+        <p style="font-size:0.7em; margin-top:0;">JSON é <strong>texto</strong>. Nasceu da sintaxe de objeto do JavaScript, mas é entendido por C#, Python, Java e por qualquer linguagem que você venha a usar.</p>
+
+        <pre class="code-compact"><code class="language-json" data-trim>[
+  { "id": 3, "nome": "Dra. Helena Vasques", "crm": "SP-118240" },
+  { "id": 7, "nome": "Dr. Rafael Nakano",   "crm": "SP-204915" }
+]</code></pre>
+
+        <table style="margin-top:10px; font-size:0.62em;">
+          <thead>
+            <tr><th style="width:340px;">JSON, o texto que trafega</th><th>Objeto JavaScript, o que existe na memória</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Chave sempre entre aspas duplas</td><td>Chave sem aspas, na maior parte dos casos</td></tr>
+            <tr><td>Texto só com aspas duplas</td><td>Aspas simples, duplas ou crase, tanto faz</td></tr>
+            <tr><td>Seis tipos: texto, número, booleano, nulo, objeto e vetor</td><td>Tem também função, data, <code>undefined</code></td></tr>
+          </tbody>
+        </table>
+
+        <div class="takeaway">
+          <span class="takeaway-label">Takeaway</span>
+          <p>A ponte são dois métodos: <code>JSON.parse(texto)</code> vira objeto, e <code>JSON.stringify(objeto)</code> volta a ser texto. O <code>fetch</code> já faz o <code>parse</code> por você, no <code>await resposta.json()</code>.</p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">14 O formato JSON</div>
+          <div class="footer-page">7</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 8: FETCH ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2><code>fetch</code>: pedir dados ao servidor de dentro da página <a href="#/ref-slide" class="ref-badge" title="Ver referências">[1]</a></h2>
+        </div>
+
+        <p style="font-size:0.7em; margin-top:0;">São dois <code>await</code>, e cada um espera uma coisa diferente: o primeiro espera os <strong>cabeçalhos</strong> da resposta chegarem, o segundo espera o <strong>corpo</strong> ser lido e convertido.</p>
+
+        <pre class="code-compact"><code class="language-javascript" data-trim>async function carregarMedicos(especialidadeId) {
+  const url = `/Consultas/MedicosPorEspecialidade?especialidadeId=${especialidadeId}`;
+
+  const resposta = await fetch(url);      // espera os cabeçalhos
+
+  // 404 e 500 NÃO lançam erro no fetch: quem avisa é o resposta.ok
+  if (!resposta.ok) {
+    throw new Error(`O servidor respondeu ${resposta.status}`);
+  }
+
+  return await resposta.json();           // espera e converte o corpo
+}</code></pre>
+
+        <div class="callout" style="margin-top:12px;">
+          <p><strong>A armadilha mais comum:</strong> o <code>fetch</code> só rejeita quando a requisição <em>não acontece</em>, por rede fora do ar. Um 404 ou um 500 é uma resposta que chegou normalmente. Sem o <code>if (!resposta.ok)</code>, o seu código trata uma página de erro como se fosse a lista de médicos.</p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">14 fetch e resposta.ok</div>
+          <div class="footer-page">8</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 9: ASYNC E AWAIT NAS DUAS LINGUAGENS ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Você já conhece <code>async</code> e <code>await</code>: eles vieram da Aula 12 <a href="#/ref-slide" class="ref-badge" title="Ver referências">[3]</a></h2>
+        </div>
+
+        <p style="font-size:0.7em; margin-top:0;">A mesma ideia, em duas linguagens: <strong>marque o método com <code>async</code>, espere com <code>await</code>, e quem espera não fica preso</strong>. Muda o nome do que volta e quem é liberado durante a espera.</p>
+
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px; margin-top:8px;">
+          <div>
+            <h4 style="font-size:0.68em; color:#C84B31; margin:0 0 6px 0;">C#, no servidor, Aula 12</h4>
+            <pre class="code-compact" style="margin:0;"><code class="language-csharp" data-trim>public async Task&lt;IActionResult&gt; Index()
+{
+    var lista = await _context.Pacientes
+        .ToListAsync();
+
+    return View(lista);
+}</code></pre>
+          </div>
+          <div>
+            <h4 style="font-size:0.68em; color:#C84B31; margin:0 0 6px 0;">JavaScript, no navegador, hoje</h4>
+            <pre class="code-compact" style="margin:0;"><code class="language-javascript" data-trim>async function listar() {
+  const r = await fetch("/Consultas/" +
+      "MedicosPorEspecialidade?especialidadeId=3");
+
+  return await r.json();
+}</code></pre>
+          </div>
+        </div>
+
+        <table style="margin-top:12px; font-size:0.62em;">
+          <thead>
+            <tr><th style="width:250px;">&nbsp;</th><th style="width:340px;">C#, no servidor</th><th>JavaScript, no navegador</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>O que o método devolve</td><td><code>Task</code> ou <code>Task&lt;T&gt;</code></td><td><code>Promise</code></td></tr>
+            <tr><td>Quem fica livre durante a espera</td><td>A thread do servidor, que atende outra requisição</td><td>A thread do navegador, que atende o usuário</td></tr>
+            <tr><td>Se você esquecer o <code>await</code></td><td>Volta a <code>Task</code>, e a View recebe um objeto que não sabe desenhar</td><td>Volta a <code>Promise</code>, e o seu <code>for</code> percorre coisa nenhuma</td></tr>
+          </tbody>
+        </table>
+
+        <div class="slide-footer">
+          <div class="footer-bar">14 async e await nas duas linguagens</div>
+          <div class="footer-page">9</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 10: EXERCÍCIO CURTO, CICLO 1 ==================== -->
+      <section class="exercise-slide content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Exercício do Ciclo 1: o primeiro <code>fetch</code>, no console</h2>
+        </div>
+
+        <div class="exercise-container">
+          <h3>Com a aplicação rodando, no console do DevTools, 8 minutos</h3>
+          <ol class="exercise-steps">
+            <li>Abra a Clínica Vida+ no navegador e depois o DevTools, na aba <strong>Console</strong>.</li>
+            <li>Escreva a função <code>async</code> abaixo, que busca uma URL e imprime o JSON.</li>
+            <li>Chame-a com o endereço da sua aplicação e observe o resultado impresso.</li>
+            <li>Agora chame com uma URL que não existe e veja: nenhum erro é lançado, e é por isso que a checagem de <code>resposta.ok</code> não é opcional.</li>
+          </ol>
+        </div>
+
+        <pre class="code-compact"><code class="language-javascript" data-trim>async function espiar(url) {
+  const resposta = await fetch(url);
+  console.log("status:", resposta.status, "ok?", resposta.ok);
+  console.log(await resposta.json());
+}
+
+espiar("/Consultas/MedicosPorEspecialidade?especialidadeId=1");</code></pre>
+
+        <div class="slide-footer">
+          <div class="footer-bar">14 Exercício do Ciclo 1</div>
+          <div class="footer-page">10</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 11: ACTION QUE DEVOLVE JSON ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>No servidor: a action que devolve JSON em vez de HTML <a href="#/ref-slide" class="ref-badge" title="Ver referências">[4]</a></h2>
+        </div>
+
+        <p style="font-size:0.7em; margin-top:0;">É o mesmo Controller, o mesmo <code>ClinicaContext</code> e a mesma consulta com LINQ da Aula 12. Muda só o final: <code>Json(...)</code> no lugar de <code>View(...)</code>.</p>
+
+        <pre class="code-compact"><code class="language-csharp" data-trim>// Em Controllers/ConsultasController.cs
+public async Task&lt;JsonResult&gt; MedicosPorEspecialidade(int especialidadeId)
+{
+    var medicos = await _context.Medicos
+        .Where(m =&gt; m.EspecialidadeId == especialidadeId)
+        .OrderBy(m =&gt; m.Nome)
+        .Select(m =&gt; new { id = m.Id, nome = m.Nome, crm = m.Crm })
+        .ToListAsync();
+
+    return Json(medicos);   // ou: return Ok(medicos);
+}</code></pre>
+
+        <div class="callout" style="margin-top:12px;">
+          <p><strong>O <code>Select</code> não é enfeite.</strong> Devolver a entidade inteira entrega ao navegador tudo o que ela carrega, inclusive o que ninguém pediu, e ainda arrasta a <code>Especialidade</code> junto se ela estiver carregada. Escolha campo a campo o que sai: é a diferença entre expor um dado e publicar um cadastro.</p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">14 A action que devolve JSON</div>
+          <div class="footer-page">11</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 12: FRONTEIRA COM A AULA 16 ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Devolver JSON não é o mesmo que ter uma API REST</h2>
+        </div>
+
+        <p style="font-size:0.7em; margin-top:0;">A confusão é natural e vale desfazer agora: as duas actions de hoje existem para servir <strong>a sua própria tela</strong>. Nada nelas foi pensado para outro sistema consumir.</p>
+
+        <div class="side-by-side" style="margin-top:6px;">
+          <div class="side">
+            <h4>Hoje, Aula 14: JSON de apoio à tela</h4>
+            <ul style="margin:0; padding-left:20px;">
+              <li>Controller MVC comum, herdando de <code>Controller</code>.</li>
+              <li>Rota normal: <code>/Consultas/HorariosDisponiveis</code>.</li>
+              <li>Objeto anônimo montado no <code>Select</code>.</li>
+              <li>Só GET, e só o que a página precisa desenhar.</li>
+            </ul>
+          </div>
+          <div class="side">
+            <h4>Aula 16: API REST de verdade</h4>
+            <ul style="margin:0; padding-left:20px;">
+              <li><code>[ApiController]</code> e <code>ControllerBase</code>.</li>
+              <li>Rota <code>api/[controller]</code>, com recurso e verbo.</li>
+              <li>DTOs, classes escritas para o contrato público.</li>
+              <li>POST, PUT, DELETE, <code>CreatedAtAction</code> e códigos de status.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="callout" style="margin-top:16px;">
+          <p><strong>Fronteira desta aula:</strong> nenhum <code>[ApiController]</code>, nenhuma rota <code>api/...</code>, nenhum DTO e nenhum <code>CreatedAtAction</code> aparecem hoje. Isso é o assunto inteiro da Aula 16, e a comparação vai começar exatamente por estas duas actions que você escreve agora.</p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">14 Fronteira com a API REST</div>
+          <div class="footer-page">12</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 13: DO JSON AO DOM ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>No cliente: da resposta ao DOM, com o que você já sabe</h2>
+        </div>
+
+        <p style="font-size:0.7em; margin-top:0;"><code>addEventListener</code>, <code>querySelector</code> e a árvore do DOM são a Aula 06 inteira. <strong>O que muda é a origem do dado:</strong> ele não estava na página, e chega do servidor durante o uso. Tudo em <code>wwwroot/js/agendamento-ajax.js</code>.</p>
+
+        <pre class="code-compact"><code class="language-javascript" data-trim>const especialidade = document.querySelector("#especialidadeId");
+const medico = document.querySelector("#medicoId");
+
+especialidade.addEventListener("change", async () =&gt; {
+  medico.innerHTML = "&lt;option&gt;Carregando...&lt;/option&gt;";
+  const medicos = await carregarMedicos(especialidade.value);
+
+  medico.innerHTML = "&lt;option value=''&gt;Selecione o médico&lt;/option&gt;";
+  for (const m of medicos) {
+    const opcao = document.createElement("option");
+    opcao.value = m.id;
+    opcao.textContent = `${m.nome} (${m.crm})`;
+    medico.appendChild(opcao);
+  }
+});</code></pre>
+
+        <div class="takeaway">
+          <span class="takeaway-label">Takeaway</span>
+          <p>Uma requisição por escolha do usuário, e não por tecla digitada. <code>change</code> em uma lista suspensa é seguro; <code>input</code> em campo de texto dispara uma requisição por caractere.</p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">14 Do JSON ao DOM</div>
+          <div class="footer-page">13</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 14: OS ESTADOS DA INTERFACE ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Uma chamada, quatro telas possíveis</h2>
+        </div>
+
+        <p style="font-size:0.7em; margin-top:0;">Quase todo mundo programa só a segunda. As outras três aparecem em sala, na frente do professor, e a tela fica travada sem explicar o motivo.</p>
+
+        <div class="slide-figure" style="margin-top:0;">
+          <svg viewBox="0 0 1140 420" role="img" aria-label="Quatro painéis de interface lado a lado: carregando, com horários disponíveis, vazio sem horário livre e erro de comunicação com o servidor">
+            <text x="140" y="20" text-anchor="middle" font-size="14" font-weight="700" fill="#00274D">1. Carregando</text>
+            <rect x="6" y="30" width="268" height="270" rx="8" fill="#FFFFFF" stroke="#AAAAAA" stroke-width="2"/>
+            <text x="140" y="62" text-anchor="middle" font-size="13" fill="#555555">Horários de 04/11</text>
+            <rect x="26" y="82" width="228" height="24" rx="4" fill="#E4E4E4"/>
+            <rect x="26" y="116" width="180" height="24" rx="4" fill="#E4E4E4"/>
+            <rect x="26" y="150" width="210" height="24" rx="4" fill="#E4E4E4"/>
+            <text x="140" y="228" text-anchor="middle" font-size="14" font-weight="700" fill="#666666">Carregando horários...</text>
+            <text x="140" y="262" text-anchor="middle" font-size="12" fill="#888888">a tela diz que está trabalhando</text>
+
+            <text x="426" y="20" text-anchor="middle" font-size="14" font-weight="700" fill="#0B6E75">2. Com dados</text>
+            <rect x="292" y="30" width="268" height="270" rx="8" fill="#FFFFFF" stroke="#2E9E7E" stroke-width="2"/>
+            <text x="426" y="62" text-anchor="middle" font-size="13" fill="#555555">Horários de 04/11</text>
+            <rect x="312" y="82" width="72" height="38" rx="5" fill="#EAF5F1" stroke="#2E9E7E" stroke-width="1.5"/>
+            <text x="348" y="107" text-anchor="middle" font-size="13" font-weight="700" fill="#0B6E75">07:00</text>
+            <rect x="392" y="82" width="72" height="38" rx="5" fill="#EAF5F1" stroke="#2E9E7E" stroke-width="1.5"/>
+            <text x="428" y="107" text-anchor="middle" font-size="13" font-weight="700" fill="#0B6E75">08:30</text>
+            <rect x="472" y="82" width="72" height="38" rx="5" fill="#0B6E75"/>
+            <text x="508" y="107" text-anchor="middle" font-size="13" font-weight="700" fill="#FFFFFF">09:00</text>
+            <rect x="312" y="128" width="72" height="38" rx="5" fill="#EAF5F1" stroke="#2E9E7E" stroke-width="1.5"/>
+            <text x="348" y="153" text-anchor="middle" font-size="13" font-weight="700" fill="#0B6E75">14:00</text>
+            <rect x="392" y="128" width="72" height="38" rx="5" fill="#EAF5F1" stroke="#2E9E7E" stroke-width="1.5"/>
+            <text x="428" y="153" text-anchor="middle" font-size="13" font-weight="700" fill="#0B6E75">14:30</text>
+            <rect x="472" y="128" width="72" height="38" rx="5" fill="#EAF5F1" stroke="#2E9E7E" stroke-width="1.5"/>
+            <text x="508" y="153" text-anchor="middle" font-size="13" font-weight="700" fill="#0B6E75">15:00</text>
+            <text x="426" y="228" text-anchor="middle" font-size="14" font-weight="700" fill="#0B6E75">O usuário escolhe e segue</text>
+            <text x="426" y="262" text-anchor="middle" font-size="12" fill="#1F5A50">o único caminho que todos programam</text>
+
+            <text x="712" y="20" text-anchor="middle" font-size="14" font-weight="700" fill="#B8860B">3. Vazio</text>
+            <rect x="578" y="30" width="268" height="270" rx="8" fill="#FFFFFF" stroke="#D9B441" stroke-width="2"/>
+            <text x="712" y="62" text-anchor="middle" font-size="13" fill="#555555">Horários de 04/11</text>
+            <rect x="598" y="84" width="228" height="92" rx="6" fill="#FFF8E4" stroke="#D9B441" stroke-width="1.5"/>
+            <text x="712" y="116" text-anchor="middle" font-size="13" font-weight="700" fill="#8A6D0B">Nenhum horário livre</text>
+            <text x="712" y="140" text-anchor="middle" font-size="12.5" fill="#8A6D0B">nesta data com este médico.</text>
+            <text x="712" y="162" text-anchor="middle" font-size="12.5" fill="#8A6D0B">Escolha outro dia.</text>
+            <text x="712" y="228" text-anchor="middle" font-size="14" font-weight="700" fill="#8A6D0B">A resposta chegou, e veio vazia</text>
+            <text x="712" y="262" text-anchor="middle" font-size="12" fill="#8A6D0B">vazio nunca pode virar tela em branco</text>
+
+            <text x="998" y="20" text-anchor="middle" font-size="14" font-weight="700" fill="#C84B31">4. Erro</text>
+            <rect x="864" y="30" width="268" height="270" rx="8" fill="#FFFFFF" stroke="#C84B31" stroke-width="2"/>
+            <text x="998" y="62" text-anchor="middle" font-size="13" fill="#555555">Horários de 04/11</text>
+            <rect x="884" y="84" width="228" height="92" rx="6" fill="#FDECE8" stroke="#C84B31" stroke-width="1.5"/>
+            <text x="998" y="116" text-anchor="middle" font-size="13" font-weight="700" fill="#C84B31">Não foi possível carregar</text>
+            <text x="998" y="140" text-anchor="middle" font-size="12.5" fill="#7A2A18">os horários agora.</text>
+            <text x="998" y="162" text-anchor="middle" font-size="12.5" fill="#7A2A18">Tente novamente.</text>
+            <text x="998" y="228" text-anchor="middle" font-size="14" font-weight="700" fill="#C84B31">Rede fora, 404 ou 500</text>
+            <text x="998" y="262" text-anchor="middle" font-size="12" fill="#7A2A18">o usuário precisa saber disso na tela</text>
+
+            <rect x="6" y="330" width="1126" height="84" rx="8" fill="#F5F5F5" stroke="#00274D" stroke-width="1.5"/>
+            <text x="569" y="362" text-anchor="middle" font-size="14.5" font-weight="700" fill="#00274D">O laboratório de hoje cobra os quatro. Carregando entra antes do await; vazio é o array de tamanho zero;</text>
+            <text x="569" y="390" text-anchor="middle" font-size="14.5" font-weight="700" fill="#00274D">erro é o catch somado à checagem de resposta.ok, que o fetch não faz por você.</text>
+          </svg>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">14 Os estados da interface</div>
+          <div class="footer-page">14</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 15: EXERCÍCIO CURTO, CICLO 2 ==================== -->
+      <section class="exercise-slide content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Exercício do Ciclo 2: carregando e erro na mesma chamada</h2>
+        </div>
+
+        <div class="exercise-container">
+          <h3>Sobre a função do slide anterior, 8 minutos</h3>
+          <ol class="exercise-steps">
+            <li>Envolva a chamada em <code>try</code>, <code>catch</code> e <code>finally</code>.</li>
+            <li>No <code>catch</code>, escreva a mensagem em um elemento da tela, não só no <code>console</code>.</li>
+            <li>Teste o erro de verdade: pare a aplicação com a página aberta e troque a especialidade.</li>
+            <li>Confira na aba <strong>Network</strong> do DevTools que a requisição saiu e falhou.</li>
+          </ol>
+        </div>
+
+        <pre class="code-compact"><code class="language-javascript" data-trim>const aviso = document.querySelector("#avisoMedicos");
+try {
+  aviso.textContent = "Carregando médicos...";
+  preencherLista(await carregarMedicos(especialidade.value));
+  aviso.textContent = "";
+} catch (erro) {
+  console.error(erro);
+  aviso.textContent = "Não foi possível carregar os médicos.";
+}</code></pre>
+
+        <div class="slide-footer">
+          <div class="footer-bar">14 Exercício do Ciclo 2</div>
+          <div class="footer-page">15</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 16: QUIZ DE FIXAÇÃO ==================== -->
+      <section class="quiz-slide content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area"><div class="accent-bar"></div><h2>Quiz de fixação</h2></div>
+        <div class="quiz-container">
+          <div class="quiz-question">O que a action precisa retornar para que o <code>fetch</code> do navegador receba dados e não uma página inteira?</div>
+          <ul class="quiz-options">
+            <li data-correct="false"><span class="option-letter">A</span><span class="option-text"><code>View()</code>, porque o navegador consegue extrair os dados do HTML devolvido e montar o objeto sozinho.</span></li>
+            <li data-correct="true"><span class="option-letter">B</span><span class="option-text"><code>Json(...)</code> ou outro resultado cujo corpo seja JSON, que é o formato que o <code>fetch</code> converte em objeto.</span></li>
+            <li data-correct="false"><span class="option-letter">C</span><span class="option-text"><code>RedirectToAction</code>, apontando para a action que carrega os dados e devolve a tela já preenchida.</span></li>
+            <li data-correct="false"><span class="option-letter">D</span><span class="option-text"><code>Content</code> com o tipo <code>text/html</code>, entregando apenas o trecho de página que será inserido no DOM.</span></li>
+          </ul>
+          <div class="quiz-feedback"
+               data-correct-msg="Isso. O corpo da resposta precisa ser JSON, e é o que Json(...) ou Ok(...) devolvem. Do outro lado, resposta.json() converte esse texto em objeto JavaScript, pronto para o seu for percorrer."
+               data-incorrect-msg="Não é isso. View() devolve um documento HTML inteiro, que o fetch recebe como texto e não sabe interpretar; RedirectToAction devolve um 302 e leva a outra página; e Content com text/html volta ao problema de garimpar dado dentro de marcação. O que o fetch converte em objeto é JSON."></div>
+        </div>
+        <div class="slide-footer"><div class="footer-bar">14 Quiz de fixação</div><div class="footer-page">16</div></div>
+      </section>
+
+      <!-- ==================== SLIDE 17: LAB PASSO 1 ==================== -->
+      <section class="exercise-slide content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Laboratório, passo 1 de 6: a branch e a primeira action</h2>
+        </div>
+
+        <p style="font-size:0.72em; margin-top:0;">Missão dos próximos 60 minutos: deixar o agendamento da Clínica Vida+ fluido, sem uma recarga sequer.</p>
+
+        <div class="exercise-container">
+          <h3>No seu fork, a partir da main atualizada</h3>
+          <ol class="exercise-steps">
+            <li>Crie a branch <code>feature/ajax-horarios</code>.</li>
+            <li>No <code>ConsultasController</code>, acrescente a action <code>MedicosPorEspecialidade</code>.</li>
+            <li>Filtre por <code>EspecialidadeId</code>, ordene por <code>Nome</code> e projete <code>id</code>, <code>nome</code> e <code>crm</code> com <code>Select</code>.</li>
+            <li>Termine com <code>return Json(medicos);</code> e rode <code>dotnet run</code>.</li>
+          </ol>
+        </div>
+
+        <pre class="code-compact"><code class="language-bash" data-trim>git checkout main &amp;&amp; git pull
+git checkout -b feature/ajax-horarios
+dotnet run</code></pre>
+
+        <div class="slide-footer">
+          <div class="footer-bar">14 Laboratório, passo 1, branch e action</div>
+          <div class="footer-page">17</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 18: LAB PASSO 2 ==================== -->
+      <section class="exercise-slide content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Laboratório, passo 2 de 6: conferir o JSON antes do JavaScript</h2>
+        </div>
+
+        <p style="font-size:0.72em; margin-top:0;">Uma action de JSON se testa direto na barra de endereços. Depurar JavaScript contra um servidor que ainda não funciona é procurar defeito em dois lugares ao mesmo tempo.</p>
+
+        <div class="exercise-container">
+          <h3>No navegador, com a aplicação no ar</h3>
+          <ol class="exercise-steps">
+            <li>Abra o endereço abaixo, trocando <code>7145</code> pela porta que o <strong>seu</strong> terminal imprimiu.</li>
+            <li>O que aparece na tela precisa ser um vetor JSON, e não uma página.</li>
+            <li>Se vier <code>[]</code>, cheque no MySQL Workbench se há médico com aquela <code>EspecialidadeId</code>.</li>
+            <li>Abra a aba <strong>Network</strong>, recarregue e confira o cabeçalho <code>Content-Type: application/json</code>.</li>
+          </ol>
+        </div>
+
+        <pre class="code-compact"><code class="language-bash" data-trim># A porta é sorteada em Properties/launchSettings.json e muda de máquina
+# para máquina. Use a que apareceu no SEU terminal, e não esta.
+https://localhost:7145/Consultas/MedicosPorEspecialidade?especialidadeId=1</code></pre>
+
+        <div class="slide-footer">
+          <div class="footer-bar">14 Laboratório, passo 2, conferir o JSON</div>
+          <div class="footer-page">18</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 19: LAB PASSO 3 ==================== -->
+      <section class="exercise-slide content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Laboratório, passo 3 de 6: a lista de médicos que troca sozinha</h2>
+        </div>
+
+        <div class="exercise-container">
+          <h3>O fim do Ciclo 3, ainda com o professor conduzindo</h3>
+          <ol class="exercise-steps">
+            <li>Crie <code>wwwroot/js/agendamento-ajax.js</code> e ligue-o em <code>Views/Consultas/Agendar.cshtml</code> com <code>defer</code>.</li>
+            <li>Escute o <code>change</code> do <code>&lt;select&gt;</code> de especialidade, como na Aula 06.</li>
+            <li>Busque o JSON, limpe o <code>&lt;select&gt;</code> de médicos e monte uma <code>&lt;option&gt;</code> por médico.</li>
+            <li>Troque a especialidade três vezes: a lista precisa mudar sem a página piscar.</li>
+          </ol>
+        </div>
+
+        <pre class="code-compact"><code class="language-javascript" data-trim>medico.innerHTML = "&lt;option value=''&gt;Selecione o médico&lt;/option&gt;";
+for (const m of medicos) {
+  const opcao = document.createElement("option");
+  opcao.value = m.id;
+  opcao.textContent = `${m.nome} (${m.crm})`;
+  medico.appendChild(opcao);
+}</code></pre>
+
+        <div class="slide-footer">
+          <div class="footer-bar">14 Laboratório, passo 3, a lista de médicos</div>
+          <div class="footer-page">19</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 20: LAB PASSO 4 ==================== -->
+      <section class="exercise-slide content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Laboratório, passo 4 de 6: os horários livres, no servidor</h2>
+        </div>
+
+        <p style="font-size:0.72em; margin-top:0;">Ciclo 4, sozinho. O professor circula pela sala, e o roteiro completo está em <code>labs/aula14-lab/</code>.</p>
+
+        <div class="exercise-container">
+          <h3>A action HorariosDisponiveis</h3>
+          <ol class="exercise-steps">
+            <li>Receba <code>int medicoId</code> e <code>DateTime data</code>.</li>
+            <li>Busque no banco os <code>Horario</code> já ocupados daquele médico naquela data.</li>
+            <li>Gere a grade de 07:00 às 18:30, de 30 em 30 minutos, que é o expediente da clínica, e remova os ocupados.</li>
+            <li>Devolva os que sobraram como texto <code>"HH:mm"</code>, com <code>Json(...)</code>.</li>
+          </ol>
+        </div>
+
+        <pre class="code-compact"><code class="language-csharp" data-trim>var ocupados = await _context.Consultas
+    .Where(c =&gt; c.MedicoId == medicoId &amp;&amp; c.Data == data.Date)
+    .Select(c =&gt; c.Horario)
+    .ToListAsync();</code></pre>
+
+        <div class="slide-footer">
+          <div class="footer-bar">14 Laboratório, passo 4, os horários livres</div>
+          <div class="footer-page">20</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 21: LAB PASSO 5 ==================== -->
+      <section class="exercise-slide content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Laboratório, passo 5 de 6: os horários como botões, e o caso vazio</h2>
+        </div>
+
+        <div class="exercise-container">
+          <h3>Na tela da etapa 2, AgendarHorario.cshtml, sem recarregar nada</h3>
+          <ol class="exercise-steps">
+            <li>O médico vem da sessão da Aula 13: exponha-o em um campo oculto e dispare a busca no <code>change</code> da data.</li>
+            <li>Monte um <code>&lt;button type="button"&gt;</code> por horário dentro de uma <code>&lt;div&gt;</code>.</li>
+            <li>Ao clicar, marque o botão como selecionado e grave o valor em um campo oculto.</li>
+            <li>Se o vetor vier com tamanho zero, escreva a mensagem de nenhum horário livre. Vazio <strong>não</strong> é erro.</li>
+          </ol>
+        </div>
+
+        <pre class="code-compact"><code class="language-javascript" data-trim>if (horarios.length === 0) {
+  caixa.innerHTML =
+    "&lt;p class='vazio'&gt;Nenhum horário livre nesta data. Escolha outro dia.&lt;/p&gt;";
+  return;
+}</code></pre>
+
+        <div class="slide-footer">
+          <div class="footer-bar">14 Laboratório, passo 5, os horários e o vazio</div>
+          <div class="footer-page">21</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 22: LAB PASSO 6 ==================== -->
+      <section class="exercise-slide content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Laboratório, passo 6 de 6: carregando e erro</h2>
+        </div>
+
+        <div class="exercise-container">
+          <h3>Os dois estados que fecham o entregável</h3>
+          <ol class="exercise-steps">
+            <li>Antes do <code>await</code>, escreva "Carregando horários..." na caixa.</li>
+            <li>Envolva tudo em <code>try</code> e <code>catch</code>, com a mensagem de falha na tela.</li>
+            <li>Teste o erro parando a aplicação com a página aberta e trocando a data.</li>
+            <li>Teste o vazio marcando todos os horários de um médico em uma data e buscando aquela data.</li>
+          </ol>
+        </div>
+
+        <pre class="code-compact"><code class="language-javascript" data-trim>caixa.innerHTML = "&lt;p class='carregando'&gt;Carregando horários...&lt;/p&gt;";
+try {
+  const resposta = await fetch(url);
+  if (!resposta.ok) throw new Error(resposta.status);
+  desenharHorarios(await resposta.json());
+} catch (erro) {
+  caixa.innerHTML = "&lt;p class='erro'&gt;Não foi possível carregar.&lt;/p&gt;";
+}</code></pre>
+
+        <div class="slide-footer">
+          <div class="footer-bar">14 Laboratório, passo 6, carregando e erro</div>
+          <div class="footer-page">22</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 23: ENTREGÁVEL, COMMIT E PUSH ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Entregável de hoje, commit e push</h2>
+        </div>
+
+        <div class="side-by-side" style="margin-top:6px;">
+          <div class="side">
+            <h4>O que precisa estar funcionando</h4>
+            <ul style="margin:0; padding-left:20px;">
+              <li><code>MedicosPorEspecialidade</code> devolvendo JSON.</li>
+              <li><code>HorariosDisponiveis</code> devolvendo JSON.</li>
+              <li>A lista de médicos trocando sem recarregar a página.</li>
+              <li>Os horários livres como botões selecionáveis.</li>
+              <li>Os estados de carregando, vazio e erro na tela.</li>
+            </ul>
+          </div>
+          <div class="side">
+            <h4>Como o professor confere</h4>
+            <ul style="margin:0; padding-left:20px;">
+              <li>Trocar a especialidade: a lista muda e a URL não.</li>
+              <li>Na aba Network, a resposta é JSON, não HTML.</li>
+              <li>Uma data sem vaga mostra a mensagem de vazio.</li>
+              <li>Com a aplicação parada, aparece a mensagem de erro.</li>
+              <li>Nenhum <code>[ApiController]</code> no código de hoje.</li>
+            </ul>
+          </div>
+        </div>
+
+        <pre class="code-compact" style="margin-top:14px;"><code class="language-bash" data-trim>git add Controllers/ConsultasController.cs wwwroot/js/agendamento-ajax.js
+git commit -m "feat: medicos e horarios livres por AJAX no agendamento"
+git push -u origin feature/ajax-horarios</code></pre>
+
+        <div class="slide-footer">
+          <div class="footer-bar">14 Entregável, commit e push</div>
+          <div class="footer-page">23</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 24: FECHAMENTO ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>O que fica desta aula</h2>
+        </div>
+
+        <div class="concept-cards" style="margin-top:10px;">
+          <div class="concept-card">
+            <h4>O dado passou a chegar durante o uso</h4>
+            <p>Na Aula 06 o JavaScript só mexia no que já estava na página. Agora ele busca no servidor, com a página de pé.</p>
+          </div>
+          <div class="concept-card">
+            <h4>JSON é o idioma comum</h4>
+            <p>O C# projeta com <code>Select</code>, o navegador converte com <code>resposta.json()</code>, e no meio trafega texto.</p>
+          </div>
+          <div class="concept-card">
+            <h4>Assíncrono é não bloquear</h4>
+            <p>O mesmo <code>async</code> e <code>await</code> da Aula 12, agora libertando a thread do navegador em vez da do servidor.</p>
+          </div>
+          <div class="concept-card">
+            <h4>Uma chamada, quatro telas</h4>
+            <p>Carregando, com dados, vazio e erro. Programar só a segunda é entregar uma tela que trava calada.</p>
+          </div>
+        </div>
+
+        <div class="callout" style="margin-top:16px;">
+          <p><strong>Prévia da Aula 15:</strong> abra a sua aplicação em uma janela anônima e vá direto para <code>/Consultas</code>. A agenda inteira da clínica abre, com nome de paciente e horário, sem ninguém perguntar quem é você. Na próxima aula o sistema passa a saber <strong>quem</strong> está do outro lado e <strong>o que</strong> essa pessoa pode ver.</p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">14 Fechamento e prévia da Aula 15</div>
+          <div class="footer-page">24</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 25: REFERÊNCIAS ==================== -->
+      <section id="ref-slide" class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Referências desta aula</h2>
+        </div>
+
+        <p style="font-size:0.72em; margin-top:0;">Os números entre colchetes ao lado dos títulos remetem a esta lista, toda ela em português e aberta.</p>
+
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px 30px; margin-top:6px;">
+          <div class="concept-card" style="padding:14px 18px;">
+            <h4>[1] A API Fetch</h4>
+            <p style="font-size:0.7em; color:#444444;">MDN WEB DOCS. <em>Usando Fetch</em>.<br>
+            <code style="font-size:0.82em;">developer.mozilla.org/pt-BR/docs/Web/API/Fetch_API/Using_Fetch</code></p>
+          </div>
+          <div class="concept-card" style="padding:14px 18px;">
+            <h4>[2] O formato JSON</h4>
+            <p style="font-size:0.7em; color:#444444;">MDN WEB DOCS. <em>Trabalhando com JSON</em>.<br>
+            <code style="font-size:0.82em;">developer.mozilla.org/pt-BR/docs/Learn/JavaScript/Objects/JSON</code></p>
+          </div>
+          <div class="concept-card" style="padding:14px 18px;">
+            <h4>[3] Promessas, async e await</h4>
+            <p style="font-size:0.7em; color:#444444;">MDN WEB DOCS. <em>Como usar promises</em>.<br>
+            <code style="font-size:0.82em;">developer.mozilla.org/pt-BR/docs/Learn/JavaScript/Asynchronous/Promises</code></p>
+          </div>
+          <div class="concept-card" style="padding:14px 18px;">
+            <h4>[4] Actions e tipos de retorno</h4>
+            <p style="font-size:0.7em; color:#444444;">MICROSOFT. <em>Manipular solicitações com controladores no ASP.NET Core MVC</em>.<br>
+            <code style="font-size:0.82em;">learn.microsoft.com/pt-br/aspnet/core/mvc/controllers/actions</code></p>
+          </div>
+        </div>
+
+        <div class="callout" style="margin-top:14px;">
+          <p>O roteiro completo do laboratório de hoje está no portal, em <code>labs/aula14-lab/</code>.</p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">14 Referências</div>
+          <div class="footer-page">25</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 26: ENCERRAMENTO ==================== -->
+      <section class="end-slide">
+        <img src="../assets/img/uninove-logo.png" alt="Uninove, Universidade Nove de Julho"
+             style="max-width:300px; background:#FFFFFF; padding:20px 28px; border-radius:8px;">
+        <div class="copyright">
+          Copyright &copy; 2026<br>
+          Prof. José Romualdo da Costa Filho<br><br>
+          Todos os direitos reservados. É expressamente proibida a reprodução, divulgação<br>
+          total ou parcial, deste material acadêmico sem autorização formal,<br>
+          por escrito, do Professor autor da ementa.
+        </div>
+      </section>
+
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/highlight/highlight.js"></script>
+  <script src="../assets/js/uninove-quiz.js"></script>
+  <script type="module">
+    import { TURMAS, resolverTurma, dataDaAula, formatarData } from '../assets/js/turmas.js';
+    const turma = resolverTurma({
+      hoje: new Date(),
+      salva: localStorage.getItem('uninove-turma'),
+    });
+    const alvo = document.querySelector('[data-data-da-aula]');
+    if (alvo) {
+      const n = Number(alvo.getAttribute('data-data-da-aula'));
+      alvo.textContent = turma
+        ? `${TURMAS[turma].rotulo}, ${formatarData(dataDaAula(turma, n))}`
+        : `Quarta ${formatarData(dataDaAula('quarta', n))} ou quinta ${formatarData(dataDaAula('quinta', n))}`;
+    }
+  </script>
+  <script>
+    Reveal.initialize({
+      width: 1280, height: 720, center: false, margin: 0,
+      hash: true, slideNumber: false,
+      // Os chevrons de navegação caem sobre a footer-bar e sobre o triângulo
+      // azul do canto inferior direito; a barra de progresso encosta no rodapé
+      // e parece um segundo rodapé. Nenhum dos dois é usado na projeção.
+      controls: false, progress: false,
+      // Um slide por página no ?print-pdf, para o PDF bater com o deck.
+      pdfMaxPagesPerSlide: 1,
+      plugins: [RevealHighlight],
+    });
+  </script>
+</body>
+</html>

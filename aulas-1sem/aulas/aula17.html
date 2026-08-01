@@ -1,0 +1,1080 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Aula 17, Relacionamentos e EF Core avançado | Uninove</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/theme/white.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/highlight/monokai.css">
+  <link rel="stylesheet" href="../assets/css/uninove-theme.css">
+  <link rel="stylesheet" href="../assets/css/uninove-print.css">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+      <!-- ==================== SLIDE 1: CAPA ==================== -->
+      <section class="cover-slide">
+        <img src="../assets/img/uninove-logo.png" alt="Uninove, Universidade Nove de Julho" class="uninove-logo-full"
+             style="max-width:400px; background:#FFFFFF; padding:26px 36px; border-radius:10px;">
+        <div style="margin-top:36px; color:#FFFFFF; font-size:0.95em; font-weight:800; letter-spacing:4px; text-transform:uppercase;">Desenvolvimento Web</div>
+        <div style="margin-top:12px; color:#C84B31; font-size:0.6em; font-weight:700; letter-spacing:3px; text-transform:uppercase;">Graduação, 2026.2</div>
+      </section>
+
+      <!-- ==================== SLIDE 2: TÍTULO ==================== -->
+      <section class="title-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="title-card">
+          <div class="accent-bar"></div>
+          <h1>Desenvolvimento Web</h1>
+          <h2>Relacionamentos e EF Core avançado</h2>
+          <h3>Prof. José Romualdo<br><span data-data-da-aula="17"></span></h3>
+        </div>
+        <div class="lesson-bar">AULA 17 &nbsp;|&nbsp; Módulo 3, Acesso a Dados e Funcionalidades Avançadas</div>
+      </section>
+
+      <!-- ==================== SLIDE 3: AGENDA ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Agenda do encontro de hoje</h2>
+        </div>
+
+        <p style="font-size:0.76em; margin-top:0;">São 150 minutos corridos, em quatro ciclos. Hoje as quatro tabelas do banco <code>clinicavida</code> deixam de ser ilhas e passam a conversar entre si.</p>
+
+        <table>
+          <thead>
+            <tr><th style="width:190px;">Horário</th><th style="width:200px;">Bloco</th><th>O que acontece</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>19h30 às 20h05</td><td>Ciclo 1</td><td>Chave estrangeira, navegação nos dois sentidos e Fluent API</td></tr>
+            <tr><td>20h05 às 20h40</td><td>Ciclo 2</td><td>Carregamento adiantado, o problema N mais 1 e projeção</td></tr>
+            <tr><td>20h40 às 20h50</td><td>Quiz de fixação</td><td>Uma pergunta sobre o conceito central da aula</td></tr>
+            <tr><td>20h50 às 21h25</td><td>Ciclo 3</td><td>Laboratório guiado: mapear as três relações e migrar o banco</td></tr>
+            <tr><td>21h25 às 21h50</td><td>Ciclo 4</td><td>Laboratório: agenda, histórico, relatório e o entregável</td></tr>
+            <tr><td>21h50 às 22h00</td><td>Fechamento</td><td>Fim do Módulo 3 e prévia da Aula 18</td></tr>
+          </tbody>
+        </table>
+
+        <div class="slide-footer">
+          <div class="footer-bar">17 Agenda do encontro</div>
+          <div class="footer-page">3</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 4: RECAPITULAÇÃO DA AULA 16 ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>De onde viemos: a API da Aula 16</h2>
+        </div>
+
+        <p style="font-size:0.72em; margin-top:0;">Você entregou o <code>ConsultasApiController</code> com os cinco endpoints testados e documentados, protegido por <code>[Authorize]</code>. Ele funciona. E é exatamente por funcionar que a limitação fica visível.</p>
+
+        <div class="side-by-side" style="margin-top:6px;">
+          <div class="side">
+            <h4>O que a API devolve hoje</h4>
+            <pre class="code-compact" style="margin:6px 0 0 0;"><code class="language-json" data-trim>{
+  "id": 42,
+  "pacienteId": 7,
+  "medicoId": 3,
+  "data": "2026-11-25",
+  "horario": "14:30:00"
+}</code></pre>
+          </div>
+          <div class="side">
+            <h4>O que quem consome precisa</h4>
+            <ul style="margin:0; padding-left:20px;">
+              <li>O <strong>nome</strong> do paciente, não o número 7.</li>
+              <li>O <strong>nome</strong> do médico e a especialidade dele.</li>
+              <li>Hoje, para descobrir isso, é preciso fazer mais duas chamadas por consulta.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="callout" style="margin-top:14px;">
+          <p><strong>A causa é anterior à API:</strong> as quatro tabelas guardam números umas das outras, mas as quatro classes do projeto ainda não se enxergam. Hoje ligamos as entidades de verdade, nos dois sentidos.</p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">17 Recapitulação da Aula 16</div>
+          <div class="footer-page">4</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 5: DIAGRAMA ENTIDADE-RELACIONAMENTO ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>As quatro entidades da Clínica Vida+, ligadas <a href="#/ref-slide" class="ref-badge" title="Ver referências">[1]</a></h2>
+        </div>
+
+        <div class="slide-figure" style="margin-top:0;">
+          <svg viewBox="0 0 1040 388" role="img" aria-label="Diagrama entidade-relacionamento da Clínica Vida+: Especialidade um para muitos Médico, Médico um para muitos Consulta e Paciente um para muitos Consulta, com chaves primárias, chaves estrangeiras e propriedades de navegação marcadas">
+            <defs>
+              <marker id="a17setaEr" markerWidth="9" markerHeight="9" refX="8" refY="4.5" orient="auto">
+                <path d="M0,0 L9,4.5 L0,9 Z" fill="#C84B31"/>
+              </marker>
+            </defs>
+
+            <!-- Especialidade -->
+            <rect x="8" y="20" width="252" height="112" rx="8" fill="#FFFFFF" stroke="#00274D" stroke-width="2"/>
+            <rect x="10" y="22" width="248" height="26" rx="6" fill="#00274D"/>
+            <text x="134" y="40" text-anchor="middle" font-size="13.5" font-weight="700" fill="#FFFFFF">Especialidade</text>
+            <g font-family="'JetBrains Mono', monospace" font-size="11.5" fill="#333333" style="font-variant-ligatures:none;">
+              <text x="22" y="70">Id <tspan font-weight="700" fill="#C84B31">PK</tspan></text>
+              <text x="22" y="88">Nome</text>
+              <text x="22" y="106">Descricao</text>
+              <text x="22" y="124" fill="#0B6E75">Medicos, coleção</text>
+            </g>
+
+            <!-- Medico -->
+            <rect x="330" y="20" width="252" height="150" rx="8" fill="#FFFFFF" stroke="#00274D" stroke-width="2"/>
+            <rect x="332" y="22" width="248" height="26" rx="6" fill="#00274D"/>
+            <text x="456" y="40" text-anchor="middle" font-size="13.5" font-weight="700" fill="#FFFFFF">Medico</text>
+            <g font-family="'JetBrains Mono', monospace" font-size="11.5" fill="#333333" style="font-variant-ligatures:none;">
+              <text x="344" y="70">Id <tspan font-weight="700" fill="#C84B31">PK</tspan></text>
+              <text x="344" y="88">Nome</text>
+              <text x="344" y="106">Crm</text>
+              <text x="344" y="124">EspecialidadeId <tspan font-weight="700" fill="#C84B31">FK</tspan></text>
+              <text x="344" y="142" fill="#0B6E75">Especialidade, referência</text>
+              <text x="344" y="160" fill="#0B6E75">Consultas, coleção</text>
+            </g>
+
+            <!-- Paciente -->
+            <rect x="330" y="212" width="252" height="168" rx="8" fill="#FFFFFF" stroke="#00274D" stroke-width="2"/>
+            <rect x="332" y="214" width="248" height="26" rx="6" fill="#00274D"/>
+            <text x="456" y="232" text-anchor="middle" font-size="13.5" font-weight="700" fill="#FFFFFF">Paciente</text>
+            <g font-family="'JetBrains Mono', monospace" font-size="11.5" fill="#333333" style="font-variant-ligatures:none;">
+              <text x="344" y="262">Id <tspan font-weight="700" fill="#C84B31">PK</tspan></text>
+              <text x="344" y="280">Nome</text>
+              <text x="344" y="298">Cpf</text>
+              <text x="344" y="316">DataNascimento</text>
+              <text x="344" y="334">Telefone</text>
+              <text x="344" y="352">Email</text>
+              <text x="344" y="370" fill="#0B6E75">Consultas, coleção</text>
+            </g>
+
+            <!-- Consulta -->
+            <rect x="700" y="110" width="330" height="186" rx="8" fill="#FFFFFF" stroke="#C84B31" stroke-width="2.5"/>
+            <rect x="702" y="112" width="326" height="26" rx="6" fill="#C84B31"/>
+            <text x="865" y="130" text-anchor="middle" font-size="13.5" font-weight="700" fill="#FFFFFF">Consulta</text>
+            <g font-family="'JetBrains Mono', monospace" font-size="11.5" fill="#333333" style="font-variant-ligatures:none;">
+              <text x="714" y="160">Id <tspan font-weight="700" fill="#C84B31">PK</tspan></text>
+              <text x="714" y="178">PacienteId <tspan font-weight="700" fill="#C84B31">FK</tspan></text>
+              <text x="714" y="196">MedicoId <tspan font-weight="700" fill="#C84B31">FK</tspan></text>
+              <text x="714" y="214">Data</text>
+              <text x="714" y="232">Horario</text>
+              <text x="714" y="250">Observacoes</text>
+              <text x="714" y="268" fill="#0B6E75">Paciente, referência</text>
+              <text x="714" y="286" fill="#0B6E75">Medico, referência</text>
+            </g>
+
+            <!-- Ligação Especialidade 1 : N Medico -->
+            <line x1="262" y1="76" x2="326" y2="76" stroke="#C84B31" stroke-width="2.5" marker-end="url(#a17setaEr)"/>
+            <text x="270" y="68" font-size="13" font-weight="800" fill="#C84B31">1</text>
+            <text x="312" y="68" font-size="13" font-weight="800" fill="#C84B31">N</text>
+
+            <!-- Ligação Medico 1 : N Consulta -->
+            <path d="M584,100 L642,100 L642,180 L696,180" fill="none" stroke="#C84B31" stroke-width="2.5" marker-end="url(#a17setaEr)"/>
+            <text x="592" y="92" font-size="13" font-weight="800" fill="#C84B31">1</text>
+            <text x="678" y="172" font-size="13" font-weight="800" fill="#C84B31">N</text>
+
+            <!-- Ligação Paciente 1 : N Consulta -->
+            <path d="M584,280 L642,280 L642,240 L696,240" fill="none" stroke="#C84B31" stroke-width="2.5" marker-end="url(#a17setaEr)"/>
+            <text x="592" y="272" font-size="13" font-weight="800" fill="#C84B31">1</text>
+            <text x="678" y="232" font-size="13" font-weight="800" fill="#C84B31">N</text>
+          </svg>
+        </div>
+
+        <div class="takeaway">
+          <span class="takeaway-label">Takeaway</span>
+          <p>Três relacionamentos um-para-muitos, e a mesma regra nos três: a <strong>chave estrangeira</strong> mora sempre no lado N, e a <strong>coleção</strong> fica sempre no lado 1. Consulta é o lado N de dois relacionamentos ao mesmo tempo.</p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">17 Diagrama entidade-relacionamento</div>
+          <div class="footer-page">5</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 6: CHAVE ESTRANGEIRA E NAVEGAÇÃO ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Chave estrangeira e navegação: duas coisas diferentes</h2>
+        </div>
+
+        <p style="font-size:0.7em; margin-top:0;">A <strong>chave estrangeira</strong> é o número que existe na tabela desde a Aula 11. A <strong>navegação</strong> é o objeto que o C# usa para chegar ao outro lado sem escrever nenhum <code>WHERE</code>.</p>
+
+        <pre class="code-compact"><code class="language-csharp" data-trim>public class Especialidade                 // lado 1: ganha a coleção
+{
+    public int Id { get; set; }
+    public ICollection&lt;Medico&gt; Medicos { get; set; } = new List&lt;Medico&gt;();
+}
+
+public class Consulta                      // lado N: guarda as chaves
+{
+    public int PacienteId { get; set; }    // a chave estrangeira, desde a Aula 11
+    public Paciente? Paciente { get; set; }  // a navegação, nova hoje
+    public int MedicoId { get; set; }
+    public Medico? Medico { get; set; }
+}</code></pre>
+
+        <div class="takeaway">
+          <span class="takeaway-label">Takeaway</span>
+          <p>Navegação nos dois sentidos significa poder ir de <code>consulta.Paciente.Nome</code> e também de <code>paciente.Consultas.Count</code>. Nenhuma propriedade antiga é renomeada: só acrescentamos.</p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">17 Chave estrangeira e navegação</div>
+          <div class="footer-page">6</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 7: CONVENÇÕES E FLUENT API ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Quando a convenção basta e quando é preciso a Fluent API <a href="#/ref-slide" class="ref-badge" title="Ver referências">[3]</a></h2>
+        </div>
+
+        <p style="font-size:0.7em; margin-top:0;">O EF Core descobre sozinho o relacionamento quando a chave se chama <code>&lt;Entidade&gt;Id</code>. Ele não descobre o que você quer que aconteça na exclusão, nem duas navegações para a mesma entidade.</p>
+
+        <pre class="code-compact"><code class="language-csharp" data-trim>protected override void OnModelCreating(ModelBuilder builder)
+{
+    base.OnModelCreating(builder);   // obrigatório: o Identity mapeia as tabelas dele aqui
+
+    builder.Entity&lt;Medico&gt;()
+        .HasOne(m =&gt; m.Especialidade)      // deste lado, um
+        .WithMany(e =&gt; e.Medicos)          // do outro lado, muitos
+        .HasForeignKey(m =&gt; m.EspecialidadeId)
+        .OnDelete(DeleteBehavior.Restrict);
+
+    builder.Entity&lt;Especialidade&gt;().HasData(/* as quatro da Aula 11 */);
+}</code></pre>
+
+        <div class="callout" style="margin-top:10px;">
+          <p><strong>O <code>base.OnModelCreating(builder)</code> não é opcional desde a Aula 15:</strong> o <code>ClinicaContext</code> herda de <code>IdentityDbContext&lt;IdentityUser&gt;</code>, e é a chamada da base que mapeia as tabelas de usuário. Omitir a linha derruba o login.</p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">17 Convenções e Fluent API</div>
+          <div class="footer-page">7</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 8: COMPORTAMENTO DE EXCLUSÃO ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>O que acontece com o histórico quando um médico é excluído <a href="#/ref-slide" class="ref-badge" title="Ver referências">[1]</a></h2>
+        </div>
+
+        <p style="font-size:0.68em; margin-top:0;">A recepção clica em excluir a Dra. Alves, que tem 148 consultas registradas. O comportamento padrão de um relacionamento obrigatório decide isso sozinho, e a decisão dele não é a que a clínica quer.</p>
+
+        <div class="slide-figure" style="margin-top:0;">
+          <svg viewBox="0 0 1140 412" role="img" aria-label="Comparação entre DeleteBehavior Cascade, em que o banco apaga em cascata as 148 consultas da médica excluída, e DeleteBehavior Restrict, em que o banco recusa a exclusão e o histórico é preservado">
+            <defs>
+              <marker id="a17setaRuim" markerWidth="9" markerHeight="9" refX="8" refY="4.5" orient="auto">
+                <path d="M0,0 L9,4.5 L0,9 Z" fill="#C84B31"/>
+              </marker>
+              <marker id="a17setaBoa" markerWidth="9" markerHeight="9" refX="8" refY="4.5" orient="auto">
+                <path d="M0,0 L9,4.5 L0,9 Z" fill="#2E9E7E"/>
+              </marker>
+            </defs>
+
+            <text x="6" y="24" font-size="15" font-weight="700" fill="#C84B31">DeleteBehavior.Cascade, o padrão quando a chave estrangeira é obrigatória</text>
+
+            <rect x="6" y="42" width="210" height="80" rx="8" fill="#00274D"/>
+            <text x="111" y="74" text-anchor="middle" font-size="13.5" fill="#FFFFFF" font-weight="600">A recepção exclui</text>
+            <text x="111" y="98" text-anchor="middle" font-size="13.5" fill="#FFFFFF" font-weight="600">a Dra. Alves</text>
+
+            <line x1="220" y1="82" x2="272" y2="82" stroke="#C84B31" stroke-width="2.5" marker-end="url(#a17setaRuim)"/>
+
+            <rect x="278" y="42" width="290" height="80" rx="8" fill="#1E1E1E"/>
+            <g font-family="'JetBrains Mono', monospace" font-size="12.5" fill="#d4d4d4" style="font-variant-ligatures:none;">
+              <text x="292" y="74">DELETE FROM Medicos WHERE Id = 3;</text>
+              <text x="292" y="100" fill="#E39B8B">ON DELETE CASCADE</text>
+            </g>
+
+            <line x1="572" y1="82" x2="624" y2="82" stroke="#C84B31" stroke-width="2.5" marker-end="url(#a17setaRuim)"/>
+
+            <rect x="630" y="42" width="504" height="80" rx="8" fill="#FDECE8" stroke="#C84B31" stroke-width="1.5"/>
+            <text x="882" y="74" text-anchor="middle" font-size="15" font-weight="700" fill="#C84B31">148 consultas apagadas junto, em silêncio</text>
+            <text x="882" y="100" text-anchor="middle" font-size="13" fill="#7A2A18">O prontuário de 148 pacientes deixa de existir. Ninguém é avisado.</text>
+
+            <text x="6" y="190" font-size="15" font-weight="700" fill="#0B6E75">DeleteBehavior.Restrict, o que a Clínica Vida+ precisa</text>
+
+            <rect x="6" y="208" width="210" height="80" rx="8" fill="#00274D"/>
+            <text x="111" y="240" text-anchor="middle" font-size="13.5" fill="#FFFFFF" font-weight="600">A recepção exclui</text>
+            <text x="111" y="264" text-anchor="middle" font-size="13.5" fill="#FFFFFF" font-weight="600">a Dra. Alves</text>
+
+            <line x1="220" y1="248" x2="272" y2="248" stroke="#2E9E7E" stroke-width="2.5" marker-end="url(#a17setaBoa)"/>
+
+            <rect x="278" y="208" width="290" height="80" rx="8" fill="#1E1E1E"/>
+            <g font-family="'JetBrains Mono', monospace" font-size="12.5" fill="#d4d4d4" style="font-variant-ligatures:none;">
+              <text x="292" y="240">DELETE FROM Medicos WHERE Id = 3;</text>
+              <text x="292" y="266" fill="#9FE2C0">ON DELETE RESTRICT</text>
+            </g>
+
+            <line x1="572" y1="248" x2="624" y2="248" stroke="#2E9E7E" stroke-width="2.5" marker-end="url(#a17setaBoa)"/>
+
+            <rect x="630" y="208" width="504" height="80" rx="8" fill="#EAF5F1" stroke="#2E9E7E" stroke-width="1.5"/>
+            <text x="882" y="240" text-anchor="middle" font-size="15" font-weight="700" fill="#0B6E75">O banco recusa, e o histórico continua inteiro</text>
+            <text x="882" y="266" text-anchor="middle" font-size="13" fill="#1F5A50">A aplicação recebe DbUpdateException e avisa a recepção na tela.</text>
+
+            <rect x="6" y="320" width="1128" height="82" rx="8" fill="#F5F5F5" stroke="#00274D" stroke-width="1.5"/>
+            <text x="570" y="352" text-anchor="middle" font-size="14.5" font-weight="700" fill="#00274D">Quem escolhe o comportamento é você, no mapeamento, e não o EF Core.</text>
+            <text x="570" y="380" text-anchor="middle" font-size="13.5" fill="#444444">Dado de saúde não se apaga por efeito colateral de outra tela: em caso de dúvida, Restrict.</text>
+          </svg>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">17 Comportamento de exclusão</div>
+          <div class="footer-page">8</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 9: ÍNDICES E RESTRIÇÕES ÚNICAS ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Índices e restrições únicas: a regra que mora no banco</h2>
+        </div>
+
+        <p style="font-size:0.7em; margin-top:0;">Validação de tela é conselho; restrição única é lei. Uma delas roda no navegador da recepção, a outra vale para a API, para o Workbench e para qualquer script.</p>
+
+        <table style="margin-top:6px; font-size:0.66em;">
+          <thead>
+            <tr><th style="width:300px;">Regra do mini mundo</th><th style="width:200px;">Onde vive</th><th>O que impede</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Um CRM não se repete</td><td>índice único em <code>Crm</code></td><td>o mesmo médico cadastrado duas vezes</td></tr>
+            <tr><td>Um CPF não se repete</td><td>índice único em <code>Cpf</code></td><td>dois prontuários para o mesmo paciente</td></tr>
+            <tr><td>Um médico, um horário</td><td>índice único composto</td><td>a consulta em duplicidade que motivou o case</td></tr>
+          </tbody>
+        </table>
+
+        <pre class="code-compact" style="margin-top:10px;"><code class="language-csharp" data-trim>builder.Entity&lt;Medico&gt;().HasIndex(m =&gt; m.Crm).IsUnique();
+builder.Entity&lt;Paciente&gt;().HasIndex(p =&gt; p.Cpf).IsUnique();
+builder.Entity&lt;Consulta&gt;()
+    .HasIndex(c =&gt; new { c.MedicoId, c.Data, c.Horario })
+    .IsUnique();</code></pre>
+
+        <div class="slide-footer">
+          <div class="footer-bar">17 Índices e restrições únicas</div>
+          <div class="footer-page">9</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 10: EXERCÍCIO CURTO, CICLO 1 ==================== -->
+      <section class="exercise-slide content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Exercício do Ciclo 1: classificar e desenhar</h2>
+        </div>
+
+        <div class="exercise-container">
+          <h3>No papel ou no editor, 8 minutos</h3>
+          <ol class="exercise-steps">
+            <li>Classifique os três relacionamentos do case: quem é o lado 1 e quem é o lado N em cada um.</li>
+            <li>Diga, para cada relacionamento, em qual tabela mora a chave estrangeira.</li>
+            <li>Desenhe o diagrama com as quatro entidades e marque as cardinalidades.</li>
+            <li>Responda: uma <strong>Consulta</strong> pode existir sem <code>MedicoId</code>? E um <strong>Medico</strong> sem consulta nenhuma?</li>
+          </ol>
+        </div>
+
+        <div class="callout" style="margin-top:12px;">
+          <p><strong>Pergunta de desempate:</strong> e se amanhã a clínica quiser que um médico atenda mais de uma especialidade? O relacionamento vira muitos-para-muitos, e o EF Core cria sozinho a tabela de junção quando as duas classes trazem coleção uma da outra.</p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">17 Exercício do Ciclo 1</div>
+          <div class="footer-page">10</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 11: CARREGAMENTO ADIANTADO X TARDIO ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Carregamento adiantado contra carregamento tardio <a href="#/ref-slide" class="ref-badge" title="Ver referências">[2]</a></h2>
+        </div>
+
+        <p style="font-size:0.68em; margin-top:0;">Ligar as entidades não faz o EF Core trazer tudo. Ele traz o que você pedir, e o SQL emitido conta a história inteira: leia sempre o log do terminal.</p>
+
+        <div class="slide-figure" style="margin-top:0;">
+          <svg viewBox="0 0 1140 412" role="img" aria-label="Sem Include, a listagem dispara um SELECT nas consultas e mais um SELECT por linha para buscar paciente e médico; com Include, um único SELECT com JOIN traz tudo de uma vez">
+            <defs>
+              <marker id="a17setaTardio" markerWidth="9" markerHeight="9" refX="8" refY="4.5" orient="auto">
+                <path d="M0,0 L9,4.5 L0,9 Z" fill="#C84B31"/>
+              </marker>
+              <marker id="a17setaAdiant" markerWidth="9" markerHeight="9" refX="8" refY="4.5" orient="auto">
+                <path d="M0,0 L9,4.5 L0,9 Z" fill="#2E9E7E"/>
+              </marker>
+            </defs>
+
+            <text x="6" y="24" font-size="15" font-weight="700" fill="#C84B31">Tardio: a View pede o relacionado depois, uma linha de cada vez</text>
+
+            <rect x="6" y="42" width="250" height="76" rx="8" fill="#00274D"/>
+            <text x="131" y="74" text-anchor="middle" font-size="13" fill="#FFFFFF" font-weight="600">_context.Consultas</text>
+            <text x="131" y="98" text-anchor="middle" font-size="13" fill="#FFFFFF" font-weight="600">.ToListAsync()</text>
+
+            <line x1="260" y1="80" x2="304" y2="80" stroke="#C84B31" stroke-width="2.5" marker-end="url(#a17setaTardio)"/>
+
+            <rect x="310" y="42" width="330" height="76" rx="8" fill="#1E1E1E"/>
+            <g font-family="'JetBrains Mono', monospace" font-size="12.5" fill="#d4d4d4" style="font-variant-ligatures:none;">
+              <text x="324" y="74">SELECT * FROM Consultas</text>
+              <text x="324" y="98" fill="#A6A18B">-- 1 comando, 20 linhas</text>
+            </g>
+
+            <line x1="644" y1="80" x2="688" y2="80" stroke="#C84B31" stroke-width="2.5" marker-end="url(#a17setaTardio)"/>
+
+            <rect x="694" y="24" width="440" height="112" rx="8" fill="#1E1E1E"/>
+            <g font-family="'JetBrains Mono', monospace" font-size="12" fill="#d4d4d4" style="font-variant-ligatures:none;">
+              <text x="708" y="50">SELECT * FROM Pacientes WHERE Id = 7</text>
+              <text x="708" y="74">SELECT * FROM Medicos   WHERE Id = 3</text>
+              <text x="708" y="98">SELECT * FROM Pacientes WHERE Id = 9</text>
+              <text x="708" y="122" fill="#E39B8B">... e assim por diante, linha a linha</text>
+            </g>
+
+            <text x="6" y="196" font-size="15" font-weight="700" fill="#0B6E75">Adiantado: você declara na consulta o que vai precisar</text>
+
+            <rect x="6" y="214" width="250" height="94" rx="8" fill="#00274D"/>
+            <text x="131" y="244" text-anchor="middle" font-size="13" fill="#FFFFFF" font-weight="600">_context.Consultas</text>
+            <text x="131" y="268" text-anchor="middle" font-size="13" fill="#9FE2C0" font-weight="600">.Include(c =&gt; c.Paciente)</text>
+            <text x="131" y="292" text-anchor="middle" font-size="13" fill="#9FE2C0" font-weight="600">.Include(c =&gt; c.Medico)</text>
+
+            <line x1="260" y1="261" x2="304" y2="261" stroke="#2E9E7E" stroke-width="2.5" marker-end="url(#a17setaAdiant)"/>
+
+            <rect x="310" y="210" width="824" height="102" rx="8" fill="#1E1E1E"/>
+            <g font-family="'JetBrains Mono', monospace" font-size="12.5" fill="#d4d4d4" style="font-variant-ligatures:none;">
+              <text x="324" y="238">SELECT c.Id, c.Data, c.Horario, p.Nome, m.Nome FROM Consultas AS c</text>
+              <text x="324" y="262">LEFT JOIN Pacientes AS p ON p.Id = c.PacienteId</text>
+              <text x="324" y="286">LEFT JOIN Medicos   AS m ON m.Id = c.MedicoId</text>
+              <text x="324" y="306" fill="#9FE2C0">-- 1 comando, e nada mais depois dele</text>
+            </g>
+
+            <rect x="6" y="328" width="1128" height="76" rx="8" fill="#F5F5F5" stroke="#00274D" stroke-width="1.5"/>
+            <text x="570" y="358" text-anchor="middle" font-size="14.5" font-weight="700" fill="#00274D">A mesma tela, o mesmo resultado na tela do usuário, 41 idas ao banco contra 1.</text>
+            <text x="570" y="384" text-anchor="middle" font-size="13.5" fill="#444444">É daqui que nasce o problema N mais 1, o próximo slide.</text>
+          </svg>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">17 Carregamento adiantado e tardio</div>
+          <div class="footer-page">11</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 12: O PROBLEMA N MAIS 1 ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>O problema N mais 1 <a href="#/ref-slide" class="ref-badge" title="Ver referências">[2]</a></h2>
+        </div>
+
+        <p style="font-size:0.68em; margin-top:0;">A agenda de hoje tem 20 consultas. A tela mostra paciente e médico em cada linha. Ninguém escreveu nenhum laço de banco, e ainda assim o MySQL recebe 41 comandos.</p>
+
+        <div class="slide-figure" style="margin-top:0;">
+          <svg viewBox="0 0 1140 296" role="img" aria-label="Comparação do número de comandos SQL: sem Include são 41 comandos para 20 consultas, com Include é um único comando">
+            <text x="6" y="26" font-size="14.5" font-weight="700" fill="#C84B31">Sem Include, com 20 consultas na agenda</text>
+            <rect x="6" y="38" width="900" height="54" rx="6" fill="#C84B31"/>
+            <text x="456" y="72" text-anchor="middle" font-size="15" font-weight="800" fill="#FFFFFF">1 consulta na lista &nbsp;+&nbsp; 20 buscas de paciente &nbsp;+&nbsp; 20 buscas de médico</text>
+            <rect x="914" y="38" width="220" height="54" rx="6" fill="#7A2A18"/>
+            <text x="1024" y="72" text-anchor="middle" font-size="16" font-weight="800" fill="#FFFFFF">41 comandos</text>
+
+            <text x="6" y="132" font-size="14.5" font-weight="700" fill="#0B6E75">Com Include, com as mesmas 20 consultas</text>
+            <rect x="6" y="144" width="900" height="54" rx="6" fill="#2E9E7E"/>
+            <text x="456" y="178" text-anchor="middle" font-size="15" font-weight="800" fill="#FFFFFF">1 consulta com JOIN, que já traz paciente, médico e especialidade</text>
+            <rect x="914" y="144" width="220" height="54" rx="6" fill="#0B6E75"/>
+            <text x="1024" y="178" text-anchor="middle" font-size="16" font-weight="800" fill="#FFFFFF">1 comando</text>
+
+            <rect x="6" y="222" width="1128" height="68" rx="8" fill="#F5F5F5" stroke="#00274D" stroke-width="1.5"/>
+            <text x="570" y="250" text-anchor="middle" font-size="14" font-weight="700" fill="#00274D">Como identificar: o log do terminal repete o mesmo SELECT mudando só o parâmetro do WHERE.</text>
+            <text x="570" y="276" text-anchor="middle" font-size="13" fill="#444444">Na sua máquina, com o banco ao lado, ninguém percebe. Com 400 consultas no mês e o banco em outro servidor, a tela trava.</text>
+          </svg>
+        </div>
+
+        <div class="takeaway">
+          <span class="takeaway-label">Takeaway</span>
+          <p>N mais 1 não dá erro, não aparece em teste com dez linhas e não some sozinho. Ele aparece no dia da demonstração, com dados de verdade. A defesa é ler o log do SQL enquanto você desenvolve.</p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">17 O problema N mais 1</div>
+          <div class="footer-page">12</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 13: INCLUDE E THENINCLUDE ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2><code>Include</code> e <code>ThenInclude</code>: dois níveis de distância <a href="#/ref-slide" class="ref-badge" title="Ver referências">[2]</a></h2>
+        </div>
+
+        <p style="font-size:0.7em; margin-top:0;">A agenda do dia precisa da especialidade, que não está na Consulta nem no Medico: está na Especialidade, dois saltos adiante. <code>ThenInclude</code> continua o caminho a partir do último <code>Include</code>.</p>
+
+        <pre class="code-compact"><code class="language-csharp" data-trim>var agenda = await _context.Consultas
+    .Include(c =&gt; c.Paciente)            // Consulta  -&gt;  Paciente
+    .Include(c =&gt; c.Medico)              // Consulta  -&gt;  Medico
+        .ThenInclude(m =&gt; m.Especialidade)   // Medico -&gt;  Especialidade
+    .Where(c =&gt; c.Data == hoje)
+    .OrderBy(c =&gt; c.Horario)
+    .ToListAsync();
+
+// Na View, sem nenhuma ida extra ao banco:
+// @consulta.Paciente!.Nome, @consulta.Medico!.Especialidade!.Nome</code></pre>
+
+        <div class="takeaway">
+          <span class="takeaway-label">Takeaway</span>
+          <p>O <code>ThenInclude</code> pertence ao <code>Include</code> imediatamente anterior. Para incluir outro ramo a partir da raiz, comece um <code>Include</code> novo, e não encadeie mais um <code>ThenInclude</code>.</p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">17 Include e ThenInclude</div>
+          <div class="footer-page">13</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 14: PROJEÇÃO E ASNOTRACKING ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Trazer só o necessário: <code>Select</code> e <code>AsNoTracking</code> <a href="#/ref-slide" class="ref-badge" title="Ver referências">[4]</a></h2>
+        </div>
+
+        <p style="font-size:0.68em; margin-top:0;">O <code>Include</code> traz a entidade inteira, com todas as colunas. Para uma tela que mostra quatro campos, a projeção com <code>Select</code> monta o <code>SELECT</code> exato e dispensa o <code>Include</code>.</p>
+
+        <pre class="code-compact"><code class="language-csharp" data-trim>var agenda = await _context.Consultas
+    .Where(c =&gt; c.Data == hoje)
+    .OrderBy(c =&gt; c.Horario)
+    .Select(c =&gt; new AgendaItemViewModel
+    {
+        Horario       = c.Horario,
+        Paciente      = c.Paciente!.Nome,           // o JOIN sai daqui,
+        Medico        = c.Medico!.Nome,             // sem nenhum Include
+        Especialidade = c.Medico!.Especialidade!.Nome
+    })
+    .AsNoTracking()
+    .ToListAsync();</code></pre>
+
+        <div class="takeaway">
+          <span class="takeaway-label">Takeaway</span>
+          <p><code>AsNoTracking</code> desliga o rastreador de mudanças: use em toda listagem que só exibe. Nunca use quando você pretende alterar e salvar o objeto carregado, porque o <code>SaveChangesAsync</code> não terá o que gravar.</p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">17 Projeção e AsNoTracking</div>
+          <div class="footer-page">14</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 15: GROUPBY E AGREGAÇÕES ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Agregações: quantas consultas por especialidade</h2>
+        </div>
+
+        <p style="font-size:0.7em; margin-top:0;">A direção da clínica quer um número, não uma lista. <code>GroupBy</code> com <code>Count</code> vira <code>GROUP BY</code> no MySQL, e o que trafega são cinco linhas, não cinco mil.</p>
+
+        <pre class="code-compact"><code class="language-csharp" data-trim>var relatorio = await _context.Consultas
+    .GroupBy(c =&gt; c.Medico!.Especialidade!.Nome)
+    .Select(g =&gt; new RelatorioItemViewModel
+    {
+        Especialidade = g.Key,
+        Total         = g.Count()
+    })
+    .OrderByDescending(item =&gt; item.Total)
+    .ToListAsync();</code></pre>
+
+        <div class="callout" style="margin-top:10px;">
+          <p><strong>Confira sempre o log:</strong> se o <code>GROUP BY</code> não aparecer no SQL, o agrupamento foi feito em memória, o que significa que a tabela inteira veio para a aplicação antes de ser contada.</p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">17 Agregações com GroupBy</div>
+          <div class="footer-page">15</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 16: EXERCÍCIO CURTO, CICLO 2 ==================== -->
+      <section class="exercise-slide content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Exercício do Ciclo 2: matar o N mais 1</h2>
+        </div>
+
+        <div class="exercise-container">
+          <h3>No seu ClinicaVida.Web, 8 minutos</h3>
+          <ol class="exercise-steps">
+            <li>Rode a listagem abaixo e conte no terminal quantos <code>SELECT</code> ela dispara.</li>
+            <li>Reescreva a consulta com <code>Include</code>, sem mudar uma linha da View.</li>
+            <li>Rode de novo e conte outra vez: precisa sobrar um comando só.</li>
+            <li>Acrescente <code>AsNoTracking</code> e confirme que a tela continua idêntica.</li>
+          </ol>
+        </div>
+
+        <pre class="code-compact"><code class="language-csharp" data-trim>// Antes: um SELECT na lista e mais dois por linha exibida
+var consultas = await _context.Consultas.Where(c =&gt; c.Data == hoje).ToListAsync();
+
+// Depois: escreva aqui a versão com Include
+</code></pre>
+
+        <div class="slide-footer">
+          <div class="footer-bar">17 Exercício do Ciclo 2</div>
+          <div class="footer-page">16</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 17: QUIZ DE FIXAÇÃO ==================== -->
+      <section class="quiz-slide content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area"><div class="accent-bar"></div><h2>Quiz de fixação</h2></div>
+        <div class="quiz-container">
+          <div class="quiz-question">Para trazer cada consulta já acompanhada do paciente e do médico em um único acesso ao banco, o que se usa?</div>
+          <ul class="quiz-options">
+            <li data-correct="false"><span class="option-letter">A</span> Um laço sobre as consultas, buscando o paciente e o médico de cada uma em acessos separados ao banco.</li>
+            <li data-correct="true"><span class="option-letter">B</span><span class="option-text"><code>Include</code> das propriedades de navegação na própria consulta LINQ, que gera uma única ida ao banco.</span></li>
+            <li data-correct="false"><span class="option-letter">C</span><span class="option-text">Três consultas ao banco, uma por entidade, unidas depois em memória com <code>Select</code> sobre as listas.</span></li>
+            <li data-correct="false"><span class="option-letter">D</span><span class="option-text"><code>AsNoTracking</code> sozinho, que ao dispensar o rastreamento já traz junto os dados relacionados.</span></li>
+          </ul>
+          <div class="quiz-feedback"
+               data-correct-msg="Isso. O Include declara na própria consulta LINQ o que virá junto, e o EF Core traduz tudo em um único comando com JOIN. É a diferença entre 41 idas ao banco e 1."
+               data-incorrect-msg="Não é isso. O laço com acessos separados é justamente o N mais 1 que queremos evitar; unir listas em memória traz a tabela inteira para a aplicação; e AsNoTracking só desliga o rastreador de mudanças, sem carregar nada de relacionado. Quem resolve é o Include."></div>
+        </div>
+        <div class="slide-footer"><div class="footer-bar">17 Quiz de fixação</div><div class="footer-page">17</div></div>
+      </section>
+
+      <!-- ==================== SLIDE 18: LAB PASSO 1 ==================== -->
+      <section class="exercise-slide content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Laboratório, passo 1 de 6: a branch e as navegações</h2>
+        </div>
+
+        <p style="font-size:0.7em; margin-top:0;">Missão dos próximos 60 minutos: ligar as quatro entidades da Clínica Vida+ e fazer as telas mostrarem nomes, não números.</p>
+
+        <div class="exercise-container">
+          <h3>No seu fork, a partir da main atualizada</h3>
+          <ol class="exercise-steps">
+            <li>Crie a branch <code>feature/relacionamentos</code>.</li>
+            <li>Acrescente as coleções: <code>Especialidade.Medicos</code>, <code>Medico.Consultas</code> e <code>Paciente.Consultas</code>.</li>
+            <li>Acrescente as referências <code>Consulta.Paciente</code> e <code>Consulta.Medico</code>.</li>
+            <li>Não renomeie nada do que já existe: as chaves estrangeiras da Aula 11 continuam como estão.</li>
+          </ol>
+        </div>
+
+        <pre class="code-compact"><code class="language-bash" data-trim>git checkout main &amp;&amp; git pull
+git checkout -b feature/relacionamentos</code></pre>
+
+        <div class="slide-footer">
+          <div class="footer-bar">17 Laboratório, passo 1, branch e navegações</div>
+          <div class="footer-page">18</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 19: LAB PASSO 2 ==================== -->
+      <section class="exercise-slide content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Laboratório, passo 2 de 6: o mapeamento</h2>
+        </div>
+
+        <div class="exercise-container">
+          <h3>Em Data/ClinicaContext.cs, no OnModelCreating</h3>
+          <ol class="exercise-steps">
+            <li>Garanta que a <strong>primeira</strong> linha do método é <code>base.OnModelCreating(builder)</code>.</li>
+            <li>Mapeie os três relacionamentos com <code>HasOne</code>, <code>WithMany</code> e <code>HasForeignKey</code>.</li>
+            <li>Deixe o <code>HasData</code> das especialidades onde ele já estava, depois do mapeamento.</li>
+          </ol>
+        </div>
+
+        <pre class="code-compact"><code class="language-csharp" data-trim>base.OnModelCreating(builder);
+
+builder.Entity&lt;Consulta&gt;()
+    .HasOne(c =&gt; c.Medico)
+    .WithMany(m =&gt; m.Consultas)
+    .HasForeignKey(c =&gt; c.MedicoId);   // o comportamento de exclusão vem no passo 3</code></pre>
+
+        <div class="slide-footer">
+          <div class="footer-bar">17 Laboratório, passo 2, o mapeamento</div>
+          <div class="footer-page">19</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 20: LAB PASSO 3 ==================== -->
+      <section class="exercise-slide content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Laboratório, passo 3 de 6: exclusão e migration</h2>
+        </div>
+
+        <div class="exercise-container">
+          <h3>Preservar o histórico e levar tudo ao banco</h3>
+          <ol class="exercise-steps">
+            <li>Acrescente <code>.OnDelete(DeleteBehavior.Restrict)</code> aos três relacionamentos.</li>
+            <li>Acrescente os índices únicos de <code>Crm</code>, de <code>Cpf</code> e o composto da Consulta.</li>
+            <li>Gere a migration e aplique-a no banco <code>clinicavida</code>.</li>
+            <li>Confirme no Workbench: as três chaves estrangeiras precisam aparecer com <code>RESTRICT</code>.</li>
+          </ol>
+        </div>
+
+        <pre class="code-compact"><code class="language-bash" data-trim>dotnet ef migrations add RelacionamentosClinicaVida
+dotnet ef database update
+# No Workbench: SHOW CREATE TABLE clinicavida.Consultas;</code></pre>
+
+        <div class="slide-footer">
+          <div class="footer-bar">17 Laboratório, passo 3, exclusão e migration</div>
+          <div class="footer-page">20</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 21: LAB PASSO 4 ==================== -->
+      <section class="exercise-slide content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Laboratório, passo 4 de 6: a agenda do dia</h2>
+        </div>
+
+        <p style="font-size:0.7em; margin-top:0;">Fim do Ciclo 3. Daqui em diante você trabalha sozinho, com o professor circulando; o roteiro completo está em <code>labs/aula17-lab/</code>.</p>
+
+        <div class="exercise-container">
+          <h3>Em ConsultasController, na action Index</h3>
+          <ol class="exercise-steps">
+            <li>Refaça a consulta com <code>Include</code> e <code>ThenInclude</code>, filtrando pela data escolhida.</li>
+            <li>Exiba na tabela: horário, nome do paciente, nome do médico e especialidade.</li>
+            <li>Conte os comandos no log antes e depois, e anote os dois números.</li>
+          </ol>
+        </div>
+
+        <pre class="code-compact"><code class="language-csharp" data-trim>var agenda = await _context.Consultas
+    .Include(c =&gt; c.Paciente)
+    .Include(c =&gt; c.Medico).ThenInclude(m =&gt; m.Especialidade)
+    .Where(c =&gt; c.Data == data)
+    .OrderBy(c =&gt; c.Horario)
+    .AsNoTracking()
+    .ToListAsync();</code></pre>
+
+        <div class="slide-footer">
+          <div class="footer-bar">17 Laboratório, passo 4, a agenda do dia</div>
+          <div class="footer-page">21</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 22: LAB PASSO 5 ==================== -->
+      <section class="exercise-slide content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Laboratório, passo 5 de 6: o histórico do paciente</h2>
+        </div>
+
+        <div class="exercise-container">
+          <h3>Uma tela nova, partindo do lado 1 do relacionamento</h3>
+          <ol class="exercise-steps">
+            <li>Crie a action <code>Historico(int id)</code> em <code>PacientesController</code>.</li>
+            <li>Carregue o paciente com as consultas dele e com o médico de cada consulta.</li>
+            <li>Ordene da consulta mais recente para a mais antiga.</li>
+            <li>Trate o paciente inexistente com <code>NotFound()</code>, como na Aula 12.</li>
+          </ol>
+        </div>
+
+        <pre class="code-compact"><code class="language-csharp" data-trim>var paciente = await _context.Pacientes
+    .Include(p =&gt; p.Consultas.OrderByDescending(c =&gt; c.Data))
+        .ThenInclude(c =&gt; c.Medico)
+    .AsNoTracking()
+    .FirstOrDefaultAsync(p =&gt; p.Id == id);</code></pre>
+
+        <div class="slide-footer">
+          <div class="footer-bar">17 Laboratório, passo 5, o histórico do paciente</div>
+          <div class="footer-page">22</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 23: LAB PASSO 6 ==================== -->
+      <section class="exercise-slide content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Laboratório, passo 6 de 6: o relatório por especialidade</h2>
+        </div>
+
+        <div class="exercise-container">
+          <h3>Agrupar no banco, não em memória</h3>
+          <ol class="exercise-steps">
+            <li>Crie a action <code>Relatorio</code> e um ViewModel com especialidade e total.</li>
+            <li>Agrupe com <code>GroupBy</code> e conte com <code>Count</code>, projetando com <code>Select</code>.</li>
+            <li>Ordene do maior total para o menor e exiba em uma tabela simples.</li>
+            <li>Confirme no log que o <code>GROUP BY</code> foi para o MySQL.</li>
+          </ol>
+        </div>
+
+        <pre class="code-compact"><code class="language-csharp" data-trim>var relatorio = await _context.Consultas
+    .GroupBy(c =&gt; c.Medico!.Especialidade!.Nome)
+    .Select(g =&gt; new RelatorioItemViewModel { Especialidade = g.Key, Total = g.Count() })
+    .OrderByDescending(item =&gt; item.Total)
+    .ToListAsync();</code></pre>
+
+        <div class="slide-footer">
+          <div class="footer-bar">17 Laboratório, passo 6, o relatório</div>
+          <div class="footer-page">23</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 24: ENTREGÁVEL, COMMIT E PUSH ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Entregável de hoje, commit e push</h2>
+        </div>
+
+        <div class="side-by-side" style="margin-top:6px;">
+          <div class="side">
+            <h4>O que precisa estar funcionando</h4>
+            <ul style="margin:0; padding-left:20px;">
+              <li>Os <strong>três</strong> relacionamentos mapeados na Fluent API.</li>
+              <li>A migration gerada e aplicada no <code>clinicavida</code>.</li>
+              <li>Exclusão em <code>Restrict</code>, com o histórico preservado.</li>
+              <li>Agenda do dia com nome, médico e especialidade.</li>
+              <li>Histórico do paciente e relatório por especialidade.</li>
+            </ul>
+          </div>
+          <div class="side">
+            <h4>Como o professor confere</h4>
+            <ul style="margin:0; padding-left:20px;">
+              <li><code>SHOW CREATE TABLE</code> mostra as três chaves estrangeiras.</li>
+              <li>Excluir médico com consulta é recusado, com aviso na tela.</li>
+              <li>A agenda dispara <strong>um</strong> comando no log, não 41.</li>
+              <li>O CRM repetido é recusado pelo banco.</li>
+            </ul>
+          </div>
+        </div>
+
+        <pre class="code-compact" style="margin-top:14px;"><code class="language-bash" data-trim>git add Models/ Data/ClinicaContext.cs Migrations/ Controllers/ Views/
+git commit -m "feat: relacionamentos entre as entidades da Clinica Vida"
+git push -u origin feature/relacionamentos</code></pre>
+
+        <div class="slide-footer">
+          <div class="footer-bar">17 Entregável, commit e push</div>
+          <div class="footer-page">24</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 25: FECHAMENTO DO MÓDULO 3 ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Módulo 3 fechado: a aplicação virou um sistema</h2>
+        </div>
+
+        <p style="font-size:0.68em; margin-top:0;">Cinco encontros atrás a Clínica Vida+ gravava dados e nada mais. Agora ela reconhece quem está do outro lado, conversa sem recarregar a página, protege o que é da recepção, se deixa integrar por outro sistema e entende como as entidades se ligam.</p>
+
+        <div class="timeline">
+          <div class="tl-item is-past">
+            <div class="tl-dot"></div>
+            <span class="tl-year">Aula 13</span>
+            <span class="tl-tool">Cookies e sessões</span>
+            <span class="tl-desc">O agendamento em duas etapas com estado.</span>
+          </div>
+          <div class="tl-item is-past">
+            <div class="tl-dot"></div>
+            <span class="tl-year">Aula 14</span>
+            <span class="tl-tool">AJAX</span>
+            <span class="tl-desc">Médicos e horários sem recarregar a página.</span>
+          </div>
+          <div class="tl-item is-past">
+            <div class="tl-dot"></div>
+            <span class="tl-year">Aula 15</span>
+            <span class="tl-tool">Autenticação</span>
+            <span class="tl-desc">Login, logout e a recepção protegida.</span>
+          </div>
+          <div class="tl-item is-past">
+            <div class="tl-dot"></div>
+            <span class="tl-year">Aula 16</span>
+            <span class="tl-tool">API REST</span>
+            <span class="tl-desc">Cinco endpoints testados e documentados.</span>
+          </div>
+          <div class="tl-item">
+            <div class="tl-dot"></div>
+            <span class="tl-year">Aula 17</span>
+            <span class="tl-tool">Relacionamentos</span>
+            <span class="tl-desc">As quatro entidades ligadas de verdade.</span>
+          </div>
+        </div>
+
+        <div class="callout" style="margin-top:14px;">
+          <p><strong>Prévia da Aula 18:</strong> abra qualquer tela sua e olhe para ela com os olhos de quem vai receber a aplicação. Tudo funciona, e tudo parece um rascunho: cada View repete o próprio cabeçalho e nada se ajusta ao celular. Começa o <strong>Módulo 4</strong>, com <code>_Layout.cshtml</code>, Partial Views e Bootstrap 5.</p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">17 Fechamento do Módulo 3</div>
+          <div class="footer-page">25</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 26: REFERÊNCIAS ==================== -->
+      <section id="ref-slide" class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Referências desta aula</h2>
+        </div>
+
+        <p style="font-size:0.72em; margin-top:0;">Os números entre colchetes ao lado dos títulos remetem a esta lista, toda ela em português e aberta.</p>
+
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px 30px; margin-top:6px;">
+          <div class="concept-card" style="padding:14px 18px;">
+            <h4>[1] Relacionamentos entre entidades</h4>
+            <p style="font-size:0.7em; color:#444444;">MICROSOFT. <em>Relacionamentos no Entity Framework Core</em>.<br>
+            <code style="font-size:0.82em;">learn.microsoft.com/pt-br/ef/core/modeling/relationships</code></p>
+          </div>
+          <div class="concept-card" style="padding:14px 18px;">
+            <h4>[2] Carregamento de dados relacionados</h4>
+            <p style="font-size:0.7em; color:#444444;">MICROSOFT. <em>Carregando dados relacionados</em>.<br>
+            <code style="font-size:0.82em;">learn.microsoft.com/pt-br/ef/core/querying/related-data/</code></p>
+          </div>
+          <div class="concept-card" style="padding:14px 18px;">
+            <h4>[3] Fluent API e modelagem</h4>
+            <p style="font-size:0.7em; color:#444444;">MICROSOFT. <em>Criando e configurando um modelo</em>.<br>
+            <code style="font-size:0.82em;">learn.microsoft.com/pt-br/ef/core/modeling/</code></p>
+          </div>
+          <div class="concept-card" style="padding:14px 18px;">
+            <h4>[4] Consultas sem rastreamento</h4>
+            <p style="font-size:0.7em; color:#444444;">MICROSOFT. <em>Rastreamento e consultas sem rastreamento</em>.<br>
+            <code style="font-size:0.82em;">learn.microsoft.com/pt-br/ef/core/querying/tracking</code></p>
+          </div>
+        </div>
+
+        <div class="callout" style="margin-top:14px;">
+          <p>O roteiro completo do laboratório de hoje está no portal, em <code>labs/aula17-lab/</code>.</p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">17 Referências</div>
+          <div class="footer-page">26</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 27: ENCERRAMENTO ==================== -->
+      <section class="end-slide">
+        <img src="../assets/img/uninove-logo.png" alt="Uninove, Universidade Nove de Julho"
+             style="max-width:300px; background:#FFFFFF; padding:20px 28px; border-radius:8px;">
+        <div class="copyright">
+          Copyright &copy; 2026<br>
+          Prof. José Romualdo da Costa Filho<br><br>
+          Todos os direitos reservados. É expressamente proibida a reprodução, divulgação<br>
+          total ou parcial, deste material acadêmico sem autorização formal,<br>
+          por escrito, do Professor autor da ementa.
+        </div>
+      </section>
+
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/highlight/highlight.js"></script>
+  <script src="../assets/js/uninove-quiz.js"></script>
+  <script type="module">
+    import { TURMAS, resolverTurma, dataDaAula, formatarData } from '../assets/js/turmas.js';
+    const turma = resolverTurma({
+      hoje: new Date(),
+      salva: localStorage.getItem('uninove-turma'),
+    });
+    const alvo = document.querySelector('[data-data-da-aula]');
+    if (alvo) {
+      const n = Number(alvo.getAttribute('data-data-da-aula'));
+      alvo.textContent = turma
+        ? `${TURMAS[turma].rotulo}, ${formatarData(dataDaAula(turma, n))}`
+        : `Quarta ${formatarData(dataDaAula('quarta', n))} ou quinta ${formatarData(dataDaAula('quinta', n))}`;
+    }
+  </script>
+  <script>
+    Reveal.initialize({
+      width: 1280, height: 720, center: false, margin: 0,
+      hash: true, slideNumber: false,
+      // Os chevrons de navegação caem sobre a footer-bar e sobre o triângulo
+      // azul do canto inferior direito; a barra de progresso encosta no rodapé
+      // e parece um segundo rodapé. Nenhum dos dois é usado na projeção.
+      controls: false, progress: false,
+      // Um slide por página no ?print-pdf, para o PDF bater com o deck.
+      pdfMaxPagesPerSlide: 1,
+      plugins: [RevealHighlight],
+    });
+  </script>
+</body>
+</html>
