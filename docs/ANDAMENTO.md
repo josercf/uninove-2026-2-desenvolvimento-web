@@ -1,6 +1,6 @@
 # Andamento
 
-**Última atualização:** 31/07/2026 (Task 13, lote do Módulo 2)
+**Última atualização:** 31/07/2026 (Task 14, lote do Módulo 3)
 
 ## Ordem de leitura ao abrir uma sessão
 
@@ -234,22 +234,91 @@ tema. `npm test` continua com 14 testes passando.
   a senha de exemplo. **Esta medição não é feita por nenhum validador** e vale
   repetir a cada lote.
 
+**Task 14, lote do Módulo 3, Aulas 13 a 17 (31/07/2026):**
+
+- Cinco decks e cinco kits: `aula13.html` (27 slides, cookies e sessões),
+  `aula14.html` (26, AJAX), `aula15.html` (29, autenticação e autorização),
+  `aula16.html` (28, API REST) e `aula17.html` (27, relacionamentos e EF Core
+  avançado). Cards 13 a 17 habilitados na edição única de sempre.
+- **Dezessete aulas no ar.** Falta só o Módulo 4.
+- Decisões do professor, registradas na seção 3 do `SKILL.md`: o
+  `ClinicaContext` **passa a herdar de `IdentityDbContext<IdentityUser>`** na
+  Aula 15, em vez de nascer um segundo contexto; as telas de login são MVC
+  escritas à mão em `ContaController`, **sem o scaffold em Razor Pages**; e a
+  API da Aula 16 é protegida com `[Authorize]` pelo cookie do Identity, sem
+  JWT.
+- **Instrução nova que funcionou:** cada agente mediu o corte horizontal de
+  código no próprio deck, em vez de eu descobrir na reconciliação. Um deles
+  chegou a validar o próprio medidor injetando uma linha de 200 caracteres
+  para confirmar que ele acusava. Zero cortes chegaram até mim.
+
+**Reconciliação do Módulo 3:**
+
+- **Expediente da clínica.** As Aulas 06, 09 e 10 fixam 07h às 19h, e o aluno
+  escreveu essa regra em JavaScript e em C#. A Aula 14 inventou uma grade de
+  horários das 08:00 às 17:30. Não era contradição lógica, porque a grade cabe
+  dentro do expediente, mas o aluno estranharia. Grade alinhada para 07:00 às
+  18:30.
+- **Rota da API, e este erro foi meu.** O contrato que passei aos agentes
+  mandava `[Route("api/[controller]")]` numa classe `ConsultasApiController`,
+  o que resolve para `api/consultasapi` e não para o `api/consultas` usado na
+  aula inteira. Copiei do planejamento, que traz as duas coisas e se
+  contradiz. O construtor da Aula 16 percebeu, manteve a rota do recurso e
+  transformou o conflito em conteúdo de slide. O planejamento ganhou uma nota
+  explícita mandando **não** "corrigir" o deck de volta.
+- **401 contra 302 na API.** Consequência da decisão do cookie que eu não
+  antecipei: sem configuração, uma requisição não autenticada à API receberia
+  302 e a tela de login em HTML, e o 401 da tabela de status seria mentira
+  dentro da própria aplicação. A Aula 16 configura
+  `ConfigureApplicationCookie` para devolver 401 sob `/api`.
+- **Perfil no registro**, decisão do professor: a conta criada pela tela de
+  registro nasce **sem perfil**. Assim o laboratório exercita os dois lados da
+  autorização, e a proteção deixa de ser decorativa no exemplo que a ensina. A
+  tabela de teste, no kit e no fechamento do deck, ganhou a coluna "logado,
+  sem perfil", que é a linha mais importante da aula.
+- Conferidos e **sem conflito**: migrations (`MedicosIniciais`,
+  `IdentityClinicaVida`, `RelacionamentosClinicaVida`, distintas e
+  sequenciais); só a Aula 13 semeia médicos; numeração de Fase nos kits (12 a
+  16); e o acoplamento entre as Aulas 13 e 14, que se reconciliaram sozinhas
+  em nomes de action, chave de sessão e `ViewBag`.
+
+**Terceiro defeito de tema, ADR-007 atualizado (31/07/2026):**
+
+`.exercise-container h3` também era `display: flex` com `gap`, a mesma
+armadilha da alternativa de quiz, em outro seletor. **Estava vivo em
+produção:** a Aula 09, já publicada, trazia `Em <code>ClinicaVida.Web/Models</code>`
+com 8px de buraco no lugar do espaço. A oitava checagem não pegava, porque só
+olha `li` de `.quiz-options`.
+
+Corrigido no tema, voltando o `h3` a bloco. **A correção aqui foi de natureza
+diferente da do quiz, de propósito:** no quiz o flex serve para alinhar o
+círculo da letra, então a saída foi dar ao texto um elemento próprio, ao custo
+de uma convenção; no título do exercício não havia nada a alinhar, e deu para
+remover a armadilha na origem, sem convenção nova e sem checagem nova. Preferir
+sempre a correção que não cria regra para alguém lembrar.
+
 ## Próximos passos
 
-Produzir o **Módulo 3, Aulas 13 a 17** (cookies e sessões, AJAX, autenticação,
-API REST, relacionamentos e EF Core avançado), no mesmo formato de lote, e
-depois o **Módulo 4, Aulas 18 a 20** (Bootstrap, deploy e projeto final).
+Produzir o **Módulo 4, Aulas 18 a 20** (layout com Partial Views e Bootstrap,
+publicação e deploy, revisão geral e projeto final), fechando as 20 aulas.
 
-O que os dois lotes já ensinaram, e que o próximo deve repetir:
+Antes de despachar, decidir com o professor o que o planejamento não fixa:
+onde a aplicação será publicada na Aula 19 (o planejamento fala em variável de
+ambiente e `appsettings.Production.json`, mas não nomeia provedor), e como o
+banco MySQL de produção será provido. Sem isso, cinco agentes inventariam cinco
+provedores diferentes, que é exatamente o erro que os Módulos 2 e 3 ensinaram a
+não cometer.
 
-1. **Fixar o contrato técnico antes de despachar**, não reconciliar depois. O
-   contrato do Módulo 2 está na seção 3 do `SKILL.md` e já cobre o Módulo 3.
-   Falta decidir, antes de despachar: nome do esquema de autenticação e das
-   roles da Aula 15, e o prefixo de rota da API da Aula 16.
+O que os três lotes ensinaram, e que o próximo deve repetir:
+
+1. **Fixar o contrato técnico antes de despachar.** Está na seção 3 do
+   `SKILL.md` e já cobre até a Aula 20.
 2. **Manter o portal fora dos agentes**, habilitando os cards numa edição única.
-3. **Reconciliar contratos ao fim do lote** é etapa, não detalhe.
-4. **Medir o corte horizontal de código** em todos os decks, porque nenhum
-   validador cobre isso.
+3. **Reconciliar contratos ao fim do lote** é etapa, não detalhe. Inclui
+   confrontar números inventados (expediente, grade de horários) contra o que
+   aulas anteriores já fixaram.
+4. **Medir o corte horizontal de código**, que nenhum validador cobre. Desde a
+   Task 14 a instrução vai no prompt de cada agente.
 
 ## Pendências conhecidas
 

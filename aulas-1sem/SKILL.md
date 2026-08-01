@@ -179,6 +179,37 @@ Convenções que valem para o código de todas as aulas:
   diferente. Escreva "a porta que o seu terminal imprimiu" e use `7145` só como
   exemplo.
 
+### Autenticação e API, a partir da Aula 15
+
+- **Um contexto só.** Na Aula 15 o `ClinicaContext` **passa a herdar de
+  `IdentityDbContext<IdentityUser>`**, em vez de nascer um segundo contexto.
+  Uma cadeia de migrations, um banco coerente, e o aluno vê a própria classe
+  que escreveu na Aula 11 evoluir. A Aula 15 precisa de um slide explicando a
+  troca de herança e a migration que ela gera.
+- **As telas de login são MVC, escritas à mão.** `ContaController` com `Login`
+  em GET e POST, `Logout` e `Registrar` em GET e POST, usando `SignInManager` e
+  `UserManager`, com Views em `Views/Conta/`. **Não use o scaffold do
+  Identity**, que gera Razor Pages em `Areas/Identity/`: a disciplina inteira
+  ensina MVC, e um paradigma novo por uma aula só confunde mais do que economiza
+  tempo. O aluno precisa ver o fluxo de autenticação, não recebê-lo pronto.
+- **Perfis:** `Recepcao` e `Medico`, conforme o planejamento.
+- **A API da Aula 16 é protegida** com `[Authorize]`, herdando a autenticação
+  por cookie configurada na Aula 15. Diga em sala a limitação, com honestidade:
+  cookie serve ao navegador, e integração real entre sistemas usaria token.
+  **JWT não entra**, nem na Aula 16 nem em nenhuma outra: não está na ementa e
+  não cabe num encontro que já traz REST, DTO, status HTTP e ferramenta de
+  teste.
+- **A rota da API é literal:** `[Route("api/consultas")]` em
+  `ConsultasApiController`. A convenção `[Route("api/[controller]")]` daria
+  `api/consultasapi`, porque o token resolve para o nome da classe sem o
+  sufixo `Controller`, e o nome tem o `Api` para não colidir com o
+  `ConsultasController` do MVC. A Aula 16 ensina a convenção, explica o
+  conflito e usa a rota literal.
+- **Com cookie, uma requisição não autenticada à API receberia 302 e a tela de
+  login em HTML.** A Aula 16 configura `ConfigureApplicationCookie` para
+  devolver **401** em caminhos sob `/api`, senão o 401 da tabela de status
+  seria mentira dentro da própria aplicação do aluno.
+
 ---
 
 ## 4. Anatomia do deck Reveal.js

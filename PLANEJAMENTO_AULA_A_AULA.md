@@ -1494,11 +1494,20 @@ verbo, rota, o que faz e o status de sucesso esperado.
 
 ### Ciclo 2, 20h05 às 20h40
 
-**Conceito:** `[ApiController]`, `[Route("api/[controller]")]`, atributos de
+**Conceito:** `[ApiController]`, a rota do recurso, atributos de
 verbo, `ActionResult<T>`, `Ok`, `CreatedAtAction`, `NoContent`, `BadRequest` e
 `NotFound`. DTOs de entrada e de saída, e por que não devolver a entidade do EF
 Core diretamente. Validação automática do `[ApiController]`. Teste com Swagger,
 Postman ou arquivo `.http`.
+
+> **Sobre a rota, e isto é conteúdo de aula, não detalhe.** A convenção do
+> ASP.NET Core é `[Route("api/[controller]")]`, mas o token `[controller]`
+> resolve para o nome da classe sem o sufixo `Controller`. Como a classe se
+> chama `ConsultasApiController`, para não colidir com o `ConsultasController`
+> do MVC, o token daria `api/consultasapi`, e não o `api/consultas` usado em
+> toda esta aula. O deck ensina a convenção, explica por que ela não serve
+> aqui e escreve a rota literal `[Route("api/consultas")]`. Não "corrija" o
+> deck de volta para o token: o conflito é real e é didático.
 **Demonstração:** criar o endpoint de listagem e o de criação, e exercitá-los
 pela ferramenta de teste, mostrando o cabeçalho `Location` do 201.
 **Exercício curto:** corrigir uma action que devolve 200 na criação e 200 na
