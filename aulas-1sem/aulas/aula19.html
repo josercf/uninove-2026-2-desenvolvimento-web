@@ -1,0 +1,1173 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Aula 19, Publicação e deploy | Uninove</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/theme/white.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/highlight/monokai.css">
+  <link rel="stylesheet" href="../assets/css/uninove-theme.css">
+  <link rel="stylesheet" href="../assets/css/uninove-print.css">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+      <!-- ==================== SLIDE 1: CAPA ==================== -->
+      <section class="cover-slide">
+        <img src="../assets/img/uninove-logo.png" alt="Uninove, Universidade Nove de Julho" class="uninove-logo-full"
+             style="max-width:400px; background:#FFFFFF; padding:26px 36px; border-radius:10px;">
+        <div style="margin-top:36px; color:#FFFFFF; font-size:0.95em; font-weight:800; letter-spacing:4px; text-transform:uppercase;">Desenvolvimento Web</div>
+        <div style="margin-top:12px; color:#C84B31; font-size:0.6em; font-weight:700; letter-spacing:3px; text-transform:uppercase;">Graduação, 2026.2</div>
+      </section>
+
+      <!-- ==================== SLIDE 2: TÍTULO ==================== -->
+      <section class="title-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="title-card">
+          <div class="accent-bar"></div>
+          <h1>Desenvolvimento Web</h1>
+          <h2>Publicação e deploy</h2>
+          <h3>Prof. José Romualdo<br><span data-data-da-aula="19"></span></h3>
+        </div>
+        <div class="lesson-bar">AULA 19 &nbsp;|&nbsp; Módulo 4, Tópicos Avançados e Projeto Final</div>
+      </section>
+
+      <!-- ==================== SLIDE 3: AGENDA ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Agenda do encontro de hoje</h2>
+        </div>
+
+        <p style="font-size:0.76em; margin-top:0;">São 150 minutos corridos, em quatro ciclos. Ao fim da aula a Clínica Vida+ estará no ar, com endereço acessível pela internet.</p>
+
+        <table>
+          <thead>
+            <tr><th style="width:190px;">Horário</th><th style="width:190px;">Bloco</th><th>O que acontece</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>19h30 às 20h05</td><td>Ciclo 1</td><td>Desenvolvimento contra produção, ambientes e segredos</td></tr>
+            <tr><td>20h05 às 20h40</td><td>Ciclo 2</td><td>Docker, compose e a URL pública no GitHub Codespaces</td></tr>
+            <tr><td>20h40 às 20h50</td><td>Quiz de fixação</td><td>Uma pergunta sobre o conceito central da aula</td></tr>
+            <tr><td>20h50 às 21h25</td><td>Ciclo 3</td><td>Laboratório guiado: Dockerfile, compose e o codespace de pé</td></tr>
+            <tr><td>21h25 às 21h50</td><td>Ciclo 4</td><td>Migrations, porta pública, testes e a URL no README</td></tr>
+            <tr><td>21h50 às 22h00</td><td>Fechamento</td><td>Cada um abre a própria URL no celular. Prévia da Aula 20</td></tr>
+          </tbody>
+        </table>
+
+        <div class="slide-footer">
+          <div class="footer-bar">19 Agenda do encontro</div>
+          <div class="footer-page">3</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 4: RECAPITULAÇÃO DA AULA 18 ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>De onde viemos: a aplicação pronta, e presa</h2>
+        </div>
+
+        <p style="font-size:0.76em; margin-top:0;">Na Aula 18 você entregou o <code>_Layout.cshtml</code> e as Partial Views com Bootstrap 5 na paleta da clínica, com todas as telas responsivas. A aplicação está pronta. Só que ela roda em um lugar só.</p>
+
+        <div class="concept-cards" style="margin-top:12px;">
+          <div class="concept-card">
+            <h4>O que já existe</h4>
+            <p>CRUD de pacientes, agendamento com regra de conflito, agenda do dia, login com perfis, API REST e layout unificado. Dezoito encontros de trabalho.</p>
+          </div>
+          <div class="concept-card">
+            <h4>O problema de hoje</h4>
+            <p>Tudo isso responde em <code>https://localhost:</code> mais a porta que o seu terminal sorteou. Ninguém fora da sua máquina alcança esse endereço, nem a recepção da clínica, nem o professor.</p>
+          </div>
+          <div class="concept-card">
+            <h4>O que muda hoje</h4>
+            <p>A aplicação e o banco viram contêineres, sobem no GitHub Codespaces e ganham um endereço <code>https://</code> que qualquer celular abre.</p>
+          </div>
+        </div>
+
+        <div class="takeaway">
+          <span class="takeaway-label">Takeaway</span>
+          <p>Software que não está publicado não existe para quem precisa dele. Publicar não é um detalhe do fim do projeto: é o que transforma código em serviço.</p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">19 Recapitulação da Aula 18</div>
+          <div class="footer-page">4</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 5: DESENVOLVIMENTO CONTRA PRODUÇÃO ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Desenvolvimento contra produção <a href="#/ref-slide" class="ref-badge" title="Ver referências">[1]</a></h2>
+        </div>
+
+        <p style="font-size:0.74em; margin:0 0 4px 0;">É a mesma aplicação e o mesmo código compilado. O que muda é o ambiente, e o ambiente muda o comportamento em pontos que importam. O <code>Program.cs</code> decide pelo <code>ASPNETCORE_ENVIRONMENT</code>.</p>
+
+        <div class="side-by-side">
+          <div class="side">
+            <h4>Development, a sua máquina</h4>
+            <ul style="font-size:0.68em; margin:0; padding-left:18px;">
+              <li>Página de exceção detalhada, com a pilha de chamadas e o trecho do código na tela</li>
+              <li>Dados de teste, log em <code>Information</code></li>
+              <li>Erro na tela é ajuda: quem lê é você</li>
+            </ul>
+          </div>
+          <div class="side">
+            <h4>Production, o mundo</h4>
+            <ul style="font-size:0.68em; margin:0; padding-left:18px;">
+              <li>Página de erro amigável, sem uma linha de código exposta</li>
+              <li>Dados reais, log em <code>Warning</code></li>
+              <li>Erro na tela é vazamento: quem lê é qualquer um</li>
+            </ul>
+          </div>
+        </div>
+
+        <pre class="code-compact" style="margin-top:8px;"><code class="language-csharp" data-trim>if (app.Environment.IsDevelopment())
+    app.UseDeveloperExceptionPage();
+else
+{
+    app.UseExceptionHandler("/Home/Error");
+    app.UseHsts();
+}
+</code></pre>
+
+        <div class="slide-footer">
+          <div class="footer-bar">19 Desenvolvimento contra produção</div>
+          <div class="footer-page">5</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 6: A CASCATA DE CONFIGURAÇÃO ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2><code>ASPNETCORE_ENVIRONMENT</code> e a cascata <a href="#/ref-slide" class="ref-badge" title="Ver referências">[1]</a></h2>
+        </div>
+
+        <p style="font-size:0.74em; margin-top:0;">A configuração do ASP.NET Core é lida em camadas, de baixo para cima. Quem é lido por último vence, e é isso que permite publicar sem editar arquivo nenhum.</p>
+
+        <div class="slide-figure" style="margin-top:4px;">
+          <svg viewBox="0 0 1060 288" role="img" aria-label="Cascata de configuração do ASP.NET Core: appsettings.json na base, depois appsettings do ambiente, depois User Secrets em desenvolvimento, depois variáveis de ambiente e por fim argumentos de linha de comando, com a regra de que o último lido vence">
+            <rect x="10" y="238" width="740" height="42" rx="6" fill="#E8EDF2" stroke="#00274D" stroke-width="1.5"/>
+            <text x="26" y="265" font-size="15" font-weight="700" fill="#00274D">1. appsettings.json</text>
+            <text x="330" y="265" font-size="13.5" fill="#333333">versionado, sem segredo nenhum</text>
+
+            <rect x="10" y="188" width="740" height="42" rx="6" fill="#DCE6EE" stroke="#00274D" stroke-width="1.5"/>
+            <text x="26" y="215" font-size="15" font-weight="700" fill="#00274D">2. appsettings.{Ambiente}.json</text>
+            <text x="400" y="215" font-size="13.5" fill="#333333">Development ou Production</text>
+
+            <rect x="10" y="138" width="740" height="42" rx="6" fill="#CFDDE9" stroke="#00274D" stroke-width="1.5"/>
+            <text x="26" y="165" font-size="15" font-weight="700" fill="#00274D">3. User Secrets</text>
+            <text x="330" y="165" font-size="13.5" fill="#333333">só em desenvolvimento, fora da pasta do projeto</text>
+
+            <rect x="10" y="88" width="740" height="42" rx="6" fill="#C84B31" stroke="#8E3623" stroke-width="1.5"/>
+            <text x="26" y="115" font-size="15" font-weight="700" fill="#FFFFFF">4. Variáveis de ambiente</text>
+            <text x="400" y="115" font-size="13.5" fill="#FFFFFF">é por aqui que a senha entra</text>
+
+            <rect x="10" y="38" width="740" height="42" rx="6" fill="#00274D" stroke="#00274D" stroke-width="1.5"/>
+            <text x="26" y="65" font-size="15" font-weight="700" fill="#FFFFFF">5. Argumentos de linha de comando</text>
+
+            <line x1="800" y1="262" x2="800" y2="44" stroke="#C84B31" stroke-width="3"/>
+            <path d="M793,52 L800,34 L807,52 Z" fill="#C84B31"/>
+            <text x="822" y="120" font-size="15" font-weight="800" fill="#C84B31">quem vem</text>
+            <text x="822" y="142" font-size="15" font-weight="800" fill="#C84B31">depois vence</text>
+            <text x="822" y="196" font-size="13.5" fill="#333333">O valor final é o da</text>
+            <text x="822" y="216" font-size="13.5" fill="#333333">camada mais alta que</text>
+            <text x="822" y="236" font-size="13.5" fill="#333333">tiver aquela chave.</text>
+          </svg>
+        </div>
+
+        <div class="takeaway">
+          <span class="takeaway-label">Takeaway</span>
+          <p>Publicar não é editar arquivo. É definir a variável certa no ambiente certo, e deixar a camada mais alta sobrescrever o que está versionado.</p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">19 Ambientes e cascata de configuração</div>
+          <div class="footer-page">6</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 7: SEGREDOS FORA DO REPOSITÓRIO ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Segredo não mora no repositório <a href="#/ref-slide" class="ref-badge" title="Ver referências">[2]</a></h2>
+        </div>
+
+        <p style="font-size:0.74em; margin-top:0;">Uma chave aninhada do <code>appsettings.json</code> vira variável de ambiente trocando os dois-pontos por <strong>duplo sublinhado</strong>. O nome da variável é a única coisa que você precisa acertar.</p>
+
+        <table style="margin-top:8px;">
+          <thead>
+            <tr><th style="width:46%;">Chave na configuração</th><th>Variável de ambiente equivalente</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><code>ConnectionStrings:DefaultConnection</code></td><td><code>ConnectionStrings__DefaultConnection</code></td></tr>
+            <tr><td><code>Logging:LogLevel:Default</code></td><td><code>Logging__LogLevel__Default</code></td></tr>
+            <tr><td><code>SeedRecepcao:Senha</code>, da Aula 15</td><td><code>SeedRecepcao__Senha</code></td></tr>
+          </tbody>
+        </table>
+
+        <p style="font-size:0.72em; margin-top:6px;">Dois-pontos não é caractere válido em nome de variável em todos os sistemas. O duplo sublinhado é a convenção oficial de escape, e o ASP.NET Core o converte de volta ao carregar.</p>
+
+        <div class="callout" style="margin-top:10px;">
+          <p><strong>Em desenvolvimento:</strong> <code>dotnet user-secrets set</code> guarda o valor no seu perfil de usuário, fora da pasta do projeto, e por isso ele nunca entra em um <code>git add</code> distraído.</p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">19 Segredos fora do repositório</div>
+          <div class="footer-page">7</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 8: DOTNET PUBLISH ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>O pacote de publicação: <code>dotnet publish</code> <a href="#/ref-slide" class="ref-badge" title="Ver referências">[3]</a></h2>
+        </div>
+
+        <p style="font-size:0.74em; margin-top:0;">Publicar é gerar uma pasta autocontida: o que ela tem dentro é tudo o que o servidor precisa, e nada mais. Código-fonte não vai junto.</p>
+
+        <pre class="code-compact"><code class="language-bash" data-trim># Compila em Release e escreve o pacote em ./publicado
+dotnet publish ClinicaVida.Web/ClinicaVida.Web.csproj -c Release -o ./publicado
+
+# A aplicação publicada roda sem o SDK, só com o runtime
+cd publicado
+dotnet ClinicaVida.Web.dll
+</code></pre>
+
+        <div class="side-by-side" style="margin-top:6px;">
+          <div class="side">
+            <h4>O que a pasta tem</h4>
+            <ul style="font-size:0.66em; margin:0; padding-left:18px;">
+              <li><code>ClinicaVida.Web.dll</code> e as bibliotecas do NuGet</li>
+              <li><code>wwwroot/</code>, com o CSS e o JavaScript</li>
+              <li><code>appsettings.json</code> e o do ambiente</li>
+              <li><code>*.runtimeconfig.json</code> e <code>*.deps.json</code></li>
+            </ul>
+          </div>
+          <div class="side">
+            <h4>Debug contra Release</h4>
+            <ul style="font-size:0.66em; margin:0; padding-left:18px;">
+              <li><code>Debug</code> traz símbolos e desliga otimizações</li>
+              <li><code>Release</code> otimiza e é o que vai para produção</li>
+              <li><code>dotnet publish</code> já usa <code>Release</code> por padrão desde o .NET 8, mas escreva o <code>-c Release</code> assim mesmo</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">19 O pacote de publicação</div>
+          <div class="footer-page">8</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 9: EXERCÍCIO DO CICLO 1 ==================== -->
+      <section class="exercise-slide content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Exercício do Ciclo 1: o que não pode ir para o repositório</h2>
+        </div>
+
+        <div class="exercise-container" style="padding:16px 24px;">
+          <h3>Olhando este arquivo, 6 minutos</h3>
+          <ol class="exercise-steps">
+            <li>Aponte as linhas que <strong>não</strong> podem ser versionadas e diga, em uma frase, o risco de cada uma.</li>
+            <li>Para cada linha apontada, escreva o nome da variável de ambiente que a substitui.</li>
+            <li>Decida o que sobra no arquivo, e por que pode ficar.</li>
+          </ol>
+        </div>
+
+        <pre class="code-compact" style="margin-top:8px;"><code class="language-json" data-trim>{
+  "ConnectionStrings": {
+    "DefaultConnection": "server=localhost;database=clinicavida;user=root;password=senha-do-banco"
+  },
+  "Smtp": { "Host": "smtp.exemplo.com", "Usuario": "clinica@exemplo.com", "Senha": "senha-do-email" },
+  "IntegracaoLaboratorio": { "ChaveDeApi": "chave-da-integracao" },
+  "Logging": { "LogLevel": { "Default": "Information" } },
+  "AllowedHosts": "*"
+}
+</code></pre>
+
+        <div class="slide-footer">
+          <div class="footer-bar">19 Exercício do Ciclo 1</div>
+          <div class="footer-page">9</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 10: ONDE PUBLICAR ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Onde publicar uma aplicação com banco</h2>
+        </div>
+
+        <p style="font-size:0.74em; margin:0 0 4px 0;">Uma aplicação ASP.NET Core com MySQL precisa de dois serviços no ar ao mesmo tempo. As opções mudam em custo, em esforço e no que a camada gratuita permite.</p>
+
+        <table style="margin-top:6px;">
+          <thead>
+            <tr><th style="width:30%;">Opção</th><th style="width:20%;">Custo</th><th>O que pesa</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Servidor próprio, ou VPS</td><td>Mensal, em dólar</td><td>Você cuida do sistema, do banco, do certificado e das atualizações</td></tr>
+            <tr><td>Nuvem gerenciada</td><td>Camada gratuita curta</td><td>Cartão de crédito exigido no cadastro, mesmo no plano gratuito</td></tr>
+            <tr><td>Plataforma de contêiner</td><td>Gratuito com limites</td><td>Banco costuma ser cobrado à parte, e a aplicação hiberna sem uso</td></tr>
+            <tr><td><strong>Docker no GitHub Codespaces</strong></td><td><strong>Cota gratuita da conta</strong></td><td><strong>Aplicação e banco no mesmo lugar, com HTTPS pronto e sem cartão</strong></td></tr>
+          </tbody>
+        </table>
+
+        <div class="callout" style="margin-top:10px;">
+          <p><strong>Nesta disciplina o provedor é o GitHub Codespaces</strong>, com cota mensal gratuita de horas na conta pessoal. Containerizar e configurar por variável de ambiente vale igual em qualquer nuvem.</p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">19 Onde publicar</div>
+          <div class="footer-page">10</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 11: IMAGEM MULTI-STAGE ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>A imagem multi-stage: compilar em uma, entregar outra <a href="#/ref-slide" class="ref-badge" title="Ver referências">[3]</a></h2>
+        </div>
+
+        <p style="font-size:0.72em; margin-top:0;">Compilar exige o SDK inteiro. Executar exige só o runtime. O Docker deixa você usar os dois e mandar para o servidor apenas o segundo.</p>
+
+        <div class="slide-figure" style="margin-top:2px;">
+          <svg viewBox="0 0 1080 300" role="img" aria-label="Diagrama da imagem multi-stage: a etapa de build usa a imagem do SDK do .NET 10, com compilador, pacotes NuGet e código-fonte, e é descartada; apenas a pasta publicada é copiada para a etapa final, baseada na imagem do runtime ASP.NET, que é a imagem entregue">
+            <!-- Etapa build -->
+            <rect x="8" y="30" width="400" height="230" rx="10" fill="#F2F4F7" stroke="#00274D" stroke-width="2" stroke-dasharray="7 5"/>
+            <rect x="10" y="32" width="396" height="30" rx="8" fill="#00274D"/>
+            <text x="208" y="53" text-anchor="middle" font-size="14.5" font-weight="700" fill="#FFFFFF">Etapa build: sdk:10.0</text>
+            <g font-size="13.5" fill="#333333">
+              <text x="30" y="90">compilador C# e MSBuild</text>
+              <text x="30" y="116">pacotes NuGet restaurados</text>
+              <text x="30" y="142">código-fonte do projeto</text>
+              <text x="30" y="168">ferramentas do EF Core</text>
+            </g>
+            <rect x="26" y="188" width="364" height="30" rx="6" fill="#FFFFFF" stroke="#C84B31" stroke-width="2"/>
+            <text x="208" y="208" text-anchor="middle" font-size="13.5" font-weight="700" fill="#C84B31">saída: /app/publish</text>
+            <text x="208" y="243" text-anchor="middle" font-size="13.5" font-weight="700" fill="#8E3623">imagem na ordem de 1 GB, descartada</text>
+
+            <!-- Seta -->
+            <line x1="416" y1="203" x2="656" y2="203" stroke="#C84B31" stroke-width="3"/>
+            <path d="M648,196 L666,203 L648,210 Z" fill="#C84B31"/>
+            <text x="536" y="190" text-anchor="middle" font-size="13.5" font-weight="800" fill="#C84B31">COPY --from=build</text>
+            <text x="536" y="228" text-anchor="middle" font-size="13" fill="#333333">só o resultado atravessa</text>
+
+            <!-- Etapa final -->
+            <rect x="672" y="30" width="400" height="230" rx="10" fill="#FFFFFF" stroke="#C84B31" stroke-width="2.5"/>
+            <rect x="674" y="32" width="396" height="30" rx="8" fill="#C84B31"/>
+            <text x="872" y="53" text-anchor="middle" font-size="14.5" font-weight="700" fill="#FFFFFF">Etapa final: aspnet:10.0</text>
+            <g font-size="13.5" fill="#333333">
+              <text x="694" y="90">runtime do .NET e do ASP.NET</text>
+              <text x="694" y="116">a pasta publicada, e nada além</text>
+              <text x="694" y="142">sem compilador, sem código-fonte</text>
+              <text x="694" y="168">porta 8080 exposta</text>
+            </g>
+            <rect x="690" y="188" width="364" height="30" rx="6" fill="#F2F4F7" stroke="#00274D" stroke-width="2"/>
+            <text x="872" y="208" text-anchor="middle" font-size="13.5" font-weight="700" fill="#00274D">esta é a imagem publicada</text>
+            <text x="872" y="243" text-anchor="middle" font-size="13.5" font-weight="700" fill="#00274D">algumas centenas de MB</text>
+          </svg>
+        </div>
+
+        <div class="takeaway">
+          <span class="takeaway-label">Takeaway</span>
+          <p>Multi-stage não é capricho: é o que impede o compilador, o código-fonte e o histórico do Git de viajarem para o servidor junto com a aplicação.</p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">19 A imagem multi-stage</div>
+          <div class="footer-page">11</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 12: O DOCKERFILE DA CLÍNICA ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>O <code>Dockerfile</code> da Clínica Vida+ <a href="#/ref-slide" class="ref-badge" title="Ver referências">[3]</a></h2>
+        </div>
+
+        <pre class="code-compact" style="margin-top:6px;"><code class="language-dockerfile" data-trim># Etapa 1: build. O SDK completo compila e publica.
+FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
+WORKDIR /src
+COPY ClinicaVida.Web/*.csproj ClinicaVida.Web/
+RUN dotnet restore ClinicaVida.Web/ClinicaVida.Web.csproj
+COPY . .
+RUN dotnet publish ClinicaVida.Web/ClinicaVida.Web.csproj -c Release -o /app/publish
+
+# Etapa 2: runtime. Só o necessário para executar.
+FROM mcr.microsoft.com/dotnet/aspnet:10.0 AS final
+WORKDIR /app
+COPY --from=build /app/publish .
+EXPOSE 8080
+ENTRYPOINT ["dotnet", "ClinicaVida.Web.dll"]
+</code></pre>
+
+        <div class="callout" style="margin-top:8px;">
+          <p><strong>Por que o <code>.csproj</code> é copiado sozinho antes do resto?</strong> Cada linha vira uma camada em cache. Enquanto você não mexer nas dependências, o <code>restore</code> não roda de novo, e o build de uma alteração de View leva segundos em vez de minutos.</p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">19 O Dockerfile do case</div>
+          <div class="footer-page">12</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 13: TOPOLOGIA DO COMPOSE ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Dois contêineres, uma rede, uma porta para fora <a href="#/ref-slide" class="ref-badge" title="Ver referências">[4]</a></h2>
+        </div>
+
+        <div class="slide-figure" style="margin-top:2px;">
+          <svg viewBox="0 0 1080 330" role="img" aria-label="Topologia do Docker Compose dentro do codespace: os serviços web e db na mesma rede privada, o web falando com o db pelo nome do serviço, o volume nomeado guardando os dados do MySQL, e a porta 8080 encaminhada para fora, em modo público, acessível por navegador e celular pela internet">
+            <!-- Codespace -->
+            <rect x="8" y="18" width="700" height="296" rx="12" fill="#F7F9FB" stroke="#00274D" stroke-width="2"/>
+            <text x="26" y="42" font-size="14" font-weight="800" fill="#00274D">Codespace, o computador remoto do GitHub</text>
+
+            <!-- Rede do compose -->
+            <rect x="28" y="58" width="330" height="238" rx="10" fill="#FFFFFF" stroke="#2E9E7E" stroke-width="2" stroke-dasharray="6 4"/>
+            <text x="44" y="80" font-size="13" font-weight="700" fill="#0B6E75">rede privada do compose</text>
+
+            <!-- web -->
+            <rect x="50" y="92" width="286" height="64" rx="8" fill="#00274D"/>
+            <text x="193" y="116" text-anchor="middle" font-size="14.5" font-weight="700" fill="#FFFFFF">web</text>
+            <text x="193" y="138" text-anchor="middle" font-size="12.5" fill="#D8E2EC">ClinicaVida.Web, escuta na 8080</text>
+
+            <!-- db -->
+            <rect x="50" y="214" width="286" height="64" rx="8" fill="#0B6E75"/>
+            <text x="193" y="238" text-anchor="middle" font-size="14.5" font-weight="700" fill="#FFFFFF">db</text>
+            <text x="193" y="260" text-anchor="middle" font-size="12.5" fill="#DCEFEA">mysql:8.4, escuta na 3306</text>
+
+            <line x1="193" y1="156" x2="193" y2="204" stroke="#C84B31" stroke-width="3"/>
+            <path d="M186,196 L193,214 L200,196 Z" fill="#C84B31"/>
+            <text x="208" y="186" font-size="12.5" font-weight="800" fill="#C84B31">server=db</text>
+
+            <!-- volume -->
+            <ellipse cx="486" cy="212" rx="62" ry="11" fill="#CFE6DF" stroke="#0B6E75" stroke-width="1.5"/>
+            <path d="M424,212 L424,244 A62,11 0 0 0 548,244 L548,212" fill="#CFE6DF" stroke="#0B6E75" stroke-width="1.5"/>
+            <text x="486" y="238" text-anchor="middle" font-size="12" font-weight="700" fill="#0B6E75">dados-mysql</text>
+            <line x1="340" y1="228" x2="418" y2="228" stroke="#0B6E75" stroke-width="2.5"/>
+            <text x="486" y="278" text-anchor="middle" font-size="12" fill="#333333">volume nomeado: os dados</text>
+            <text x="486" y="296" text-anchor="middle" font-size="12" fill="#333333">sobrevivem ao compose down</text>
+
+            <!-- porta encaminhada -->
+            <rect x="400" y="92" width="234" height="64" rx="8" fill="#C84B31"/>
+            <text x="517" y="116" text-anchor="middle" font-size="13" font-weight="700" fill="#FFFFFF">porta 8080 encaminhada</text>
+            <text x="517" y="138" text-anchor="middle" font-size="13" font-weight="700" fill="#FFFFFF">em modo público</text>
+            <line x1="338" y1="124" x2="394" y2="124" stroke="#C84B31" stroke-width="2.5" stroke-dasharray="5 4"/>
+            <path d="M386,117 L404,124 L386,131 Z" fill="#C84B31"/>
+
+            <!-- internet -->
+            <line x1="636" y1="124" x2="762" y2="124" stroke="#00274D" stroke-width="3"/>
+            <path d="M754,117 L772,124 L754,131 Z" fill="#00274D"/>
+            <rect x="784" y="46" width="286" height="180" rx="10" fill="#FFFFFF" stroke="#00274D" stroke-width="2"/>
+            <text x="927" y="76" text-anchor="middle" font-size="14" font-weight="800" fill="#00274D">Internet</text>
+            <text x="927" y="108" text-anchor="middle" font-size="12.5" fill="#333333">navegador, celular da turma,</text>
+            <text x="927" y="128" text-anchor="middle" font-size="12.5" fill="#333333">recepção da clínica, professor</text>
+            <rect x="804" y="146" width="246" height="60" rx="6" fill="#F2F4F7" stroke="#C84B31" stroke-width="1.5"/>
+            <text x="927" y="170" text-anchor="middle" font-size="12" font-family="'JetBrains Mono', monospace" fill="#00274D" style="font-variant-ligatures:none;">https://seu-codespace</text>
+            <text x="927" y="192" text-anchor="middle" font-size="12" font-family="'JetBrains Mono', monospace" fill="#00274D" style="font-variant-ligatures:none;">-8080.app.github.dev</text>
+            <text x="927" y="252" text-anchor="middle" font-size="12.5" fill="#333333">o HTTPS é do proxy do GitHub,</text>
+            <text x="927" y="272" text-anchor="middle" font-size="12.5" fill="#333333">não do seu contêiner</text>
+          </svg>
+        </div>
+
+        <div class="takeaway">
+          <span class="takeaway-label">Takeaway</span>
+          <p>O compose descreve a topologia inteira em um arquivo: quem sobe, em que ordem, com qual rede, com qual volume e qual porta sai para a internet.</p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">19 Topologia do compose</div>
+          <div class="footer-page">13</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 14: O COMPOSE.YAML ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>O <code>compose.yaml</code> da Clínica Vida+ <a href="#/ref-slide" class="ref-badge" title="Ver referências">[4]</a></h2>
+        </div>
+
+        <pre class="code-compact" style="margin-top:4px;"><code class="language-yaml" data-trim>services:
+  web:
+    build: .
+    ports: ["8080:8080"]
+    environment:            # os ${...} vêm do .env, fora do repositório
+      ASPNETCORE_ENVIRONMENT: Production
+      ConnectionStrings__DefaultConnection: ${CONNECTION_STRING}
+      SeedRecepcao__Senha: ${SEED_RECEPCAO_SENHA}
+    depends_on: { db: { condition: service_healthy } }
+
+  db:
+    image: mysql:8.4
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: clinicavida
+      MYSQL_USER: clinica
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    volumes: ["dados-mysql:/var/lib/mysql"]
+
+volumes:
+  dados-mysql:
+</code></pre>
+
+        <div class="slide-footer">
+          <div class="footer-bar">19 O compose do case</div>
+          <div class="footer-page">14</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 15: O HOST É DB ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Dentro do compose, o host é <code>db</code>, não <code>localhost</code></h2>
+        </div>
+
+        <p style="font-size:0.74em; margin-top:0;">Cada contêiner tem a própria rede. <code>localhost</code>, dentro do contêiner da aplicação, é o próprio contêiner da aplicação: não existe MySQL ali. O compose publica o <strong>nome do serviço</strong> como nome de host.</p>
+
+        <div class="side-by-side">
+          <div class="side" style="border-left:4px solid #C84B31;">
+            <h4>Errado, e é o erro número um</h4>
+            <p style="font-size:0.64em; font-family:'JetBrains Mono', monospace; font-variant-ligatures:none;">server=localhost;database=clinicavida</p>
+            <p style="font-size:0.66em;">Resultado: <code>Unable to connect to any of the specified MySQL hosts</code>, ou conexão recusada na 3306.</p>
+          </div>
+          <div class="side" style="border-left:4px solid #2E9E7E;">
+            <h4>Certo</h4>
+            <p style="font-size:0.64em; font-family:'JetBrains Mono', monospace; font-variant-ligatures:none;">server=db;database=clinicavida</p>
+            <p style="font-size:0.66em;"><code>db</code> é o nome do serviço no <code>compose.yaml</code>, e o compose resolve esse nome dentro da rede.</p>
+          </div>
+        </div>
+
+        <pre class="code-compact" style="margin-top:6px;"><code class="language-yaml" data-trim># O db precisa estar aceitando conexão antes de o web tentar
+db:
+  healthcheck:
+    test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "-u", "root", "-p$$MYSQL_ROOT_PASSWORD"]
+    interval: 10s
+    retries: 12
+    start_period: 30s
+</code></pre>
+
+        <div class="slide-footer">
+          <div class="footer-bar">19 O host do banco no compose</div>
+          <div class="footer-page">15</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 16: MIGRATIONS EM PRODUÇÃO ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Aplicar as migrations no banco de produção</h2>
+        </div>
+
+        <p style="font-size:0.72em; margin:0 0 2px 0;">O banco do contêiner nasce vazio. Alguém precisa criar as tabelas, e há três caminhos, com trocas diferentes.</p>
+
+        <table style="margin:6px 0 0 0;">
+          <thead>
+            <tr><th style="width:34%;">Estratégia</th><th style="width:33%;">Vantagem</th><th>Preço</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><code>Migrate()</code> no arranque</td><td>Nada a lembrar depois do deploy</td><td>Com várias réplicas, duas subiriam migrando ao mesmo tempo</td></tr>
+            <tr><td><code>dotnet ef database update</code> à mão</td><td>Você vê o que foi aplicado</td><td>Exige o SDK e acesso de rede ao banco</td></tr>
+            <tr><td>Script SQL idempotente</td><td>Revisável antes de rodar</td><td>Mais passos, e alguém precisa executá-lo</td></tr>
+          </tbody>
+        </table>
+
+        <pre class="code-compact" style="margin-top:6px;"><code class="language-csharp" data-trim>// Program.cs: a estratégia da nossa aula, migrar ao subir
+using (var escopo = app.Services.CreateScope())
+{
+    var contexto = escopo.ServiceProvider.GetRequiredService&lt;ClinicaContext&gt;();
+    contexto.Database.Migrate();          // cria o banco e aplica o que faltar
+    await SeedIdentity.CriarPerfisEUsuarioInicialAsync(escopo.ServiceProvider);
+}
+</code></pre>
+
+        <div class="slide-footer">
+          <div class="footer-bar">19 Migrations em produção</div>
+          <div class="footer-page">16</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 17: CODESPACES E A PORTA PÚBLICA ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>De onde vem a URL: a porta encaminhada <a href="#/ref-slide" class="ref-badge" title="Ver referências">[5]</a></h2>
+        </div>
+
+        <p style="font-size:0.74em; margin-top:0;">O codespace roda em um computador do GitHub. Quando um processo começa a escutar em uma porta, o GitHub cria um endereço para ela. Quem decide se esse endereço é acessível é você.</p>
+
+        <div class="flow-diagram" style="margin:14px 0;">
+          <div class="flow-item">docker compose up</div>
+          <div class="flow-arrow">&#8594;</div>
+          <div class="flow-item">porta 8080 detectada</div>
+          <div class="flow-arrow">&#8594;</div>
+          <div class="flow-item">aba PORTS, Public</div>
+          <div class="flow-arrow">&#8594;</div>
+          <div class="flow-item">URL para a turma</div>
+        </div>
+
+        <div class="side-by-side">
+          <div class="side" style="border-left:4px solid #C84B31;">
+            <h4>Private, o padrão</h4>
+            <p style="font-size:0.66em;">Só você abre. Qualquer outra pessoa, inclusive o professor, recebe <strong>401</strong> ou a tela de login do GitHub. É o esquecimento mais comum da aula.</p>
+          </div>
+          <div class="side" style="border-left:4px solid #2E9E7E;">
+            <h4>Public</h4>
+            <p style="font-size:0.66em;">Qualquer um com o endereço abre, sem conta no GitHub. É o que o entregável de hoje e a apresentação da Aula 20 exigem.</p>
+          </div>
+        </div>
+
+        <div class="takeaway">
+          <span class="takeaway-label">Takeaway</span>
+          <p>Publicar aqui é encaminhar uma porta e marcá-la como pública. Se a URL só abre para você, o deploy não aconteceu.</p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">19 A porta encaminhada e a URL</div>
+          <div class="footer-page">17</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 18: HTTPS PELO PROXY E A HIBERNAÇÃO ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>O HTTPS vem do proxy, e a URL tem prazo <a href="#/ref-slide" class="ref-badge" title="Ver referências">[5]</a></h2>
+        </div>
+
+        <div class="side-by-side" style="margin-top:6px;">
+          <div class="side">
+            <h4>Quem termina o TLS é o GitHub</h4>
+            <p style="font-size:0.66em;">O contêiner serve HTTP puro na 8080; o certificado é do proxy do GitHub. Por isso <code>UseHttpsRedirection</code> dentro do contêiner só produz redirecionamento para uma porta que não existe.</p>
+            <p style="font-size:0.66em;">Para o login da Aula 15 continuar funcionando, a aplicação precisa confiar no cabeçalho <code>X-Forwarded-Proto</code> com <code>UseForwardedHeaders</code>. Sem isso, ela se acha em HTTP e descarta o cookie seguro.</p>
+          </div>
+          <div class="side" style="border-left:4px solid #C84B31;">
+            <h4>A limitação, dita com todas as letras</h4>
+            <p style="font-size:0.66em;"><strong>A URL existe enquanto o codespace está rodando.</strong> Depois de um tempo sem uso ele hiberna, e o endereço para de responder até você iniciá-lo de novo.</p>
+            <p style="font-size:0.66em;">Isso não é defeito do material nem erro seu: é como o Codespaces funciona, e é o preço de um deploy sem cartão de crédito.</p>
+          </div>
+        </div>
+
+        <div class="callout" style="margin-top:12px;">
+          <p><strong>Combinado para a Aula 20:</strong> a apresentação do projeto final exige a URL respondendo. Inicie o seu codespace, rode o <code>docker compose up</code> e confira a porta pública <strong>antes</strong> de entrar na sala, não na hora de apresentar.</p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">19 HTTPS e o prazo da URL</div>
+          <div class="footer-page">18</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 19: CHECKLIST DE PUBLICAÇÃO ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Checklist de publicação</h2>
+        </div>
+
+        <p style="font-size:0.72em; margin:0 0 2px 0;">Publicar não termina quando a URL abre. Termina quando estes sete itens estão conferidos, um a um.</p>
+
+        <table style="margin:6px 0 0 0; font-size:0.7em;">
+          <thead>
+            <tr><th style="width:40%;">Item</th><th>Como conferir</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Ambiente correto</td><td>A página de erro é a amigável, não a de exceção detalhada</td></tr>
+            <tr><td>Segredos fora do repositório</td><td><code>.env</code> no <code>.gitignore</code>, sem senha em arquivo versionado</td></tr>
+            <tr><td>Migrations aplicadas</td><td>As tabelas existem no banco do contêiner e o login funciona</td></tr>
+            <tr><td>Dados iniciais semeados</td><td>As especialidades aparecem na tela de agendamento</td></tr>
+            <tr><td><strong>Porta marcada como pública</strong></td><td><strong>Janela anônima abre a URL sem pedir login do GitHub</strong></td></tr>
+            <tr><td>URL respondendo</td><td>Cadastro, agendamento, login e API testados pela URL</td></tr>
+            <tr><td>URL registrada</td><td>O endereço está no <code>README.md</code>, com as instruções</td></tr>
+          </tbody>
+        </table>
+
+        <div class="slide-footer">
+          <div class="footer-bar">19 Checklist de publicação</div>
+          <div class="footer-page">19</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 20: EXERCÍCIO DO CICLO 2 ==================== -->
+      <section class="exercise-slide content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Exercício do Ciclo 2: o seu checklist</h2>
+        </div>
+
+        <div class="exercise-container">
+          <h3>No README.md do seu fork, 8 minutos</h3>
+          <ol class="exercise-steps">
+            <li>Crie a seção <strong>Publicação</strong> e escreva o checklist com as suas palavras, um item por linha, em caixas de marcação do Markdown.</li>
+            <li>Ao lado de cada item, escreva <strong>como</strong> você vai conferir aquilo, e não apenas o que é.</li>
+            <li>Acrescente dois itens que só existem no seu projeto, por causa de algo que você fez diferente nas aulas anteriores.</li>
+            <li>Marque com destaque o item da porta pública: é o que mais falha na hora de apresentar.</li>
+          </ol>
+        </div>
+
+        <div class="callout" style="margin-top:12px;">
+          <p><strong>Critério:</strong> um colega precisa conseguir publicar o seu projeto lendo apenas esse trecho do <code>README.md</code>, sem perguntar nada a você.</p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">19 Exercício do Ciclo 2</div>
+          <div class="footer-page">20</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 21: QUIZ DE FIXAÇÃO ==================== -->
+      <section class="quiz-slide content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area"><div class="accent-bar"></div><h2>Quiz de fixação</h2></div>
+        <div class="quiz-container">
+          <div class="quiz-question">Onde deve ficar a senha do banco de dados de produção?</div>
+          <ul class="quiz-options">
+            <li data-correct="false"><span class="option-letter">A</span><span class="option-text">No <code>appsettings.json</code>, que é versionado junto com o código e por isso acompanha cada publicação.</span></li>
+            <li data-correct="false"><span class="option-letter">B</span><span class="option-text">No <code>README.md</code>, junto das instruções de instalação, para quem precisar publicar a aplicação outra vez.</span></li>
+            <li data-correct="true"><span class="option-letter">C</span> Fora do repositório, em variável de ambiente ou no serviço de segredos do provedor de hospedagem.</li>
+            <li data-correct="false"><span class="option-letter">D</span> Em um comentário ao lado da connection string, separado do restante da configuração da aplicação.</li>
+          </ul>
+          <div class="quiz-feedback"
+               data-correct-msg="Isso. Segredo vive fora do repositório, e no nosso deploy ele entra pela variável ConnectionStrings__DefaultConnection, definida no .env que está no .gitignore. Trocar a senha não exige recompilar nem editar arquivo versionado."
+               data-incorrect-msg="Não. Qualquer arquivo versionado, seja o appsettings.json, o README.md ou um comentário, vai para o histórico do Git e fica público no fork. Uma vez commitada, a senha continua no histórico mesmo depois de removida do arquivo. O lugar dela é a variável de ambiente ou o serviço de segredos do provedor."></div>
+        </div>
+        <div class="slide-footer"><div class="footer-bar">19 Quiz de fixação</div><div class="footer-page">21</div></div>
+      </section>
+
+      <!-- ==================== SLIDE 22: LAB PASSO 1 ==================== -->
+      <section class="exercise-slide content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Laboratório, passo 1: a branch e a faxina de segredos</h2>
+        </div>
+
+        <div class="exercise-container" style="padding:16px 24px;">
+          <h3>Ciclo 3, guiado, 8 minutos</h3>
+          <ol class="exercise-steps">
+            <li>Crie a branch <code>feature/deploy</code> a partir da <code>main</code> atualizada.</li>
+            <li>Tire a senha do <code>appsettings.json</code>: a connection string versionada fica sem <code>password</code>.</li>
+            <li>Confirme que <code>appsettings.Development.json</code> tem a sua configuração local, e só ela.</li>
+            <li>Acrescente <code>.env</code> ao <code>.gitignore</code> <strong>antes</strong> de criar o arquivo.</li>
+          </ol>
+        </div>
+
+        <pre class="code-compact" style="margin-top:8px;"><code class="language-bash" data-trim>git checkout main &amp;&amp; git pull
+git checkout -b feature/deploy
+echo ".env" &gt;&gt; .gitignore
+git status          # o .env não pode aparecer aqui, nunca
+</code></pre>
+
+        <div class="slide-footer">
+          <div class="footer-bar">19 Laboratório, passo 1, branch e segredos</div>
+          <div class="footer-page">22</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 23: LAB PASSO 2 ==================== -->
+      <section class="exercise-slide content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Laboratório, passo 2: <code>Dockerfile</code> e <code>.dockerignore</code></h2>
+        </div>
+
+        <div class="exercise-container" style="padding:16px 24px;">
+          <h3>Ciclo 3, guiado, 10 minutos</h3>
+          <ol class="exercise-steps">
+            <li>Crie o <code>Dockerfile</code> multi-stage na raiz do repositório, como no slide 12.</li>
+            <li>Crie o <code>.dockerignore</code> com <code>bin/</code>, <code>obj/</code>, <code>.git/</code> e <code>.env</code>.</li>
+            <li>Construa a imagem e confira o tamanho dela.</li>
+            <li>Se o build falhar, leia a <strong>primeira</strong> mensagem de erro, não a última.</li>
+          </ol>
+        </div>
+
+        <pre class="code-compact" style="margin-top:8px;"><code class="language-bash" data-trim>docker build -t clinicavida .
+docker images clinicavida      # compare com a imagem do SDK
+</code></pre>
+
+        <div class="callout" style="margin-top:8px;">
+          <p>O <code>.dockerignore</code> não é enfeite: sem ele, o <code>COPY . .</code> manda <code>bin/</code>, <code>obj/</code> e o histórico inteiro do Git para dentro da imagem, e ainda arrisca levar junto o seu <code>.env</code>.</p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">19 Laboratório, passo 2, a imagem</div>
+          <div class="footer-page">23</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 24: LAB PASSO 3 ==================== -->
+      <section class="exercise-slide content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Laboratório, passo 3: <code>compose.yaml</code> e <code>.env</code></h2>
+        </div>
+
+        <div class="exercise-container" style="padding:16px 24px;">
+          <h3>Ciclo 3, guiado, 10 minutos</h3>
+          <ol class="exercise-steps">
+            <li>Escreva o <code>compose.yaml</code> com os serviços <code>web</code> e <code>db</code>, o volume nomeado e o <code>healthcheck</code>.</li>
+            <li>Crie o <code>.env</code> com as duas senhas e a connection string. São <strong>senhas didáticas e locais</strong>, criadas para esta aula: não reaproveite senha sua de outro serviço.</li>
+            <li>Confira que a connection string usa <code>server=db</code>, e não <code>localhost</code>, e que a senha dela é igual à de <code>MYSQL_PASSWORD</code>.</li>
+            <li>Suba tudo e acompanhe o log até a aplicação responder.</li>
+          </ol>
+        </div>
+
+        <pre class="code-compact" style="margin-top:8px;"><code class="language-bash" data-trim># .env, fora do Git. Senhas didáticas e locais, criadas para esta aula.
+MYSQL_ROOT_PASSWORD=troque-esta-raiz
+MYSQL_PASSWORD=troque-esta-senha
+CONNECTION_STRING=server=db;database=clinicavida;user=clinica;password=troque-esta-senha
+SEED_RECEPCAO_SENHA=Troque-Esta-Senha1
+
+docker compose up --build
+</code></pre>
+
+        <div class="slide-footer">
+          <div class="footer-bar">19 Laboratório, passo 3, o compose</div>
+          <div class="footer-page">24</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 25: LAB PASSO 4 ==================== -->
+      <section class="exercise-slide content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Laboratório, passo 4: o codespace de pé</h2>
+        </div>
+
+        <div class="exercise-container" style="padding:16px 24px;">
+          <h3>Ciclo 3, guiado, 7 minutos</h3>
+          <ol class="exercise-steps">
+            <li>Crie <code>.devcontainer/devcontainer.json</code>, com o Docker disponível dentro do codespace.</li>
+            <li>Commite e envie a branch <code>feature/deploy</code> para o seu fork.</li>
+            <li>No GitHub, abra <strong>Code</strong>, aba <strong>Codespaces</strong>, e crie um codespace na branch <code>feature/deploy</code>.</li>
+            <li>No terminal do codespace, recrie o <code>.env</code>: ele não veio junto, e é assim que tem de ser.</li>
+          </ol>
+        </div>
+
+        <pre class="code-compact" style="margin-top:8px;"><code class="language-json" data-trim>{
+  "name": "Clinica Vida+",
+  "image": "mcr.microsoft.com/devcontainers/dotnet:10.0",
+  "features": { "ghcr.io/devcontainers/features/docker-in-docker:2": {} },
+  "forwardPorts": [8080]
+}
+</code></pre>
+
+        <div class="slide-footer">
+          <div class="footer-bar">19 Laboratório, passo 4, o codespace</div>
+          <div class="footer-page">25</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 26: LAB PASSO 5 ==================== -->
+      <section class="exercise-slide content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Laboratório, passo 5: migrations, seed e o proxy</h2>
+        </div>
+
+        <div class="exercise-container" style="padding:16px 24px;">
+          <h3>Ciclo 4, sozinho, 12 minutos</h3>
+          <ol class="exercise-steps">
+            <li>Acrescente o bloco de <code>Migrate()</code> e de semeadura no <code>Program.cs</code>, antes do <code>app.Run()</code>.</li>
+            <li>Configure o <code>UseForwardedHeaders</code>, senão o login cai atrás do proxy do GitHub.</li>
+            <li>Suba de novo com <code>docker compose up --build</code> e confira no log que a migration foi aplicada.</li>
+            <li>Confirme no banco do contêiner que as tabelas e as especialidades estão lá.</li>
+          </ol>
+        </div>
+
+        <pre class="code-compact" style="margin-top:8px;"><code class="language-bash" data-trim>docker compose exec db mysql -u clinica -p clinicavida -e "SHOW TABLES;"
+</code></pre>
+
+        <div class="callout" style="margin-top:10px;">
+          <p><strong>Dois detalhes que derrubam a aplicação no arranque:</strong> o <code>UseHttpsRedirection</code> precisa ficar só em desenvolvimento, e a senha do usuário inicial da Aula 15 precisa chegar como <code>SeedRecepcao__Senha</code>, pelo <code>.env</code>, porque dentro do contêiner não existe <code>user-secrets</code>.</p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">19 Laboratório, passo 5, migrations</div>
+          <div class="footer-page">26</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 27: LAB PASSO 6 ==================== -->
+      <section class="exercise-slide content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Laboratório, passo 6: porta pública e teste real</h2>
+        </div>
+
+        <div class="exercise-container" style="padding:16px 24px;">
+          <h3>Ciclo 4, sozinho, 13 minutos</h3>
+          <ol class="exercise-steps">
+            <li>Na aba <strong>PORTS</strong>, clique com o botão direito na porta 8080 e marque <strong>Port Visibility: Public</strong>.</li>
+            <li>Abra a URL em uma <strong>janela anônima</strong>: se pedir login do GitHub, a porta ainda está privada.</li>
+            <li>Pela URL, e não por localhost, teste cadastro de paciente, agendamento, login e a API de consultas.</li>
+            <li>Registre no <code>README.md</code> a URL pública e as instruções de publicação, e envie o commit.</li>
+          </ol>
+        </div>
+
+        <div class="callout" style="margin-top:10px;">
+          <p><strong>Teste do colega:</strong> mande a sua URL para quem está ao lado e peça que ele abra no celular dele, na rede de dados. Se abrir na sua máquina mas não na dele, ou a porta está privada, ou o codespace parou.</p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">19 Laboratório, passo 6, porta pública</div>
+          <div class="footer-page">27</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 28: ENTREGÁVEL ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Entregável de hoje, commit e push</h2>
+        </div>
+
+        <p style="font-size:0.74em; margin-top:0;">Aplicação publicada, com URL acessível pela internet, banco de produção configurado e a URL registrada no <code>README.md</code>.</p>
+
+        <div class="concept-cards" style="margin-top:8px;">
+          <div class="concept-card">
+            <h4>Cinco arquivos novos</h4>
+            <p><code>Dockerfile</code>, <code>compose.yaml</code>, <code>.dockerignore</code>, o <code>devcontainer.json</code> e a seção de publicação do <code>README.md</code>.</p>
+          </div>
+          <div class="concept-card">
+            <h4>Um arquivo que não é entregue</h4>
+            <p>O <code>.env</code>. Ele fica na sua máquina e no codespace, e <strong>nunca</strong> no repositório. Se ele aparecer no <code>git status</code>, algo está errado.</p>
+          </div>
+          <div class="concept-card">
+            <h4>Uma URL que responde</h4>
+            <p>Aberta em janela anônima, sem pedir login do GitHub, com cadastro, agendamento, login e API funcionando.</p>
+          </div>
+        </div>
+
+        <pre class="code-compact" style="margin-top:10px;"><code class="language-bash" data-trim>git add Dockerfile compose.yaml .dockerignore .devcontainer/ .gitignore README.md Program.cs
+git commit -m "feat: publicacao da Clinica Vida com Docker e Codespaces"
+git push -u origin feature/deploy
+</code></pre>
+
+        <div class="slide-footer">
+          <div class="footer-bar">19 Entregável, commit e push</div>
+          <div class="footer-page">28</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 29: FECHAMENTO ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Fechamento: a clínica no ar</h2>
+        </div>
+
+        <p style="font-size:0.74em; margin-top:0;">Abra a sua URL no celular, agora, na rede de dados, e agende uma consulta. O que começou como um HTML estático na Aula 03 acabou de virar um serviço com endereço próprio.</p>
+
+        <div class="timeline" style="margin-top:22px;">
+          <div class="tl-item is-past"><div class="tl-dot"></div><div class="tl-year">Aula 03</div><div class="tl-tool">HTML</div><div class="tl-desc">Página estática no seu editor</div></div>
+          <div class="tl-item is-past"><div class="tl-dot"></div><div class="tl-year">Aula 08</div><div class="tl-tool">MVC</div><div class="tl-desc">Aplicação rodando em localhost</div></div>
+          <div class="tl-item is-past"><div class="tl-dot"></div><div class="tl-year">Aula 12</div><div class="tl-tool">MySQL</div><div class="tl-desc">Dados que sobrevivem ao reinício</div></div>
+          <div class="tl-item is-past"><div class="tl-dot"></div><div class="tl-year">Aula 18</div><div class="tl-tool">Bootstrap</div><div class="tl-desc">Interface unificada e responsiva</div></div>
+          <div class="tl-item"><div class="tl-dot"></div><div class="tl-year">Aula 19</div><div class="tl-tool">Docker</div><div class="tl-desc">Endereço público na internet</div></div>
+        </div>
+
+        <div class="callout" style="margin-top:20px;">
+          <p><strong>Prévia da Aula 20:</strong> revisão geral, prova objetiva e apresentação do projeto final. Leve a URL funcionando: inicie o codespace e suba o compose <strong>antes</strong> da aula, porque ele hiberna sozinho.</p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">19 Fechamento e prévia da Aula 20</div>
+          <div class="footer-page">29</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 30: REFERÊNCIAS ==================== -->
+      <section id="ref-slide" class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Referências desta aula</h2>
+        </div>
+
+        <p style="font-size:0.72em; margin-top:0;">Os números entre colchetes ao lado dos títulos remetem a esta lista, toda ela aberta e em português.</p>
+
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px 26px; margin-top:4px;">
+          <div class="concept-card" style="padding:12px 16px;">
+            <h4>[1] Ambientes no ASP.NET Core</h4>
+            <p style="font-size:0.68em; color:#444444;">MICROSOFT. <em>Usar vários ambientes no ASP.NET Core</em>.<br>
+            <code style="font-size:0.82em;">learn.microsoft.com/pt-br/aspnet/core/fundamentals/environments</code></p>
+          </div>
+          <div class="concept-card" style="padding:12px 16px;">
+            <h4>[2] Configuração e segredos</h4>
+            <p style="font-size:0.68em; color:#444444;">MICROSOFT. <em>Configuração no ASP.NET Core</em> e <em>Armazenamento seguro de segredos</em>.<br>
+            <code style="font-size:0.82em;">learn.microsoft.com/pt-br/aspnet/core/fundamentals/configuration/</code></p>
+          </div>
+          <div class="concept-card" style="padding:12px 16px;">
+            <h4>[3] Publicação e contêineres .NET</h4>
+            <p style="font-size:0.68em; color:#444444;">MICROSOFT. <em>Containerizar um aplicativo .NET</em>.<br>
+            <code style="font-size:0.82em;">learn.microsoft.com/pt-br/dotnet/core/docker/build-container</code></p>
+          </div>
+          <div class="concept-card" style="padding:12px 16px;">
+            <h4>[4] Docker Compose</h4>
+            <p style="font-size:0.68em; color:#444444;">DOCKER. <em>Compose file reference</em>.<br>
+            <code style="font-size:0.82em;">docs.docker.com/reference/compose-file/</code></p>
+          </div>
+          <div class="concept-card" style="padding:12px 16px;">
+            <h4>[5] Portas no GitHub Codespaces</h4>
+            <p style="font-size:0.68em; color:#444444;">GITHUB. <em>Encaminhamento de portas no seu codespace</em>.<br>
+            <code style="font-size:0.82em;">docs.github.com/pt/codespaces</code></p>
+          </div>
+          <div class="concept-card" style="padding:12px 16px;">
+            <h4>Roteiro do laboratório</h4>
+            <p style="font-size:0.68em; color:#444444;">O passo a passo completo de hoje está no portal da disciplina, em <code style="font-size:0.82em;">labs/aula19-lab/</code>.</p>
+          </div>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">19 Referências</div>
+          <div class="footer-page">30</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 31: ENCERRAMENTO ==================== -->
+      <section class="end-slide">
+        <img src="../assets/img/uninove-logo.png" alt="Uninove, Universidade Nove de Julho"
+             style="max-width:300px; background:#FFFFFF; padding:20px 28px; border-radius:8px;">
+        <div class="copyright">
+          Copyright &copy; 2026<br>
+          Prof. José Romualdo da Costa Filho<br><br>
+          Todos os direitos reservados. É expressamente proibida a reprodução, divulgação<br>
+          total ou parcial, deste material acadêmico sem autorização formal,<br>
+          por escrito, do Professor autor da ementa.
+        </div>
+      </section>
+
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/highlight/highlight.js"></script>
+  <script src="../assets/js/uninove-quiz.js"></script>
+  <script type="module">
+    import { TURMAS, resolverTurma, dataDaAula, formatarData } from '../assets/js/turmas.js';
+    const turma = resolverTurma({
+      hoje: new Date(),
+      salva: localStorage.getItem('uninove-turma'),
+    });
+    const alvo = document.querySelector('[data-data-da-aula]');
+    if (alvo) {
+      const n = Number(alvo.getAttribute('data-data-da-aula'));
+      alvo.textContent = turma
+        ? `${TURMAS[turma].rotulo}, ${formatarData(dataDaAula(turma, n))}`
+        : `Quarta ${formatarData(dataDaAula('quarta', n))} ou quinta ${formatarData(dataDaAula('quinta', n))}`;
+    }
+  </script>
+  <script>
+    Reveal.initialize({
+      width: 1280, height: 720, center: false, margin: 0,
+      hash: true, slideNumber: false,
+      // Os chevrons de navegação caem sobre a footer-bar e sobre o triângulo
+      // azul do canto inferior direito; a barra de progresso encosta no rodapé
+      // e parece um segundo rodapé. Nenhum dos dois é usado na projeção.
+      controls: false, progress: false,
+      // Um slide por página no ?print-pdf, para o PDF bater com o deck.
+      pdfMaxPagesPerSlide: 1,
+      plugins: [RevealHighlight],
+    });
+  </script>
+</body>
+</html>

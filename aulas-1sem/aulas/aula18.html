@@ -1,0 +1,1166 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Aula 18, Layout, Partial Views e Bootstrap | Uninove</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/theme/white.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/highlight/monokai.css">
+  <link rel="stylesheet" href="../assets/css/uninove-theme.css">
+  <link rel="stylesheet" href="../assets/css/uninove-print.css">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+      <!-- ==================== SLIDE 1: CAPA ==================== -->
+      <section class="cover-slide">
+        <img src="../assets/img/uninove-logo.png" alt="Uninove, Universidade Nove de Julho" class="uninove-logo-full"
+             style="max-width:400px; background:#FFFFFF; padding:26px 36px; border-radius:10px;">
+        <div style="margin-top:36px; color:#FFFFFF; font-size:0.95em; font-weight:800; letter-spacing:4px; text-transform:uppercase;">Desenvolvimento Web</div>
+        <div style="margin-top:12px; color:#C84B31; font-size:0.6em; font-weight:700; letter-spacing:3px; text-transform:uppercase;">Graduação, 2026.2</div>
+      </section>
+
+      <!-- ==================== SLIDE 2: TÍTULO ==================== -->
+      <section class="title-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="title-card">
+          <div class="accent-bar"></div>
+          <h1>Desenvolvimento Web</h1>
+          <h2>Layout, Partial Views e Bootstrap</h2>
+          <h3>Prof. José Romualdo<br><span data-data-da-aula="18"></span></h3>
+        </div>
+        <div class="lesson-bar">AULA 18 &nbsp;|&nbsp; Módulo 4, Tópicos Avançados e Projeto Final</div>
+      </section>
+
+      <!-- ==================== SLIDE 3: AGENDA ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Agenda do encontro de hoje</h2>
+        </div>
+
+        <p style="font-size:0.76em; margin-top:0;">São 150 minutos corridos, em quatro ciclos. Hoje nenhuma regra de negócio nova entra na aplicação: o que muda é a cara de tudo o que já funciona.</p>
+
+        <table>
+          <thead>
+            <tr><th style="width:190px;">Horário</th><th style="width:200px;">Bloco</th><th>O que acontece</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>19h30 às 20h05</td><td>Ciclo 1</td><td>Layout, seções, Partial Views e View Components</td></tr>
+            <tr><td>20h05 às 20h40</td><td>Ciclo 2</td><td>Bootstrap 5, grade de 12 colunas, componentes e a paleta da clínica</td></tr>
+            <tr><td>20h40 às 20h50</td><td>Quiz de fixação</td><td>Uma pergunta sobre o conceito central da aula</td></tr>
+            <tr><td>20h50 às 21h25</td><td>Ciclo 3</td><td>Laboratório guiado: layout, navbar responsiva e Partials de mensagem</td></tr>
+            <tr><td>21h25 às 21h50</td><td>Ciclo 4</td><td>Laboratório: cards, grid em todas as telas e o entregável</td></tr>
+            <tr><td>21h50 às 22h00</td><td>Fechamento</td><td>Comparação com a Aula 08 e prévia da Aula 19</td></tr>
+          </tbody>
+        </table>
+
+        <div class="slide-footer">
+          <div class="footer-bar">18 Agenda do encontro</div>
+          <div class="footer-page">3</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 4: RECAPITULAÇÃO DA AULA 17 ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>De onde viemos: as quatro entidades ligadas</h2>
+        </div>
+
+        <p style="font-size:0.72em; margin-top:0;">Você fechou o Módulo 3 com os três relacionamentos mapeados na Fluent API, a agenda do dia trazendo paciente, médico e especialidade com <code>Include</code> em um único comando, e o histórico do paciente na tela.</p>
+
+        <div class="side-by-side" style="margin-top:6px;">
+          <div class="side">
+            <h4>Por dentro, a aplicação está pronta</h4>
+            <ul style="margin:0; padding-left:20px;">
+              <li>CRUD, sessão, AJAX, login e API REST.</li>
+              <li>Quatro entidades ligadas no <code>clinicavida</code>.</li>
+              <li>Agenda, histórico e relatório funcionando.</li>
+            </ul>
+          </div>
+          <div class="side">
+            <h4>Por fora, ela ainda é um rascunho</h4>
+            <ul style="margin:0; padding-left:20px;">
+              <li>Cada View repete a própria moldura.</li>
+              <li>Tabelas sem estilo, botões de tamanhos diferentes.</li>
+              <li>No celular, a tela sai da largura da janela.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="callout" style="margin-top:14px;">
+          <p><strong>Quem recebe a aplicação não vê o seu <code>OnModelCreating</code>.</strong> Vê a primeira tela. Hoje a Clínica Vida+ passa a parecer o que já é: um sistema, e não um exercício.</p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">18 Recapitulação da Aula 17</div>
+          <div class="footer-page">4</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 5: ABERTURA DO MÓDULO 4 ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Começa o Módulo 4: de aplicação a produto</h2>
+        </div>
+
+        <p style="font-size:0.72em; margin-top:0;">Os três últimos encontros não acrescentam funcionalidade. Eles transformam o que funciona na sua máquina em algo que outra pessoa consegue usar, acessar e avaliar.</p>
+
+        <div class="flow-diagram" style="margin:14px 0 0 0; font-size:0.82em; gap:8px;">
+          <div class="flow-item">Aula 18<br>Acabamento visual</div>
+          <div class="flow-arrow">&rarr;</div>
+          <div class="flow-item">Aula 19<br>Publicação na internet</div>
+          <div class="flow-arrow">&rarr;</div>
+          <div class="flow-item">Aula 20<br>Apresentação do projeto</div>
+        </div>
+
+        <div class="side-by-side" style="margin-top:18px;">
+          <div class="side">
+            <h4>Por que isso vale nota</h4>
+            <ul style="margin:0; padding-left:20px;">
+              <li><strong>Interface</strong> pesa 15% do projeto final.</li>
+              <li><strong>Apresentação</strong> pesa outros 10%.</li>
+              <li>Um quarto da nota depende do que se vê.</li>
+            </ul>
+          </div>
+          <div class="side">
+            <h4>Por que isso vale fora daqui</h4>
+            <ul style="margin:0; padding-left:20px;">
+              <li>Ninguém aprova o que não consegue usar.</li>
+              <li>Interface repetida em 12 arquivos custa caro para mudar.</li>
+              <li>O paciente abre a agenda pelo celular.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">18 Abertura do Módulo 4</div>
+          <div class="footer-page">5</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 6: _LAYOUT COMO MOLDURA ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>O <code>_Layout.cshtml</code> é a moldura de todas as telas <a href="#/ref-slide" class="ref-badge" title="Ver referências">[1]</a></h2>
+        </div>
+
+        <p style="font-size:0.7em; margin-top:0;">A View não é a página inteira. Ela é o miolo. O restante, que é igual em todas as telas, mora num arquivo só, em <code>Views/Shared/_Layout.cshtml</code>.</p>
+
+        <div class="slide-figure" style="margin-top:4px;">
+          <svg viewBox="0 0 1040 372" role="img" aria-label="Três arquivos de View à esquerda apontando para o mesmo layout à direita, cujo miolo é marcado por RenderBody, com cabeçalho e rodapé escritos uma única vez">
+            <defs>
+              <marker id="a18setaLayout" markerWidth="9" markerHeight="9" refX="8" refY="4.5" orient="auto">
+                <path d="M0,0 L9,4.5 L0,9 Z" fill="#C84B31"/>
+              </marker>
+            </defs>
+
+            <rect x="6" y="24" width="318" height="72" rx="6" fill="#FFFFFF" stroke="#00274D" stroke-width="2"/>
+            <text x="20" y="52" font-size="15" font-weight="700" fill="#00274D">Views/Pacientes/Index.cshtml</text>
+            <text x="20" y="78" font-size="14" fill="#555555">só a tabela de pacientes</text>
+
+            <rect x="6" y="150" width="318" height="72" rx="6" fill="#FFFFFF" stroke="#00274D" stroke-width="2"/>
+            <text x="20" y="178" font-size="15" font-weight="700" fill="#00274D">Views/Consultas/Agendar.cshtml</text>
+            <text x="20" y="204" font-size="14" fill="#555555">só o formulário de agendamento</text>
+
+            <rect x="6" y="276" width="318" height="72" rx="6" fill="#FFFFFF" stroke="#00274D" stroke-width="2"/>
+            <text x="20" y="304" font-size="15" font-weight="700" fill="#00274D">Views/Medicos/Index.cshtml</text>
+            <text x="20" y="330" font-size="14" fill="#555555">só os cards dos médicos</text>
+
+            <path d="M332,60 C368,60 372,178 402,186" fill="none" stroke="#C84B31" stroke-width="2.5" marker-end="url(#a18setaLayout)"/>
+            <path d="M332,186 L402,186" fill="none" stroke="#C84B31" stroke-width="2.5" marker-end="url(#a18setaLayout)"/>
+            <path d="M332,312 C368,312 372,194 402,188" fill="none" stroke="#C84B31" stroke-width="2.5" marker-end="url(#a18setaLayout)"/>
+
+            <rect x="424" y="14" width="610" height="344" rx="8" fill="#F7F9FB" stroke="#00274D" stroke-width="2.5"/>
+            <rect x="440" y="30" width="578" height="58" rx="5" fill="#00274D"/>
+            <text x="458" y="66" font-size="17" font-weight="700" fill="#FFFFFF">Clínica Vida+ &nbsp; Pacientes &nbsp; Agenda &nbsp; Médicos &nbsp; Sair</text>
+
+            <rect x="440" y="100" width="578" height="190" rx="5" fill="#FFFFFF" stroke="#C84B31" stroke-width="2.5" stroke-dasharray="9 6"/>
+            <text x="729" y="188" font-size="27" font-weight="700" fill="#C84B31" text-anchor="middle">@RenderBody()</text>
+            <text x="729" y="220" font-size="16" fill="#555555" text-anchor="middle">aqui entra, inteiro, o conteúdo da View da vez</text>
+
+            <rect x="440" y="302" width="578" height="44" rx="5" fill="#E4EAF0"/>
+            <text x="458" y="330" font-size="16" fill="#00274D">Clínica Vida+, 2026. Rodapé escrito uma vez só.</text>
+          </svg>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">18 O layout como moldura</div>
+          <div class="footer-page">6</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 7: _VIEWSTART E _VIEWIMPORTS ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Quem manda a View usar o layout <a href="#/ref-slide" class="ref-badge" title="Ver referências">[1]</a></h2>
+        </div>
+
+        <p style="font-size:0.68em; margin-top:0;">Nenhuma das suas Views escreve <code>Layout = ...</code>, e mesmo assim todas aparecem dentro da moldura. Dois arquivos de convenção, em <code>Views/</code>, respondem por isso.</p>
+
+        <div class="side-by-side" style="margin-top:4px;">
+          <div class="side">
+            <h4>Views/_ViewStart.cshtml</h4>
+            <pre class="code-compact" style="margin:6px 0 0 0;"><code class="language-html" data-trim>@{
+    Layout = "_Layout";
+}</code></pre>
+            <p style="font-size:0.62em; margin:8px 0 0 0;">Roda antes de cada View da pasta e das subpastas. Não gera marcação nenhuma: só decide a moldura.</p>
+          </div>
+          <div class="side">
+            <h4>Views/_ViewImports.cshtml</h4>
+            <pre class="code-compact" style="margin:6px 0 0 0;"><code class="language-html" data-trim>@using ClinicaVida.Web
+@using ClinicaVida.Web.Models
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers</code></pre>
+            <p style="font-size:0.62em; margin:8px 0 0 0;">Concentra os <code>@using</code> e liga os Tag Helpers. É por causa dele que <code>asp-for</code> e <code>&lt;partial&gt;</code> funcionam sem import em cada View.</p>
+          </div>
+        </div>
+
+        <div class="takeaway">
+          <span class="takeaway-label">Takeaway</span>
+          <p>Os dois arquivos valem para a pasta em que estão e para tudo abaixo dela. Uma View avulsa pode desligar a moldura com <code>Layout = null</code>, e é assim que se devolve um pedaço de HTML por AJAX, como na Aula 14.</p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">18 ViewStart e ViewImports</div>
+          <div class="footer-page">7</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 8: RENDERBODY E RENDERSECTION ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Um buraco para o miolo, outros para as seções <a href="#/ref-slide" class="ref-badge" title="Ver referências">[1]</a></h2>
+        </div>
+
+        <p style="font-size:0.66em; margin-top:0;">O <code>@RenderBody()</code> aparece uma única vez e recebe a View inteira. As seções são buracos nomeados, que cada View preenche se quiser, e servem para o que precisa sair do miolo: scripts no fim do corpo, por exemplo.</p>
+
+        <pre class="code-compact"><code class="language-html" data-trim>&lt;!-- Views/Shared/_Layout.cshtml --&gt;
+&lt;main class="container py-4"&gt;
+    @RenderBody()
+&lt;/main&gt;
+&lt;script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"&gt;&lt;/script&gt;
+@await RenderSectionAsync("Scripts", required: false)
+
+&lt;!-- Views/Consultas/Agendar.cshtml, no fim do arquivo --&gt;
+@section Scripts {
+    &lt;partial name="_ValidationScriptsPartial" /&gt;
+    &lt;script src="~/js/agendamento-ajax.js"&gt;&lt;/script&gt;
+}</code></pre>
+
+        <div class="takeaway">
+          <span class="takeaway-label">Takeaway</span>
+          <p><code>required: false</code> significa "se a View não declarar a seção, siga em frente". Com <code>required: true</code>, toda View que esquecer a seção quebra em tempo de execução. É o mesmo bloco que a Aula 10 usou na validação e a Aula 14 no AJAX.</p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">18 RenderBody e seções</div>
+          <div class="footer-page">8</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 9: PARTIAL VIEW, A FIGURA ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Partial View: um pedaço de marcação, muitos lugares <a href="#/ref-slide" class="ref-badge" title="Ver referências">[2]</a></h2>
+        </div>
+
+        <p style="font-size:0.68em; margin-top:0;">O layout resolve o que é igual em <em>toda</em> tela. A Partial View resolve o que se repete em <em>algumas</em> telas, e que o layout não tem como conhecer.</p>
+
+        <div class="slide-figure" style="margin-top:4px;">
+          <svg viewBox="0 0 1040 366" role="img" aria-label="Um arquivo de Partial View chamado underline CardMedico ponto cshtml, na pasta Views barra Shared, com setas para três telas que o reaproveitam: lista de médicos, agenda do dia e página inicial">
+            <defs>
+              <marker id="a18setaPartial" markerWidth="9" markerHeight="9" refX="8" refY="4.5" orient="auto">
+                <path d="M0,0 L9,4.5 L0,9 Z" fill="#C84B31"/>
+              </marker>
+            </defs>
+
+            <text x="196" y="34" font-size="16" font-weight="700" fill="#C84B31" text-anchor="middle">escrito uma vez</text>
+
+            <rect x="10" y="52" width="372" height="220" rx="8" fill="#00274D"/>
+            <text x="30" y="86" font-size="16" font-weight="700" fill="#FFFFFF">Views/Shared/_CardMedico.cshtml</text>
+            <text x="30" y="128" font-size="16" fill="#9FC3E0" font-family="'JetBrains Mono', monospace">@model Medico</text>
+            <text x="30" y="162" font-size="16" fill="#FFFFFF" font-family="'JetBrains Mono', monospace">&lt;div class="card h-100"&gt;</text>
+            <text x="30" y="196" font-size="16" fill="#FFFFFF" font-family="'JetBrains Mono', monospace">&nbsp;&nbsp;@Model.Nome, @Model.Crm</text>
+            <text x="30" y="230" font-size="16" fill="#FFFFFF" font-family="'JetBrains Mono', monospace">&lt;/div&gt;</text>
+
+            <path d="M390,120 C470,120 490,66 596,60" fill="none" stroke="#C84B31" stroke-width="2.5" marker-end="url(#a18setaPartial)"/>
+            <path d="M390,178 L596,178" fill="none" stroke="#C84B31" stroke-width="2.5" marker-end="url(#a18setaPartial)"/>
+            <path d="M390,236 C470,236 490,290 596,296" fill="none" stroke="#C84B31" stroke-width="2.5" marker-end="url(#a18setaPartial)"/>
+
+            <rect x="616" y="24" width="414" height="72" rx="6" fill="#FFFFFF" stroke="#00274D" stroke-width="2"/>
+            <text x="634" y="54" font-size="17" font-weight="700" fill="#00274D">Medicos/Index.cshtml</text>
+            <text x="634" y="79" font-size="15" fill="#555555">um card por médico, dentro de um laço</text>
+
+            <rect x="616" y="142" width="414" height="72" rx="6" fill="#FFFFFF" stroke="#00274D" stroke-width="2"/>
+            <text x="634" y="172" font-size="17" font-weight="700" fill="#00274D">Consultas/Agendar.cshtml</text>
+            <text x="634" y="197" font-size="15" fill="#555555">o card do médico escolhido na etapa 1</text>
+
+            <rect x="616" y="260" width="414" height="72" rx="6" fill="#FFFFFF" stroke="#00274D" stroke-width="2"/>
+            <text x="634" y="290" font-size="17" font-weight="700" fill="#00274D">Home/Index.cshtml</text>
+            <text x="634" y="315" font-size="15" fill="#555555">os três médicos em destaque na home</text>
+          </svg>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">18 Partial View, o conceito</div>
+          <div class="footer-page">9</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 10: COMO CHAMAR A PARTIAL ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Como chamar a Partial e como passar o modelo <a href="#/ref-slide" class="ref-badge" title="Ver referências">[2]</a></h2>
+        </div>
+
+        <p style="font-size:0.66em; margin-top:0;">Duas formas para o mesmo resultado. O Tag Helper <code>&lt;partial&gt;</code> é a forma atual e a que se lê melhor no meio da marcação; <code>Html.PartialAsync</code> serve quando a chamada precisa estar dentro de um bloco de código C#.</p>
+
+        <pre class="code-compact"><code class="language-html" data-trim>@model IEnumerable&lt;Medico&gt;
+
+&lt;div class="row g-4"&gt;
+    @foreach (var medico in Model)
+    {
+        &lt;div class="col-12 col-md-6 col-lg-4"&gt;
+            &lt;partial name="_CardMedico" model="medico" /&gt;
+        &lt;/div&gt;
+    }
+&lt;/div&gt;
+
+@* A mesma chamada, na forma de método: *@
+@await Html.PartialAsync("_CardMedico", medico)</code></pre>
+
+        <div class="takeaway">
+          <span class="takeaway-label">Takeaway</span>
+          <p>A Partial não executa action nenhuma e não tem layout: ela recebe pronto o modelo que a View passou. Se o dado que ela precisa exibir não está na mão de quem chama, a Partial é a ferramenta errada.</p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">18 Chamando a Partial View</div>
+          <div class="footer-page">10</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 11: PARTIAL X VIEW COMPONENT ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Partial View ou View Component? <a href="#/ref-slide" class="ref-badge" title="Ver referências">[3]</a></h2>
+        </div>
+
+        <table>
+          <thead>
+            <tr><th style="width:190px;">&nbsp;</th><th>Partial View</th><th>View Component</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><strong>O que é</strong></td><td>Marcação reaproveitada</td><td>Pedaço de tela com lógica própria</td></tr>
+            <tr><td><strong>De onde vêm os dados</strong></td><td>De quem chama, pelo modelo</td><td>Da própria classe, que busca o dado</td></tr>
+            <tr><td><strong>Tem classe C#</strong></td><td>Não, só o <code>.cshtml</code></td><td>Sim, com <code>InvokeAsync</code> e injeção</td></tr>
+            <tr><td><strong>Como se chama</strong></td><td><code>&lt;partial name="_CardMedico" /&gt;</code></td><td><code>&lt;vc:consultas-de-hoje /&gt;</code></td></tr>
+            <tr><td><strong>No case</strong></td><td>Card de médico e linha de consulta</td><td>Contador de consultas do dia no menu</td></tr>
+          </tbody>
+        </table>
+
+        <div class="callout" style="margin-top:14px;">
+          <p><strong>O teste que decide:</strong> se toda action da aplicação tiver que passar a mesma informação para a Partial funcionar, ela quer ser um View Component. Um contador no menu não pode obrigar 12 Controllers a buscarem o número de consultas de hoje.</p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">18 Partial View e View Component</div>
+          <div class="footer-page">11</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 12: EXERCÍCIO DO CICLO 1 ==================== -->
+      <section class="exercise-slide content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Exercício do Ciclo 1: caçar a repetição</h2>
+        </div>
+
+        <div class="exercise-container">
+          <h3>No seu <code>ClinicaVida.Web</code>, 8 minutos</h3>
+          <ol class="exercise-steps">
+            <li>Abra a pasta <code>Views/</code> inteira e liste <strong>três</strong> trechos de marcação que aparecem em mais de uma tela.</li>
+            <li>Para cada um, escreva o nome de arquivo que ele teria como Partial, começando com sublinhado.</li>
+            <li>Diga de onde viria o modelo de cada um: da View que chama, ou de uma consulta ao banco?</li>
+            <li>Se a resposta do item 3 for "do banco", marque esse trecho: ele é candidato a View Component, não a Partial.</li>
+          </ol>
+        </div>
+
+        <div class="callout" style="margin-top:14px;">
+          <p><strong>Onde procurar primeiro:</strong> o bloco de mensagem de sucesso da Aula 12, o cabeçalho das telas de CRUD de paciente, os botões de ação repetidos em cada linha de tabela e o par label mais campo do formulário de agendamento.</p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">18 Exercício do Ciclo 1</div>
+          <div class="footer-page">12</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 13: A PONTE COM AS AULAS 04 E 05 ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>O mesmo card, escrito à mão e pelo Bootstrap</h2>
+        </div>
+
+        <div class="side-by-side" style="margin-top:2px;">
+          <div class="side">
+            <h4>Aula 04: você escreveu o CSS</h4>
+            <pre class="code-compact" style="margin:6px 0 0 0;"><code class="language-css" data-trim>.lista-especialidades {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+.lista-especialidades li {
+  width: 260px;
+  padding: 20px;
+  background-color: #FFFFFF;
+  border-left: 4px solid var(--vida-secundaria);
+  border-radius: 8px;
+}</code></pre>
+          </div>
+          <div class="side">
+            <h4>Aula 18: as classes já existem</h4>
+            <pre class="code-compact" style="margin:6px 0 0 0;"><code class="language-html" data-trim>&lt;div class="card h-100 shadow-sm"&gt;
+  &lt;div class="card-body"&gt;
+    &lt;h5 class="card-title"&gt;Cardiologia&lt;/h5&gt;
+    &lt;p class="card-text"&gt;Consultas e exames.&lt;/p&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</code></pre>
+            <p style="font-size:0.62em; margin:8px 0 0 0;">A fileira e o espaço entre os cards vêm de <code>&lt;div class="row g-4"&gt;</code> em volta, com um <code>col-12 col-md-4</code> por card.</p>
+          </div>
+        </div>
+
+        <div class="callout" style="margin-top:14px;">
+          <p><strong>O que você delega:</strong> o espaçamento, a quebra da fileira, o arredondamento e a sombra. <strong>O que continua seu:</strong> a cor, a decisão do que é card e a semântica do HTML. Delegar sem saber o que foi delegado é o que transforma uma tela em quebra-cabeça no dia em que ela precisa mudar.</p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">18 O card à mão e o card do Bootstrap</div>
+          <div class="footer-page">13</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 14: O BOOTSTRAP JÁ ESTÁ NO PROJETO ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>O Bootstrap está no seu projeto desde a Aula 07</h2>
+        </div>
+
+        <p style="font-size:0.68em; margin-top:0;">O <code>dotnet new mvc</code> já traz o Bootstrap 5 em <code>wwwroot/lib/</code>, servido do seu próprio projeto, sem depender de internet. Hoje você deixa de conviver com ele e passa a usá-lo.</p>
+
+        <pre class="code-compact"><code class="language-html" data-trim>&lt;!-- Views/Shared/_Layout.cshtml, no head. A ORDEM decide quem vence: --&gt;
+&lt;link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" /&gt;
+&lt;link rel="stylesheet" href="~/css/site.css" asp-append-version="true" /&gt;
+
+&lt;!-- No fim do body. O bundle traz o Popper junto, e sem ele o menu --&gt;
+&lt;!-- sanduíche e o modal não abrem: eles precisam de JavaScript.     --&gt;
+&lt;script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"&gt;&lt;/script&gt;</code></pre>
+
+        <div class="takeaway">
+          <span class="takeaway-label">Takeaway</span>
+          <p>O <code>site.css</code> vem <strong>depois</strong> do <code>bootstrap.min.css</code> de propósito: é isso que permite ajustar o framework sem editar o arquivo dele. Nunca edite o <code>bootstrap.min.css</code>, porque a próxima atualização apaga a sua alteração.</p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">18 Bootstrap no projeto</div>
+          <div class="footer-page">14</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 15: A GRADE DE 12 COLUNAS ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>A grade de 12 colunas <a href="#/ref-slide" class="ref-badge" title="Ver referências">[4]</a></h2>
+        </div>
+
+        <p style="font-size:0.66em; margin-top:0;">É o Grid da Aula 05 com um contrato pronto: <code>container</code> define a largura útil, <code>row</code> abre uma linha de 12 colunas e cada <code>col</code> declara quantas dessas 12 ocupa em cada largura de tela.</p>
+
+        <div class="slide-figure" style="margin-top:2px;">
+          <svg viewBox="0 0 1040 300" role="img" aria-label="Uma linha dividida em doze colunas iguais e, abaixo, o mesmo bloco col-12 col-md-6 col-lg-4 exibido em celular com uma coluna, em tablet com duas e em desktop com três">
+            <text x="0" y="16" font-size="16" font-weight="700" fill="#00274D">Uma .row tem sempre 12 colunas</text>
+            <g>
+              <rect x="0" y="26" width="1040" height="42" rx="4" fill="#F0F4F7" stroke="#D2DBE2"/>
+              <rect x="6" y="32" width="74" height="30" rx="3" fill="#00274D"/><text x="43" y="52" font-size="14" fill="#FFFFFF" text-anchor="middle">1</text>
+              <rect x="92" y="32" width="74" height="30" rx="3" fill="#00274D"/><text x="129" y="52" font-size="14" fill="#FFFFFF" text-anchor="middle">2</text>
+              <rect x="178" y="32" width="74" height="30" rx="3" fill="#00274D"/><text x="215" y="52" font-size="14" fill="#FFFFFF" text-anchor="middle">3</text>
+              <rect x="264" y="32" width="74" height="30" rx="3" fill="#00274D"/><text x="301" y="52" font-size="14" fill="#FFFFFF" text-anchor="middle">4</text>
+              <rect x="350" y="32" width="74" height="30" rx="3" fill="#00274D"/><text x="387" y="52" font-size="14" fill="#FFFFFF" text-anchor="middle">5</text>
+              <rect x="436" y="32" width="74" height="30" rx="3" fill="#00274D"/><text x="473" y="52" font-size="14" fill="#FFFFFF" text-anchor="middle">6</text>
+              <rect x="522" y="32" width="74" height="30" rx="3" fill="#00274D"/><text x="559" y="52" font-size="14" fill="#FFFFFF" text-anchor="middle">7</text>
+              <rect x="608" y="32" width="74" height="30" rx="3" fill="#00274D"/><text x="645" y="52" font-size="14" fill="#FFFFFF" text-anchor="middle">8</text>
+              <rect x="694" y="32" width="74" height="30" rx="3" fill="#00274D"/><text x="731" y="52" font-size="14" fill="#FFFFFF" text-anchor="middle">9</text>
+              <rect x="780" y="32" width="74" height="30" rx="3" fill="#00274D"/><text x="817" y="52" font-size="14" fill="#FFFFFF" text-anchor="middle">10</text>
+              <rect x="866" y="32" width="74" height="30" rx="3" fill="#00274D"/><text x="903" y="52" font-size="14" fill="#FFFFFF" text-anchor="middle">11</text>
+              <rect x="952" y="32" width="82" height="30" rx="3" fill="#00274D"/><text x="993" y="52" font-size="14" fill="#FFFFFF" text-anchor="middle">12</text>
+            </g>
+
+            <text x="0" y="102" font-size="16" font-weight="700" fill="#C84B31" font-family="'JetBrains Mono', monospace">&lt;div class="col-12 col-md-6 col-lg-4"&gt;</text>
+            <text x="470" y="102" font-size="15" fill="#555555">o mesmo card de médico, nas três larguras</text>
+
+            <rect x="0" y="118" width="300" height="172" rx="6" fill="#FFFFFF" stroke="#00274D" stroke-width="2"/>
+            <text x="150" y="140" font-size="15" font-weight="700" fill="#00274D" text-anchor="middle">Celular, menos de 768px</text>
+            <rect x="14" y="150" width="272" height="38" rx="4" fill="#2E9E7E"/><text x="150" y="174" font-size="14" fill="#FFFFFF" text-anchor="middle">col-12, ocupa as 12</text>
+            <rect x="14" y="196" width="272" height="38" rx="4" fill="#2E9E7E"/>
+            <rect x="14" y="242" width="272" height="38" rx="4" fill="#2E9E7E"/>
+
+            <rect x="326" y="118" width="330" height="172" rx="6" fill="#FFFFFF" stroke="#00274D" stroke-width="2"/>
+            <text x="491" y="140" font-size="15" font-weight="700" fill="#00274D" text-anchor="middle">Tablet, a partir de 768px</text>
+            <rect x="340" y="150" width="145" height="60" rx="4" fill="#0B6E75"/><text x="412" y="185" font-size="14" fill="#FFFFFF" text-anchor="middle">col-md-6</text>
+            <rect x="497" y="150" width="145" height="60" rx="4" fill="#0B6E75"/>
+            <rect x="340" y="218" width="145" height="60" rx="4" fill="#0B6E75"/>
+
+            <rect x="682" y="118" width="352" height="172" rx="6" fill="#FFFFFF" stroke="#00274D" stroke-width="2"/>
+            <text x="858" y="140" font-size="15" font-weight="700" fill="#00274D" text-anchor="middle">Desktop, a partir de 992px</text>
+            <rect x="696" y="150" width="104" height="60" rx="4" fill="#E4572E"/><text x="748" y="185" font-size="14" fill="#FFFFFF" text-anchor="middle">col-lg-4</text>
+            <rect x="810" y="150" width="104" height="60" rx="4" fill="#E4572E"/>
+            <rect x="924" y="150" width="104" height="60" rx="4" fill="#E4572E"/>
+            <rect x="696" y="218" width="104" height="60" rx="4" fill="#E4572E"/>
+          </svg>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">18 A grade de 12 colunas</div>
+          <div class="footer-page">15</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 16: PONTOS DE QUEBRA ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Os pontos de quebra são as media queries da Aula 05 <a href="#/ref-slide" class="ref-badge" title="Ver referências">[4]</a></h2>
+        </div>
+
+        <div class="side-by-side" style="margin-top:2px;">
+          <div class="side">
+            <h4>A escala do Bootstrap</h4>
+            <table style="margin-top:6px;">
+              <thead><tr><th>Prefixo</th><th>A partir de</th></tr></thead>
+              <tbody>
+                <tr><td>nenhum</td><td>0, é a regra base</td></tr>
+                <tr><td><code>sm</code></td><td>576px</td></tr>
+                <tr><td><code>md</code></td><td>768px</td></tr>
+                <tr><td><code>lg</code></td><td>992px</td></tr>
+                <tr><td><code>xl</code></td><td>1200px</td></tr>
+                <tr><td><code>xxl</code></td><td>1400px</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="side">
+            <h4>É a mesma ideia, com outro nome</h4>
+            <pre class="code-compact" style="margin:6px 0 0 0;"><code class="language-css" data-trim>/* Aula 05, escrito por você */
+.form-grid { grid-template-columns: 1fr; }
+
+@media (min-width: 768px) {
+  .form-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}</code></pre>
+            <p style="font-size:0.62em; margin:8px 0 0 0;">Vira <code>class="col-12 col-md-6"</code>. Mesmo <code>min-width</code>, mesma ordem do mais estreito para o mais largo.</p>
+          </div>
+        </div>
+
+        <div class="takeaway">
+          <span class="takeaway-label">Takeaway</span>
+          <p>Todo prefixo vale <strong>daquela largura para cima</strong>. Por isso <code>col-md-6</code> continua valendo no desktop, a menos que um <code>col-lg-4</code> venha depois dele, e por isso não existe prefixo para celular: quem cuida do celular é a classe sem prefixo.</p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">18 Pontos de quebra</div>
+          <div class="footer-page">16</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 17: COMPONENTES ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Os componentes que a Clínica Vida+ usa hoje <a href="#/ref-slide" class="ref-badge" title="Ver referências">[5]</a></h2>
+        </div>
+
+        <table style="font-size:0.64em;">
+          <thead>
+            <tr><th style="width:130px;">Componente</th><th style="width:420px;">Classes principais</th><th>Onde entra no case</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>navbar</td><td><code>navbar navbar-expand-lg</code></td><td>Menu do topo, que vira sanduíche no celular</td></tr>
+            <tr><td>card</td><td><code>card card-body card-title</code></td><td>Lista de médicos e de especialidades</td></tr>
+            <tr><td>table</td><td><code>table table-striped table-hover</code></td><td>Agenda do dia e lista de pacientes</td></tr>
+            <tr><td>form</td><td><code>form-label form-control form-select</code></td><td>Agendamento e cadastro de paciente</td></tr>
+            <tr><td>alert</td><td><code>alert alert-success alert-danger</code></td><td>Mensagens de consulta agendada e de erro</td></tr>
+            <tr><td>badge</td><td><code>badge text-bg-secondary</code></td><td>Especialidade do médico dentro do card</td></tr>
+            <tr><td>modal</td><td><code>modal modal-dialog</code></td><td>Confirmação de exclusão de paciente</td></tr>
+            <tr><td>pagination</td><td><code>pagination page-item page-link</code></td><td>Lista de pacientes quando ela crescer</td></tr>
+          </tbody>
+        </table>
+
+        <div class="callout" style="margin-top:12px;">
+          <p><strong>Modal e menu sanduíche</strong> só abrem com o <code>bootstrap.bundle.min.js</code> no fim do layout.</p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">18 Componentes do Bootstrap</div>
+          <div class="footer-page">17</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 18: UTILITÁRIOS ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Classes utilitárias: o ajuste fino sem abrir o CSS</h2>
+        </div>
+
+        <table>
+          <thead>
+            <tr><th style="width:190px;">Família</th><th style="width:400px;">Exemplos</th><th>O que faz</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Espaçamento</td><td><code>mt-3</code>, <code>px-4</code>, <code>mb-0</code>, <code>py-2</code></td><td>Margem e padding numa escala de 0 a 5</td></tr>
+            <tr><td>Display e flex</td><td><code>d-flex</code>, <code>justify-content-between</code>, <code>gap-3</code></td><td>O Flexbox da Aula 04, sem escrever CSS</td></tr>
+            <tr><td>Tipografia</td><td><code>fw-bold</code>, <code>text-muted</code>, <code>text-center</code></td><td>Peso, cor de apoio e alinhamento</td></tr>
+            <tr><td>Cores</td><td><code>bg-light</code>, <code>text-bg-success</code>, <code>border</code></td><td>Fundo e texto coordenados, com contraste pronto</td></tr>
+            <tr><td>Caixa</td><td><code>w-100</code>, <code>h-100</code>, <code>rounded</code>, <code>shadow-sm</code></td><td>Largura, altura, cantos e sombra</td></tr>
+          </tbody>
+        </table>
+
+        <div class="callout" style="margin-top:16px;">
+          <p><strong>Onde parar:</strong> utilitário demais é estilo em linha com outro nome. Quando a mesma sequência de seis classes se repete em três telas, ela está pedindo uma classe própria no <code>site.css</code> ou uma Partial View, e não um copiar e colar.</p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">18 Classes utilitárias</div>
+          <div class="footer-page">18</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 19: A PALETA DA CLÍNICA SOBRE O BOOTSTRAP ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>A identidade da clínica por cima do Bootstrap <a href="#/ref-slide" class="ref-badge" title="Ver referências">[6]</a></h2>
+        </div>
+
+        <p style="font-size:0.66em; margin-top:0;">Aplicação com Bootstrap e sem customização tem a mesma cara de milhares de outras. A paleta que você fixou na Aula 04 continua mandando: o framework entra por baixo dela, em <code>wwwroot/css/site.css</code>.</p>
+
+        <pre class="code-compact"><code class="language-css" data-trim>:root {
+  --vida-primaria: #0B6E75;   /* as mesmas variáveis da Aula 04 */
+  --vida-destaque: #E4572E;
+
+  --bs-body-bg:      #F4F7F6;       /* --vida-fundo  */
+  --bs-body-color:   #1F2A30;       /* --vida-texto  */
+  --bs-border-color: #D6E2E0;       /* --vida-borda  */
+  --bs-primary-rgb:  11, 110, 117;  /* text-primary e bg-primary */
+}
+
+/* O .btn-primary traz a cor compilada dentro dele e ignora o
+   --bs-primary. Quem manda no botão são as variáveis dele: */
+.btn-primary {
+  --bs-btn-bg:           var(--vida-primaria);
+  --bs-btn-border-color: var(--vida-primaria);
+  --bs-btn-hover-bg:     #095A60;
+}</code></pre>
+
+        <div class="slide-footer">
+          <div class="footer-bar">18 A paleta sobre o Bootstrap</div>
+          <div class="footer-page">19</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 20: EXERCÍCIO DO CICLO 2 ==================== -->
+      <section class="exercise-slide content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Exercício do Ciclo 2: um formulário, em classes do Bootstrap</h2>
+        </div>
+
+        <div class="exercise-container">
+          <h3>Em <code>Views/Pacientes/Create.cshtml</code>, 8 minutos</h3>
+          <ol class="exercise-steps">
+            <li>Troque cada <code>&lt;label&gt;</code> por <code>class="form-label"</code> e cada <code>&lt;input&gt;</code> por <code>class="form-control"</code>.</li>
+            <li>Os <code>&lt;select&gt;</code> pedem <code>form-select</code>, e não <code>form-control</code>.</li>
+            <li>Envolva cada par de label e campo em <code>&lt;div class="mb-3 col-12 col-md-6"&gt;</code>, dentro de uma <code>row</code>.</li>
+            <li>O botão de enviar vira <code>class="btn btn-primary"</code>, e o de cancelar, <code>btn btn-outline-secondary</code>.</li>
+            <li>Envie o formulário vazio: as mensagens da Aula 10 precisam continuar aparecendo.</li>
+          </ol>
+        </div>
+
+        <div class="callout" style="margin-top:12px;">
+          <p><strong>Atenção à validação:</strong> os Tag Helpers da Aula 10 marcam o campo inválido com <code>input-validation-error</code>, que não é uma classe do Bootstrap. Uma regra no <code>site.css</code> resolve, sem trocar nada na View.</p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">18 Exercício do Ciclo 2</div>
+          <div class="footer-page">20</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 21: QUIZ DE FIXAÇÃO ==================== -->
+      <section class="quiz-slide content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area"><div class="accent-bar"></div><h2>Quiz de fixação</h2></div>
+        <div class="quiz-container">
+          <div class="quiz-question">Qual é o papel de <code>@RenderBody()</code> dentro do <code>_Layout.cshtml</code>?</div>
+          <ul class="quiz-options">
+            <li data-correct="true"><span class="option-letter">A</span> Marca o ponto onde o conteúdo específico de cada View é inserido dentro do layout compartilhado.</li>
+            <li data-correct="false"><span class="option-letter">B</span> Renderiza o menu de navegação compartilhado, que por isso não precisa ser repetido em cada View.</li>
+            <li data-correct="false"><span class="option-letter">C</span><span class="option-text">Importa as folhas de estilo e os scripts do Bootstrap declarados no <code>_ViewImports.cshtml</code>.</span></li>
+            <li data-correct="false"><span class="option-letter">D</span> Executa a action do Controller correspondente à View atual, devolvendo o modelo já preenchido.</li>
+          </ul>
+          <div class="quiz-feedback"
+               data-correct-msg="Isso. O RenderBody é o buraco do miolo: aparece uma vez só no layout e recebe, inteiro, o conteúdo da View que está sendo exibida."
+               data-incorrect-msg="Não é isso. O menu fica escrito no próprio layout, e não dentro do RenderBody; o _ViewImports carrega usings e Tag Helpers, não folhas de estilo; e quem executa a action é o roteamento, muito antes de a View ser renderizada. O RenderBody apenas marca onde o conteúdo da View entra."></div>
+        </div>
+        <div class="slide-footer"><div class="footer-bar">18 Quiz de fixação</div><div class="footer-page">21</div></div>
+      </section>
+
+      <!-- ==================== SLIDE 22: LAB PASSO 1 ==================== -->
+      <section class="exercise-slide content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Laboratório, passo 1 de 6: a branch e o inventário</h2>
+        </div>
+
+        <p style="font-size:0.7em; margin-top:0;">Missão dos próximos 60 minutos: padronizar a interface da Clínica Vida+, tela por tela, sem mudar uma linha de regra de negócio.</p>
+
+        <div class="exercise-container">
+          <h3>No seu fork, a partir da main atualizada</h3>
+          <ol class="exercise-steps">
+            <li>Crie a branch <code>feature/layout-bootstrap</code>.</li>
+            <li>Confirme que <code>wwwroot/lib/bootstrap/dist/css/bootstrap.min.css</code> existe no projeto.</li>
+            <li>Liste as telas que você vai padronizar: pacientes, agendamento, agenda do dia, médicos, login e home.</li>
+            <li>Rode a aplicação e tire uma captura da tela de pacientes: é o "antes" que você vai comparar no fim.</li>
+          </ol>
+        </div>
+
+        <pre class="code-compact"><code class="language-bash" data-trim>git checkout main &amp;&amp; git pull
+git checkout -b feature/layout-bootstrap
+dotnet run   # abra no navegador a porta que o SEU terminal imprimiu</code></pre>
+
+        <div class="slide-footer">
+          <div class="footer-bar">18 Laboratório, passo 1, branch e inventário</div>
+          <div class="footer-page">22</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 23: LAB PASSO 2 ==================== -->
+      <section class="exercise-slide content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Laboratório, passo 2 de 6: o layout da clínica</h2>
+        </div>
+
+        <div class="exercise-container">
+          <h3>Em <code>Views/Shared/_Layout.cshtml</code></h3>
+          <ol class="exercise-steps">
+            <li>Troque <code>lang="en"</code> por <code>lang="pt-BR"</code> e o título para <code>@ViewData["Title"] - Clínica Vida+</code>.</li>
+            <li>Reescreva a navbar com <code>navbar-expand-lg</code> e o botão sanduíche, mantendo o bloco de login da Aula 15.</li>
+            <li>Ponha o <code>@RenderBody()</code> dentro de <code>&lt;main class="container py-4"&gt;</code>.</li>
+            <li>Feche com um rodapé em <code>container</code>, com o nome da clínica e o ano.</li>
+          </ol>
+        </div>
+
+        <pre class="code-compact"><code class="language-html" data-trim>&lt;nav class="navbar navbar-expand-lg navbar-vida" data-bs-theme="dark"&gt;
+  &lt;div class="container"&gt;
+    &lt;a class="navbar-brand" asp-controller="Home" asp-action="Index"&gt;Clínica Vida+&lt;/a&gt;
+    &lt;button class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#menuVida"&gt;
+      &lt;span class="navbar-toggler-icon"&gt;&lt;/span&gt;
+    &lt;/button&gt;
+    &lt;div class="collapse navbar-collapse" id="menuVida"&gt; ... &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/nav&gt;</code></pre>
+
+        <div class="slide-footer">
+          <div class="footer-bar">18 Laboratório, passo 2, o layout</div>
+          <div class="footer-page">23</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 24: LAB PASSO 3 ==================== -->
+      <section class="exercise-slide content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Laboratório, passo 3 de 6: a paleta por cima</h2>
+        </div>
+
+        <div class="exercise-container">
+          <h3>Em <code>wwwroot/css/site.css</code>, depois do que já existe</h3>
+          <ol class="exercise-steps">
+            <li>Declare as seis variáveis <code>--vida-*</code> da Aula 04 no <code>:root</code>, se ainda não estiverem lá.</li>
+            <li>Redefina <code>--bs-body-bg</code>, <code>--bs-body-color</code>, <code>--bs-border-color</code> e <code>--bs-primary-rgb</code>.</li>
+            <li>Reescreva as variáveis de <code>.btn-primary</code> e crie a classe <code>.navbar-vida</code>.</li>
+            <li>Ligue a validação da Aula 10 à paleta, com as duas regras abaixo.</li>
+          </ol>
+        </div>
+
+        <pre class="code-compact"><code class="language-css" data-trim>.navbar-vida { background-color: var(--vida-primaria); }
+
+.input-validation-error { border-color: var(--vida-destaque); }
+.field-validation-error { color: var(--vida-destaque); font-size: 0.875rem; }</code></pre>
+
+        <div class="slide-footer">
+          <div class="footer-bar">18 Laboratório, passo 3, a paleta</div>
+          <div class="footer-page">24</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 25: LAB PASSO 4 ==================== -->
+      <section class="exercise-slide content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Laboratório, passo 4 de 6: a Partial de mensagens</h2>
+        </div>
+
+        <div class="exercise-container">
+          <h3>Crie <code>Views/Shared/_Mensagens.cshtml</code></h3>
+          <ol class="exercise-steps">
+            <li>A Partial lê as três chaves já usadas no projeto: <code>Sucesso</code>, <code>Aviso</code> e <code>Erro</code>.</li>
+            <li>Chame-a com <code>&lt;partial name="_Mensagens" /&gt;</code> logo antes do <code>@RenderBody()</code>, no layout.</li>
+            <li>Apague os blocos de mensagem soltos que você escreveu nas Views das Aulas 12, 13 e 17.</li>
+            <li>Cadastre um paciente e confirme que a mensagem aparece, agora em todas as telas.</li>
+          </ol>
+        </div>
+
+        <pre class="code-compact"><code class="language-html" data-trim>@if (TempData["Sucesso"] != null)
+{
+    &lt;div class="alert alert-success alert-dismissible fade show" role="alert"&gt;
+        @TempData["Sucesso"]
+        &lt;button type="button" class="btn-close" data-bs-dismiss="alert"&gt;&lt;/button&gt;
+    &lt;/div&gt;
+}</code></pre>
+
+        <div class="slide-footer">
+          <div class="footer-bar">18 Laboratório, passo 4, a Partial de mensagens</div>
+          <div class="footer-page">25</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 26: LAB PASSO 5 ==================== -->
+      <section class="exercise-slide content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Laboratório, passo 5 de 6: card e linha, em Partial</h2>
+        </div>
+
+        <p style="font-size:0.7em; margin-top:0;">A partir daqui você trabalha sozinho, com o professor circulando pela sala.</p>
+
+        <div class="exercise-container">
+          <h3>Duas Partials novas, em <code>Views/Shared/</code></h3>
+          <ol class="exercise-steps">
+            <li><code>_CardMedico.cshtml</code>, com <code>@model Medico</code>: nome, CRM e a especialidade em <code>badge</code>.</li>
+            <li><code>_LinhaConsulta.cshtml</code>, com <code>@model Consulta</code>: horário, paciente, médico e especialidade.</li>
+            <li>Use o <code>Include</code> da Aula 17 nas actions: sem ele, <code>Model.Medico</code> chega nulo dentro da Partial.</li>
+            <li>Troque o corpo do laço nas Views por uma chamada de <code>&lt;partial&gt;</code>.</li>
+          </ol>
+        </div>
+
+        <pre class="code-compact"><code class="language-html" data-trim>@foreach (var consulta in Model)
+{
+    &lt;partial name="_LinhaConsulta" model="consulta" /&gt;
+}</code></pre>
+
+        <div class="slide-footer">
+          <div class="footer-bar">18 Laboratório, passo 5, card e linha</div>
+          <div class="footer-page">26</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 27: LAB PASSO 6 ==================== -->
+      <section class="exercise-slide content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Laboratório, passo 6 de 6: as telas e as três larguras</h2>
+        </div>
+
+        <div class="exercise-container">
+          <h3>Grid e componentes em todas as telas do projeto</h3>
+          <ol class="exercise-steps">
+            <li>CRUD de paciente: <code>table table-striped</code> na listagem e <code>row</code> com <code>col-12 col-md-6</code> nos formulários.</li>
+            <li>Agendamento: os campos da Aula 13 e o bloco de AJAX da Aula 14 dentro da grade, sem quebrar o JavaScript.</li>
+            <li>Agenda do dia e médicos: tabela e cards, com o <code>badge</code> da especialidade.</li>
+            <li>Abra o DevTools, ative o modo dispositivo e confira em <strong>360px</strong>, <strong>768px</strong> e <strong>1280px</strong>.</li>
+            <li>Em nenhuma largura pode haver barra de rolagem horizontal.</li>
+          </ol>
+        </div>
+
+        <div class="callout" style="margin-top:12px;">
+          <p><strong>Cuidado com o AJAX:</strong> o <code>agendamento-ajax.js</code> encontra os campos pelo <code>id</code>. Mude classes à vontade, mas não mude os <code>id</code>, ou a busca de horários livres para de funcionar sem nenhum erro na tela.</p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">18 Laboratório, passo 6, telas e larguras</div>
+          <div class="footer-page">27</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 28: ENTREGÁVEL ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Entregável de hoje, commit e push</h2>
+        </div>
+
+        <div class="side-by-side" style="margin-top:6px;">
+          <div class="side">
+            <h4>O que precisa estar pronto</h4>
+            <ul style="margin:0; padding-left:20px;">
+              <li><code>_Layout.cshtml</code> com navbar responsiva e rodapé.</li>
+              <li><strong>Três</strong> Partial Views: mensagens, card de médico e linha de consulta.</li>
+              <li>Bootstrap aplicado a <strong>todas</strong> as telas do projeto.</li>
+              <li>Paleta da clínica por cima do framework.</li>
+              <li>Nenhuma tela com rolagem horizontal em 360px.</li>
+            </ul>
+          </div>
+          <div class="side">
+            <h4>Como o professor confere</h4>
+            <ul style="margin:0; padding-left:20px;">
+              <li>Nenhuma View repete cabeçalho, menu ou rodapé.</li>
+              <li>O menu vira sanduíche e abre no celular.</li>
+              <li>O botão principal está no verde da clínica, não no azul do Bootstrap.</li>
+              <li>Login, agendamento e CRUD continuam funcionando.</li>
+            </ul>
+          </div>
+        </div>
+
+        <pre class="code-compact" style="margin-top:14px;"><code class="language-bash" data-trim>git add Views/ wwwroot/css/site.css
+git commit -m "feat: layout unificado com Partial Views e Bootstrap 5"
+git push -u origin feature/layout-bootstrap</code></pre>
+
+        <div class="slide-footer">
+          <div class="footer-bar">18 Entregável, commit e push</div>
+          <div class="footer-page">28</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 29: FECHAMENTO ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Dez encontros depois da Aula 08</h2>
+        </div>
+
+        <p style="font-size:0.68em; margin-top:0;">Na Aula 08 a Clínica Vida+ era um menu com dois links e uma lista de especialidades sem estilo. Vale abrir aquela tela ao lado da de hoje: é o mesmo projeto, e o mesmo autor.</p>
+
+        <div class="side-by-side" style="margin-top:6px;">
+          <div class="side">
+            <h4>Aula 08</h4>
+            <ul style="margin:0; padding-left:20px;">
+              <li>Dados fixos no código, sem banco.</li>
+              <li>Cada View com o próprio HTML solto.</li>
+              <li>Uma única largura de tela.</li>
+            </ul>
+          </div>
+          <div class="side">
+            <h4>Aula 18</h4>
+            <ul style="margin:0; padding-left:20px;">
+              <li>MySQL, login, API e quatro entidades ligadas.</li>
+              <li>Uma moldura e três Partials para tudo.</li>
+              <li>Celular, tablet e desktop.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="callout" style="margin-top:16px;">
+          <p><strong>Prévia da Aula 19:</strong> a aplicação está pronta e continua rodando só na sua máquina. Vamos empacotá-la em um contêiner com <strong>Docker</strong>, subir o MySQL junto pelo <code>compose.yaml</code> e publicar tudo no <strong>GitHub Codespaces</strong>, com a porta em modo público. No fim daquela aula, a Clínica Vida+ terá uma URL que qualquer pessoa abre pela internet.</p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">18 Fechamento</div>
+          <div class="footer-page">29</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 30: REFERÊNCIAS ==================== -->
+      <section id="ref-slide" class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Referências desta aula</h2>
+        </div>
+
+        <p style="font-size:0.7em; margin-top:0;">Os números entre colchetes ao lado dos títulos remetem a esta lista. A documentação da Microsoft está em português; a do Bootstrap, apenas em inglês.</p>
+
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px 26px; margin-top:4px;">
+          <div class="concept-card" style="padding:12px 16px;">
+            <h4>[1] Layout no ASP.NET Core</h4>
+            <p style="font-size:0.66em; color:#444444;">MICROSOFT. <em>Layout no ASP.NET Core</em>.<br>
+            <code style="font-size:0.82em;">learn.microsoft.com/pt-br/aspnet/core/mvc/views/layout</code></p>
+          </div>
+          <div class="concept-card" style="padding:12px 16px;">
+            <h4>[2] Exibições parciais</h4>
+            <p style="font-size:0.66em; color:#444444;">MICROSOFT. <em>Exibições parciais no ASP.NET Core</em>.<br>
+            <code style="font-size:0.82em;">learn.microsoft.com/pt-br/aspnet/core/mvc/views/partial</code></p>
+          </div>
+          <div class="concept-card" style="padding:12px 16px;">
+            <h4>[3] View Components</h4>
+            <p style="font-size:0.66em; color:#444444;">MICROSOFT. <em>Componentes de exibição no ASP.NET Core</em>.<br>
+            <code style="font-size:0.82em;">learn.microsoft.com/pt-br/aspnet/core/mvc/views/view-components</code></p>
+          </div>
+          <div class="concept-card" style="padding:12px 16px;">
+            <h4>[4] A grade do Bootstrap</h4>
+            <p style="font-size:0.66em; color:#444444;">BOOTSTRAP. <em>Grid system</em>, Bootstrap 5.3.<br>
+            <code style="font-size:0.82em;">getbootstrap.com/docs/5.3/layout/grid/</code></p>
+          </div>
+          <div class="concept-card" style="padding:12px 16px;">
+            <h4>[5] Componentes do Bootstrap</h4>
+            <p style="font-size:0.66em; color:#444444;">BOOTSTRAP. <em>Components</em>, Bootstrap 5.3.<br>
+            <code style="font-size:0.82em;">getbootstrap.com/docs/5.3/components/</code></p>
+          </div>
+          <div class="concept-card" style="padding:12px 16px;">
+            <h4>[6] Variáveis CSS do Bootstrap</h4>
+            <p style="font-size:0.66em; color:#444444;">BOOTSTRAP. <em>CSS variables</em>, Bootstrap 5.3.<br>
+            <code style="font-size:0.82em;">getbootstrap.com/docs/5.3/customize/css-variables/</code></p>
+          </div>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">18 Referências</div>
+          <div class="footer-page">30</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 31: ENCERRAMENTO ==================== -->
+      <section class="end-slide">
+        <img src="../assets/img/uninove-logo.png" alt="Uninove, Universidade Nove de Julho"
+             style="max-width:300px; background:#FFFFFF; padding:20px 28px; border-radius:8px;">
+        <div class="copyright">
+          Copyright &copy; 2026<br>
+          Prof. José Romualdo da Costa Filho<br><br>
+          Todos os direitos reservados. É expressamente proibida a reprodução, divulgação<br>
+          total ou parcial, deste material acadêmico sem autorização formal,<br>
+          por escrito, do Professor autor da ementa.
+        </div>
+      </section>
+
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/highlight/highlight.js"></script>
+  <script src="../assets/js/uninove-quiz.js"></script>
+  <script type="module">
+    import { TURMAS, resolverTurma, dataDaAula, formatarData } from '../assets/js/turmas.js';
+    const turma = resolverTurma({
+      hoje: new Date(),
+      salva: localStorage.getItem('uninove-turma'),
+    });
+    const alvo = document.querySelector('[data-data-da-aula]');
+    if (alvo) {
+      const n = Number(alvo.getAttribute('data-data-da-aula'));
+      alvo.textContent = turma
+        ? `${TURMAS[turma].rotulo}, ${formatarData(dataDaAula(turma, n))}`
+        : `Quarta ${formatarData(dataDaAula('quarta', n))} ou quinta ${formatarData(dataDaAula('quinta', n))}`;
+    }
+  </script>
+  <script>
+    Reveal.initialize({
+      width: 1280, height: 720, center: false, margin: 0,
+      hash: true, slideNumber: false,
+      // Os chevrons de navegação caem sobre a footer-bar e sobre o triângulo
+      // azul do canto inferior direito; a barra de progresso encosta no rodapé
+      // e parece um segundo rodapé. Nenhum dos dois é usado na projeção.
+      controls: false, progress: false,
+      // Um slide por página no ?print-pdf, para o PDF bater com o deck.
+      pdfMaxPagesPerSlide: 1,
+      plugins: [RevealHighlight],
+    });
+  </script>
+</body>
+</html>

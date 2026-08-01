@@ -1,0 +1,1073 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Aula 20, Revisão geral e projeto final | Uninove</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/theme/white.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/highlight/monokai.css">
+  <link rel="stylesheet" href="../assets/css/uninove-theme.css">
+  <link rel="stylesheet" href="../assets/css/uninove-print.css">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+      <!-- ==================== SLIDE 1: CAPA ==================== -->
+      <section class="cover-slide">
+        <img src="../assets/img/uninove-logo.png" alt="Uninove, Universidade Nove de Julho" class="uninove-logo-full"
+             style="max-width:400px; background:#FFFFFF; padding:26px 36px; border-radius:10px;">
+        <div style="margin-top:36px; color:#FFFFFF; font-size:0.95em; font-weight:800; letter-spacing:4px; text-transform:uppercase;">Desenvolvimento Web</div>
+        <div style="margin-top:12px; color:#C84B31; font-size:0.6em; font-weight:700; letter-spacing:3px; text-transform:uppercase;">Graduação, 2026.2</div>
+      </section>
+
+      <!-- ==================== SLIDE 2: TÍTULO ==================== -->
+      <section class="title-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="title-card">
+          <div class="accent-bar"></div>
+          <h1>Desenvolvimento Web</h1>
+          <h2>Revisão geral e projeto final</h2>
+          <h3>Prof. José Romualdo<br><span data-data-da-aula="20"></span></h3>
+        </div>
+        <div class="lesson-bar">AULA 20 &nbsp;|&nbsp; Módulo 4, Tópicos Avançados e Projeto Final</div>
+      </section>
+
+      <!-- ==================== SLIDE 3: AGENDA ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Agenda do último encontro do semestre</h2>
+        </div>
+
+        <p style="font-size:0.74em; margin-top:0;">São os mesmos 150 minutos em quatro ciclos de sempre, com uma diferença: hoje o laboratório não constrói uma peça nova, ele fecha e entrega o que você construiu desde agosto.</p>
+
+        <table>
+          <thead>
+            <tr><th style="width:190px;">Horário</th><th style="width:190px;">Bloco</th><th>O que acontece</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>19h30 às 20h05</td><td>Ciclo 1</td><td>A trajetória inteira do semestre e os erros mais comuns</td></tr>
+            <tr><td>20h05 às 20h40</td><td>Ciclo 2</td><td>Revisão para a prova, critérios do projeto e roteiro da apresentação</td></tr>
+            <tr><td>20h40 às 20h50</td><td>Quiz de fixação</td><td>Uma pergunta que atravessa os quatro módulos</td></tr>
+            <tr><td>20h50 às 21h25</td><td>Ciclo 3</td><td>Laboratório guiado: o checklist final de entrega</td></tr>
+            <tr><td>21h25 às 21h50</td><td>Ciclo 4</td><td>Apresentação do projeto, cinco minutos e dois de arguição</td></tr>
+            <tr><td>21h50 às 22h00</td><td>Fechamento</td><td>Devolutiva, AV2 institucional e encerramento da disciplina</td></tr>
+          </tbody>
+        </table>
+
+        <div class="slide-footer">
+          <div class="footer-bar">20 Agenda do encontro</div>
+          <div class="footer-page">3</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 4: RECAPITULAÇÃO DA AULA 19 ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>De onde viemos: a Aula 19 colocou a Clínica Vida+ no ar <a href="#/ref-slide" class="ref-badge" title="Ver referências">[3]</a></h2>
+        </div>
+
+        <p style="font-size:0.68em; margin-top:0;">Seu entregável da semana passada: a aplicação containerizada com Docker, publicada pelo Codespaces, com URL acessível e registrada no <code>README.md</code>. É dessa URL que sai a demonstração de hoje.</p>
+
+        <div class="side-by-side" style="margin-top:6px;">
+          <div class="side">
+            <h4>O que ficou pronto no seu fork</h4>
+            <ul style="margin:0; padding-left:20px; font-size:0.76em;">
+              <li><code>Dockerfile</code> multi-stage, build no SDK e execução no runtime do ASP.NET.</li>
+              <li><code>compose.yaml</code> com os serviços <code>web</code> e <code>db</code>, o banco em <code>mysql:8.4</code>.</li>
+              <li><code>.env</code> no <code>.gitignore</code>, nunca no repositório.</li>
+              <li>Porta encaminhada em modo <strong>público</strong> no Codespaces.</li>
+            </ul>
+          </div>
+          <div class="side">
+            <h4>O que isso mudou na prática</h4>
+            <ul style="margin:0; padding-left:20px; font-size:0.76em;">
+              <li>A configuração vem do ambiente, com <code>ConnectionStrings__DefaultConnection</code>, e não de arquivo editado à mão.</li>
+              <li>Dentro do compose o host do banco é <code>db</code>, não <code>localhost</code>.</li>
+              <li>Qualquer pessoa com o link abre a sua aplicação, do celular, sem instalar nada.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="callout" style="margin-top:14px;">
+          <p><strong>Um detalhe que decide a nota de hoje:</strong> a URL do Codespaces só responde enquanto o codespace está rodando, e ele hiberna por inatividade.</p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">20 Recapitulação da Aula 19</div>
+          <div class="footer-page">4</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 5: A TRAJETÓRIA DO SEMESTRE ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Vinte aulas, um sistema só: a trajetória da Clínica Vida+</h2>
+        </div>
+
+        <p style="font-size:0.7em; margin-top:0;">Cada módulo não trocou de assunto: ele acrescentou uma camada sobre a anterior. Em agosto havia uma pasta vazia; hoje há uma aplicação publicada na internet.</p>
+
+        <div class="slide-figure" style="margin-top:2px;">
+          <svg viewBox="0 0 1150 410" role="img" aria-label="Escada de quatro módulos, do HTML ao deploy, com o problema resolvido em cada etapa">
+            <defs>
+              <marker id="setaTraj" markerWidth="10" markerHeight="10" refX="9" refY="5" orient="auto">
+                <path d="M0,0 L10,5 L0,10 Z" fill="#C84B31"/>
+              </marker>
+            </defs>
+
+            <!-- Módulo 1 -->
+            <rect x="8" y="248" width="272" height="112" rx="8" fill="#EAF0F5" stroke="#00274D" stroke-width="2"/>
+            <text x="24" y="274" font-family="Montserrat, sans-serif" font-size="16" font-weight="800" fill="#00274D">Módulo 1, Aulas 01 a 06</text>
+            <text x="24" y="296" font-family="Montserrat, sans-serif" font-size="14" fill="#333333">HTTP, HTML, CSS</text>
+            <text x="24" y="315" font-family="Montserrat, sans-serif" font-size="14" fill="#333333">e JavaScript</text>
+            <text x="24" y="338" font-family="Montserrat, sans-serif" font-size="13" fill="#C84B31">A clínica não tinha</text>
+            <text x="24" y="354" font-family="Montserrat, sans-serif" font-size="13" fill="#C84B31">nenhuma página.</text>
+
+            <!-- Módulo 2 -->
+            <rect x="295" y="196" width="272" height="164" rx="8" fill="#DCE6EE" stroke="#00274D" stroke-width="2"/>
+            <text x="311" y="222" font-family="Montserrat, sans-serif" font-size="16" font-weight="800" fill="#00274D">Módulo 2, Aulas 07 a 10</text>
+            <text x="311" y="244" font-family="Montserrat, sans-serif" font-size="14" fill="#333333">C#, ASP.NET Core MVC,</text>
+            <text x="311" y="263" font-family="Montserrat, sans-serif" font-size="14" fill="#333333">Models e validação</text>
+            <text x="311" y="286" font-family="Montserrat, sans-serif" font-size="13" fill="#C84B31">A página não</text>
+            <text x="311" y="302" font-family="Montserrat, sans-serif" font-size="13" fill="#C84B31">processava nada.</text>
+
+            <!-- Módulo 3 -->
+            <rect x="582" y="142" width="272" height="218" rx="8" fill="#C9D8E4" stroke="#00274D" stroke-width="2"/>
+            <text x="598" y="168" font-family="Montserrat, sans-serif" font-size="16" font-weight="800" fill="#00274D">Módulo 3, Aulas 11 a 17</text>
+            <text x="598" y="190" font-family="Montserrat, sans-serif" font-size="14" fill="#333333">EF Core e MySQL, sessão,</text>
+            <text x="598" y="209" font-family="Montserrat, sans-serif" font-size="14" fill="#333333">login e API REST</text>
+            <text x="598" y="232" font-family="Montserrat, sans-serif" font-size="13" fill="#C84B31">Os dados morriam ao</text>
+            <text x="598" y="248" font-family="Montserrat, sans-serif" font-size="13" fill="#C84B31">fechar o programa.</text>
+
+            <!-- Módulo 4 -->
+            <rect x="869" y="88" width="272" height="272" rx="8" fill="#00274D" stroke="#00274D" stroke-width="2"/>
+            <text x="885" y="114" font-family="Montserrat, sans-serif" font-size="16" font-weight="800" fill="#FFFFFF">Módulo 4, Aulas 18 a 20</text>
+            <text x="885" y="136" font-family="Montserrat, sans-serif" font-size="14" fill="#E6EDF3">Bootstrap 5, Docker</text>
+            <text x="885" y="155" font-family="Montserrat, sans-serif" font-size="14" fill="#E6EDF3">e publicação</text>
+            <text x="885" y="178" font-family="Montserrat, sans-serif" font-size="13" fill="#F2B8A8">Só rodava na</text>
+            <text x="885" y="194" font-family="Montserrat, sans-serif" font-size="13" fill="#F2B8A8">sua máquina.</text>
+
+            <line x1="8" y1="378" x2="1136" y2="378" stroke="#C84B31" stroke-width="3" marker-end="url(#setaTraj)"/>
+            <text x="10" y="400" font-family="Montserrat, sans-serif" font-size="14" font-weight="700" fill="#666666">Agosto: uma pasta vazia</text>
+            <text x="906" y="400" font-family="Montserrat, sans-serif" font-size="14" font-weight="700" fill="#666666">Dezembro: aplicação publicada</text>
+          </svg>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">20 A trajetória do semestre</div>
+          <div class="footer-page">5</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 6: AULAS 01 A 10, O PROBLEMA DE CADA ETAPA ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Aulas 01 a 10: o problema que cada etapa resolveu <a href="#/ref-slide" class="ref-badge" title="Ver referências">[1]</a></h2>
+        </div>
+
+        <table style="font-size:0.64em; margin:10px 0 0 0;">
+          <thead>
+            <tr>
+              <th style="width:80px; padding:8px 12px;">Aula</th>
+              <th style="width:300px; padding:8px 12px;">O que entrou</th>
+              <th style="padding:6px 12px;">O problema que ela resolveu na Clínica Vida+</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td style="padding:7px 12px;">01</td><td style="padding:7px 12px;">Git e GitHub</td><td style="padding:7px 12px;">O trabalho vivia numa pasta só, sem histórico e sem cópia fora da máquina.</td></tr>
+            <tr><td style="padding:7px 12px;">02</td><td style="padding:7px 12px;">HTTP, DNS e cliente-servidor</td><td style="padding:7px 12px;">Ninguém sabia o que acontece entre o clique do paciente e a tela que aparece.</td></tr>
+            <tr><td style="padding:7px 12px;">03</td><td style="padding:7px 12px;">HTML semântico</td><td style="padding:7px 12px;">A informação da clínica não tinha estrutura que o navegador soubesse ler.</td></tr>
+            <tr><td style="padding:7px 12px;">04</td><td style="padding:7px 12px;">CSS, Flexbox e Grid</td><td style="padding:7px 12px;">A página existia, mas sem identidade visual e sem hierarquia de leitura.</td></tr>
+            <tr><td style="padding:7px 12px;">05</td><td style="padding:7px 12px;">Responsividade e formulários</td><td style="padding:7px 12px;">O paciente agenda pelo celular, e o formulário aceitava qualquer coisa digitada.</td></tr>
+            <tr><td style="padding:7px 12px;">06</td><td style="padding:7px 12px;">JavaScript e DOM</td><td style="padding:7px 12px;">A página não reagia: filtrar especialidade exigia trocar de página.</td></tr>
+            <tr><td style="padding:7px 12px;">07</td><td style="padding:7px 12px;">C# e .NET</td><td style="padding:7px 12px;">O navegador sozinho não guarda nem processa a agenda de ninguém.</td></tr>
+            <tr><td style="padding:7px 12px;">08</td><td style="padding:7px 12px;">ASP.NET Core MVC e rotas</td><td style="padding:7px 12px;">Tela, decisão e dado estavam misturados no mesmo arquivo.</td></tr>
+            <tr><td style="padding:7px 12px;">09</td><td style="padding:7px 12px;">Controllers e Views Razor</td><td style="padding:7px 12px;">A tela era fixa e não sabia mostrar o que a aplicação tinha em mãos.</td></tr>
+            <tr><td style="padding:7px 12px;">10</td><td style="padding:7px 12px;">Models e Data Annotations</td><td style="padding:7px 12px;">Dado inválido atravessava o fluxo inteiro sem ser barrado no servidor.</td></tr>
+          </tbody>
+        </table>
+
+        <div class="slide-footer">
+          <div class="footer-bar">20 Aulas 01 a 10, o problema resolvido</div>
+          <div class="footer-page">6</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 7: AULAS 11 A 20, O PROBLEMA DE CADA ETAPA ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Aulas 11 a 20: o problema que cada etapa resolveu <a href="#/ref-slide" class="ref-badge" title="Ver referências">[2]</a></h2>
+        </div>
+
+        <table style="font-size:0.64em; margin:10px 0 0 0;">
+          <thead>
+            <tr>
+              <th style="width:80px; padding:8px 12px;">Aula</th>
+              <th style="width:300px; padding:8px 12px;">O que entrou</th>
+              <th style="padding:6px 12px;">O problema que ela resolveu na Clínica Vida+</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td style="padding:7px 12px;">11</td><td style="padding:7px 12px;">EF Core e MySQL</td><td style="padding:7px 12px;">Tudo se perdia ao parar a aplicação: não havia banco <code>clinicavida</code>.</td></tr>
+            <tr><td style="padding:7px 12px;">12</td><td style="padding:7px 12px;">CRUD completo</td><td style="padding:7px 12px;">A recepção não conseguia cadastrar, corrigir nem cancelar nada pela tela.</td></tr>
+            <tr><td style="padding:7px 12px;">13</td><td style="padding:7px 12px;">Cookies e sessões</td><td style="padding:7px 12px;">O agendamento em duas etapas esquecia o que foi escolhido na primeira.</td></tr>
+            <tr><td style="padding:7px 12px;">14</td><td style="padding:7px 12px;">AJAX com <code>fetch</code></td><td style="padding:7px 12px;">Trocar a especialidade recarregava a página inteira para atualizar uma lista.</td></tr>
+            <tr><td style="padding:7px 12px;">15</td><td style="padding:7px 12px;">Autenticação e autorização</td><td style="padding:7px 12px;">Qualquer visitante abria a agenda e os dados de todos os pacientes.</td></tr>
+            <tr><td style="padding:7px 12px;">16</td><td style="padding:7px 12px;">API REST</td><td style="padding:7px 12px;">Nenhum outro sistema conseguia ler as consultas sem passar pelas telas.</td></tr>
+            <tr><td style="padding:7px 12px;">17</td><td style="padding:7px 12px;">Relacionamentos e consultas</td><td style="padding:7px 12px;">As telas mostravam números de identificação onde deveria haver nomes.</td></tr>
+            <tr><td style="padding:7px 12px;">18</td><td style="padding:7px 12px;">Layout e Bootstrap 5</td><td style="padding:7px 12px;">Cada View repetia o próprio cabeçalho e nada se ajustava ao celular.</td></tr>
+            <tr><td style="padding:7px 12px;">19</td><td style="padding:7px 12px;">Docker e publicação</td><td style="padding:7px 12px;">A aplicação existia apenas na sua máquina, com a sua configuração.</td></tr>
+            <tr><td style="padding:7px 12px;">20</td><td style="padding:7px 12px;">Revisão e entrega</td><td style="padding:7px 12px;">O trabalho estava pronto, mas ainda não tinha sido fechado nem apresentado.</td></tr>
+          </tbody>
+        </table>
+
+        <div class="slide-footer">
+          <div class="footer-bar">20 Aulas 11 a 20, o problema resolvido</div>
+          <div class="footer-page">7</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 8: ONDE CADA PEÇA VIVE HOJE ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Uma requisição sua hoje, e a aula em que cada peça nasceu <a href="#/ref-slide" class="ref-badge" title="Ver referências">[1]</a></h2>
+        </div>
+
+        <p style="font-size:0.68em; margin-top:0;">Este é o caminho de um agendamento no seu <code>ClinicaVida.Web</code>, da tela ao banco. Cada etiqueta coral diz de qual aula veio aquela peça.</p>
+
+        <div class="slide-figure" style="margin-top:0;">
+          <svg viewBox="0 0 1150 350" role="img" aria-label="Caminho de uma requisição do navegador ao MySQL, com a aula de origem de cada camada">
+            <defs>
+              <marker id="setaFluxo" markerWidth="9" markerHeight="9" refX="8" refY="4.5" orient="auto">
+                <path d="M0,0 L9,4.5 L0,9 Z" fill="#00274D"/>
+              </marker>
+            </defs>
+
+            <rect x="8" y="30" width="200" height="86" rx="8" fill="#FFFFFF" stroke="#00274D" stroke-width="2"/>
+            <text x="24" y="58" font-family="Montserrat, sans-serif" font-size="16" font-weight="700" fill="#00274D">Navegador</text>
+            <text x="24" y="80" font-family="Montserrat, sans-serif" font-size="13" fill="#444444">HTML, CSS, Bootstrap</text>
+            <text x="24" y="99" font-family="Montserrat, sans-serif" font-size="13" fill="#444444">e JavaScript com fetch</text>
+            <rect x="8" y="120" width="200" height="22" rx="4" fill="#C84B31"/>
+            <text x="24" y="136" font-family="Montserrat, sans-serif" font-size="12" font-weight="700" fill="#FFFFFF">Aulas 03 a 06, 14 e 18</text>
+
+            <line x1="216" y1="73" x2="266" y2="73" stroke="#00274D" stroke-width="2.5" marker-end="url(#setaFluxo)"/>
+
+            <rect x="274" y="30" width="200" height="86" rx="8" fill="#FFFFFF" stroke="#00274D" stroke-width="2"/>
+            <text x="290" y="58" font-family="Montserrat, sans-serif" font-size="16" font-weight="700" fill="#00274D">Rota e Controller</text>
+            <text x="290" y="80" font-family="Montserrat, sans-serif" font-size="13" fill="#444444">ConsultasController,</text>
+            <text x="290" y="99" font-family="Montserrat, sans-serif" font-size="13" fill="#444444">actions Index e Create</text>
+            <rect x="274" y="120" width="200" height="22" rx="4" fill="#C84B31"/>
+            <text x="290" y="136" font-family="Montserrat, sans-serif" font-size="12" font-weight="700" fill="#FFFFFF">Aulas 08 e 09</text>
+
+            <line x1="482" y1="73" x2="532" y2="73" stroke="#00274D" stroke-width="2.5" marker-end="url(#setaFluxo)"/>
+
+            <rect x="540" y="30" width="200" height="86" rx="8" fill="#FFFFFF" stroke="#00274D" stroke-width="2"/>
+            <text x="556" y="58" font-family="Montserrat, sans-serif" font-size="16" font-weight="700" fill="#00274D">Model e validação</text>
+            <text x="556" y="80" font-family="Montserrat, sans-serif" font-size="13" fill="#444444">Consulta, Paciente,</text>
+            <text x="556" y="99" font-family="Montserrat, sans-serif" font-size="13" fill="#444444">ModelState.IsValid</text>
+            <rect x="540" y="120" width="200" height="22" rx="4" fill="#C84B31"/>
+            <text x="556" y="136" font-family="Montserrat, sans-serif" font-size="12" font-weight="700" fill="#FFFFFF">Aula 10</text>
+
+            <line x1="748" y1="73" x2="798" y2="73" stroke="#00274D" stroke-width="2.5" marker-end="url(#setaFluxo)"/>
+
+            <rect x="806" y="30" width="200" height="86" rx="8" fill="#FFFFFF" stroke="#00274D" stroke-width="2"/>
+            <text x="822" y="58" font-family="Montserrat, sans-serif" font-size="16" font-weight="700" fill="#00274D">ClinicaContext</text>
+            <text x="822" y="80" font-family="Montserrat, sans-serif" font-size="13" fill="#444444">EF Core com Pomelo,</text>
+            <text x="822" y="99" font-family="Montserrat, sans-serif" font-size="13" fill="#444444">Include e migrations</text>
+            <rect x="806" y="120" width="200" height="22" rx="4" fill="#C84B31"/>
+            <text x="822" y="136" font-family="Montserrat, sans-serif" font-size="12" font-weight="700" fill="#FFFFFF">Aulas 11, 12 e 17</text>
+
+            <line x1="906" y1="150" x2="906" y2="188" stroke="#00274D" stroke-width="2.5" marker-end="url(#setaFluxo)"/>
+            <rect x="806" y="196" width="200" height="60" rx="8" fill="#00274D"/>
+            <text x="822" y="222" font-family="Montserrat, sans-serif" font-size="16" font-weight="700" fill="#FFFFFF">MySQL</text>
+            <text x="822" y="243" font-family="JetBrains Mono, monospace" font-size="13" fill="#E6EDF3">banco clinicavida</text>
+
+            <rect x="8" y="196" width="310" height="60" rx="8" fill="#F4F1EE" stroke="#C84B31" stroke-width="2"/>
+            <text x="24" y="221" font-family="Montserrat, sans-serif" font-size="15" font-weight="700" fill="#00274D">Sessão e cookie de autenticação</text>
+            <text x="24" y="243" font-family="Montserrat, sans-serif" font-size="13" fill="#444444">Perfis Recepcao e Medico, Aulas 13 e 15</text>
+
+            <rect x="330" y="196" width="310" height="60" rx="8" fill="#F4F1EE" stroke="#C84B31" stroke-width="2"/>
+            <text x="346" y="221" font-family="Montserrat, sans-serif" font-size="15" font-weight="700" fill="#00274D">API REST</text>
+            <text x="346" y="243" font-family="JetBrains Mono, monospace" font-size="13" fill="#444444">api/consultas, Aula 16</text>
+
+            <rect x="8" y="272" width="1132" height="56" rx="8" fill="#EAF0F5" stroke="#00274D" stroke-width="2"/>
+            <text x="24" y="296" font-family="Montserrat, sans-serif" font-size="15" font-weight="700" fill="#00274D">Tudo isso empacotado em contêiner e publicado pelo Codespaces, Aula 19</text>
+            <text x="24" y="317" font-family="Montserrat, sans-serif" font-size="13" fill="#444444">Um serviço web e um serviço de banco, com a configuração vindo do ambiente, não do repositório</text>
+          </svg>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">20 Onde cada peça vive hoje</div>
+          <div class="footer-page">8</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 9: ERROS MAIS COMUNS ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Os sete erros que mais aparecem, e onde olhar primeiro</h2>
+        </div>
+
+        <p style="font-size:0.68em; margin-top:0;">Nenhum destes é sinal de que você não sabe programar: todos têm um lugar exato para conferir. Guarde esta tela para a reta final do projeto.</p>
+
+        <table style="font-size:0.62em; margin:8px 0 0 0;">
+          <thead>
+            <tr>
+              <th style="width:440px; padding:8px 12px;">O que aparece na tela ou no terminal</th>
+              <th style="padding:6px 12px;">Onde olhar primeiro</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td style="padding:7px 12px;">404 ao clicar em um link que existia</td><td style="padding:7px 12px;">O nome do controller e da action. As actions são em inglês: <code>Index</code>, <code>Details</code>, <code>Create</code>, <code>Edit</code>, <code>Delete</code>.</td></tr>
+            <tr><td style="padding:7px 12px;"><code>Unable to resolve service for type ClinicaContext</code></td><td style="padding:7px 12px;">Falta o <code>AddDbContext</code> no <code>Program.cs</code>, ou ele foi registrado depois do <code>builder.Build()</code>.</td></tr>
+            <tr><td style="padding:7px 12px;"><code>Access denied</code> ou <code>Unable to connect to any of the specified MySQL hosts</code></td><td style="padding:7px 12px;">A connection string. Dentro do compose o host é <code>db</code>, e não <code>localhost</code>.</td></tr>
+            <tr><td style="padding:7px 12px;"><code>Pending changes</code> ou coluna que não existe no banco</td><td style="padding:7px 12px;">Migration criada e não aplicada. Rode <code>dotnet ef migrations list</code> e depois <code>database update</code>.</td></tr>
+            <tr><td style="padding:7px 12px;">A View mostra vazio onde deveria vir o nome do médico</td><td style="padding:7px 12px;">A consulta não pediu o relacionado. Falta <code>Include</code> ou uma projeção com <code>Select</code>.</td></tr>
+            <tr><td style="padding:7px 12px;">O formulário volta para a tela sem gravar e sem avisar</td><td style="padding:7px 12px;"><code>ModelState.IsValid</code> recusou o modelo e a View não exibe o resumo de validação.</td></tr>
+            <tr><td style="padding:7px 12px;">Sua URL pública responde 401 ou nem abre para o colega</td><td style="padding:7px 12px;">A porta do Codespaces está privada, ou o codespace hibernou por inatividade.</td></tr>
+          </tbody>
+        </table>
+
+        <div class="slide-footer">
+          <div class="footer-bar">20 Erros mais comuns</div>
+          <div class="footer-page">9</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 10: EXERCÍCIO CURTO, CICLO 1 ==================== -->
+      <section class="exercise-slide content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Exercício do Ciclo 1: o mapa do seu projeto</h2>
+        </div>
+
+        <div class="exercise-container">
+          <h3>No seu fork, 8 minutos, individual</h3>
+          <ol class="exercise-steps">
+            <li>Abra a sua aplicação e percorra as telas que você tem hoje, sem corrigir nada ainda.</li>
+            <li>Liste <strong>seis</strong> funcionalidades e escreva, ao lado de cada uma, a aula em que ela nasceu.</li>
+            <li>Marque com um sinal as que estão <strong>incompletas</strong>: é essa lista que vira o roteiro do laboratório de hoje.</li>
+            <li>Escolha a funcionalidade que você vai demonstrar ao vivo na apresentação. Uma só, a mais completa.</li>
+          </ol>
+        </div>
+
+        <pre class="code-compact"><code class="language-markdown" data-trim>| Funcionalidade                       | Nasceu na     | Estado     |
+|--------------------------------------|---------------|------------|
+| Cadastro de paciente com validação   | Aulas 10 e 12 | pronto     |
+| Agendamento em duas etapas           | Aula 13       | incompleto |
+</code></pre>
+
+        <div class="slide-footer">
+          <div class="footer-bar">20 Exercício do Ciclo 1</div>
+          <div class="footer-page">10</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 11: REVISÃO PARA A PROVA OBJETIVA ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Revisão dirigida para a prova objetiva, por módulo</h2>
+        </div>
+
+        <p style="font-size:0.66em; margin-top:0;">A prova objetiva vale <strong>60% da AV1</strong> e cobre os quatro módulos. Abaixo, o que costuma ser cobrado e a confusão que mais derruba questão.</p>
+
+        <div class="concept-cards" style="margin-top:4px;">
+          <div class="concept-card" style="padding:12px 16px;">
+            <h4>Módulo 1, fundamentos e front-end</h4>
+            <p style="font-size:0.64em; color:#444444;">Cliente e servidor, DNS, métodos e status HTTP, tags semânticas, seletores e box model, tipos e eventos em JavaScript.<br>
+            <strong>Confusão frequente:</strong> achar que GET e POST diferem só no visual. GET pede recurso, POST envia dado que muda estado.</p>
+          </div>
+          <div class="concept-card" style="padding:12px 16px;">
+            <h4>Módulo 2, C# e MVC</h4>
+            <p style="font-size:0.64em; color:#444444;">Quem faz o quê no MVC, rota padrão, verbos nas actions, Razor, Data Annotations e <code>ModelState</code>.<br>
+            <strong>Confusão frequente:</strong> colocar regra de negócio na View. A View exibe; quem decide é o Controller com o Model.</p>
+          </div>
+          <div class="concept-card" style="padding:12px 16px;">
+            <h4>Módulo 3, dados e segurança</h4>
+            <p style="font-size:0.64em; color:#444444;">Migrations, CRUD, sessão contra cookie, <code>[Authorize]</code> e perfis, verbos e status da API REST, <code>Include</code> e o problema N mais 1.<br>
+            <strong>Confusão frequente:</strong> tratar validação do navegador como segurança. O que vale é o que o servidor confere.</p>
+          </div>
+          <div class="concept-card" style="padding:12px 16px;">
+            <h4>Módulo 4, layout e publicação</h4>
+            <p style="font-size:0.64em; color:#444444;">Layout e Partial Views, grid e componentes do Bootstrap 5, contêiner, imagem e serviço, configuração por variável de ambiente.<br>
+            <strong>Confusão frequente:</strong> guardar senha no <code>appsettings.json</code> versionado. Segredo fica fora do repositório.</p>
+          </div>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">20 Revisão para a prova objetiva</div>
+          <div class="footer-page">11</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 12: COMO A NOTA FECHA ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Como a sua nota fecha, com os pesos na mesa</h2>
+        </div>
+
+        <div class="side-by-side" style="margin-top:6px;">
+          <div class="side">
+            <h4>A composição</h4>
+            <ul style="margin:0; padding-left:20px; font-size:0.86em;">
+              <li>AV1, checkpoints em aula: <strong>40% da AV1</strong>, os entregáveis dos laboratórios das 20 aulas.</li>
+              <li>AV1, prova objetiva: <strong>60% da AV1</strong>.</li>
+              <li>AV2: avaliação institucional, com questões de todas as disciplinas do semestre.</li>
+            </ul>
+          </div>
+          <div class="side">
+            <h4>A conta</h4>
+            <pre class="code-compact" style="margin-top:6px;"><code class="language-text" data-trim>AV1   = (checkpoints x 0,40) + (prova x 0,60)
+Média = (AV1 + AV2) / 2</code></pre>
+            <p style="font-size:0.72em; margin:8px 0 0 0;">Aprovação com <strong>média maior ou igual a 6,0</strong>.</p>
+          </div>
+        </div>
+
+        <div class="callout" style="margin-top:18px;">
+          <p><strong>O projeto final é a própria Clínica Vida+</strong> que você construiu desde agosto, entregue como repositório no GitHub com histórico de commits de sua autoria, mais deploy funcional acessível por URL. Ele não é um trabalho à parte que começa hoje: ele é o acúmulo dos 20 encontros.</p>
+        </div>
+
+        <div class="takeaway">
+          <span class="takeaway-label">Takeaway</span>
+          <p>Checkpoint entregue em aula é nota que já está no seu bolso. O que fica de fora hoje não volta em dezembro.</p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">20 Como a nota fecha</div>
+          <div class="footer-page">12</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 13: CRITÉRIOS DO PROJETO FINAL ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Critérios do projeto final e o que a banca olha em cada um</h2>
+        </div>
+
+        <table style="font-size:0.66em; margin:10px 0 0 0;">
+          <thead>
+            <tr>
+              <th style="width:210px; padding:8px 12px;">Critério</th>
+              <th style="width:90px; padding:8px 12px;">Peso</th>
+              <th style="padding:8px 12px;">O que é conferido na correção</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td style="padding:8px 12px;">Funcionalidade</td><td style="padding:8px 12px;"><strong>30%</strong></td><td style="padding:8px 12px;">CRUD das quatro entidades, agendamento do começo ao fim, login com perfil e a API respondendo.</td></tr>
+            <tr><td style="padding:8px 12px;">Código</td><td style="padding:8px 12px;"><strong>25%</strong></td><td style="padding:8px 12px;">MVC respeitado, validação no servidor, nenhum segredo versionado e histórico de commits de sua autoria.</td></tr>
+            <tr><td style="padding:8px 12px;">Banco de dados</td><td style="padding:8px 12px;"><strong>20%</strong></td><td style="padding:8px 12px;">Banco <code>clinicavida</code> com as quatro tabelas, chaves estrangeiras, índices e migrations aplicadas.</td></tr>
+            <tr><td style="padding:8px 12px;">Interface</td><td style="padding:8px 12px;"><strong>15%</strong></td><td style="padding:8px 12px;">Layout único em todas as telas, leitura confortável no celular e mensagens de erro visíveis.</td></tr>
+            <tr><td style="padding:8px 12px;">Apresentação</td><td style="padding:8px 12px;"><strong>10%</strong></td><td style="padding:8px 12px;">Cinco minutos cumpridos, demonstração ao vivo na URL pública e decisão técnica explicada.</td></tr>
+          </tbody>
+        </table>
+
+        <div class="takeaway">
+          <span class="takeaway-label">Takeaway</span>
+          <p>Metade da nota do projeto está em funcionalidade e código. Uma tela bonita que não grava no banco vale menos que uma tela simples que funciona.</p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">20 Critérios do projeto final</div>
+          <div class="footer-page">13</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 14: CHECKLIST DE ENTREGA ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Checklist de entrega do projeto final</h2>
+        </div>
+
+        <p style="font-size:0.68em; margin-top:0;">Cinco itens objetivos. Se algum deles falhar, o projeto perde nota antes mesmo da apresentação começar. É este o checklist que rodamos juntos no Ciclo 3.</p>
+
+        <table style="font-size:0.62em; margin:8px 0 0 0;">
+          <thead>
+            <tr>
+              <th style="width:60px; padding:8px 12px;">#</th>
+              <th style="width:290px; padding:8px 12px;">Item</th>
+              <th style="padding:8px 12px;">Como confirmar que está de pé</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td style="padding:8px 12px;">1</td><td style="padding:8px 12px;">Repositório com o seu histórico de commits</td><td style="padding:8px 12px;"><code>git log --oneline</code> mostra commits com o seu nome ao longo do semestre.</td></tr>
+            <tr><td style="padding:8px 12px;">2</td><td style="padding:8px 12px;"><code>README.md</code> completo</td><td style="padding:8px 12px;">Descrição do sistema, instruções de execução e a URL do deploy, todas na primeira tela do arquivo.</td></tr>
+            <tr><td style="padding:8px 12px;">3</td><td style="padding:8px 12px;">Aplicação publicada respondendo</td><td style="padding:8px 12px;">Com o codespace <strong>iniciado antes de apresentar</strong>, a URL abre em uma janela anônima e faz o login sem erro.</td></tr>
+            <tr><td style="padding:8px 12px;">4</td><td style="padding:8px 12px;">Banco com dados de demonstração</td><td style="padding:8px 12px;">Especialidades, médicos, pacientes e consultas com nomes plausíveis, nada de "teste 1".</td></tr>
+            <tr><td style="padding:8px 12px;">5</td><td style="padding:8px 12px;">Branches integradas à <code>main</code></td><td style="padding:8px 12px;">Tudo o que conta está na <code>main</code>: é ela que o professor clona para corrigir.</td></tr>
+          </tbody>
+        </table>
+
+        <div class="callout" style="margin-top:14px;">
+          <p><strong>Entrega formal:</strong> link do repositório e URL do deploy postados no Google Classroom até o fim do encontro de hoje.</p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">20 Checklist de entrega</div>
+          <div class="footer-page">14</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 15: O AVISO DO CODESPACES ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Antes de apresentar: ligue o codespace <a href="#/ref-slide" class="ref-badge" title="Ver referências">[3]</a></h2>
+        </div>
+
+        <p style="font-size:0.66em; margin-top:0;">A URL pública da Aula 19 existe <strong>enquanto o codespace está rodando</strong>, e ele hiberna por inatividade. Isso não é defeito do seu projeto, é como o Codespaces funciona. Na apresentação, porém, o resultado é o mesmo de um projeto fora do ar.</p>
+
+        <div class="side-by-side" style="margin-top:8px;">
+          <div class="side">
+            <h4>Dez minutos antes da sua vez</h4>
+            <ul style="margin:0; padding-left:20px; font-size:0.76em;">
+              <li>Abra o codespace do seu fork e espere ele terminar de subir.</li>
+              <li>Suba os serviços com <code>docker compose up -d</code> e aguarde o banco ficar saudável.</li>
+              <li>Confira que a porta está marcada como <strong>pública</strong>, e não privada.</li>
+              <li>Abra a URL no celular, fora da conta do GitHub, e faça um login de verdade.</li>
+            </ul>
+          </div>
+          <div class="side">
+            <h4>Se mesmo assim cair</h4>
+            <ul style="margin:0; padding-left:20px; font-size:0.76em;">
+              <li>Porta privada devolve <strong>401</strong> para quem não é você. Troque a visibilidade e recarregue.</li>
+              <li>Tenha a aplicação rodando também na sua máquina, na porta que o seu terminal imprimiu, como plano B.</li>
+              <li>Apresentação com URL fora do ar custa nota em <strong>funcionalidade</strong> e em <strong>apresentação</strong>.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="takeaway">
+          <span class="takeaway-label">Takeaway</span>
+          <p>Ninguém consegue avaliar o que não abre. Ligar o codespace antes é parte da entrega, não um detalhe de operação.</p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">20 O aviso do Codespaces</div>
+          <div class="footer-page">15</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 16: ROTEIRO DA APRESENTAÇÃO ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>O roteiro da apresentação: cinco minutos, cinco blocos</h2>
+        </div>
+
+        <p style="font-size:0.68em; margin-top:0;">São cinco minutos de apresentação e dois de arguição. Quem começa configurando ambiente perde metade do tempo antes de mostrar o sistema.</p>
+
+        <div class="flow-diagram" style="margin:16px 0 0 0; font-size:0.72em; gap:6px;">
+          <div class="flow-item">1. O problema<br>40 segundos</div>
+          <div class="flow-arrow">&rarr;</div>
+          <div class="flow-item">2. Demonstração ao vivo<br>2 minutos</div>
+          <div class="flow-arrow">&rarr;</div>
+          <div class="flow-item">3. Arquitetura<br>1 minuto</div>
+          <div class="flow-arrow">&rarr;</div>
+          <div class="flow-item">4. A decisão difícil<br>1 minuto</div>
+          <div class="flow-arrow">&rarr;</div>
+          <div class="flow-item">5. O que faria diferente<br>20 segundos</div>
+        </div>
+
+        <div class="side-by-side" style="margin-top:18px;">
+          <div class="side">
+            <h4>O que dizer em cada bloco</h4>
+            <ul style="margin:0; padding-left:20px; font-size:0.78em;">
+              <li>O agendamento por telefone e papel, e o que ele custava à clínica.</li>
+              <li>Um agendamento inteiro, na URL pública, do login à consulta gravada.</li>
+              <li>MVC, EF Core sobre MySQL e onde ficam autenticação e API.</li>
+              <li>Uma decisão sua, com o motivo e a alternativa que você descartou.</li>
+            </ul>
+          </div>
+          <div class="side">
+            <h4>O que não fazer</h4>
+            <ul style="margin:0; padding-left:20px; font-size:0.78em;">
+              <li>Ler código linha a linha no projetor.</li>
+              <li>Começar instalando ou compilando qualquer coisa.</li>
+              <li>Pedir desculpa pelo que faltou: mostre o que existe e funciona.</li>
+              <li>Passar de cinco minutos. O tempo é cronometrado.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">20 Roteiro da apresentação</div>
+          <div class="footer-page">16</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 17: EXERCÍCIO CURTO, CICLO 2 ==================== -->
+      <section class="exercise-slide content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Exercício do Ciclo 2: escreva o seu roteiro</h2>
+        </div>
+
+        <div class="exercise-container">
+          <h3>Em papel ou no README, 8 minutos, individual</h3>
+          <ol class="exercise-steps">
+            <li>Escreva os cinco blocos do roteiro em <strong>uma frase cada</strong>, com o seu projeto no lugar do exemplo.</li>
+            <li>Defina exatamente qual caminho você vai clicar na demonstração, e em que ordem.</li>
+            <li>Escolha a sua decisão técnica mais difícil do semestre e escreva o porquê dela em duas linhas.</li>
+            <li>Ensaie uma vez, com o relógio na mão. Se passou de cinco minutos, corte o bloco 3, não a demonstração.</li>
+          </ol>
+        </div>
+
+        <div class="callout" style="margin-top:14px;">
+          <p>Exemplos de decisão técnica que rendem boa resposta: por que a validação ficou no servidor e não só no navegador, por que a exclusão de médico é recusada em vez de apagar consultas, ou por que a senha do banco saiu do <code>appsettings.json</code>.</p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">20 Exercício do Ciclo 2</div>
+          <div class="footer-page">17</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 18: QUIZ DE FIXAÇÃO ==================== -->
+      <section class="quiz-slide content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area"><div class="accent-bar"></div><h2>Quiz de fixação</h2></div>
+        <div class="quiz-container">
+          <div class="quiz-question">Em uma aplicação ASP.NET Core MVC com EF Core, onde deve ficar a regra que impede agendar duas consultas para o mesmo médico no mesmo horário?</div>
+          <ul class="quiz-options">
+            <li data-correct="false"><span class="option-letter">A</span> Somente no JavaScript da página de agendamento, que bloqueia o envio do formulário antes de a requisição sair do navegador.</li>
+            <li data-correct="false"><span class="option-letter">B</span> Somente na View, escondendo da lista os horários que já estão ocupados por outra consulta marcada com o mesmo médico.</li>
+            <li data-correct="false"><span class="option-letter">C</span> Somente no banco de dados, com uma restrição de unicidade que rejeita a segunda tentativa de gravar o mesmo horário.</li>
+            <li data-correct="true"><span class="option-letter">D</span> No servidor, na lógica da aplicação e com apoio de restrição no banco, porque a validação feita no navegador pode ser contornada.</li>
+          </ul>
+          <div class="quiz-feedback"
+               data-correct-msg="Isso. A regra vale no servidor, onde ninguém contorna, e o índice único no banco é a última linha de defesa contra dois envios simultâneos. O JavaScript e a View continuam úteis, mas como conforto de quem usa, não como garantia."
+               data-incorrect-msg="Não é isso. Tudo o que roda no navegador pode ser desligado ou driblado, e esconder o horário na tela não impede uma requisição direta. Deixar só para o banco resolve a duplicidade, mas devolve um erro cru ao usuário. A resposta é a combinação: regra no servidor, com restrição no banco por trás."></div>
+        </div>
+        <div class="slide-footer"><div class="footer-bar">20 Quiz de fixação</div><div class="footer-page">18</div></div>
+      </section>
+
+      <!-- ==================== SLIDE 19: LAB PASSO 1 ==================== -->
+      <section class="exercise-slide content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Laboratório, passo 1 de 5: a aplicação no ar</h2>
+        </div>
+
+        <p style="font-size:0.68em; margin-top:0;">Missão dos próximos 60 minutos: fechar a entrega e apresentar a Clínica Vida+. Começamos pelo item que mais falha na hora H.</p>
+
+        <div class="exercise-container">
+          <h3>No codespace do seu fork</h3>
+          <ol class="exercise-steps">
+            <li>Suba o codespace e os contêineres, e espere o serviço <code>db</code> ficar saudável antes de testar.</li>
+            <li>Confirme que a porta encaminhada está <strong>pública</strong>.</li>
+            <li>Abra a URL em uma janela anônima: cadastro de paciente, agendamento, login e <code>api/consultas</code>.</li>
+            <li>Anote a URL exata. Ela vai para o <code>README.md</code> e para o Google Classroom.</li>
+          </ol>
+        </div>
+
+        <pre class="code-compact"><code class="language-bash" data-trim>docker compose up -d --build
+docker compose ps        # o serviço db precisa aparecer como healthy
+docker compose logs -f web</code></pre>
+
+        <div class="slide-footer">
+          <div class="footer-bar">20 Laboratório, passo 1, a aplicação no ar</div>
+          <div class="footer-page">19</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 20: LAB PASSO 2 ==================== -->
+      <section class="exercise-slide content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Laboratório, passo 2 de 5: o README que a banca lê primeiro</h2>
+        </div>
+
+        <div class="exercise-container">
+          <h3>Na raiz do seu fork</h3>
+          <ol class="exercise-steps">
+            <li>Descrição do sistema em até cinco linhas: o problema da clínica e o que a aplicação resolve.</li>
+            <li>Instruções de execução: o que instalar, como subir os contêineres e como aplicar as migrations.</li>
+            <li>A <strong>URL do deploy</strong>, em destaque, com o aviso de que ela responde com o codespace ligado.</li>
+            <li>Usuários de demonstração, um do perfil <code>Recepcao</code> e um do perfil <code>Medico</code>.</li>
+          </ol>
+        </div>
+
+        <pre class="code-compact"><code class="language-markdown" data-trim># Clínica Vida+
+
+Agendamento de consultas em ASP.NET Core MVC, EF Core e MySQL.
+
+## Deploy
+https://SEU-CODESPACE-XXXX.app.github.dev  (ativo com o codespace em execução)
+
+## Como executar
+docker compose up -d --build
+</code></pre>
+
+        <div class="slide-footer">
+          <div class="footer-bar">20 Laboratório, passo 2, o README</div>
+          <div class="footer-page">20</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 21: LAB PASSO 3 ==================== -->
+      <section class="exercise-slide content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Laboratório, passo 3 de 5: dados de demonstração</h2>
+        </div>
+
+        <p style="font-size:0.68em; margin-top:0;">Um sistema vazio não demonstra nada, e uma lista de "teste 1, teste 2" custa nota em banco de dados e em apresentação.</p>
+
+        <div class="exercise-container">
+          <h3>No banco clinicavida da sua publicação</h3>
+          <ol class="exercise-steps">
+            <li>Garanta <strong>4</strong> especialidades, <strong>3</strong> médicos com CRM válido, <strong>5</strong> pacientes e <strong>8</strong> consultas.</li>
+            <li>Distribua as consultas entre datas passadas e futuras, para as telas de agenda e histórico terem o que mostrar.</li>
+            <li>Confirme que nenhuma tela quebra com o banco preenchido: agenda do dia, histórico e relatório por especialidade.</li>
+            <li>Se o banco de produção estiver vazio, aplique as migrations contra ele antes de semear.</li>
+          </ol>
+        </div>
+
+        <pre class="code-compact"><code class="language-bash" data-trim>docker compose ps          # o servico db precisa estar healthy antes de aplicar
+dotnet ef database update  # com a configuracao de ambiente da Aula 19
+# depois, cadastre pelos formulários ou pelo HasData, e confira na tela</code></pre>
+
+        <div class="slide-footer">
+          <div class="footer-bar">20 Laboratório, passo 3, dados de demonstração</div>
+          <div class="footer-page">21</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 22: LAB PASSO 4 ==================== -->
+      <section class="exercise-slide content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Laboratório, passo 4 de 5: tudo integrado na main</h2>
+        </div>
+
+        <p style="font-size:0.68em; margin-top:0;">A correção clona a <code>main</code> do seu fork. Funcionalidade que ficou numa branch esquecida simplesmente não existe para quem corrige.</p>
+
+        <div class="exercise-container">
+          <h3>No seu fork</h3>
+          <ol class="exercise-steps">
+            <li>Liste as branches e identifique o que ainda não foi integrado.</li>
+            <li>Integre cada uma na <code>main</code>, resolvendo os conflitos com calma e testando depois de cada integração.</li>
+            <li>Rode a aplicação a partir da <code>main</code> limpa e repita o teste do passo 1.</li>
+            <li>Envie tudo para o GitHub e confira pelo navegador que o código está lá.</li>
+          </ol>
+        </div>
+
+        <pre class="code-compact"><code class="language-bash" data-trim>git branch -a
+git checkout main &amp;&amp; git pull
+git merge feature/deploy      # repita para cada branch que faltar
+git push origin main</code></pre>
+
+        <div class="slide-footer">
+          <div class="footer-bar">20 Laboratório, passo 4, integração na main</div>
+          <div class="footer-page">22</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 23: LAB PASSO 5, A APRESENTAÇÃO ==================== -->
+      <section class="exercise-slide content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Laboratório, passo 5 de 5: a apresentação, Ciclo 4</h2>
+        </div>
+
+        <div class="exercise-container">
+          <h3>Cinco minutos de apresentação e dois de arguição</h3>
+          <ol class="exercise-steps">
+            <li>Deixe a URL pública já aberta no navegador antes de assumir o projetor.</li>
+            <li>Siga o roteiro que você escreveu no Ciclo 2, sem improvisar ordem nova.</li>
+            <li>Responda a arguição com o sistema na tela, mostrando onde aquilo acontece.</li>
+            <li>Enquanto um colega apresenta, preencha a ficha de observação por critério.</li>
+          </ol>
+        </div>
+
+        <div class="flow-diagram" style="margin:18px 0 0 0; font-size:0.68em; gap:6px;">
+          <div class="flow-item">Funcionalidade</div>
+          <div class="flow-item">Código</div>
+          <div class="flow-item">Banco de dados</div>
+          <div class="flow-item">Interface</div>
+          <div class="flow-item">Apresentação</div>
+        </div>
+
+        <div class="callout" style="margin-top:16px;">
+          <p><strong>Ficha de observação:</strong> anote o nome de quem apresentou, dê uma nota de <strong>1 a 5</strong> em cada um dos cinco critérios e escreva uma frase sobre o que você levaria daquele projeto para o seu.</p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">20 Laboratório, passo 5, a apresentação</div>
+          <div class="footer-page">23</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 24: ENTREGÁVEL ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Entregável de hoje, o último do semestre</h2>
+        </div>
+
+        <p style="font-size:0.7em; margin-top:0;">O entregável da Aula 20 é a apresentação realizada mais os dois links postados no Google Classroom, ainda dentro do encontro.</p>
+
+        <div class="side-by-side" style="margin-top:8px;">
+          <div class="side">
+            <h4>O que postar no Classroom</h4>
+            <ul style="margin:0; padding-left:20px; font-size:0.82em;">
+              <li>O link do seu fork no GitHub, com a <code>main</code> atualizada.</li>
+              <li>A URL do deploy, exatamente como ela aparece no navegador.</li>
+              <li>Uma linha dizendo qual funcionalidade você demonstrou.</li>
+            </ul>
+          </div>
+          <div class="side">
+            <h4>O commit que fecha o semestre</h4>
+            <pre class="code-compact" style="margin-top:6px;"><code class="language-bash" data-trim>git add README.md
+git commit -m "docs: entrega final da Clinica Vida"
+git push origin main</code></pre>
+          </div>
+        </div>
+
+        <div class="takeaway">
+          <span class="takeaway-label">Takeaway</span>
+          <p>O projeto final não é um trabalho novo: é o mesmo repositório que você forkou na Aula 01, com 20 semanas de histórico dentro.</p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">20 Entregável do semestre</div>
+          <div class="footer-page">24</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 25: FECHAMENTO DA DISCIPLINA ==================== -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Fim de semestre: o que você leva daqui</h2>
+        </div>
+
+        <p style="font-size:0.66em; margin-top:0;">Em agosto você abriu um repositório vazio. Hoje você tem um sistema publicado, com banco, autenticação, API e interface, feito por você, semana a semana.</p>
+
+        <div class="timeline">
+          <div class="tl-item is-past">
+            <div class="tl-dot"></div>
+            <span class="tl-year">Módulo 1</span>
+            <span class="tl-tool">Front-end</span>
+            <span class="tl-desc">A clínica ganhou uma página que o paciente entende.</span>
+          </div>
+          <div class="tl-item is-past">
+            <div class="tl-dot"></div>
+            <span class="tl-year">Módulo 2</span>
+            <span class="tl-tool">C# e MVC</span>
+            <span class="tl-desc">A página virou aplicação que processa e decide.</span>
+          </div>
+          <div class="tl-item is-past">
+            <div class="tl-dot"></div>
+            <span class="tl-year">Módulo 3</span>
+            <span class="tl-tool">Dados e segurança</span>
+            <span class="tl-desc">Os dados passaram a durar, e só quem pode entra.</span>
+          </div>
+          <div class="tl-item">
+            <div class="tl-dot"></div>
+            <span class="tl-year">Módulo 4</span>
+            <span class="tl-tool">Layout e deploy</span>
+            <span class="tl-desc">O sistema saiu da sua máquina e foi para a internet.</span>
+          </div>
+        </div>
+
+        <div class="side-by-side" style="margin-top:16px;">
+          <div class="side">
+            <h4>Ainda falta a AV2</h4>
+            <ul style="margin:0; padding-left:20px; font-size:0.78em;">
+              <li>Avaliação institucional, com questões de todas as disciplinas do semestre.</li>
+              <li>Média igual a <code>(AV1 + AV2) / 2</code>, aprovação com <strong>6,0</strong>.</li>
+              <li>Acompanhe data e local pelos canais oficiais da instituição.</li>
+            </ul>
+          </div>
+          <div class="side">
+            <h4>Caminhos de continuidade</h4>
+            <ul style="margin:0; padding-left:20px; font-size:0.78em;">
+              <li>Aprofundar em testes automatizados e em consultas com EF Core.</li>
+              <li>Publicar em nuvem com domínio próprio, sem depender do codespace.</li>
+              <li>Deixar este repositório no seu portfólio: ele é código seu, com histórico.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">20 Fechamento da disciplina</div>
+          <div class="footer-page">25</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 26: REFERÊNCIAS ==================== -->
+      <section id="ref-slide" class="content-slide">
+        <div class="top-bar"></div>
+        <img src="../assets/img/uninove-logo.png" alt="Uninove" class="uninove-logo-header">
+        <div class="decor-coral"></div>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Referências desta aula</h2>
+        </div>
+
+        <p style="font-size:0.72em; margin-top:0;">Os números entre colchetes ao lado dos títulos remetem a esta lista. As quatro continuam úteis depois do semestre, quando o projeto for só seu.</p>
+
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px 30px; margin-top:6px;">
+          <div class="concept-card" style="padding:14px 18px;">
+            <h4>[1] ASP.NET Core MVC, visão geral</h4>
+            <p style="font-size:0.7em; color:#444444;">MICROSOFT. <em>Visão geral do ASP.NET Core MVC</em>.<br>
+            <code style="font-size:0.82em;">learn.microsoft.com/pt-br/aspnet/core/mvc/overview</code></p>
+          </div>
+          <div class="concept-card" style="padding:14px 18px;">
+            <h4>[2] Entity Framework Core</h4>
+            <p style="font-size:0.7em; color:#444444;">MICROSOFT. <em>Documentação do Entity Framework Core</em>.<br>
+            <code style="font-size:0.82em;">learn.microsoft.com/pt-br/ef/core/</code></p>
+          </div>
+          <div class="concept-card" style="padding:14px 18px;">
+            <h4>[3] GitHub Codespaces e portas encaminhadas</h4>
+            <p style="font-size:0.7em; color:#444444;">GITHUB. <em>Encaminhamento de portas no codespace</em>.<br>
+            <code style="font-size:0.82em;">docs.github.com/pt/codespaces</code></p>
+          </div>
+          <div class="concept-card" style="padding:14px 18px;">
+            <h4>[4] Bootstrap 5, componentes e grid</h4>
+            <p style="font-size:0.7em; color:#444444;">BOOTSTRAP. <em>Bootstrap 5 documentation</em>.<br>
+            <code style="font-size:0.82em;">getbootstrap.com/docs/5.3/</code></p>
+          </div>
+        </div>
+
+        <div class="callout" style="margin-top:14px;">
+          <p>O checklist completo da entrega final está no portal, em <code>labs/aula20-lab/</code>. O repositório do case continua em <code>github.com/josercf/uninove-2026-2-clinica-vida</code>.</p>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">20 Referências</div>
+          <div class="footer-page">26</div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 27: ENCERRAMENTO ==================== -->
+      <section class="end-slide">
+        <img src="../assets/img/uninove-logo.png" alt="Uninove, Universidade Nove de Julho"
+             style="max-width:300px; background:#FFFFFF; padding:20px 28px; border-radius:8px;">
+        <div class="copyright">
+          Copyright &copy; 2026<br>
+          Prof. José Romualdo da Costa Filho<br><br>
+          Todos os direitos reservados. É expressamente proibida a reprodução, divulgação<br>
+          total ou parcial, deste material acadêmico sem autorização formal,<br>
+          por escrito, do Professor autor da ementa.
+        </div>
+      </section>
+
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/highlight/highlight.js"></script>
+  <script src="../assets/js/uninove-quiz.js"></script>
+  <script type="module">
+    import { TURMAS, resolverTurma, dataDaAula, formatarData } from '../assets/js/turmas.js';
+    const turma = resolverTurma({
+      hoje: new Date(),
+      salva: localStorage.getItem('uninove-turma'),
+    });
+    const alvo = document.querySelector('[data-data-da-aula]');
+    if (alvo) {
+      const n = Number(alvo.getAttribute('data-data-da-aula'));
+      alvo.textContent = turma
+        ? `${TURMAS[turma].rotulo}, ${formatarData(dataDaAula(turma, n))}`
+        : `Quarta ${formatarData(dataDaAula('quarta', n))} ou quinta ${formatarData(dataDaAula('quinta', n))}`;
+    }
+  </script>
+  <script>
+    Reveal.initialize({
+      width: 1280, height: 720, center: false, margin: 0,
+      hash: true, slideNumber: false,
+      // Os chevrons de navegação caem sobre a footer-bar e sobre o triângulo
+      // azul do canto inferior direito; a barra de progresso encosta no rodapé
+      // e parece um segundo rodapé. Nenhum dos dois é usado na projeção.
+      controls: false, progress: false,
+      // Um slide por página no ?print-pdf, para o PDF bater com o deck.
+      pdfMaxPagesPerSlide: 1,
+      plugins: [RevealHighlight],
+    });
+  </script>
+</body>
+</html>
