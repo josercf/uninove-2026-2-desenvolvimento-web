@@ -1,6 +1,6 @@
 # Andamento
 
-**Última atualização:** 01/08/2026 (Task 15, Módulo 4; as 20 aulas prontas)
+**Última atualização:** 01/08/2026 (Task 16, revisão independente dos 20 decks)
 
 ## Ordem de leitura ao abrir uma sessão
 
@@ -350,9 +350,67 @@ não repinta o botão, porque o `.btn-primary` compilado do Bootstrap 5.3 declar
 lembrança, é o que separa material que funciona em sala de material que parece
 certo.
 
+**Task 16, revisão independente dos 20 decks (01/08/2026):**
+
+Quatro agentes `revisor-slides-uninove`, cinco decks cada, sem participação de
+quem produziu o material e proibidos de tocar em arquivo compartilhado. Os
+quatro validadores já passavam; o que se procurava era o que eles não pegam.
+
+**A revisão encontrou nove defeitos reais, nenhum detectável por validador.**
+Vale registrar que material aprovado nos quatro validadores ainda estava errado
+em nove pontos: validador mede geometria e estrutura, não sentido.
+
+- **`Models/Paciente.cs` nunca era criado**, e o laboratório da Aula 10 usava
+  `new Paciente { ... }` no primeiro passo. O aluno travaria com erro de
+  compilação. A classe entrou com as seis propriedades do contrato.
+- **A Aula 20 mandava rodar `dotnet ef database update` do terminal**, o que
+  não funciona: o `compose.yaml` da Aula 19 publica só a porta do `web`, o
+  serviço `db` não expõe porta, e o host `db` só existe dentro da rede do
+  compose. O caminho certo é o `Database.Migrate()` no arranque, que a própria
+  Aula 19 ensina. **Este é o segundo erro no mesmo comando**: o registro da
+  Task 15 dizia que ele havia sido corrigido, mas o construtor tinha apenas
+  trocado um comando quebrado por outro, e a afirmação foi repetida sem
+  verificação. Verificar antes de registrar como resolvido.
+- **Seletor divergente entre as Aulas 04 e 05**, a mesma família de defeito do
+  Módulo 1: a Aula 04 entrega `.lista-especialidades` e a Aula 05 estilizava
+  `.especialidades`.
+- **O exercício da Aula 10 mandava converter um `select` de paciente que não
+  existe na Aula 05**, que entrega `nome` como campo de texto. Passou a apontar
+  para o `select` de médico, que existe.
+- **A Aula 15 contava as migrations errado**, dizendo uma antes e duas depois,
+  quando ao chegar lá existem três e a do Identity faz a quarta.
+- **A grade de horários da Aula 14 tinha prosa e código divergentes.** Defeito
+  introduzido na reconciliação da Task 14, quando o texto foi alinhado ao
+  expediente e o código logo abaixo não.
+- **Referência `[4]` órfã na Aula 20**, definida e nunca citada.
+- **`git checkout` contra `git switch`.** A Aula 03 ensina `git switch` com
+  slide dedicado, a Aula 04 segue, e **da Aula 05 à 20 o acervo voltava para
+  `git checkout`**: 62 ocorrências contra 13. O aluno aprendia um comando e via
+  o professor usar outro por dezesseis semanas. Uniformizado em `git switch`
+  nos 32 arquivos, em duas formas apenas (`switch main` e `switch -c`), sem
+  nenhum uso de `checkout --` a preservar.
+- **Soma dos minutos dos passos estourando a duração do laboratório.** O
+  revisor apontou três kits; a varredura nos 20 achou **seis** (Aulas 06, 07,
+  11, 16, 17 e 20), sendo o da Aula 07 o caso inverso, somando 55. Todos
+  reequilibrados mantendo o peso relativo de cada passo, e **os 20 kits agora
+  somam exatamente 60 minutos**.
+
+Relatado e **não** corrigido, por ser decisão de projeto visual: o
+`quiz-slide` deixa entre um terço e quase metade da altura livre abaixo das
+alternativas, por construção do `.quiz-container` no tema. Não é defeito de
+nenhuma aula; é como o bloco foi desenhado. Se o professor quiser o conjunto
+centralizado verticalmente, é mudança de tema e merece ADR.
+
+**O que a Task 16 ensina para qualquer produção futura:** revisão por quem não
+produziu encontra classe de defeito que nem validador nem autor encontram, e
+vale como etapa própria. Duas instruções fizeram diferença: proibir o revisor
+de tocar em arquivo compartilhado, e exigir que ele **prove o próprio medidor**
+injetando defeito antes de confiar num resultado zero.
+
 ## Próximos passos
 
-As 20 aulas estão prontas. O que resta é opcional e depende do professor:
+As 20 aulas estão prontas e revisadas. O que resta é opcional e depende do
+professor:
 
 1. **Revisar as Aulas 07 e 11 à luz do Codespaces.** Elas ensinam instalar o
    SDK e o MySQL na máquina do aluno, o que continua válido, mas se a turma
