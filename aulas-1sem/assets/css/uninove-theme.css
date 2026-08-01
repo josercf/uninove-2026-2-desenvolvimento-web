@@ -526,13 +526,22 @@
   margin-top: 10px;
 }
 
+/* Este h3 já foi `display: flex` com `gap: 8px`, e isso era a mesma armadilha
+   da alternativa de quiz do ADR-007: um `<code>` no meio do título vira item
+   de flex próprio e ganha 8px de buraco onde deveria haver um espaço de
+   palavra. Medido na Aula 09: o texto "Em" terminava em x=121 e o
+   `<code>` começava em x=129. Nenhum dos quatro validadores acusa, porque
+   nada estoura nem se sobrepõe.
+
+   Aqui a correção é mais simples que a do quiz: este é um título de texto
+   corrido, nenhum deck do acervo põe elemento de alinhamento antes dele, e
+   portanto o contexto de flex não servia a nada. Voltando a `block`, o
+   `<code>` volta a ser texto em linha e a armadilha some na origem, sem
+   depender de o autor lembrar de uma convenção. Ver ADR-007. */
 .exercise-slide .exercise-container h3 {
   color: var(--uninove-coral);
   font-size: 0.85em;
   margin: 0 0 10px 0;
-  display: flex;
-  align-items: center;
-  gap: 8px;
 }
 
 .exercise-slide .exercise-container p {
